@@ -310,6 +310,8 @@
                                         </h5>
                                         <div class="movie-rating-percent">
                                             <span>327 Montague Street</span>
+                                            <a href="{{ route('event_checkout') }}"
+                                                class="custom-button back-button mt-2">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
@@ -331,6 +333,8 @@
                                         </h5>
                                         <div class="movie-rating-percent">
                                             <span>327 Montague Street</span>
+                                            <a href="{{ route('event_checkout') }}"
+                                                class="custom-button back-button mt-2">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
@@ -352,6 +356,8 @@
                                         </h5>
                                         <div class="movie-rating-percent">
                                             <span>327 Montague Street</span>
+                                            <a href="{{ route('event_checkout') }}"
+                                                class="custom-button back-button mt-2">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
@@ -373,6 +379,8 @@
                                         </h5>
                                         <div class="movie-rating-percent">
                                             <span>327 Montague Street</span>
+                                            <a href="{{ route('event_checkout') }}"
+                                                class="custom-button back-button mt-2">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
@@ -394,6 +402,8 @@
                                         </h5>
                                         <div class="movie-rating-percent">
                                             <span>327 Montague Street</span>
+                                            <a href="{{ route('event_checkout') }}"
+                                                class="custom-button back-button mt-2">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
@@ -401,7 +411,7 @@
                             <div class="col-sm-6 col-lg-4">
                                 <div class="event-grid">
                                     <div class="movie-thumb c-thumb">
-                                        <a href="event-details.html">
+                                        <a href="{{ route('event_details') }}">
                                             <img src="assets/images/event/event06.jpg" alt="event">
                                         </a>
                                         <div class="event-date">
@@ -411,11 +421,13 @@
                                     </div>
                                     <div class="movie-content bg-one">
                                         <h5 class="title m-0">
-                                            <a href="event-details.html">Gartner IT
+                                            <a href="{{ route('event_details') }}">Gartner IT
                                                 Symposium/Xpo</a>
                                         </h5>
                                         <div class="movie-rating-percent">
                                             <span>327 Montague Street</span>
+                                            <a href="{{ route('event_checkout') }}"
+                                                class="custom-button back-button mt-2">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
@@ -423,7 +435,7 @@
                             <div class="col-sm-6 col-lg-4">
                                 <div class="event-grid">
                                     <div class="movie-thumb c-thumb">
-                                        <a href="event-details.html">
+                                        <a href="{{ route('event_details') }}">
                                             <img src="assets/images/event/event07.jpg" alt="event">
                                         </a>
                                         <div class="event-date">
@@ -433,11 +445,13 @@
                                     </div>
                                     <div class="movie-content bg-one">
                                         <h5 class="title m-0">
-                                            <a href="event-details.html">App Design and
+                                            <a href="{{ route('event_details') }}">App Design and
                                                 Development</a>
                                         </h5>
                                         <div class="movie-rating-percent">
                                             <span>327 Montague Street</span>
+                                            <a href="{{ route('event_checkout') }}"
+                                                class="custom-button back-button mt-2">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
@@ -445,7 +459,7 @@
                             <div class="col-sm-6 col-lg-4">
                                 <div class="event-grid">
                                     <div class="movie-thumb c-thumb">
-                                        <a href="event-details.html">
+                                        <a href="{{ route('event_details') }}">
                                             <img src="assets/images/event/event08.jpg" alt="event">
                                         </a>
                                         <div class="event-date">
@@ -455,11 +469,13 @@
                                     </div>
                                     <div class="movie-content bg-one">
                                         <h5 class="title m-0">
-                                            <a href="event-details.html">Cyber Security
+                                            <a href="{{ route('event_details') }}">Cyber Security
                                                 Chicago </a>
                                         </h5>
                                         <div class="movie-rating-percent">
                                             <span>327 Montague Street</span>
+                                            <a href="{{ route('event_checkout') }}"
+                                                class="custom-button back-button mt-2">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
@@ -467,7 +483,7 @@
                             <div class="col-sm-6 col-lg-4">
                                 <div class="event-grid">
                                     <div class="movie-thumb c-thumb">
-                                        <a href="event-details.html">
+                                        <a href="{{ route('event_details') }}">
                                             <img src="assets/images/event/event09.jpg" alt="event">
                                         </a>
                                         <div class="event-date">
@@ -477,81 +493,18 @@
                                     </div>
                                     <div class="movie-content bg-one">
                                         <h5 class="title m-0">
-                                            <a href="event-details.html">B2B Marketing
+                                            <a href="{{ route('event_details') }}">B2B Marketing
                                                 Exchange </a>
                                         </h5>
                                         <div class="movie-rating-percent">
                                             <span>327 Montague Street</span>
+                                            <a href="{{ route('event_checkout') }}"
+                                                class="custom-button back-button mt-2">Book Ticket</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="event-grid">
-                                    <div class="movie-thumb c-thumb">
-                                        <a href="event-details.html">
-                                            <img src="assets/images/event/event10.jpg" alt="event">
-                                        </a>
-                                        <div class="event-date">
-                                            <h6 class="date-title">28</h6>
-                                            <span>Dec</span>
-                                        </div>
-                                    </div>
-                                    <div class="movie-content bg-one">
-                                        <h5 class="title m-0">
-                                            <a href="event-details.html">Social Media
-                                                Marketing World</a>
-                                        </h5>
-                                        <div class="movie-rating-percent">
-                                            <span>327 Montague Street</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="event-grid">
-                                    <div class="movie-thumb c-thumb">
-                                        <a href="event-details.html">
-                                            <img src="assets/images/event/event11.jpg" alt="event">
-                                        </a>
-                                        <div class="event-date">
-                                            <h6 class="date-title">28</h6>
-                                            <span>Dec</span>
-                                        </div>
-                                    </div>
-                                    <div class="movie-content bg-one">
-                                        <h5 class="title m-0">
-                                            <a href="event-details.html">Brand Marketing
-                                                Summit</a>
-                                        </h5>
-                                        <div class="movie-rating-percent">
-                                            <span>327 Montague Street</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-lg-4">
-                                <div class="event-grid">
-                                    <div class="movie-thumb c-thumb">
-                                        <a href="event-details.html">
-                                            <img src="assets/images/event/event12.jpg" alt="event">
-                                        </a>
-                                        <div class="event-date">
-                                            <h6 class="date-title">28</h6>
-                                            <span>Dec</span>
-                                        </div>
-                                    </div>
-                                    <div class="movie-content bg-one">
-                                        <h5 class="title m-0">
-                                            <a href="event-details.html">Marketing Nation
-                                                Summit</a>
-                                        </h5>
-                                        <div class="movie-rating-percent">
-                                            <span>327 Montague Street</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                         <div class="pagination-area text-center">
                             <a href="#0"><i class="fas fa-angle-double-left"></i><span>Prev</span></a>

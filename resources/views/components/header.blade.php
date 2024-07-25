@@ -35,26 +35,28 @@
                 <li>
                     <a href="{{ route('contact') }}">Contact us</a>
                 </li>
-                <li class="header-button pr-0">
-                    <a href="{{ route('login') }}">join us</a>
-                </li>
+
                 <li>
                     @if (Auth::check())
                         {{ Auth::user()->name }}
-                    @endif
-                    <ul class="submenu">
-                        <li>
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                onclick="event.preventDefault();
-                                         document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </li>
-                    </ul>
+                        <ul class="submenu">
+                            <li>
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                                 document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
+                    @else
+                <li class="header-button pr-0">
+                    <a href="{{ route('login') }}">join us</a>
                 </li>
+                @endif
+
             </ul>
             <div class="header-bar d-lg-none">
                 <span></span>
