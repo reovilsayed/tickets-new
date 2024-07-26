@@ -1,0 +1,42 @@
+.body {
+    font-family: 'Inter' !important;
+    font-style: 'normal' !important;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+
+
+}
+
+.user-profile img {
+    width: 119px;
+    height: 91px;
+}
+
+.visa-card {
+    display: flex;
+    align-items: center;
+}
+
+.visa-card img {
+    width: 39px;
+    height: 26px;
+}
+
+.hr {
+    /* width: 1202.01px; */
+    height: 0px;
+    border: 0.8px solid rgba(0, 0, 0, 0.29);
+}
+
+.footer-icon {
+    display: flex;
+    flex-direction: row;
+
+    align-items: flex-start;
+    padding: 5px;
+    gap: 25px;
+    font-size: 20px;
+}

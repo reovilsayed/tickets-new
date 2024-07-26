@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 class VoyagerDatabaseSeeder extends Seeder
 {
     /**
-     * Run the database seeders.
+     * Run the database seeds.
      *
      * @return void
      */

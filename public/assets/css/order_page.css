@@ -1,0 +1,17 @@
+.title-margin{
+    margin: 88px 0px 64px 0px;
+}
+
+.order-heading{
+    color: #fff;
+    background-color: #373737;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.border-custom{
+    border: 1px solid rgba(179, 179, 179, 0.77);
+border-radius: 5px;
+}
+.order-heading-previous{
+    margin-top: 83px;
+}

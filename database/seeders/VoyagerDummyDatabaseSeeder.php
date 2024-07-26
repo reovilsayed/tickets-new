@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 class VoyagerDummyDatabaseSeeder extends Seeder
 {
     /**
-     * Run the database seeders.
+     * Run the database seeds.
      *
      * @return void
      */
@@ -20,6 +20,7 @@ class VoyagerDummyDatabaseSeeder extends Seeder
             PagesTableSeeder::class,
             TranslationsTableSeeder::class,
             PermissionRoleTableSeeder::class,
+           
         ]);
     }
 }

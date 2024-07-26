@@ -1,86 +1,91 @@
 @extends('layouts.app')
+@section('css')
+    <style>
+        .login-wrapper {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
+        .navbar .navbar-nav .nav-link {
+            color: black;
+        }
+    </style>
+@endsection
 @section('content')
-    <section class="account-section bg_img" data-background="assets/images/account/account-bg.jpg">
-        <div class="container">
-            <div class="padding-top padding-bottom">
-                <div class="account-area">
-                    <div class="section-header-3">
-                        <span class="cate">welcome</span>
-                        <h2 class="title">to Tickets </h2>
-                    </div>
-                    <form class="account-form" method="POST" action="{{ route('register') }}">
+    <div class="contaner login-wrapper">
+        <div class="col-md-5 mb-20 offset-md-1 p-5"
+            style="background-color:#ffff; box-shadow: rgba(15, 15, 15, 0.24) 0px 3px 8px;">
+            <h3>{{ __('Register') }}<h3>
+
+                    <form method="post" class="" action="{{ route('register') }}">
                         @csrf
-                        <div class="form-group">
-                            <label for="name">Name<span>*</span></label>
-                            <input id="name" type="text" class="@error('name') is-invalid @enderror" name="name"
-                                value="{{ old('name') }}" required autocomplete="name" autofocus>
 
-                            @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="email1">Email<span>*</span></label>
-                            <input id="email" type="email" class="@error('email') is-invalid @enderror" name="email"
-                                value="{{ old('email') }}" required autocomplete="email">
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <input id="name" type="text" placeholder="{{ __('First Name') }}"
+                                    class=" @error('name') is-invalid @enderror" name="name" value=""
+                                    required autocomplete="name" autofocus>
+                                @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <input id="l_name" type="text" placeholder="{{ __('Last Name') }}"
+                                    class=" @error('l_name') is-invalid @enderror" name="l_name" value=""
+                                    required autocomplete="l_name" autofocus>
+                                @error('l_name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <input id="email" type="email" placeholder="{{ __('Email Address') }}"
+                                    class=" @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
+                                    required autocomplete="email" autofocus>
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
 
-                            @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="pass1">Password<span>*</span></label>
-                            <input id="password" type="password" class=" @error('password') is-invalid @enderror"
-                                name="password" required autocomplete="new-password">
+                            <div class="col-md-6 form-group">
+                                <input id="password" type="password" placeholder="{{ __('Password') }}"
+                                    class="@error('password') is-invalid @enderror" name="password" required
+                                    autocomplete="current-password">
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
 
-                            @error('password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="pass2">Confirm Password<span>*</span></label>
-                            <input id="password-confirm" type="password"name="password_confirmation" required
-                                autocomplete="new-password">
-                        </div>
-                        <div class="form-group checkgroup">
-                            <input type="checkbox" id="bal" required checked>
-                            <label for="bal">I agree to the <a href="#0">Terms, Privacy Policy</a> and <a
-                                    href="#0">Fees</a></label>
-                        </div>
-                        <div class="form-group text-center">
-                            <input type="submit" value="Sign Up">
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <input id="password-confirm" type="password" placeholder="{{ __('Confirm Password') }}"
+                                    class="" name="password_confirmation" required autocomplete="new-password">
+                            </div>
+                            <input type="hidden" name="role_id" value="2" id="">
+                            <div class="col-md-6 mt-3">
+                                <button type="submit" class="butn-dark2 me-3"><span>Register</span></button>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <span style="font-size: 18px">Already have an account ? <a class="text-success"
+                                        href="{{ route('login') }}"> login</a></span>
+                            </div>
                         </div>
                     </form>
-                    <div class="option">
-                        Already have an account? <a href="sign-in.html">Login</a>
-                    </div>
-                    <div class="or"><span>Or</span></div>
-                    <ul class="social-icons">
-                        <li>
-                            <a href="#0">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#0" class="active">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#0">
-                                <i class="fab fa-google"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
         </div>
-    </section>
+    </div>
+@endsection
+
+@section('js')
+    <script src="{{ asset('assets/frontend-assets/js/vendor/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('assets/frontend-assets/js/plugins/jquery.sticky-sidebar.js') }}"></script>
+
+    <script src="{{ asset('assets/frontend-assets/js/main.js') }}"></script>
 @endsection

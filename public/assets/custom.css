@@ -1,0 +1,56 @@
+* {
+    font-family: "Open Sans", "Regular" !important;
+}
+
+body {
+    background-color: #001232 !important;
+}
+
+.nav-scroll {
+    background-color: #0a1e5e !important;
+    color: #fff !important;
+}
+
+.navbar-collapse {
+    color: #fff !important;
+}
+
+.bg-cream {
+    background-color: #001232 !important;
+}
+
+.back-button {
+    font-size: 12px;
+    font-weight: 400;
+    padding: 0px 4px;
+}
+
+.custom-button {
+    background-image: -webkit-linear-gradient(169deg, #5560ff 17%, #aa52a1 63%, #ff4343 100%);
+    padding: 7px 16px;
+    font-weight: 600;
+    color: #ffffff !important;
+    text-transform: uppercase;
+    border-radius: 25px;
+    display: inline-block;
+}
+
+.tick {
+    color: #fff !important;
+}
+
+.text-cus-secondary,
+.nav-link {
+    color: #ff4343 !important;
+}
+
+.dropdown-menu {
+    background-color: #001232 !important;
+}
+
+.dropdown-item:hover {
+    color: #ffffff !important;
+}
+.footer-top{
+    background-color: #0a1e5e !important;
+}

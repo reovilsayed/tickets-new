@@ -1,0 +1,175 @@
+.top-bn {
+    padding: 20px 0;
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.button-bn {
+    color: #ffffff;
+    width: 110px;
+    height: 40px;
+    background: #434343;
+    border: 1px solid #373737;
+    border-radius: 12px;
+}
+
+.button-bn:hover {
+    color: #fff;
+    background-color: #1b1b1b;
+}
+
+.banner {
+    width: 100%;
+    height: 343px;
+    object-fit: cover;
+}
+
+.search {
+    height: 56px;
+    width: 80%;
+    position: relative;
+    display: flex;
+}
+
+.searchTerm {
+    text-align: center;
+    width: 225px;
+    border: 3px solid #373737;
+    border-right: none;
+    padding: 5px;
+    height: 41px;
+    border-radius: 25px 0 0 25px;
+    outline: none;
+    color: #9dbfaf;
+}
+
+.searchTerm:focus {
+    color: #373737;
+}
+
+.searchButton {
+    width: 100px;
+    height: 41px;
+    border: 1px solid #373737;
+    background: #373737;
+    text-align: center;
+    color: #fff;
+    border-radius: 0 25px 25px 0;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.searchButton i {
+    object-fit: contain;
+}
+
+.mid-bn {
+    background-color: #d9d9d9 !important;
+}
+
+.mid-btn {
+    background: #373737;
+    border-radius: 3px;
+    width: 144px;
+    height: 30px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff !important;
+}
+
+.seller-icon {
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.seller-footer {
+    justify-content: center;
+    align-items: center;
+}
+
+.ec-gl-btn p {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 143%;
+}
+
+.ec-sort-select {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 143%;
+}
+
+.ec-pro-image .image img {
+    width: 219px;
+    height: 168px;
+}
+
+.ec-product-inner .ec-pro-content .ec-price span.old-price {
+    font-size: 14px !important;
+    margin-right: 3px !important;
+    text-decoration: line-through;
+    color: #777777;
+}
+
+.ec-product-inner .ec-pro-content .ec-price span.new-price {
+    color: #555;
+    font-weight: 700;
+    font-size: 14px !important;
+}
+
+.button-size .btn {
+    font-size: 12px !important;
+
+    width: 70px !important;
+    height: 29px !important;
+    line-height: 30px !important;
+    padding-left: 10px !important;
+}
+
+.ec-product-inner {
+    border: none;
+}
+
+.hr-border {
+    margin-top: 48px;
+    border-bottom: 1px solid #b5b5b5;
+}
+
+.reco-ratting .rating-container .filled-stars {
+    left: 7px;
+}
+
+.shop_policies h5 {
+    font-size: 16px;
+}
+.rating-xs {
+    font-size: 20px !important;
+}
+.rating-sm {
+    font-size: 20px;
+}
+.ec-product-inner .ec-pro-image a.quickview {
+    bottom: 25px !important;
+    right: 10px !important;
+}
+.height-shops {
+    height: 85px !important;
+}
+.ec-product-inner {
+    padding: 0 !important;
+    border: none !important;
+}
+.ec-pro-list-desc {
+    margin-bottom: 0;
+}

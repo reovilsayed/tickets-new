@@ -1,455 +1,322 @@
 @extends('layouts.app')
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/star-rating.css') }}" media="all" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <style>
+        .star {
+            font-size: 20px !important;
+        }
+
+        .testimonials .item .info i {
+            color: #f3454f;
+            font-size: 20px;
+        }
+    </style>
+@endsection
 @section('content')
-    <!-- ==========Banner-Section========== -->
-    <section class="main-page-header speaker-banner bg_img" data-background="assets/images/banner/banner07.jpg">
-        <div class="container">
-            <div class="speaker-banner-content">
-                <h2 class="title">about us</h2>
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="{{ route('index') }}">
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        about us
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
-    <!-- ==========Banner-Section========== -->
-
-    <!-- ==========Speaker-Single========== -->
-    <section class="about-section padding-top padding-bottom">
-        <div class="container">
-            <div class="row justify-content-between">
-                <div class="col-lg-6">
-                    <div class="event-about-content">
-                        <div class="section-header-3 left-style m-0">
-                            <span class="cate">we are </span>
-                            <h2 class="title">Get to know us</h2>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ut labore et
-                                dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.
-                            </p>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ut labore et
-                                dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.Lorem ipsum dolor sit amet,
-                                consectetur adipiscing elit
-                            </p>
-                            <a href="{{ route('event_checkout') }}" class="custom-button">book tickets</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5 d-none d-lg-block">
-                    <div class="about-thumb">
-                        <img src="assets/images/about/about01.png" alt="about">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ==========Speaker-Single========== -->
-
-    <!-- ==========Philosophy-Section========== -->
-    <div class="philosophy-section padding-top padding-bottom bg-one bg_img bg_quater_img"
-        data-background="assets/images/about/about-bg.jpg">
+    <!-- Header Banner -->
+    <div class="banner-header section-padding valign bg-img bg-fixed" data-overlay-dark="4" data-background="{{asset('assets/frontend-assets/img/slider/1.jpg')}}">
         <div class="container">
             <div class="row">
-                <div class="col-lg-9 offset-lg-3 bg-two">
-                    <div class="philosophy-content">
-                        <div class="section-header-3 left-style">
-                            <span class="cate">Take look at</span>
-                            <h2 class="title">Our philosophy</h2>
-                            <p class="ml-0">
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmtempor incididunt
-                                labore et dolore magna aliqu enim ad minim veniam quis nostrud exercitation ullamco laboris
-                                nisi ut aliquip
-                            </p>
-                        </div>
-                        <ul class="phisophy-list">
-                            <li>
-                                <div class="thumb">
-                                    <img src="assets/images/philosophy/icon1.png" alt="philosophy">
-                                </div>
-                                <h5 class="title">Honesty & Fairness </h5>
-                            </li>
-                            <li>
-                                <div class="thumb">
-                                    <img src="assets/images/philosophy/icon2.png" alt="philosophy">
-                                </div>
-                                <h5 class="title">Clarity & Transparency</h5>
-                            </li>
-                            <li>
-                                <div class="thumb">
-                                    <img src="assets/images/philosophy/icon3.png" alt="philosophy">
-                                </div>
-                                <h5 class="title">Focus on Customers</h5>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="col-md-12 caption mt-90">
+                    <h5>{{__('words.about_hero_subtittle')}}</h5>
+                    <h1>{{__('words.about_hero_tittle')}}</h1>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ==========Philosophy-Section========== -->
-
-    <!-- ==========About-Counter-Section========== -->
-    <section class="about-counter-section padding-bottom padding-top">
+    <!-- About -->
+    <section class="about section-padding">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4">
-                    <div class="section-header-3 left-style mb-lg-0">
-                        <span class="cate">quick facts</span>
-                        <h2 class="title">fun facts</h2>
-                        <p>Objectively seize scalable metrics whereas proactive services seamlessly empower fully researched
-                            growth strategies</p>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="about-counter">
-                        <div class="counter-item">
-                            <div class="counter-thumb">
-                                <img src="assets/images/about/about-counter01.png" alt="about">
-                            </div>
-                            <div class="counter-content">
-                                <h3 class="title odometer" data-odometer-final="30"></h3>
-                                <h3 class="title">M+</h3>
-                            </div>
-                            <span class="d-block info">Customers</span>
-                        </div>
-                        <div class="counter-item">
-                            <div class="counter-thumb">
-                                <img src="assets/images/about/about-counter02.png" alt="about">
-                            </div>
-                            <div class="counter-content">
-                                <h3 class="title odometer" data-odometer-final="11"></h3>
-                            </div>
-                            <span class="d-block info">Contries</span>
-                        </div>
-                        <div class="counter-item">
-                            <div class="counter-thumb">
-                                <img src="assets/images/about/about-counter03.png" alt="about">
-                            </div>
-                            <div class="counter-content">
-                                <h3 class="title odometer" data-odometer-final="650"></h3>
-                                <h3 class="title">+</h3>
-                            </div>
-                            <span class="d-block info">Towns & Cities</span>
-                        </div>
-                        <div class="counter-item">
-                            <div class="counter-thumb">
-                                <img src="assets/images/about/about-counter04.png" alt="about">
-                            </div>
-                            <div class="counter-content">
-                                <h3 class="title odometer" data-odometer-final="5000"></h3>
-                                <h3 class="title">+</h3>
-                            </div>
-                            <span class="d-block info">Screens</span>
+                <div class="col-md-6 mb-30 animate-box" data-animate-effect="fadeInUp"> 
+                    <span>
+                        <i class="star-rating"></i>
+                        <i class="star-rating"></i>
+                        <i class="star-rating"></i>
+                        <i class="star-rating"></i>
+                        <i class="star-rating"></i>
+                    </span>
+                    <div class="section-subtitle">{{__('words.about_sec_subtittle')}}</div>
+                    <div class="section-title">{{__('words.about_sec_tittle')}}</div>
+                    <p>{!!__('words.about_sec_tittle')!!}</p>
+                    
+                    <!-- reservation -->
+                    <div class="reservations">
+                        <div class="icon"><span class="flaticon-call"></span></div>
+                        <div class="text">
+                            <p>{{__('words.contact_reservation')}}</p> <a href="tel:855-100-4444">855 100 4444</a>
                         </div>
                     </div>
                 </div>
+                <div class="col col-md-3 animate-box" data-animate-effect="fadeInUp"> <img src="{{asset('assets/frontend-assets/img/rooms/8.jpg')}}" alt="" class="mt-90 mb-30"> </div>
+                <div class="col col-md-3 animate-box" data-animate-effect="fadeInUp"> <img src="{{asset('assets/frontend-assets/img/rooms/2.jpg')}}" alt=""> </div>
             </div>
         </div>
     </section>
-    <!-- ==========About-Counter-Section========== -->
-
-    <!-- ==========Client-Section========== -->
-    <section class="client-section padding-bottom padding-top bg_img" data-background="assets/images/client/client-bg.jpg">
-        <div class="container">
-            <div class="section-header-3">
-                <span class="cate">testimonials</span>
-                <h2 class="title">the fans have spoken</h2>
-            </div>
-            <div class="client-slider owl-carousel owl-theme">
-                <div class="client-item">
-                    <div class="client-thumb">
-                        <img src="assets/images/client/client01.jpg" alt="client">
-                    </div>
-                    <div class="client-content">
-                        <h5 class="title">
-                            <a href="#0">Rafuz</a>
-                        </h5>
-                        <span class="info"><i class="fas fa-check"></i> Verified</span>
-                        <blockquote class="client-quote">
-                            "Great prices and Cheaper than other sites! Easy to use."
-                        </blockquote>
-                    </div>
-                </div>
-                <div class="client-item">
-                    <div class="client-thumb">
-                        <img src="assets/images/client/client03.jpg" alt="client">
-                    </div>
-                    <div class="client-content">
-                        <h5 class="title">
-                            <a href="#0">Rudra</a>
-                        </h5>
-                        <span class="info"><i class="fas fa-check"></i> Verified</span>
-                        <blockquote class="client-quote">
-                            "Id iure est sint at illum ipsum non beatae cumque"
-                        </blockquote>
-                    </div>
-                </div>
-                <div class="client-item">
-                    <div class="client-thumb">
-                        <img src="assets/images/client/client02.jpg" alt="client">
-                    </div>
-                    <div class="client-content">
-                        <h5 class="title">
-                            <a href="#0">Raihan</a>
-                        </h5>
-                        <span class="info"><i class="fas fa-check"></i> Verified</span>
-                        <blockquote class="client-quote">
-                            "amet consectetur adipisicing elit. Animi, ut consequuntur"
-                        </blockquote>
-                    </div>
-                </div>
-                <div class="client-item">
-                    <div class="client-thumb">
-                        <img src="assets/images/client/client04.jpg" alt="client">
-                    </div>
-                    <div class="client-content">
-                        <h5 class="title">
-                            <a href="#0">Shahidul</a>
-                        </h5>
-                        <span class="info"><i class="fas fa-check"></i> Verified</span>
-                        <blockquote class="client-quote">
-                            "Quia voluptatum animi libero recusandae error."
-                        </blockquote>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ==========Client-Section========== -->
-
-    <!-- ==========Speaker-Section========== -->
-    <section class="speaker-section padding-bottom padding-top">
-        <div class="container">
-            <div class="section-header-3">
-                <span class="cate">meet our most valued</span>
-                <h2 class="title">expert team members</h2>
-                <p>World is committed to making participation in the event a harassment free experience for
-                    everyone, regardless of level of experience, gender, gender identity and expression</p>
-            </div>
-            <div class="speaker--slider">
-                <div class="speaker-slider owl-carousel owl-theme">
-                    <div class="speaker-item">
-                        <div class="speaker-thumb">
-                            <a href="event-speaker.html">
-                                <img src="assets/images/speaker/speaker01.jpg" alt="speaker">
-                            </a>
-                        </div>
-                        <div class="speaker-content">
-                            <h5 class="title">
-                                <a href="event-speaker.html">
-                                    Gerard Bryan
-                                </a>
-                            </h5>
-                            <span>CO-FOUNDER, CEO</span>
-                        </div>
-                    </div>
-                    <div class="speaker-item">
-                        <div class="speaker-thumb">
-                            <a href="event-speaker.html">
-                                <img src="assets/images/speaker/speaker02.jpg" alt="speaker">
-                            </a>
-                        </div>
-                        <div class="speaker-content">
-                            <h5 class="title">
-                                <a href="event-speaker.html">
-                                    Raihan Rafuj
-                                </a>
-                            </h5>
-                            <span>CO-FOUNDER, CEO</span>
-                        </div>
-                    </div>
-                    <div class="speaker-item">
-                        <div class="speaker-thumb">
-                            <a href="event-speaker.html">
-                                <img src="assets/images/speaker/speaker03.jpg" alt="speaker">
-                            </a>
-                        </div>
-                        <div class="speaker-content">
-                            <h5 class="title">
-                                <a href="event-speaker.html">
-                                    Bela Bose
-                                </a>
-                            </h5>
-                            <span>CO-FOUNDER, CEO</span>
-                        </div>
-                    </div>
-                    <div class="speaker-item">
-                        <div class="speaker-thumb">
-                            <a href="event-speaker.html">
-                                <img src="assets/images/speaker/speaker04.jpg" alt="speaker">
-                            </a>
-                        </div>
-                        <div class="speaker-content">
-                            <h5 class="title">
-                                <a href="event-speaker.html">
-                                    Grass Hopper
-                                </a>
-                            </h5>
-                            <span>CO-FOUNDER, CEO</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="speaker-prev">
-                    <i class="flaticon-double-right-arrows-angles"></i>
-                </div>
-                <div class="speaker-next">
-                    <i class="flaticon-double-right-arrows-angles"></i>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ==========Speaker-Section========== -->
-
-    <!-- ==========Gallery-Section========== -->
-    <section class="gallery-section padding-top padding-bottom bg-one">
-        <div class="container">
-            <div class="section-header-3">
-                <span class="cate">Take a look at our</span>
-                <h2 class="title">A ticket for every fan.</h2>
-                <p>World is committed to making participation in the event a harassment free experience for
-                    everyone, regardless of level of experience, gender, gender identity and expression</p>
-            </div>
-            <div class="row justify-content-center gallery-wrapper mb-30-none">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="gallery-item two">
-                        <div class="gallery-thumb">
-                            <a href="assets/images/gallery/gallery05.jpg" class="img-pop">
-                                <i class="flaticon-loupe"></i>
-                            </a>
-                            <img src="assets/images/gallery/gallery05.jpg" alt="gallery">
-                        </div>
-                    </div>
-                    <div class="gallery-item two">
-                        <div class="gallery-thumb">
-                            <a href="assets/images/gallery/gallery06.jpg" class="img-pop">
-                                <i class="flaticon-loupe"></i>
-                            </a>
-                            <img src="assets/images/gallery/gallery06.jpg" alt="gallery">
-                        </div>
-                    </div>
-                    <div class="gallery-item two">
-                        <div class="gallery-thumb">
-                            <a href="assets/images/gallery/gallery07.jpg" class="img-pop">
-                                <i class="flaticon-loupe"></i>
-                            </a>
-                            <img src="assets/images/gallery/gallery07.jpg" alt="gallery">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-lg-3 order-lg-1">
-                    <div class="gallery-item two">
-                        <div class="gallery-thumb">
-                            <a href="assets/images/gallery/gallery11.jpg" class="img-pop">
-                                <i class="flaticon-loupe"></i>
-                            </a>
-                            <img src="assets/images/gallery/gallery11.jpg" alt="gallery">
-                        </div>
-                    </div>
-                    <div class="gallery-item two">
-                        <div class="gallery-thumb">
-                            <a href="assets/images/gallery/gallery12.jpg" class="img-pop">
-                                <i class="flaticon-loupe"></i>
-                            </a>
-                            <img src="assets/images/gallery/gallery12.jpg" alt="gallery">
-                        </div>
-                    </div>
-                    <div class="gallery-item two">
-                        <div class="gallery-thumb">
-                            <a href="assets/images/gallery/gallery13.jpg" class="img-pop">
-                                <i class="flaticon-loupe"></i>
-                            </a>
-                            <img src="assets/images/gallery/gallery13.jpg" alt="gallery">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="gallery-item two">
-                        <div class="gallery-thumb">
-                            <a href="assets/images/gallery/gallery08.jpg" class="img-pop">
-                                <i class="flaticon-loupe"></i>
-                            </a>
-                            <img src="assets/images/gallery/gallery08.jpg" alt="gallery">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="gallery-item two">
-                                <div class="gallery-thumb">
-                                    <a href="assets/images/gallery/gallery09.jpg" class="img-pop">
-                                        <i class="flaticon-loupe"></i>
-                                    </a>
-                                    <img src="assets/images/gallery/gallery09.jpg" alt="gallery">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="gallery-item two">
-                                <div class="gallery-thumb">
-                                    <a href="assets/images/gallery/gallery10.jpg" class="img-pop">
-                                        <i class="flaticon-loupe"></i>
-                                    </a>
-                                    <img src="assets/images/gallery/gallery10.jpg" alt="gallery">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ==========Gallery-Section========== -->
-
-    <!-- ==========Tour-Section========== -->
-    <section class="tour-section padding-top padding-bottom">
+    <!-- Pricing -->
+    {{-- <section class="pricing section-padding bg-blck">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6">
-                    <div class="tour-content">
-                        <div class="section-header-3 left-style">
-                            <span class="cate">take a look at our tour</span>
-                            <h2 class="title">Guarantees you can trust.</h2>
-                            <p class="ml-0">
-                                Because more peace of mind means more love for the event.
-                            </p>
+                <div class="col-md-4">
+                    <div class="section-subtitle"><span>Best Prices</span></div>
+                    <div class="section-title"><span>Extra Services</span></div>
+                    <p class="color-2">The best prices for your relaxing vacation. The utanislen quam nestibulum ac quame odion elementum sceisue the aucan.</p>
+                    <p class="color-2">Orci varius natoque penatibus et magnis disney parturient monte nascete ridiculus mus nellen etesque habitant morbine.</p>
+                    <div class="reservations mb-30">
+                        <div class="icon"><span class="flaticon-call"></span></div>
+                        <div class="text">
+                            <p class="color-2">For information</p> <a href="tel:855-100-4444">855 100 4444</a>
                         </div>
-                        <ul class="list-tour">
-                            <li>
-                                <div class="thumb">
-                                    <img src="assets/images/tour/icon01.png" alt="tour">
-                                </div>
-                                <div class="content">
-                                    <h5 class="title">Get In Guarantee</h5>
-                                    <p>Authentic tickets, on-time delivery, and access to
-                                        your event. Or your money back. Period.</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="thumb">
-                                    <img src="assets/images/tour/icon02.png" alt="tour">
-                                </div>
-                                <div class="content">
-                                    <h5 class="title">price match guarantee</h5>
-                                    <p>The best prices are here. If you spot a better deal
-                                        elsewhere, we’ll cover the difference.</p>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                 </div>
-                <div class="col-lg-6 d-none d-lg-block">
-                    <div class="tour-thumb">
-                        <img src="assets/images/tour/tour.png" alt="tour">
+                <div class="col-md-8">
+                    <div class="owl-carousel owl-theme">
+                        <div class="pricing-card">
+                            <img src="{{asset('assets/frontend-assets/img/pricing/1.jpg')}}" alt="">
+                            <div class="desc">
+                                <div class="name">Room cleaning</div>
+                                <div class="amount">$50<span>/ month</span></div>
+                                <ul class="list-unstyled list">
+                                    <li><i class="ti-check"></i> Hotel ut nisan the duru</li>
+                                    <li><i class="ti-check"></i> Orci miss natoque vasa ince</li>
+                                    <li><i class="ti-close unavailable"></i>Clean sorem ipsum morbin</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="pricing-card">
+                            <img src="{{asset('assets/frontend-assets/img/pricing/2.jpg')}}" alt="">
+                            <div class="desc">
+                                <div class="name">Drinks included</div>
+                                <div class="amount">$30<span>/ daily</span></div>
+                                <ul class="list-unstyled list">
+                                    <li><i class="ti-check"></i> Hotel ut nisan the duru</li>
+                                    <li><i class="ti-check"></i> Orci miss natoque vasa ince</li>
+                                    <li><i class="ti-close unavailable"></i>Clean sorem ipsum morbin</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="pricing-card">
+                            <img src="{{asset('assets/frontend-assets/img/pricing/3.jpg')}}" alt="">
+                            <div class="desc">
+                                <div class="name">Room Breakfast</div>
+                                <div class="amount">$30<span>/ daily</span></div>
+                                <ul class="list-unstyled list">
+                                    <li><i class="ti-check"></i> Hotel ut nisan the duru</li>
+                                    <li><i class="ti-check"></i> Orci miss natoque vasa ince</li>
+                                    <li><i class="ti-close unavailable"></i>Clean sorem ipsum morbin</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="pricing-card">
+                            <img src="{{asset('assets/frontend-assets/img/pricing/4.jpg')}}" alt="">
+                            <div class="desc">
+                                <div class="name">Safe & Secure</div>
+                                <div class="amount">$15<span>/ daily</span></div>
+                                <ul class="list-unstyled list">
+                                    <li><i class="ti-check"></i> Hotel ut nisan the duru</li>
+                                    <li><i class="ti-check"></i> Orci miss natoque vasa ince</li>
+                                    <li><i class="ti-close unavailable"></i>Clean sorem ipsum morbin</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> --}}
+    <!-- Facilties -->
+    <section class="facilties section-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-subtitle">{{__('words.facilities_sec_subtittle')}}</div>
+                    <div class="section-title">{{__('words.facilities_sec_tittle')}}</div>
+                </div>
+            </div>
+            <div class="row">
+                @foreach ($facilities as $facility)
+                    <div class="col-md-4">
+                        <div class="single-facility animate-box" data-animate-effect="fadeInUp">
+                            {{-- <span class="flaticon-world"></span> --}}
+                            <h5>{{ $facility->name }}</h5>
+                            <p>{{ $facility->description }}</p>
+                            <div class="facility-shape"> <span class="flaticon-world"></span> </div>
+                        </div>
+                    </div>
+                @endforeach
+
+            </div>
+        </div>
+    </section>
+    <!-- Team -->
+    <section class="team section-padding bg-cream">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="section-subtitle">{{__('words.team_sec_subtittle')}}</div>
+                    <div class="section-title">{{__('words.team_sec_tittle')}}</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 owl-carousel owl-theme">
+                    <div class="item">
+                        <div class="img"> <img src="{{asset('assets/frontend-assets/img/team/4.jpg')}}" alt=""> </div>
+                        <div class="info">
+                            <h6>Valentina Karla</h6>
+                            <p>General Manager</p>
+                            <div class="social valign">
+                                <div class="full-width"> 
+                                   <a href="#"><i class="ti-instagram"></i></a> 
+                                   <a href="#"><i class="ti-twitter"></i></a> 
+                                   <a href="#"><i class="ti-facebook"></i></a> 
+                                   <a href="#"><i class="ti-pinterest"></i></a>
+                                   <p>valentina@hotel.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="img"> 
+                        <img src="{{asset('assets/frontend-assets/img/team/1.jpg')}}" alt=""> </div>
+                        <div class="info">
+                            <h6>Micheal White</h6>
+                            <p>Guest Service Department</p>
+                            <div class="social valign">
+                                <div class="full-width"> 
+                                    <a href="#"><i class="ti-instagram"></i></a>
+                                    <a href="#"><i class="ti-twitter"></i></a> 
+                                    <a href="#"><i class="ti-facebook"></i></a> 
+                                    <a href="#"><i class="ti-pinterest"></i></a>
+                                    <p>micheal@hotel.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="img"> <img src="{{asset('assets/frontend-assets/img/team/2.jpg')}}" alt=""> </div>
+                        <div class="info">
+                            <h6>Olivia Martin</h6>
+                            <p>Reservations Manager</p>
+                            <div class="social valign">
+                                <div class="social valign">
+                                    <div class="full-width"> 
+                                       <a href="#"><i class="ti-instagram"></i></a> 
+                                       <a href="#"><i class="ti-twitter"></i></a> 
+                                       <a href="#"><i class="ti-facebook"></i></a> 
+                                       <a href="#"><i class="ti-pinterest"></i></a>
+                                       <p>olivia@hotel.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="img"> <img src="{{asset('assets/frontend-assets/img/team/5.jpg')}}" alt=""> </div>
+                        <div class="info">
+                            <h6>Mariana Dana</h6>
+                            <p>F&B Manager</p>
+                            <div class="social valign">
+                                <div class="full-width"> 
+                                   <a href="#"><i class="ti-instagram"></i></a> 
+                                   <a href="#"><i class="ti-twitter"></i></a> 
+                                   <a href="#"><i class="ti-facebook"></i></a> 
+                                   <a href="#"><i class="ti-pinterest"></i></a>
+                                   <p>mariana@hotel.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="img"> <img src="{{asset('assets/frontend-assets/img/team/3.jpg')}}" alt=""> </div>
+                        <div class="info">
+                            <h6>Enrico Brown</h6>
+                            <p>Head Chef</p>
+                            <div class="social valign">
+                                <div class="full-width"> 
+                                   <a href="#"><i class="ti-instagram"></i></a> 
+                                   <a href="#"><i class="ti-twitter"></i></a> 
+                                   <a href="#"><i class="ti-facebook"></i></a> 
+                                   <a href="#"><i class="ti-pinterest"></i></a>
+                                   <p>enrico@hotel.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="img"> <img src="{{asset('assets/frontend-assets/img/team/6.jpg')}}" alt=""> </div>
+                        <div class="info">
+                            <h6>Victoria Dan</h6>
+                            <p>Meetings and Events Manager</p>
+                            <div class="social valign">
+                                <div class="full-width"> 
+                                   <a href="#"><i class="ti-instagram"></i></a> 
+                                   <a href="#"><i class="ti-twitter"></i></a> 
+                                   <a href="#"><i class="ti-facebook"></i></a> 
+                                   <a href="#"><i class="ti-pinterest"></i></a>
+                                   <p>victoria@hotel.com</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- ==========Tour-Section========== -->
+    <!-- Testiominals -->
+
+    <section class="testimonials">
+        <div class="background bg-img bg-fixed section-padding pb-0"
+            data-background="{{ asset('assets/frontend-assets/img/slider/2.jpg') }}" data-overlay-dark="3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2">
+                        <div class="testimonials-box">
+                            <div class="head-box">
+                                <h6>{{__('words.testimonials_sec_subtittle')}}</h6>
+                                <h4>{{__('words.testimonials_sec_tittle')}}</h4>
+                                <div class="line"></div>
+                            </div>
+                            <div class="owl-carousel owl-theme">
+                                @foreach ($ratings as $rating)
+                                    <div class="item">
+                                        <span class="quote"><img src="img/quot.png" alt=""></span>
+                                        <p>{{ $rating->review }}</p>
+                                        <div class="info">
+                                            <div class="author-img"> <img
+                                                    src="{{ $rating->shop ? Voyager::image($rating->shop->logo) : asset('assets/frontend-assets/img/team/4.jpg') }}"
+                                                    alt=""> </div>
+                                            <div class="cont">
+                                                <input name="rating" type="number" value="{{ $rating->rating }}"
+                                                    class="rating published_rating" data-size="xs">
+                                                {{-- <span><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i></span> --}}
+                                                <h6 class="ms-2 mt-3">{{ $rating->shop ? $rating->shop->name : 'Halal deals' }}</h6>
+                                                <span class="ms-2">Guest review</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+@endsection
+@section('js')
+    <script src="{{ asset('assets/js/star-rating.js') }}" type="text/javascript"></script>
+    <script>
+        $("#product_rating").rating({
+            showCaption: true
+        });
+        $(".published_rating").rating({
+            showCaption: false,
+            readonly: true,
+        });
+    </script>
 @endsection

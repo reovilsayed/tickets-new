@@ -1,0 +1,129 @@
+.order-side {
+    background-color: #F5F5F5;
+    border: 1px solid #BCBCBC;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.order-title {
+    font-weight: 600 !important;
+    font-size: 28px !important;
+    line-height: 34px !important;
+}
+
+.shipment-text {
+    font-weight: 400;
+    font-size: 14px !important;
+    line-height: 17px;
+    padding: 20px;
+    background: #373737;
+    border-radius: 0px 0px 20px 20px;
+}
+
+.order-btn {
+    margin-top: 52px;
+}
+
+.shipping_add {
+    font-weight: 300 !important;
+    font-size: 30px !important;
+    line-height: 36px !important;
+    margin-top: 32px;
+}
+
+.shipping_add_old {
+    margin-top: 38px;
+    font-weight: 300 !important;
+    font-size: 20px !important;
+    line-height: 24px;
+    color: #000;
+}
+
+.address-label {
+    font-weight: 300 !important;
+    font-size: 13px !important;
+    line-height: 18px !important;
+
+    color: #000000 !important;
+    margin-top: 10px;
+}
+
+.personal-info {
+    margin-top: 33px;
+    padding: 19px;
+    background: #FFFFFF;
+    border: 1px solid #BCBCBC;
+    border-radius: 4px;
+}
+
+.select-form-border {
+    height: 50px !important;
+    border: 1px solid #B2BCCA !important;
+    border-radius: 4px;
+}
+
+.pay-img {
+    width: 39px;
+    height: 26px;
+}
+
+.pay-card-size {
+    /* width: 42px; */
+    height: 30px;
+    padding-right: 5px;
+    border: 1px solid #B2BCCA;
+    padding: 5px;
+    margin-right: 5px;
+}
+
+/* review-item */
+.review-head h3 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 41px;
+    margin-top: 21px;
+
+}
+
+.review-item {
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+}
+
+.cart-item-text h1 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    color: #323232;
+}
+
+.reivew-bill h1 {
+    color: rgba(0, 0, 0, 0.87);
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.cart-input-stock {
+    width: 60px;
+    height: 30px;
+
+    padding: 0px;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /* background: #F5F5F5; */
+    /* box-shadow: 0px 0px 1.04876px 0.52438px rgba(0, 0, 0, 0.25); */
+    border-radius: 4px;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { 
+    position: relative;
+    top: 10px;
+    right: 5px;
+    width: 20px;
+    height: 30px;
+    font-size: 10px;
+    /* pointer-events: none; */
+    /* background: #fff; */
+}
