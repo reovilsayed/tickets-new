@@ -15,6 +15,7 @@ class Product extends Model
     protected $casts = [
         'expired_at' => 'datetime',
         'event_start_date' => 'datetime',
+        'event_end_date' => 'datetime',
       ];
     public function shop()
     {
@@ -135,6 +136,8 @@ class Product extends Model
         return json_decode($value);
       }
     }
+
+    
   
 }
 

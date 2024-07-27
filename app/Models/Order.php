@@ -21,7 +21,7 @@ class Order extends Model
     }
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withTimestamps();
+        return $this->belongsToMany(Product::class)->using(OrderProduct::class)->withPivot(['ticket', 'price', 'check_in_at', 'check_out_at'])->withTimestamps();
     }
 
     public function parent()

@@ -97,7 +97,7 @@ class UserController extends Controller
     {
 
         $latest_orders = Order::where('user_id', auth()->user()->id)
-            ->whereNotNull('parent_id')
+
             ->when($request->filled('status'), function ($query) use ($request) {
                 $query->where('status', $request->status);
             })->latest()->get();
