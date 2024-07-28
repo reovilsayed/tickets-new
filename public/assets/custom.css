@@ -51,6 +51,21 @@ body {
 .dropdown-item:hover {
     color: #ffffff !important;
 }
-.footer-top{
+
+.footer-top {
     background-color: #0a1e5e !important;
+}
+
+.line-footer {
+    height: 2px;
+    width: 60px;
+    background-color: rgba(255, 255, 255, 0.647);
+}
+
+.line-footer:hover{
+    background-color: #f3454f !important;
+    width: 50%;
+    transition: 1.5s;
+    transition-duration: 0.8s;
+    transition-timing-function: ease-in-out;
 }

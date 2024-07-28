@@ -793,14 +793,13 @@ color: #ffffff;
     margin-bottom: 20px;
 }
 .section-subtitle {
-    font-size: 15px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 400;
+    font-size: 30px;
+    font-weight: 700;
     color: #ffffff;
     text-transform: uppercase;
     position: relative;
     letter-spacing: 6px;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 .section-subtitle span {
  color: #ffffff;
@@ -2394,7 +2393,6 @@ hr {
 }
 /* permalink */
 .rooms1 .item .con .permalink {
-    font-family: 'Barlow Condensed', sans-serif;
     font-size: 15px;
     letter-spacing: 3px;
     text-transform: uppercase;
@@ -2613,7 +2611,7 @@ hr.border-2 {
 }
 .reservations .icon span {
     font-size: 40px;
-    color: #8e6d45;
+    color: #ffffff;
 }
 .reservations .icon.color-1 span {
     font-size: 40px;
@@ -2629,7 +2627,7 @@ hr.border-2 {
 }
 .reservations .text a {
     font-size: 27px;
-    color: #8e6d45;
+    color: #ffffff;
     letter-spacing: -1px;
 }
 .reservations .text a.color-1 {
@@ -2639,7 +2637,7 @@ hr.border-2 {
 
 /* ======= Rooms 3 ======= */
 .rooms3 {
-    color: #666;
+    color: #ffffff;
 }
 .rooms3 .square-flip {
     -webkit-perspective: 1000;
@@ -5020,7 +5018,7 @@ button.mfp-arrow {
     margin-bottom: 30px;
 }
 .footer-title {
-  font-size: 24px;
+  font-size: 30px;
   color: #fff;
   margin-bottom: 20px;
 }
@@ -5036,7 +5034,7 @@ button.mfp-arrow {
   -webkit-box-align: center;
   -ms-flex-align: center;
       align-items: center;
-  margin-top: 20px;
+  margin-top: 9px;
 }
 .footer-about-social-list a {
   display: -webkit-box;
@@ -5114,7 +5112,7 @@ button.mfp-arrow {
 }
 .footer-contact-phone {
     font-family: 'Gilda Display', serif;
-  font-size: 24px;
+  font-size: 18px;
   color: #fff;
   font-weight: 400;
   display: block;
@@ -5125,8 +5123,7 @@ button.mfp-arrow {
   color: #fff;
 }
 .footer-contact-mail {
-  font-size: 15px;
-  line-height: 3em;
+  font-size: 18px;
   color: #fff;
   position: relative;
   display: inline-block;

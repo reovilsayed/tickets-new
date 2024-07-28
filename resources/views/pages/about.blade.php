@@ -15,18 +15,18 @@
 @endsection
 @section('content')
     <!-- Header Banner -->
-    <div class="banner-header section-padding valign bg-img bg-fixed" data-overlay-dark="4" data-background="{{asset('assets/frontend-assets/img/slider/1.jpg')}}">
+    <div class="banner-header section-padding valign bg-img bg-fixed" data-overlay-dark="4" data-background="">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 caption mt-90">
-                    <h5>{{__('words.about_hero_subtittle')}}</h5>
-                    <h1>{{__('words.about_hero_tittle')}}</h1>
+                    <h5>{{__('about_hero_subtittle')}}</h5>
+                    <h1>{{__('about_hero_tittle')}}</h1>
                 </div>
             </div>
         </div>
     </div>
     <!-- About -->
-    <section class="about section-padding">
+    {{-- <section class="about section-padding">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 mb-30 animate-box" data-animate-effect="fadeInUp"> 
@@ -53,7 +53,7 @@
                 <div class="col col-md-3 animate-box" data-animate-effect="fadeInUp"> <img src="{{asset('assets/frontend-assets/img/rooms/2.jpg')}}" alt=""> </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- Pricing -->
     {{-- <section class="pricing section-padding bg-blck">
         <div class="container">
@@ -126,7 +126,7 @@
         </div>
     </section> --}}
     <!-- Facilties -->
-    <section class="facilties section-padding">
+    {{-- <section class="facilties section-padding">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -139,7 +139,7 @@
                     <div class="col-md-4">
                         <div class="single-facility animate-box" data-animate-effect="fadeInUp">
                             {{-- <span class="flaticon-world"></span> --}}
-                            <h5>{{ $facility->name }}</h5>
+                            {{-- <h5>{{ $facility->name }}</h5>
                             <p>{{ $facility->description }}</p>
                             <div class="facility-shape"> <span class="flaticon-world"></span> </div>
                         </div>
@@ -148,14 +148,14 @@
 
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- Team -->
     <section class="team section-padding bg-cream">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="section-subtitle">{{__('words.team_sec_subtittle')}}</div>
-                    <div class="section-title">{{__('words.team_sec_tittle')}}</div>
+                    <div class="section-subtitle">{{__('team_sec_subtittle')}}</div>
+                    <div class="section-title">{{__('team_sec_tittle')}}</div>
                 </div>
             </div>
             <div class="row">
@@ -265,16 +265,16 @@
     </section>
     <!-- Testiominals -->
 
-    <section class="testimonials">
+    {{-- <section class="testimonials">
         <div class="background bg-img bg-fixed section-padding pb-0"
-            data-background="{{ asset('assets/frontend-assets/img/slider/2.jpg') }}" data-overlay-dark="3">
+            data-background="" data-overlay-dark="3">
             <div class="container">
                 <div class="row">
                     <div class="col-md-8 offset-md-2">
                         <div class="testimonials-box">
                             <div class="head-box">
-                                <h6>{{__('words.testimonials_sec_subtittle')}}</h6>
-                                <h4>{{__('words.testimonials_sec_tittle')}}</h4>
+                                <h6>{{__('testimonials_sec_subtittle')}}</h6>
+                                <h4>{{__('testimonials_sec_tittle')}}</h4>
                                 <div class="line"></div>
                             </div>
                             <div class="owl-carousel owl-theme">
@@ -289,7 +289,7 @@
                                             <div class="cont">
                                                 <input name="rating" type="number" value="{{ $rating->rating }}"
                                                     class="rating published_rating" data-size="xs">
-                                                {{-- <span><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i></span> --}}
+                                                <span><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i></span>
                                                 <h6 class="ms-2 mt-3">{{ $rating->shop ? $rating->shop->name : 'Halal deals' }}</h6>
                                                 <span class="ms-2">Guest review</span>
                                             </div>
@@ -305,7 +305,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     
 @endsection
 @section('js')

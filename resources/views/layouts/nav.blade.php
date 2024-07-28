@@ -61,7 +61,7 @@
                 @if (auth()->check())
                     <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button"
                             data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                            aria-expanded="false">{{ auth()->user()->name }}</a>
+                            aria-expanded="false">{{ auth()->user()->name }} <i class="fa-solid fa-caret-down"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('user.dashboard') }}"
                                     class="dropdown-item"><span>{{ __('User Dashboard') }}</span></a>

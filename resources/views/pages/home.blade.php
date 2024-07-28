@@ -72,8 +72,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="section-subtitle">{{ __('words.feature_sec_title') }}</div>
-                    <div class="section-title">{{ __('words.feature_sec_subtittle') }}</div>
+                    <div class="section-subtitle">{{ __('Get Events') }}</div>
+                    {{-- <div class="section-title">{{ __('words.feature_sec_subtittle') }}</div> --}}
                 </div>
             </div>
             <div class="row">

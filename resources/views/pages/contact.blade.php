@@ -1,45 +1,45 @@
 @extends('layouts.app')
 @section('content')
     <!-- Header Banner -->
-    <div class="banner-header section-padding valign bg-img bg-fixed" data-overlay-dark="3" data-background="{{asset('assets/frontend-assets/img/slider/5.jpg')}}">
+    {{-- <div class="banner-header section-padding valign bg-img bg-fixed" data-overlay-dark="3" data-background="{{asset('')}}">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 text-left caption mt-90">
-                    <h5>{{__('words.contact_hero_subtittle')}}</h5>
-                    <h1>{{__('words.contact_hero_tittle')}}</h1>
+                    <h5>{{__('Contact_Hero_Subtittle')}}</h5>
+                    <h1>{{__('Contact_Hero_Tittle')}}</h1>
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Contact -->
     <section class="contact section-padding">
         <div class="container">
-            <div class="row mb-90">
-                <div class="col-md-6 mb-60">
+            <div class="row mb-10">
+                <div class="col-md-6 mb-10">
                     <h3>{{setting('site.title')}}</h3>
                     <p>{{setting('site.about')}}</p>
                     <div class="reservations mb-30">
                         <div class="icon"><span class="flaticon-call"></span></div>
                         <div class="text">
-                            <p>{{__('words.contact_reservation')}}</p> <a href="tel:{{setting('site.phone')}}">{{setting('site.phone')}}</a>
+                            <p>{{__('contact_reservation')}}</p> <a href="tel:{{setting('site.phone')}}">{{setting('site.phone')}}</a>
                         </div>
                     </div>
                     <div class="reservations mb-30">
                         <div class="icon"><span class="flaticon-envelope"></span></div>
                         <div class="text">
-                            <p>{{__('words.contact_email_info')}}</p> <a href="mailto:{{setting('site.email')}}">{{setting('site.email')}}</a>
+                            <p>{{__('contact_email_info')}}</p> <a href="mailto:{{setting('site.email')}}">{{setting('site.email')}}</a>
                         </div>
                     </div>
                     <div class="reservations">
                         <div class="icon"><span class="flaticon-location-pin"></span></div>
                         <div class="text">
-                            <p>{{__('words.contact_address')}}</p>
+                            <p>{{__('contact_address')}}</p>
                             {!! setting('site.address') !!}
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5 mb-30 offset-md-1">
-                    <h3>{{__('words.contact_sec_tittle')}}</h3>
+                <div class="col-md-5 mb-10 offset-md-1">
+                    <h3>{{__('Contact Form')}}</h3>
                     <form method="post" class="" action="{{route('contact.store')}}">
                         @csrf
                         <!-- form message -->
@@ -51,7 +51,7 @@
                         <!-- form elements -->
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <input name="name" class="@error('name') is-invalid @enderror" type="text" placeholder="{{__('words.contact_name')}} *" required>
+                                <input name="name" class="@error('name') is-invalid @enderror" type="text" placeholder="{{__('contact_name')}} *" required>
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -59,7 +59,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 form-group">
-                                <input name="email" class="@error('email') is-invalid @enderror" type="email" placeholder="{{__('words.contact_email')}} *" required>
+                                <input name="email" class="@error('email') is-invalid @enderror" type="email" placeholder="{{__('contact_email')}} *" required>
                                 @error('email')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -67,7 +67,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 form-group">
-                                <input name="phone" type="text" class="@error('phone') is-invalid @enderror" placeholder="{{__('words.contact_number')}} *" required>
+                                <input name="phone" type="text" class="@error('phone') is-invalid @enderror" placeholder="{{__('contact_number')}} *" required>
                                 @error('phone')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -75,7 +75,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 form-group">
-                                <input name="subject" class="@error('subject') is-invalid @enderror" type="text" placeholder="{{__('words.contact_subject')}}*" required>
+                                <input name="subject" class="@error('subject') is-invalid @enderror" type="text" placeholder="{{__('contact_subject')}}*" required>
                                 @error('subject')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -83,7 +83,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-12 form-group">
-                                <textarea name="message" class="@error('message') is-invalid @enderror" id="message" cols="30" rows="4" placeholder="{{__('words.contact_message')}} *" required></textarea>
+                                <textarea name="message" class="@error('message') is-invalid @enderror" id="message" cols="30" rows="4" placeholder="{{__('contact_message')}} *" required></textarea>
                                 @error('message')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -91,7 +91,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-12">
-                                <button type="submit" class="butn-dark2"><span>{{__('words.send_message_btn')}}</span></button>
+                                <button type="submit" class="butn-dark2"><span>{{__('send_message')}}</span></button>
                             </div>
                         </div>
                     </form>
@@ -189,7 +189,7 @@
         </div>
     </section> --}}
     <!-- Clients -->
-    <section class="clients">
+    {{-- <section class="clients">
         <div class="container">
             <div class="row">
                 <div class="col-md-7">
@@ -216,6 +216,6 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- Footer -->    
 @endsection

@@ -42,11 +42,9 @@
     <link rel="stylesheet" href="cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
     <link rel="stylesheet" href="{{ asset('assets/custom.css') }}">
 
-    
+
 
     <style>
-        
-
         .category-drop::after {
             top: 7px !important;
         }
@@ -375,7 +373,7 @@
     <script src="{{ asset('assets/frontend-assets/js/vendor/index.js') }}"></script>
     <script src="{{ asset('assets/js/star-rating.js') }}"></script>
     <script src="cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js"></script>
     <script>
         function cartQnty() {
             $.ajax({

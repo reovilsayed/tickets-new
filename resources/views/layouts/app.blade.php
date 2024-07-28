@@ -22,8 +22,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800;1,900&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800;1,900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/frontend-assets/css/plugins.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/frontend-assets/css/style.css') }}" />
@@ -93,7 +92,8 @@
                                     action="{{ route('subscribe') }}">
                                     @csrf
                                     <div class="ec-subscribe-form ">
-                                        <label for="" class="text-white mb-3" style="font-size:22px">Subscribe now</label>
+                                        <label for="" class="text-white mb-3" style="font-size:22px">Subscribe
+                                            now :</label>
                                         <div id="ec_news_signup" class="ec-form footer-email">
 
                                             <input class="ec-email" type="email" style="margin-bottom: 0" required
@@ -121,34 +121,45 @@
                     </div>
                     <div class="col-md-3 offset-md-1">
                         <div class="footer-column footer-explore clearfix">
-                            <h3 class="footer-title">{{ __('explore') }}</h3>
-                            {{-- <ul class="footer-explore-list list-unstyled">
+
+                            <h3 class="footer-title">{{ __('Explore') }}</h3>
+                            <div class="line-footer mb-2"></div>
+
+                            <ul class="footer-explore-list list-unstyled">
                                 <li><a href="{{ route('homepage') }}">Home</a></li>
-                                <li><a href="{{ route('shops') }}">Deals</a></li>
-                                <li><a href="{{ route('about') }}">About Hotel</a></li>
+                                {{-- <li><a href="{{ route('shops') }}">Deals</a></li> --}}
+                                <li><a href="{{ route('about') }}">About</a></li>
                                 <li><a href="{{ route('contact') }}">Contact</a></li>
-                            </ul> --}}
+                            </ul>
                             {{-- {!! menu('main', 'menus.bootstrap') !!} --}}
                         </div>
 
                     </div>
                     <div class="col-md-4">
                         <div class="footer-column footer-contact">
-                            <h3 class="footer-title">{{ __('contact') }}</h3>
+                            <h3 class="footer-title line-cont">{{ __('Contact') }}</h3>
+                            <div class="line-footer mb-2"></div>
                             <p class="footer-contact-text">{{ setting('site.description') }}</p>
                             <div class="footer-contact-info">
-                                {{-- <p class="footer-contact-phone"><span class="flaticon-call"></span>
-                                    {{ setting('site.phone') }}</p> --}}
-                                <p class="footer-contact-mail">{{ setting('site.email') }}</p>
-                                <p><a href="#"
-                                        class="text-white">{{ __('contact_us') }}</a></p>
+                                <p class="footer-contact-phone"><span class="flaticon-call"></span>
+                                    <a href="">{{ setting('site.phone') }}</a>
+                                </p>
+                                <p class="footer-contact-phone"><span class="flaticon-envelope"></span>
+                                    <a href="">{{ setting('site.email') }}</a>
+                                </p>
+                                {{-- <p><a href="#" class="text-white">{{ __('Contact_us') }}</a></p> --}}
                             </div>
                             <div class="footer-about-social-list">
-                                <a href="{{ setting('social.inst_link') }}"><i class="ti-instagram"></i></a>
-                                <a href="{{ setting('social.twiter_link') }}"><i class="ti-twitter"></i></a>
-                                <a href="{{ setting('social.youtube') }}"><i class="ti-youtube"></i></a>
-                                <a href="{{ setting('social.fb_link') }}"><i class="ti-facebook"></i></a>
-                                <a href="{{ setting('social.pinterest') }}"><i class="ti-pinterest"></i></a>
+                                <a href="{{ setting('social.fb_link') }}"><i
+                                        class="fa-brands fa-facebook fa-lg"></i></a>
+                                <a href="{{ setting('social.inst_link') }}"><i
+                                        class="fa-brands fa-square-instagram fa-lg"></i></a>
+                                <a href="{{ setting('social.twiter_link') }}"><i
+                                        class="fa-brands fa-twitter fa-lg"></i></a>
+                                <a href="{{ setting('social.youtube') }}"><i
+                                        class="fa-brands fa-youtube fa-lg"></i></a>
+                                <a href="{{ setting('social.pinterest') }}"><i
+                                        class="fa-brands fa-pinterest fa-lg"></i></a>
                             </div>
                         </div>
                     </div>
@@ -160,7 +171,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="footer-bottom-inner">
-                            <p class="footer-bottom-copy-right">© Copyright 2022 by <a
+                            <p class="footer-bottom-copy-right">© Copyright 2024 by <a
                                     href="#">{{ setting('site.title') }}</a></p>
                         </div>
                     </div>
@@ -169,6 +180,7 @@
         </div>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js"></script>
     <x-alert :exclude="[route('user.update_profile')]" />
     <!-- jQuery -->
     <script src="{{ asset('assets/frontend-assets/js/jquery-3.6.3.min.js') }}"></script>
