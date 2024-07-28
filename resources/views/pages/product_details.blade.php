@@ -37,7 +37,7 @@
                     @endforeach
                     <div class="section-title">{{ $product->name }}</div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-8 text-white">
                     {!! $product->description !!}
 
                 </div>
@@ -51,21 +51,21 @@
                     @endphp
                     <div class="mb-3" style="background-color: #F5F5F5">
                         <div class="px-3 py-2">
-                            <h4 class="text-center" style="font-size:25px">{{ __('words.expired_at') }}
+                            <h4 class="text-center" style="font-size:20px">{{ __('expired_at') }}
                                 <p>{{ $product->expired_at->format('d-M-Y') }}
                                     @if ($expiredDate > $today)
-                                        ( {{ $today->diffInDays($expiredDate) }} {{ __('words.days_left') }})
+                                        ( {{ $today->diffInDays($expiredDate) }} {{ __('days_left') }})
                                     @elseif($expiredDate->isToday())
-                                        ({{ __('words.days_left') }})
+                                        ({{ __('days_left') }})
                                     @else
-                                        ({{ __('words.already_expired') }})
+                                        ({{ __('already_expired') }})
                                     @endif
                                     
                                 </p>
                             </h4>
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-evenly">
 
-                                <span class="">{{ __('words.price') }}</span>
+                                <span class="">{{ __('price :') }}</span>
                                 @if ($product->sale_price)
                                     <span class=""> {{ Sohoj::price($product->sale_price) }} </span>
                                 @else

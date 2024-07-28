@@ -259,13 +259,13 @@
                                                 @endif
                                             @endforeach
                                             
-                                            @if($data->payouts_status==0)
+                                            {{-- @if($data->payouts_status==0)
                                                 <a href="{{ route('payout', $data) }}" OnClick='return (confirm("Are you sure you want to payment request?"));' title="Payouts"
                                                     class="btn btn-sm btn-success pull-right">
                                                     <i class="voyager-wallet"></i> <span
                                                         class="hidden-xs hidden-sm">Payouts</span>
                                                 </a>
-                                                @endif
+                                                @endif --}}
                                         </td>
                                     </tr>
                                     @endforeach

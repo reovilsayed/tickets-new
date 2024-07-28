@@ -34,7 +34,7 @@
                                             <input type="hidden" name="shop_id" value="">
 
                                             <fieldset class="p-4">
-                                                <h3 class="ec-checkout-title mb-3" style="font-size: 20px;">{{ __('words.personal_info') }}
+                                                <h3 class="ec-checkout-title mb-3" style="font-size: 20px;">{{ __('personal_info') }}
                                                 </h3>
                                                 <div class="row">
                                                     <div class=" col-md-6">
@@ -42,7 +42,7 @@
                                                         <input type="text"
                                                             class="bg-white ps-2 @error('first_name') is-invalid @enderror"
                                                             value="{{ Auth()->user() ? Auth()->user()->name : '' }}"
-                                                            name="first_name" placeholder="{{ __('words.first_name') }} *" id="inputEmail4">
+                                                            name="first_name" placeholder="{{ __('first_name') }} *" id="inputEmail4">
                                                         @error('first_name')
                                                             <span class="text-danger">
                                                                 {{ $message }}
@@ -51,7 +51,7 @@
                                                     </div>
                                                     <div class="col-md-6">
 
-                                                        <input type="text" placeholder="{{ __('words.last_name') }} *"
+                                                        <input type="text" placeholder="{{ __('last_name') }} *"
                                                             value="{{ Auth()->user() ? Auth()->user()->l_name : '' }}"
                                                             name="last_name"
                                                             class="bg-white ps-2 @error('last_name') is-invalid @enderror"
@@ -68,7 +68,7 @@
                                                         <input type="email"
                                                             class="bg-white ps-2 @error('email') is-invalid @enderror"
                                                             value="{{ Auth()->user() ? Auth()->user()->email : '' }}"
-                                                            name="email" id="inputAddress" placeholder="{{ __('words.email') }} *">
+                                                            name="email" id="inputAddress" placeholder="{{ __('email') }} *">
                                                         @error('email')
                                                             <span class="text-danger">
                                                                 {{ $message }}
@@ -80,7 +80,7 @@
                                                         <input type="text"
                                                             class="bg-white ps-2 @error('phone') is-invalid @enderror"
                                                             value="{{ Auth()->user() ? Auth()->user()->phone : '' }}" name="phone" id="phone"
-                                                            placeholder="{{ __('words.phone') }} *">
+                                                            placeholder="{{ __('phone') }} *">
                                                         @error('phone')
                                                             <span class="text-danger">
                                                                 {{ $message }}
@@ -106,7 +106,7 @@
                             <!-- Sidebar Summary Block -->
                             <div class="ec-sidebar-block">
                                 <div class="ec-sb-title">
-                                    <h3 class="ec-sidebar-title">{{ __('words.order_summery') }}</h3>
+                                    <h3 class="ec-sidebar-title">{{ __('order_summery') }}</h3>
                                 </div>
                                 <div class="ec-sb-block-content">
                                     <div class="ec-checkout-summary">
@@ -116,24 +116,24 @@
                                             $prices = Sohoj::newItemTotal();
                                         @endphp
                                         <div>
-                                            <span class="text-left">{{ __('words.items') }}({{ Cart::getTotalQuantity() }}):</span>
+                                            <span class="text-left">{{ __('items') }}({{ Cart::getTotalQuantity() }}):</span>
                                             <span class="text-right">{{ Sohoj::price($prices) }}</span>
                                         </div>
                                       
                                         <div>
-                                            <span class="text-left">{{ __('words.tax') }}:</span>
+                                            <span class="text-left">{{ __('tax') }}:</span>
                                             <span class="text-right">{{ Sohoj::price($tax) }}</span>
                                         </div>
                                         @if (session()->has('discount'))
                                             <div>
-                                                <span class="text-left">{{ __('words.discount') }}:</span>
+                                                <span class="text-left">{{ __('discount') }}:</span>
                                                 <span class="text-right">{{ Sohoj::price(Sohoj::discount()) }}</span>
                                             </div>
                                         @endif
 
 
                                         <div class="ec-checkout-summary-total">
-                                            <span class="text-left order-title" style="font-size: 20px !important;">{{ __('words.order_total') }}:</span>
+                                            <span class="text-left order-title" style="font-size: 20px !important;">{{ __('order_total') }}:</span>
                                             <span class="text-right"
                                                 style="font-weight: 800 !important;">{{ Sohoj::price($prices + $tax + $flatCharge - Sohoj::discount()) }}</span>
                                         </div>
@@ -141,7 +141,7 @@
 
                                             <input type="checkbox" required class="@error('terms') is-invalid @enderror"
                                                 id="terms" style="width: 25px;" value="1" name="terms"
-                                                required><a href="#" style="" class="mt-3 ms-3">{!! __('words.terms') !!}</span></a><span class="checked"></span>
+                                                required><a href="#" style="" class="mt-3 ms-3">{!! __('terms & policy') !!}</span></a><span class="checked"></span>
                                             @error('terms')
                                                 <span class="invalid-feedback " role="alert">
                                                     <strong>{{ $message }}</strong>
@@ -150,7 +150,7 @@
                                         </div>
 
                                         <div class="col-md-12 justify-content-center" style="margin-top: 17px; ">
-                                            <button class="butn-dark2" style="" type="submit"><span>{{ __('words.place_order_btn') }}</span> </button>
+                                            <button class="butn-dark2" style="" type="submit"><span>{{ __('place_order') }}</span> </button>
                                         </div>
 
                                     </div>
@@ -161,7 +161,7 @@
                             <!-- Sidebar Summary Block -->
                         </div>
                         <div class="shipment-text  text-white" style="border-radius: 0px">
-                            <span>{!! __('words.checkout_cart_footer') !!} <a href="" target="_blank"><u class="text-white">{{ __('words.learn_more') }}</u></a></span>
+                            <span>{!! __('checkout_cart_footer') !!} <a href="" target="_blank"><u class="text-white">{{ __('learn_more') }}</u></a></span>
 
                         </div>
 
