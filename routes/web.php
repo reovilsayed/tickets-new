@@ -91,7 +91,7 @@ Route::get('/set-location', [PageController::class, 'setLocation'])->name('set.l
 Route::get('/location-reset', [PageController::class, 'locationReset'])->name('location.reset');
 Route::get('/posts', [PageController::class, 'posts'])->name('posts');
 Route::get('/post/{slug}', [PageController::class, 'post'])->name('post');
-Route::get('/event-details', [PageController::class, 'event_details'])->name('product_details');
+Route::get('/event-details{slug}', [PageController::class, 'event_details'])->name('product_details');
 
 
 

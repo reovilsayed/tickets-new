@@ -40,9 +40,10 @@
     .rooms1 .item .con i {
         color: #bd3d06;
     }
-    .category{
+
+    .category {
         /* border-radius:20px; */
-        right: 0px !important; 
+        right: 0px !important;
     }
 </style>
 <div class="item" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
@@ -68,7 +69,11 @@
 
             </a></h6>
         <h5 style="height: 85px"><a href="{{ $product->path() }}" class="w-100">{{ $product->name }}</a> </h5>
-        
+       @if($product->event_start_date->format('d M') == $product->event_end_date->format('d M'))
+       <h6>{{ $product->event_start_date->format('d M')}} </h6>
+       @else
+       <h6>{{ $product->event_start_date->format('d M')}} - {{ $product->event_end_date->format('d M')}} </h6>
+       @endif
         <div class="line"></div>
         <div class=" facilities">
             <a class="custom-button back-button" href="{{ $product->path() }}">{{ __('Book Ticket') }}</a>

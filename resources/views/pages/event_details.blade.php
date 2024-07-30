@@ -5,11 +5,11 @@
             <div class="row ">
                 <div class="col-md-5 event-details">
 
-                    <div class="event_img mt-5">
-                        <img src="/assets/logo.png" alt="event-image" class="event-image">
+                    <div class="event_img">
+                        <img src=" {{ Voyager::image($product->image) }}" alt="">
                     </div>
 
-                    <h2 class="events-title">Light Festival</h2>
+                    <h2 class="events-title mt-5">{{ $product->name }}</h2>
                     <div class="accordins">
                         <div class="accordin-item">
                             <div>
