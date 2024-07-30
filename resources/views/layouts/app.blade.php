@@ -22,8 +22,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="{{ asset('assets/frontend-assets/css/plugins.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/frontend-assets/css/style.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -127,7 +128,6 @@
 
                             <ul class="footer-explore-list list-unstyled">
                                 <li><a href="{{ route('homepage') }}">Home</a></li>
-                                {{-- <li><a href="{{ route('shops') }}">Deals</a></li> --}}
                                 <li><a href="{{ route('about') }}">About</a></li>
                                 <li><a href="{{ route('contact') }}">Contact</a></li>
                             </ul>
@@ -171,6 +171,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="footer-bottom-inner">
+                            <img src="/assets/easypay.png" alt="" style="width:400px; hight:auto;">
                             <p class="footer-bottom-copy-right">© Copyright 2024 by <a
                                     href="#">{{ setting('site.title') }}</a></p>
                         </div>

@@ -57,9 +57,9 @@ body {
 }
 
 .line-footer {
-    height: 2px;
+    height: 4px;
     width: 60px;
-    background-color: rgba(255, 255, 255, 0.647);
+    background-color: #c16842;
 }
 
 .line-footer:hover {
@@ -117,7 +117,8 @@ body {
     display: flex;
     justify-content: space-between;
 }
-.sold{
+
+.sold {
     position: absolute;
     color: #bd3d06;
     font-size: 25px;
@@ -128,6 +129,7 @@ body {
     transform: rotate(-20deg);
     border: 2px solid #bd3d06;
 }
+
 .t-info {
     margin: 0px;
 
@@ -330,4 +332,16 @@ body {
 .s-date {
     margin-bottom: 0px;
     font-size: 12px;
+}
+
+.footer-explore-list li a:hover {
+    color: #bd3d06 !important;
+}
+
+.footer-about-social-list a:hover {
+    color: #bd3d06 !important;
+}
+
+.footer-contact-phone:hover {
+    color: #bd3d06 !important;
 }
