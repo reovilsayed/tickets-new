@@ -14570,7 +14570,7 @@ li {
 
 .header-top {
   padding: 10px 0;
-  background: #f3454f;
+  background: #bd3d06;
   color: #ffffff;
 }
 .header-top .header-top-message {
@@ -14843,7 +14843,7 @@ li {
   color: #00969b;
 }
 .ec-header-bottons .ec-header-btn:hover .header_svg {
-  fill: #f3454f;
+  fill: #bd3d06;
 }
 .ec-header-bottons .ec-header-btn i {
   font-size: 21px;
@@ -14963,7 +14963,7 @@ div#ec-main-menu-desk {
   margin-right: 30px;
 }
 .ec-main-menu ul li .mega-menu li ul li.menu_title a {
-  color: #f3454f;
+  color: #bd3d06;
   font-size: 16px;
   font-weight: 700;
   display: block;
@@ -15122,7 +15122,7 @@ div#ec-main-menu-desk {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background: #f3454f;
+  background: #bd3d06;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -15257,7 +15257,7 @@ div#ec-main-menu-desk {
   fill: #00969b;
 }
 .search_submit:hover .search_svg {
-  fill: #f3454f;
+  fill: #bd3d06;
 }
 
 .ec-search-select-inner {
@@ -15327,7 +15327,7 @@ div#ec-main-menu-desk {
   color: #00969b;
 }
 .ec-header-call:hover .call_svg {
-  fill: #f3454f;
+  fill: #bd3d06;
 }
 .ec-header-call .ec-call-title {
   font-size: 16px;
@@ -15732,7 +15732,7 @@ body.ec-open:before {
 ---------------------------------------------------*/
 .ec-footer {
   color: #ffffff;
-  background: #f3454f222;
+  background: #bd3d06222;
 }
 .ec-footer .footer-top {
   border-top: 1px solid #3c3c3c;
@@ -16398,7 +16398,7 @@ body {
 }
 #ec-fixedbutton .ec-change-rtl .ec-rtl-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 0 9px 0;
 }
 #ec-fixedbutton .ec-change-rtl .ec-rtl-switch > * {
@@ -16480,7 +16480,7 @@ body {
 }
 #ec-fixedbutton .ec-change-mode .ec-mode-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 0 7px 0;
   font-size: 10px;
 }
@@ -16914,7 +16914,7 @@ ul.slick-dots {
 }
 .bg-switcher .option-box-title {
   padding: 3px 15px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
 }
 .bg-switcher .option-box-title h3, .bg-switcher .option-box-title .h3 {
   color: #fff;
@@ -16928,7 +16928,7 @@ ul.slick-dots {
   background: #fff;
   padding: 18px;
   overflow: hidden;
-  border: 2px solid #f3454f;
+  border: 2px solid #bd3d06;
 }
 .bg-switcher ul li {
   width: 25px;
@@ -16950,7 +16950,7 @@ ul.slick-dots {
 .bg-switcher ul .bg a {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  color: #f3454f;
+  color: #bd3d06;
   font-size: 13px;
 }
 .bg-switcher ul .bg a:hover {
@@ -16966,7 +16966,7 @@ ul.slick-dots {
   width: 40px;
   height: 41px;
   color: #000;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   -webkit-transition: all ease-in 0.3s;
   transition: all ease-in 0.3s;
   display: -webkit-box;
@@ -17082,7 +17082,7 @@ ul.slick-dots {
 .lang-switcher .option-box-title {
   padding: 5px 7px;
   margin-bottom: 10px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   height: 40px;
   overflow: hidden;
 }
@@ -17098,7 +17098,7 @@ ul.slick-dots {
   background: #fff;
   padding: 18px;
   overflow: hidden;
-  border: 2px solid #f3454f;
+  border: 2px solid #bd3d06;
 }
 .lang-switcher ul li {
   width: 25px;
@@ -17140,7 +17140,7 @@ ul.slick-dots {
   height: 41px;
   color: #ffffff;
   font-size: 12px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   -webkit-transition: all ease-in 0.3s;
   transition: all ease-in 0.3s;
   display: -webkit-box;
@@ -17441,7 +17441,7 @@ ul.slick-dots {
 .ec-tools-sidebar .ec-change-mode .ec-mode-btn {
   width: 40px;
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 7px 0;
   font-size: 10px;
   cursor: pointer;
@@ -17525,7 +17525,7 @@ ul.slick-dots {
 }
 .ec-tools-sidebar .ec-change-rtl .ec-rtl-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 9px 0;
 }
 .ec-tools-sidebar .ec-change-rtl .ec-rtl-switch > * {
@@ -17608,7 +17608,7 @@ ul.slick-dots {
 .ec-tools-sidebar .ec-fullscreen-mode .ec-fullscreen-btn {
   width: 40px;
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 7px 0;
   font-size: 10px;
   cursor: pointer;
@@ -17714,7 +17714,7 @@ ul.slick-dots {
   font-size: 24px;
   position: relative;
   line-height: 1.2;
-  color: #f3454f;
+  color: #bd3d06;
   font-weight: 700;
   letter-spacing: 0;
   margin-bottom: 10px;
@@ -18501,7 +18501,7 @@ section.ec-instagram-section {
   letter-spacing: 0.4px;
 }
 .ec-product-inner .ec-pro-image .add-to-cart:hover {
-  background-color: #f3454f;
+  background-color: #bd3d06;
 }
 .ec-product-inner .ec-pro-image-outer {
   -webkit-transition: all 0.3s ease 0s;
@@ -19004,7 +19004,7 @@ i.ecicon.eci-star.fill {
   color: #444444;
 }
 .quickview-pro-content .ec-quickview-price span.new-price {
-  color: #f3454f;
+  color: #bd3d06;
   font-weight: 700;
   font-size: 22px;
 }
@@ -19128,7 +19128,7 @@ i.ecicon.eci-star.fill {
   padding: 17px 0;
 }
 .ec_ser_inner:hover .ec-service-image svg {
-  fill: #f3454f;
+  fill: #bd3d06;
 }
 .ec_ser_inner .ec-service-image {
   margin-right: 20px;
@@ -19631,7 +19631,7 @@ i.ecicon.eci-star.fill {
   line-height: 42px;
   font-size: 16px;
   text-transform: uppercase;
-  background-color: #f3454f;
+  background-color: #bd3d06;
 }
 #ec-popnews-box button:hover {
   background-color: #00969b;

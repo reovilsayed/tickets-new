@@ -56,7 +56,7 @@
                         @enderror
                     </div>
                     <div class="col-md-12 d-flex justify-content-end">
-                        <a href="{{ route('password.request') }}" class="" style="color: #f3454f">Recover
+                        <a href="{{ route('password.request') }}" class="" style="color: #bd3d06">Recover
                             password</a>
                     </div>
 

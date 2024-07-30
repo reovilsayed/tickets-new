@@ -15784,7 +15784,7 @@ body.ec-open:before {
 ---------------------------------------------------*/
 .ec-footer {
   color: #ffffff;
-  background: #f3454f222;
+  background: #bd3d06222;
 }
 .ec-footer .footer-top {
   border-top: 1px solid #3c3c3c;
@@ -16469,7 +16469,7 @@ body {
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 0;
-  color: #f3454f;
+  color: #bd3d06;
   letter-spacing: 0.4px;
   position: relative;
   display: inline;
@@ -16654,7 +16654,7 @@ body {
 }
 #ec-fixedbutton .ec-change-rtl .ec-rtl-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 0 9px 0;
 }
 #ec-fixedbutton .ec-change-rtl .ec-rtl-switch > * {
@@ -16736,7 +16736,7 @@ body {
 }
 #ec-fixedbutton .ec-change-mode .ec-mode-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 0 7px 0;
   font-size: 10px;
 }
@@ -17417,7 +17417,7 @@ ul.slick-dots {
 }
 .bg-switcher .option-box-title {
   padding: 3px 15px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
 }
 .bg-switcher .option-box-title h3, .bg-switcher .option-box-title .h3 {
   color: #fff;
@@ -17431,7 +17431,7 @@ ul.slick-dots {
   background: #fff;
   padding: 18px;
   overflow: hidden;
-  border: 2px solid #f3454f;
+  border: 2px solid #bd3d06;
 }
 .bg-switcher ul li {
   width: 25px;
@@ -17453,7 +17453,7 @@ ul.slick-dots {
 .bg-switcher ul .bg a {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  color: #f3454f;
+  color: #bd3d06;
   font-size: 13px;
 }
 .bg-switcher ul .bg a:hover {
@@ -17469,7 +17469,7 @@ ul.slick-dots {
   width: 40px;
   height: 41px;
   color: #000;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   -webkit-transition: all ease-in 0.3s;
   transition: all ease-in 0.3s;
   display: -webkit-box;
@@ -17585,7 +17585,7 @@ ul.slick-dots {
 .lang-switcher .option-box-title {
   padding: 5px 7px;
   margin-bottom: 10px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   height: 40px;
   overflow: hidden;
 }
@@ -17601,7 +17601,7 @@ ul.slick-dots {
   background: #fff;
   padding: 18px;
   overflow: hidden;
-  border: 2px solid #f3454f;
+  border: 2px solid #bd3d06;
 }
 .lang-switcher ul li {
   width: 25px;
@@ -17643,7 +17643,7 @@ ul.slick-dots {
   height: 41px;
   color: #ffffff;
   font-size: 12px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   -webkit-transition: all ease-in 0.3s;
   transition: all ease-in 0.3s;
   display: -webkit-box;
@@ -17944,7 +17944,7 @@ ul.slick-dots {
 .ec-tools-sidebar .ec-change-mode .ec-mode-btn {
   width: 40px;
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 7px 0;
   font-size: 10px;
   cursor: pointer;
@@ -18028,7 +18028,7 @@ ul.slick-dots {
 }
 .ec-tools-sidebar .ec-change-rtl .ec-rtl-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 9px 0;
 }
 .ec-tools-sidebar .ec-change-rtl .ec-rtl-switch > * {
@@ -18111,7 +18111,7 @@ ul.slick-dots {
 .ec-tools-sidebar .ec-fullscreen-mode .ec-fullscreen-btn {
   width: 40px;
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 7px 0;
   font-size: 10px;
   cursor: pointer;
@@ -18337,7 +18337,7 @@ ul.slick-dots {
   font-size: 22px;
   font-weight: 600;
   text-transform: uppercase;
-  color: #f3454f;
+  color: #bd3d06;
 }
 .ec-about-sec .ec-about-detail h5, .ec-about-sec .ec-about-detail .h5 {
   margin-bottom: 20px;
@@ -18470,7 +18470,7 @@ ul.slick-dots {
   padding-right: 30px;
   font-size: 16px;
   font-weight: 600;
-  color: #f3454f;
+  color: #bd3d06;
   line-height: 1;
   text-transform: uppercase;
   line-height: 1.3;
@@ -20410,7 +20410,7 @@ i.ecicon.eci-star.fill {
   margin: 0 0 5px;
 }
 .ec-blog-inner .ec-blog-title a {
-  color: #f3454f;
+  color: #bd3d06;
   font-size: 16px;
   margin: 0 auto;
   text-decoration: none;
@@ -22492,7 +22492,7 @@ i.ecicon.eci-star.fill {
   .ec-nav-toolbar .ec-nav-panel .ec-nav-panel-icons a .header_svg {
     width: 25px;
     height: 25px;
-    fill: #f3454f;
+    fill: #bd3d06;
   }
   .ec-nav-toolbar .ec-nav-panel .ec-nav-panel-icons a .ec-cart-noti {
     width: 15px;

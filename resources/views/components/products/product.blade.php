@@ -30,15 +30,15 @@
     }
 
     .rooms1 .item:hover .line {
-        background-color: #f3454f;
+        background-color: #bd3d06;
     }
 
     .rooms1 .item .con .permalink a {
-        color: #f3454f;
+        color: #bd3d06;
     }
 
     .rooms1 .item .con i {
-        color: #f3454f;
+        color: #bd3d06;
     }
     .category{
         /* border-radius:20px; */
@@ -49,9 +49,9 @@
     <a href="{{ $product->path() }}" class="thumb d-block">
         <img src="{{ Voyager::image($product->image) }}" alt="" style="">
     </a>
-    <span class="category">
+    {{-- <span class="category">
         {{ $product->event_start_date->format('d M') }}
-    </span>
+    </span> --}}
     <div class="con">
         <h6><a href="{{ $product->path() }}">
                 @if ($product->sale_price)
@@ -68,6 +68,7 @@
 
             </a></h6>
         <h5 style="height: 85px"><a href="{{ $product->path() }}" class="w-100">{{ $product->name }}</a> </h5>
+        
         <div class="line"></div>
         <div class=" facilities">
             <a class="custom-button back-button" href="{{ $product->path() }}">{{ __('Book Ticket') }}</a>

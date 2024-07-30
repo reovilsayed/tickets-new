@@ -39,7 +39,7 @@ $el-main-text-color: #eeeeee; //  Site main Text color
 $main-text-color: #444444; // Site main Text color
 $main-primary-trans-color: rgba(68, 68, 68, .7);
 $main-second-text-color: #aaa; // Site second Text color
-$el-product-bg: #f3454f52f;
+$el-product-bg: #bd3d0652f;
 $header-background-color: #f6f6f6; // Site header background color
 $footer-title-color: #202b3a; // Site Footer title color
 
@@ -49,7 +49,7 @@ $white-text-color: #ffffff; // white text color
 $recent-purchase-bg: #373840; // recent purchase white background color
 $recent-title-white: #dbdbdb;  // recent purchase title white color
 $recent-sub-title-white: #efefef; // recent purchase sub title white color
-$card-bg-white: #f3454f52f;
+$card-bg-white: #bd3d0652f;
 
 $description-bg : #2d313e; // Description bg on shop page
 $description-text: #efefef; // Description text on shop page
@@ -159,20 +159,20 @@ $alpha-5: 0.5;
 @import "utilities/_mixins";
 
 // Dark Mode Color Variable
-$main-body-bg-color: #f3454f52f;
+$main-body-bg-color: #bd3d0652f;
 $main-body-text-color: #ffffff;
 $main-primary-color: #ffffff;
 $main-secondary-color: #373840;
 $main-header-bg-color: #2d313e;
 $default-text-color: #ffffff;
-$default-text-dark-color: #f3454f222;
+$default-text-dark-color: #bd3d06222;
 $default-secondary-text-color: #aaa;
-$default-bg-color: #f3454f52f;
+$default-bg-color: #bd3d0652f;
 $default-bg-dark-color: #2d313e;
 $default-border-color: #494e5d;
 $svg-fill-color: #ffffff;
 $menu-text-color: #c1c1c1;
-$menu-bg-color: #f3454f52f;
+$menu-bg-color: #bd3d0652f;
 $default-button-bg-color: #2d313e;
 $default-button-text-color: #ffffff;
 $default-button-border-color: #2d313e;
@@ -424,7 +424,7 @@ input {
 	}
 }
 .category-sidebar {
-	background-color: #f3454f52f;
+	background-color: #bd3d0652f;
 	.ec-sidebar-wrap {
 		border-color: transparent;
 	}
@@ -1751,7 +1751,7 @@ section.ec-test-section {
 	background-attachment: fixed;
 }
 .body-bg-4{
-	background: #f3454f52f !important;
+	background: #bd3d0652f !important;
 }
 .ec-tools-sidebar {
 	.ec-tools-sidebar-content {
@@ -2162,7 +2162,7 @@ section.ec-test-section {
 	.corner-button {
 		border: 4px solid #494e5d;
 		&:before, &:after {
-			background: #f3454f52f;
+			background: #bd3d0652f;
 		}
 	}
 }
@@ -2185,7 +2185,7 @@ section.ec-test-section {
 }
 .ec-full-blog {
 	.ec-card-bg, .ec-card-info {
-		background: #f3454f52f;
+		background: #bd3d0652f;
 		h5 {
 			color: #ddd;
 		}
@@ -2249,7 +2249,7 @@ section.ec-test-section {
 					height: 140px;
 					border-radius: 50%;
 					margin-top: -70px;
-					border: 10px solid #f3454f52f;
+					border: 10px solid #bd3d0652f;
 				}
 			}
 		}
@@ -2269,14 +2269,14 @@ section.ec-test-section {
 	.ec-vendor-card-body {
 		.ec-vendor-upload-detail {
 			form select {
-				background-color: #f3454f52f;
+				background-color: #bd3d0652f;
 			}
 		}
 	}
 }
 .ec-vendor-card {
 	border: 1px solid #494e5d;
-	background-color: #f3454f52f;
+	background-color: #bd3d0652f;
 	.ec-vendor-detail {
 		border-bottom: 1px solid #494e5d;
 		.ec-vendor-info {
@@ -2298,11 +2298,11 @@ section.ec-test-section {
 	} 
 }
 #ec-popnews-box {
-	background-color: #f3454f52f;
+	background-color: #bd3d0652f;
 	background-image: url("../images/email-template/newsletter-bg-dark.png");
 	input {
 		border: 1px solid #373840;
-		background-color: #f3454f52f;
+		background-color: #bd3d0652f;
 		color: #fff;
 	}
 }
@@ -2665,7 +2665,7 @@ section.ec-test-section {
 }
 .ec-vendor-dashboard, .ec-vendor-uploads {
 	.ec-vendor-dashboard-card {
-		background: #f3454f52f;
+		background: #bd3d0652f;
 	}
 }
 .footer-bottom-social {

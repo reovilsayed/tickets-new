@@ -16550,7 +16550,7 @@ body {
 }
 #ec-fixedbutton .ec-change-rtl .ec-rtl-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 0 9px 0;
 }
 #ec-fixedbutton .ec-change-rtl .ec-rtl-switch > * {
@@ -16632,7 +16632,7 @@ body {
 }
 #ec-fixedbutton .ec-change-mode .ec-mode-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 0 7px 0;
   font-size: 10px;
 }
@@ -16939,7 +16939,7 @@ select::-ms-expand {
 }
 .bg-switcher .option-box-title {
   padding: 3px 15px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
 }
 .bg-switcher .option-box-title h3, .bg-switcher .option-box-title .h3 {
   color: #fff;
@@ -16953,7 +16953,7 @@ select::-ms-expand {
   background: #fff;
   padding: 18px;
   overflow: hidden;
-  border: 2px solid #f3454f;
+  border: 2px solid #bd3d06;
 }
 .bg-switcher ul li {
   width: 25px;
@@ -16975,7 +16975,7 @@ select::-ms-expand {
 .bg-switcher ul .bg a {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  color: #f3454f;
+  color: #bd3d06;
   font-size: 13px;
 }
 .bg-switcher ul .bg a:hover {
@@ -16991,7 +16991,7 @@ select::-ms-expand {
   width: 40px;
   height: 41px;
   color: #000;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   -webkit-transition: all ease-in 0.3s;
   transition: all ease-in 0.3s;
   display: -webkit-box;
@@ -17108,7 +17108,7 @@ select::-ms-expand {
 .lang-switcher .option-box-title {
   padding: 5px 7px;
   margin-bottom: 10px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   height: 40px;
   overflow: hidden;
 }
@@ -17124,7 +17124,7 @@ select::-ms-expand {
   background: #fff;
   padding: 18px;
   overflow: hidden;
-  border: 2px solid #f3454f;
+  border: 2px solid #bd3d06;
 }
 .lang-switcher ul li {
   width: 25px;
@@ -17166,7 +17166,7 @@ select::-ms-expand {
   height: 41px;
   color: #ffffff;
   font-size: 12px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   -webkit-transition: all ease-in 0.3s;
   transition: all ease-in 0.3s;
   display: -webkit-box;
@@ -17467,7 +17467,7 @@ select::-ms-expand {
 .ec-tools-sidebar .ec-change-mode .ec-mode-btn {
   width: 40px;
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 7px 0;
   font-size: 10px;
   cursor: pointer;
@@ -17551,7 +17551,7 @@ select::-ms-expand {
 }
 .ec-tools-sidebar .ec-change-rtl .ec-rtl-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 9px 0;
 }
 .ec-tools-sidebar .ec-change-rtl .ec-rtl-switch > * {
@@ -17634,7 +17634,7 @@ select::-ms-expand {
 .ec-tools-sidebar .ec-fullscreen-mode .ec-fullscreen-btn {
   width: 40px;
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 7px 0;
   font-size: 10px;
   cursor: pointer;

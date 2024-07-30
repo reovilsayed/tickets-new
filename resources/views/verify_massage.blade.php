@@ -10,11 +10,11 @@
 <div class="banner-header section-padding valign bg-img bg-fixed" data-overlay-dark="4" data-background="{{asset('assets/frontend-assets/img/slider/1.jpg')}}">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6 caption mt-90 p-5" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;background-color:#f3454f">
+            <div class="col-md-6 caption mt-90 p-5" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;background-color:#bd3d06">
                 <h3> Thank you for registering!
                     Please confirm your email! <br>
                 </h3>
-                <a href="{{route('again.verify.token')}}" class="btn btn-dark me-auto mt-4" style="background-color: #f3454f">Resend email</a>
+                <a href="{{route('again.verify.token')}}" class="btn btn-dark me-auto mt-4" style="background-color: #bd3d06">Resend email</a>
             </div>
         </div>
     </div>

@@ -17673,7 +17673,7 @@ h6,
 
 .bg-switcher .option-box-title {
     padding: 3px 15px;
-    background-color: #f3454f;
+    background-color: #bd3d06;
 }
 
 .bg-switcher .option-box-title h3,
@@ -17690,7 +17690,7 @@ h6,
     background: #fff;
     padding: 18px;
     overflow: hidden;
-    border: 2px solid #f3454f;
+    border: 2px solid #bd3d06;
 }
 
 .bg-switcher ul li {
@@ -17716,7 +17716,7 @@ h6,
 .bg-switcher ul .bg a {
     -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
-    color: #f3454f;
+    color: #bd3d06;
     font-size: 13px;
 }
 
@@ -17735,7 +17735,7 @@ h6,
     width: 40px;
     height: 41px;
     color: #000;
-    background-color: #f3454f;
+    background-color: #bd3d06;
     -webkit-transition: all ease-in 0.3s;
     transition: all ease-in 0.3s;
     display: -webkit-box;
@@ -17864,7 +17864,7 @@ h6,
 .lang-switcher .option-box-title {
     padding: 5px 7px;
     margin-bottom: 10px;
-    background-color: #f3454f;
+    background-color: #bd3d06;
     height: 40px;
     overflow: hidden;
 }
@@ -17883,7 +17883,7 @@ h6,
     background: #fff;
     padding: 18px;
     overflow: hidden;
-    border: 2px solid #f3454f;
+    border: 2px solid #bd3d06;
 }
 
 .lang-switcher ul li {
@@ -17933,7 +17933,7 @@ h6,
     height: 41px;
     color: #ffffff;
     font-size: 12px;
-    background-color: #f3454f;
+    background-color: #bd3d06;
     -webkit-transition: all ease-in 0.3s;
     transition: all ease-in 0.3s;
     display: -webkit-box;
@@ -20424,7 +20424,7 @@ h6,
 }
 
 .ec-main-menu ul li.dropdown ul li.active {
-    color: #f3454f;
+    color: #bd3d06;
 }
 
 .ec-main-menu ul li.dropdown li.position-static {
@@ -30393,7 +30393,7 @@ i.ecicon.eci-star-o {
     color: #fff;
     font-family: "Montserrat";
     font-weight: bold;
-    background: #f3454f;
+    background: #bd3d06;
     cursor: pointer;
     overflow: hidden;
     display: -webkit-box;
@@ -33770,7 +33770,7 @@ i.ecicon.eci-star-o {
     font-size: 15px;
     background-color: rgba(11, 13, 19, 0.8);
     border-radius: 0;
-    border: 1px solid #f3454f;
+    border: 1px solid #bd3d06;
     text-transform: uppercase;
     text-decoration: none;
     position: relative;

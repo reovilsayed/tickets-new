@@ -268,4 +268,7 @@ class PageController extends Controller
         $categories=Category::all();
         return view('pages.post_details',compact('post','recentPosts','categories'));
     }
+    public function event_details(){
+        return view('pages.event_details');
+    }
 }

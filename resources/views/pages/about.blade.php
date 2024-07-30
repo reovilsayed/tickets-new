@@ -8,7 +8,7 @@
         }
 
         .testimonials .item .info i {
-            color: #f3454f;
+            color: #bd3d06;
             font-size: 20px;
         }
     </style>

@@ -34,10 +34,6 @@ use Stripe\Price;
 use Stripe\Product;
 use Stripe\Stripe;
 use TCG\Voyager\Facades\Voyager;
-
-
-
-
 use KaziRayhan\VivaWallet\Enums\RequestLang;
 use KaziRayhan\VivaWallet\Enums\PaymentMethod;
 use KaziRayhan\VivaWallet\Facades\VivaWallet;
@@ -95,6 +91,7 @@ Route::get('/set-location', [PageController::class, 'setLocation'])->name('set.l
 Route::get('/location-reset', [PageController::class, 'locationReset'])->name('location.reset');
 Route::get('/posts', [PageController::class, 'posts'])->name('posts');
 Route::get('/post/{slug}', [PageController::class, 'post'])->name('post');
+Route::get('/event-details', [PageController::class, 'event_details'])->name('product_details');
 
 
 
@@ -135,11 +132,11 @@ Route::group(['prefix' => 'admin'], function () {
 });
 Auth::routes();
 //  google login
-Route::get('login/google',[LoginController::class,'redirectToGoogle'])->name('google.redirect');
-Route::get('login/google/callback',[LoginController::class,'handleGoogleCallback'])->name('google.callback');
+Route::get('login/google', [LoginController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback'])->name('google.callback');
 // facebook login
-Route::get('login/facebook',[LoginController::class,'redirectToFacebook'])->name('facebook.redirect');
-Route::get('login/facebook/callback',[LoginController::class,'handleFacebookCallback'])->name('facebook.callback');
+Route::get('login/facebook', [LoginController::class, 'redirectToFacebook'])->name('facebook.redirect');
+Route::get('login/facebook/callback', [LoginController::class, 'handleFacebookCallback'])->name('facebook.callback');
 
 Route::get('admin/payout/{order}', [PayoutsController::class, 'payouts'])->name('payout')->middleware('auth', 'role:admin');
 
@@ -175,9 +172,9 @@ Route::get('/massage/store/{id}', [MassageController::class, 'store'])->name('ma
 Route::post('logo-or-cover/upload', [SellerPagesController::class, 'logoCover'])->middleware('auth')->name('vendor.logo.cover');
 
 
-Route::post('setting/bankInfo/update', [SellerPagesController::class, 'bankInfoUpdate'])->middleware('auth',)->name('vendor.bankInfo.update');
+Route::post('setting/bankInfo/update', [SellerPagesController::class, 'bankInfoUpdate'])->middleware('auth', )->name('vendor.bankInfo.update');
 Route::post('setting/generalInfo/update', [SellerPagesController::class, 'generalInfoUpdate'])->name('vendor.generalInfo.update');
-Route::post('setting/shopAddress/update', [SellerPagesController::class, 'shopAddressUpdate'])->middleware('auth',)->name('vendor.shopAddress.update');
+Route::post('setting/shopAddress/update', [SellerPagesController::class, 'shopAddressUpdate'])->middleware('auth', )->name('vendor.shopAddress.update');
 Route::post('/shop/socialLink/store', [SellerPagesController::class, 'shopSocialLinksStore'])->name('vendor.shopSocialLinksStore.store')->middleware('auth');
 
 
@@ -234,7 +231,7 @@ Route::get('test', function () {
 
 
 Route::get('/callback/payment/success', function (Request $request) {
-   
+
     $transactionId = $request->t;
     $transaction = VivaWallet::retrieveTransaction($transactionId);
     $order = Order::where('order_number', $transaction['merchantTrns'])->first();

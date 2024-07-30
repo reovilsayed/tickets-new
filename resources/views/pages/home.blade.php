@@ -8,7 +8,7 @@
         }
 
         .testimonials .item .info i {
-            color: #f3454f;
+            color: #bd3d06;
             font-size: 20px;
         }
 
@@ -55,7 +55,7 @@
 
 
                         <a href="{{ $mobileItem->path() }}" class="px-2 py-1 text-white "
-                            style="background-color: #f3454f;font-size:12px">
+                            style="background-color: #bd3d06;font-size:12px">
                             <span
                                 title="{{ $mobileItem->name }}">{{ Illuminate\Support\Str::limit($mobileItem->name, 10) }}</span>
                         </a>

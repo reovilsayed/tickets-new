@@ -86,7 +86,7 @@ h6 {
     font-weight: 400;
     line-height: 1.25em;
     margin: 0 0 20px 0;
-    color: #f3454f;
+    color: #bd3d06;
 }
 img {
     width: 100%;
@@ -257,7 +257,7 @@ blockquote:before {
     font-size: 110px;
     opacity: 0.07;
     line-height: 1;
-    color: #f3454f;
+    color: #bd3d06;
 }
 blockquote p {
     margin-bottom: 0;
@@ -393,7 +393,7 @@ blockquote cite:before {
 
 /* background & color */
 .bg-blck {
-    background: #f3454f;
+    background: #bd3d06;
 }
 .bg-cream {
     background: #f8f5f0 ;
@@ -408,7 +408,7 @@ color: #adadad;
 color: #666;
 }
 .color-4 {
-color: #f3454f;
+color: #bd3d06;
 }
 .color-5 {
 color: #ffffff;
@@ -808,7 +808,7 @@ color: #ffffff;
     font-size: 46px;
     font-family: 'Gilda Display', serif;
     font-weight: 400;
-    color: #f3454f;
+    color: #bd3d06;
     position: relative;
     margin-bottom: 20px;
     line-height: 1.25em;
@@ -886,7 +886,7 @@ color: #ffffff;
     color: #ffffff;
 }
 .nav-scroll .navbar-nav .nav-link {
-    color: #f3454f;
+    color: #bd3d06;
 }
 .nav-scroll .navbar-nav .active {
     color: #ffffff !important;
@@ -918,7 +918,7 @@ color: #ffffff;
     display: block;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 10px;
-    color: #f3454f;
+    color: #bd3d06;
     font-weight: 400;
     letter-spacing: 1px;
     display: block;
@@ -976,7 +976,7 @@ color: #ffffff;
     color: rgba(255, 255, 255, 0.7);
 }
 .nav-scroll .dropdown .nav-link i {
-    color: #f3454f;
+    color: #bd3d06;
 }
 .nav-scroll .navbar-nav .active i {
     color: #ffffff;
@@ -986,7 +986,7 @@ color: #ffffff;
     font-family: 'Barlow', sans-serif;
     font-size: 15px;
     font-weight: 400;
-    color: #f3454f;
+    color: #bd3d06;
     position: relative;
     -webkit-transition: all .4s;
     transition: all .4s;
@@ -1110,10 +1110,10 @@ color: #ffffff;
         margin: 0px auto !important;
     }
     .navbar .navbar-nav .nav-link {
-        color: #f3454f;
+        color: #bd3d06;
     }
     .nav-scroll .navbar-collapse .nav-link {
-        color: #f3454f !important;
+        color: #bd3d06 !important;
     }
     .nav-scroll .navbar-collapse .active {
         color: #ffffff !important;
@@ -1156,10 +1156,10 @@ color: #ffffff;
         padding-left: 0px;
     }
     .dropdown .nav-link i {
-        color: #f3454f;
+        color: #bd3d06;
     }
     .nav-scroll .dropdown .nav-link i {
-        color: #f3454f;
+        color: #bd3d06;
     }
     .nav-scroll .dropdown .nav-link.active i {
     color: #ffffff;
@@ -1262,7 +1262,7 @@ color: #ffffff;
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #f3454f;
+    background: #bd3d06;
     position: absolute;
     top: 10px;
     right: 0;
@@ -1745,7 +1745,7 @@ hr {
     position: relative;
     overflow: hidden;
     background: #fff;
-    color: #f3454f;
+    color: #bd3d06;
 }
 .slider-grid-bg .grid-img {
     height: 100%;
@@ -1834,11 +1834,11 @@ hr {
     line-height: 1.5em;
 }
 .slider-grid-bg .grid-con:hover .book {
-    color: #f3454f;
+    color: #bd3d06;
     border: 1px solid #ddd;
 }
 .slider-grid-bg .grid-con-active .book {
-    color: #f3454f;
+    color: #bd3d06;
     border: 1px solid #ddd;
 }
 .slider-grid-bg .subtitle {
@@ -1871,10 +1871,10 @@ hr {
     margin-bottom: 0px;
 }
 .slider-grid-bg .grid-con:hover .title {
-    color: #f3454f;
+    color: #bd3d06;
 }
 .slider-grid-bg .grid-con-active .title {
-    color: #f3454f;
+    color: #bd3d06;
 }
 
 /* bounce */
@@ -2213,7 +2213,7 @@ hr {
 .team .info h6 {
     font-size: 20px;
     margin-bottom: 5px;
-    color: #f3454f;
+    color: #bd3d06;
 }
 .team .info p {
     margin-bottom: 0px;
@@ -2235,7 +2235,7 @@ hr {
     margin: 0 5px;
 }
 .team .info .social a:hover {
-    color: #f3454f;
+    color: #bd3d06;
 }
 .team .info .social p {
     margin-bottom: 0px;
@@ -2285,7 +2285,7 @@ hr {
     font-size: 15px;
     font-weight: 400;
     letter-spacing: 3px;
-    background: #f3454f;
+    background: #bd3d06;
     border: 1px solid rgba(255,255,255,0.5);
     font-family: 'Barlow Condensed', sans-serif;
     padding: 10px 3px;
@@ -2475,13 +2475,13 @@ color: #ffffff;
 .rooms2 .caption h4,
 .rooms2 .caption h4 a {
     font-size: 35px;
-    color: #f3454f;
+    color: #bd3d06;
     margin-bottom: 5px;
 }
 .rooms2 .caption h3,
 .rooms2 .caption h3 a {
     font-size: 24px;
-    color: #f3454f;
+    color: #bd3d06;
     margin-bottom: 0px;
 }
 .rooms2 .caption h3 span {
@@ -2529,19 +2529,19 @@ color: #ffffff;
     font-size: 10px;
 }
 .rooms2 .caption .info-wrapper .date {
-    color: #f3454f;
+    color: #bd3d06;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 15px;
     background: transparent;
-    border: 1px solid #f3454f;
+    border: 1px solid #bd3d06;
     text-transform: uppercase;
     letter-spacing: 3px;
     padding: 3px 12px;
 }
 .rooms2 .caption .info-wrapper .date:hover {
     background: transparent;
-    border: 1px solid #f3454f;
-    color: #f3454f;
+    border: 1px solid #bd3d06;
+    color: #bd3d06;
 }
 @media (max-width: 991.98px) {
     .rooms2 figure {
@@ -2767,7 +2767,7 @@ hr.border-2 {
 }
 .rooms3 .square2 h4 {
     font-size: 30px;
-    color: #f3454f;
+    color: #bd3d06;
 }
 .rooms3 .square2 h6 {
     position: relative;
@@ -2879,7 +2879,7 @@ hr.border-2 {
     position: relative;
     font-family: 'Gilda Display', serif;
     font-size: 24px;
-    color: #f3454f;
+    color: #bd3d06;
 }
 /* page list */
 .page-list {
@@ -2962,11 +2962,11 @@ hr.border-2 {
 }
 .facilties .single-facility h5 {
     font-size: 24px;
-    color: #f3454f;
+    color: #bd3d06;
     margin-bottom: 10px;
 }
 .facilties .single-facility:hover h5 {
-  color: #f3454f;
+  color: #bd3d06;
   -webkit-transition: .5s;
   transition: .5s;
 }
@@ -2998,7 +2998,7 @@ hr.border-2 {
 }
 .facilties .single-facility .facility-shape span {
   font-size: 140px;
-  color: #f3454f;
+  color: #bd3d06;
 }
 /* hr */
 hr {
@@ -3009,7 +3009,7 @@ hr {
 }
 /* room facilities */
 .room-facilities .wrap {
-    background: #f3454f;
+    background: #bd3d06;
     padding: 30px;
 }
 .room-facilities ul {
@@ -3080,7 +3080,7 @@ hr {
 .services .content .cont h4 {
     margin: 0 0 10px 0;
     font-size: 32px;
-    color: #f3454f;
+    color: #bd3d06;
     font-weight: 400;
     line-height: 1.5em;
 }
@@ -3103,7 +3103,7 @@ hr {
   left: 0px;
 }
 .services .content .cont .more:hover {
-   color: #f3454f; 
+   color: #bd3d06; 
 }
 .services .content .info h6 {
     font-size: 15px;
@@ -3322,11 +3322,11 @@ hr {
     font-size: 14px;
 }
 .gallery-box .gallery-detail i {
-    color: #f3454f;
+    color: #bd3d06;
     padding: 8px;
 }
 .gallery-box .gallery-detail i:hover {
-    color: #f3454f;
+    color: #bd3d06;
 }
 .gallery-box:hover .gallery-detail {
     top: 50%;
@@ -3518,7 +3518,7 @@ button.mfp-arrow {
     margin-bottom: 10px;
 }
 .testimonials-box .head-box h4 span {
-    color: #f3454f;
+    color: #bd3d06;
 }
 .line {
     width: 60px;
@@ -3585,7 +3585,7 @@ button.mfp-arrow {
     float: right;
 }
 .testimonials .item .info i {
-    color: #f3454f;
+    color: #bd3d06;
     font-size: 6px;
 }
 
@@ -3664,7 +3664,7 @@ button.mfp-arrow {
 }
 .ui-datepicker {
     font-size: 15px;
-    color: #f3454f;
+    color: #bd3d06;
     background: #fff;
     z-index: 100 !important;
     border: 1px solid #fff;
@@ -3675,7 +3675,7 @@ button.mfp-arrow {
 .ui-widget-header .ui-state-default {
     border: 1px solid #f8f5f0;
     background: #f8f5f0;
-    color: #f3454f;
+    color: #bd3d06;
 }
 .ui-state-hover,
 .ui-widget-content .ui-state-hover,
@@ -3725,7 +3725,7 @@ button.mfp-arrow {
     text-transform: uppercase;
 }
 .btn-form1-submit:hover {
-    background: #f3454f;
+    background: #bd3d06;
 }
 .btn-form1-submit:focus {
     outline: none;
@@ -3761,7 +3761,7 @@ button.mfp-arrow {
     display: block;
     width: 100%;
     font-size: 15px;
-    color: #f3454f;
+    color: #bd3d06;
     padding: 19.5px 40px 20px 19.5px;
     background: #fff;
     border: none;
@@ -3770,13 +3770,13 @@ button.mfp-arrow {
 }
 .input1_inner input::placeholder {
     font-size: 15px;
-    color: #f3454f !important;
+    color: #bd3d06 !important;
 }
 .input1_inner input:focus {
     outline: none;
     box-shadow: none;
     background: #fff;
-    color: #f3454f !important;
+    color: #bd3d06 !important;
 }
 .select1_wrapper {
     margin-bottom: 0;
@@ -3823,7 +3823,7 @@ button.mfp-arrow {
     font-size: 15px;
     line-height: 28px;
     padding: 17px 49px 17px 20px;
-    color: #f3454f;
+    color: #bd3d06;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -3847,7 +3847,7 @@ button.mfp-arrow {
     background: #fff;
     font-size: 15px;
     line-height: 20px;
-    color: #f3454f;
+    color: #bd3d06;
     border-top: 1px solid #ececec;
     text-align: center;
 }
@@ -3936,7 +3936,7 @@ button.mfp-arrow {
     font-family: 'Gilda Display', serif;
     font-size: 27px;
     font-weight: 400;
-    color: #f3454f;
+    color: #bd3d06;
     border-bottom: 1px solid rgba(170, 132, 83, 0.2);
     padding-bottom: 15px;
     letter-spacing: 0;
@@ -3944,7 +3944,7 @@ button.mfp-arrow {
     margin-top: 0;
 }
 .booking-box .head-box h4 span {
-    color: #f3454f;
+    color: #bd3d06;
 }
 @media screen and (max-width: 991px) {
     .booking-box {
@@ -3967,7 +3967,7 @@ button.mfp-arrow {
     margin: 0;
     font-family: 'Gilda Display', serif;
     font-size: 24px;
-    color: #f3454f;
+    color: #bd3d06;
     margin-bottom: 20px;
 }
 .pricing-card .subname {
@@ -4064,7 +4064,7 @@ button.mfp-arrow {
     -webkit-flex-basis: 30%;
     -ms-flex-preferred-size: 30%;
     flex-basis: 30%;
-    color: #f3454f;
+    color: #bd3d06;
 }
 .position-title span {
     font-family: 'Barlow', sans-serif;
@@ -4087,7 +4087,7 @@ button.mfp-arrow {
 .position-location span {
     font-family: 'Barlow', sans-serif;
     font-size: 15px;
-    color: #f3454f;
+    color: #bd3d06;
     display: block;
     text-transform: none;
     letter-spacing: 0px;
@@ -4096,7 +4096,7 @@ button.mfp-arrow {
     font-weight: 400;
     -webkit-transition: color .3s;
     transition: color .3s;
-    color: #f3454f;
+    color: #bd3d06;
 }
 .position-time span {
     font-family: 'Barlow', sans-serif;
@@ -4192,7 +4192,7 @@ button.mfp-arrow {
     cursor: pointer;
     padding: 20px 40px;
     padding-right: 60px;
-    color: #f3454f;
+    color: #bd3d06;
     transition: all 500ms ease;
     font-family: 'Gilda Display', serif;;
 }
@@ -4320,7 +4320,7 @@ button.mfp-arrow {
     color: #666;
 }
 .news .item .con .category a:hover {
-    color: #f3454f;
+    color: #bd3d06;
 }
 .news .item .con .category a:last-child {
     margin-right: 0;
@@ -4330,7 +4330,7 @@ button.mfp-arrow {
 }
 .news .item .con h5,
 .news .item .con h5 a {
-    color: #f3454f;
+    color: #bd3d06;
     font-size: 24px;
     font-family: 'Gilda Display', serif;;
     font-weight: 400;
@@ -4421,7 +4421,7 @@ button.mfp-arrow {
     font-size: 30px;
 }
 .news2 .post-cont h5 a {
-    color: #f3454f;
+    color: #bd3d06;
 }
 .news2 .post-cont h5 a:hover {
     color: #ffffff;
@@ -4498,7 +4498,7 @@ button.mfp-arrow {
     font-size: 24px;
     line-height: 1.75em;
     margin-bottom: 15px;
-    color: #f3454f;
+    color: #bd3d06;
 }
 .news2-sidebar .search form {
     position: relative;
@@ -4515,7 +4515,7 @@ button.mfp-arrow {
     right: 0;
     top: 0;
     background-color: transparent;
-    color: #f3454f;
+    color: #bd3d06;
     border: 0;
     padding: 10px;
     cursor: pointer;
@@ -4594,7 +4594,7 @@ button.mfp-arrow {
 }
 .post-comment-section h3 {
     font-size: 20px;
-    color: #f3454f;
+    color: #bd3d06;
     font-family: 'Gilda Display', serif;
     margin-bottom: 15px;
 }
@@ -4635,7 +4635,7 @@ button.mfp-arrow {
 /* ======= Contact style ======= */
 .contact h3 {
     font-size: 24px;
-    color: #f3454f;
+    color: #bd3d06;
 }
 .map {	
 	-webkit-filter: grayscale(100%);
@@ -4653,7 +4653,7 @@ button.mfp-arrow {
     font-weight: 400;
     font-family: 'Barlow Condensed', sans-serif;
     text-transform: uppercase;
-    background: #f3454f;
+    background: #bd3d06;
     color: #fff;
     padding: 13px 22px;
     margin: 0;
@@ -4669,7 +4669,7 @@ button.mfp-arrow {
     bottom: 0;
     left: 100%;
     z-index: 1;
-    background: #f3454f;
+    background: #bd3d06;
     color: #fff;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
@@ -4728,7 +4728,7 @@ button.mfp-arrow {
     transition: width 0.3s ease;
 }
 .butn-light a:hover span {
-    color: #f3454f;
+    color: #bd3d06;
 }
 
 
@@ -4739,7 +4739,7 @@ button.mfp-arrow {
     font-weight: 400;
     font-family: 'Barlow Condensed', sans-serif;
     text-transform: uppercase;
-    background: #f3454f;
+    background: #bd3d06;
     color: #fff;
     padding: 13px 22px;
     margin: 0;
@@ -4755,7 +4755,7 @@ button.mfp-arrow {
     bottom: 0;
     left: 100%;
     z-index: 1;
-    background: #f3454f;
+    background: #bd3d06;
     color: #fff;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
@@ -4812,7 +4812,7 @@ button.mfp-arrow {
     transition: width 0.3s ease;
 }
 .butn-light2:hover span {
-    color: #f3454f;
+    color: #bd3d06;
 }
 
 
@@ -4914,7 +4914,7 @@ button.mfp-arrow {
     outline: none;
 }
 .comming form button:hover {
-  background-color: #f3454f;
+  background-color: #bd3d06;
   color: #fff;
 	outline: none;
 }
@@ -5010,7 +5010,7 @@ button.mfp-arrow {
 .footer-top {
   position: relative;
   display: block;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 40px 0 20px 0;
   z-index: 1;
 }
@@ -5315,7 +5315,7 @@ select {
   background: #000;
 }
 [data-overlay-darkgray]:before {
-  background: #f3454f;
+  background: #bd3d06;
 }
 [data-overlay-light]:before {
   background: #fff;

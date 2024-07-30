@@ -14570,7 +14570,7 @@ li {
 
 .header-top {
   padding: 10px 0;
-  background: #f3454f;
+  background: #bd3d06;
   color: #ffffff;
 }
 .header-top .header-top-message {
@@ -14983,7 +14983,7 @@ div#ec-main-menu-desk {
   margin-right: 30px;
 }
 .ec-main-menu ul li .mega-menu li ul li.menu_title a {
-  color: #f3454f;
+  color: #bd3d06;
   font-size: 16px;
   font-weight: 700;
   display: block;
@@ -15172,7 +15172,7 @@ div#ec-main-menu-desk {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background: #f3454f;
+  background: #bd3d06;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -15343,7 +15343,7 @@ div#ec-main-menu-desk {
   fill: #46c389;
 }
 .search_submit:hover .search_svg {
-  fill: #f3454f;
+  fill: #bd3d06;
 }
 
 .ec-search-select-inner {
@@ -15417,7 +15417,7 @@ div#ec-main-menu-desk {
   color: #46c389;
 }
 .ec-header-call:hover .call_svg {
-  fill: #f3454f;
+  fill: #bd3d06;
 }
 .ec-header-call .ec-call-title {
   font-size: 16px;
@@ -15824,7 +15824,7 @@ body.ec-open:before {
 ---------------------------------------------------*/
 .ec-footer {
   color: #ffffff;
-  background: #f3454f222;
+  background: #bd3d06222;
 }
 .ec-footer .footer-top {
   border-top: 1px solid #3c3c3c;
@@ -16504,7 +16504,7 @@ body {
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 0;
-  color: #f3454f;
+  color: #bd3d06;
   letter-spacing: 0.4px;
   position: relative;
   display: inline;
@@ -16689,7 +16689,7 @@ body {
 }
 #ec-fixedbutton .ec-change-rtl .ec-rtl-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 0 9px 0;
 }
 #ec-fixedbutton .ec-change-rtl .ec-rtl-switch > * {
@@ -16771,7 +16771,7 @@ body {
 }
 #ec-fixedbutton .ec-change-mode .ec-mode-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 0 7px 0;
   font-size: 10px;
 }
@@ -16982,7 +16982,7 @@ ul.slick-dots {
 }
 
 .numberDisplay {
-  color: #f3454f;
+  color: #bd3d06;
   margin-bottom: 10px;
 }
 
@@ -17216,7 +17216,7 @@ ul.slick-dots {
 }
 .bg-switcher .option-box-title {
   padding: 3px 15px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
 }
 .bg-switcher .option-box-title h3, .bg-switcher .option-box-title .h3 {
   color: #fff;
@@ -17230,7 +17230,7 @@ ul.slick-dots {
   background: #fff;
   padding: 18px;
   overflow: hidden;
-  border: 2px solid #f3454f;
+  border: 2px solid #bd3d06;
 }
 .bg-switcher ul li {
   width: 25px;
@@ -17252,7 +17252,7 @@ ul.slick-dots {
 .bg-switcher ul .bg a {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  color: #f3454f;
+  color: #bd3d06;
   font-size: 13px;
 }
 .bg-switcher ul .bg a:hover {
@@ -17268,7 +17268,7 @@ ul.slick-dots {
   width: 40px;
   height: 41px;
   color: #000;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   -webkit-transition: all ease-in 0.3s;
   transition: all ease-in 0.3s;
   display: -webkit-box;
@@ -17384,7 +17384,7 @@ ul.slick-dots {
 .lang-switcher .option-box-title {
   padding: 5px 7px;
   margin-bottom: 10px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   height: 40px;
   overflow: hidden;
 }
@@ -17400,7 +17400,7 @@ ul.slick-dots {
   background: #fff;
   padding: 18px;
   overflow: hidden;
-  border: 2px solid #f3454f;
+  border: 2px solid #bd3d06;
 }
 .lang-switcher ul li {
   width: 25px;
@@ -17442,7 +17442,7 @@ ul.slick-dots {
   height: 41px;
   color: #ffffff;
   font-size: 12px;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   -webkit-transition: all ease-in 0.3s;
   transition: all ease-in 0.3s;
   display: -webkit-box;
@@ -17743,7 +17743,7 @@ ul.slick-dots {
 .ec-tools-sidebar .ec-change-mode .ec-mode-btn {
   width: 40px;
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 7px 0;
   font-size: 10px;
   cursor: pointer;
@@ -17827,7 +17827,7 @@ ul.slick-dots {
 }
 .ec-tools-sidebar .ec-change-rtl .ec-rtl-btn {
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 9px 0;
 }
 .ec-tools-sidebar .ec-change-rtl .ec-rtl-switch > * {
@@ -17910,7 +17910,7 @@ ul.slick-dots {
 .ec-tools-sidebar .ec-fullscreen-mode .ec-fullscreen-btn {
   width: 40px;
   pointer-events: none;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   padding: 3px 7px 0;
   font-size: 10px;
   cursor: pointer;
@@ -18017,7 +18017,7 @@ ul.slick-dots {
   font-size: 24px;
   position: relative;
   line-height: 1.2;
-  color: #f3454f;
+  color: #bd3d06;
   font-weight: 700;
   letter-spacing: 0;
   margin-bottom: 10px;
@@ -18095,7 +18095,7 @@ ul.slick-dots {
 #ec-cat-slider .slick-arrow::before {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  color: #f3454f;
+  color: #bd3d06;
   font-size: 30px;
 }
 #ec-cat-slider .slick-arrow:hover::before {
@@ -18193,7 +18193,7 @@ ul.slick-dots {
   margin-bottom: 15px;
   font-size: 16px;
   font-weight: 700;
-  color: #f3454f;
+  color: #bd3d06;
   line-height: 1;
   text-transform: uppercase;
   line-height: 1.3;
@@ -18373,7 +18373,7 @@ section.ec-instagram-section {
 }
 .ec-slide-content .ec-slide-title {
   font-size: 55px;
-  color: #f3454f;
+  color: #bd3d06;
   margin-bottom: 15px;
   letter-spacing: 0.05rem;
   font-weight: 700;
@@ -18433,7 +18433,7 @@ section.ec-instagram-section {
   font-size: 18px;
 }
 .ec-slide-content .btn:hover {
-  background-color: #f3454f;
+  background-color: #bd3d06;
 }
 
 .main-slider-dot .swiper-pagination-bullet {
@@ -18546,7 +18546,7 @@ section.ec-instagram-section {
 }
 .ec-offer-content .ec-offer-title {
   font-size: 60px;
-  color: #f3454f;
+  color: #bd3d06;
   margin-bottom: 0;
   letter-spacing: 0;
   font-weight: 700;
@@ -18945,11 +18945,11 @@ section.ec-instagram-section {
   -webkit-box-pack: left;
       -ms-flex-pack: left;
           justify-content: left;
-  color: #f3454f;
+  color: #bd3d06;
   letter-spacing: 0.4px;
 }
 .ec-product-inner .ec-pro-content .ec-price span.new-price {
-  color: #f3454f;
+  color: #bd3d06;
   font-weight: 700;
   font-size: 14px;
   margin-right: 7px;
@@ -19325,7 +19325,7 @@ i.ecicon.eci-star.fill {
   color: #444444;
 }
 .quickview-pro-content .ec-quickview-price span.new-price {
-  color: #f3454f;
+  color: #bd3d06;
   font-weight: 700;
   font-size: 22px;
 }
@@ -19452,7 +19452,7 @@ i.ecicon.eci-star.fill {
   padding: 24px 0;
 }
 .ec_ser_inner:hover .ec-service-image svg {
-  fill: #f3454f;
+  fill: #bd3d06;
 }
 .ec_ser_inner .ec-service-image {
   margin-right: 20px;
@@ -19646,7 +19646,7 @@ i.ecicon.eci-star.fill {
 .ec-spe-pro-inner .ec-spe-pro-content .ec-spe-pro-progress-desc span {
   font-size: 14px;
   font-weight: 400;
-  color: #f3454f;
+  color: #bd3d06;
   text-transform: uppercase;
   letter-spacing: 0;
   position: relative;
@@ -19691,7 +19691,7 @@ i.ecicon.eci-star.fill {
 .ec-spe-pro-inner .ec-spe-pro-content .ec-spe-count-desc {
   font-size: 14px;
   font-weight: 600;
-  color: #f3454f;
+  color: #bd3d06;
   text-transform: uppercase;
   letter-spacing: 0;
   position: relative;
@@ -19703,7 +19703,7 @@ i.ecicon.eci-star.fill {
 }
 .ec-spe-pro-inner .ec-spe-pro-title a {
   font-size: 14px;
-  color: #f3454f;
+  color: #bd3d06;
   letter-spacing: 0.1px;
   text-decoration: none;
   white-space: nowrap;
@@ -20100,7 +20100,7 @@ i.ecicon.eci-star.fill {
   line-height: 42px;
   font-size: 16px;
   text-transform: uppercase;
-  background-color: #f3454f;
+  background-color: #bd3d06;
   border-radius: 30px;
 }
 #ec-popnews-box button:hover {
@@ -21027,7 +21027,7 @@ i.ecicon.eci-star.fill {
     font-size: 20px;
   }
   .header-top-social ul li a i {
-    color: #f3454f;
+    color: #bd3d06;
   }
   .ec-menu-inner {
     display: -webkit-box;
@@ -21053,7 +21053,7 @@ i.ecicon.eci-star.fill {
             justify-content: space-between;
     width: 100%;
     padding-bottom: 10px;
-    color: #f3454f;
+    color: #bd3d06;
     font-weight: 600;
   }
   .header-top-lan-curr .dropdown .dropdown-toggle::after {
@@ -21061,7 +21061,7 @@ i.ecicon.eci-star.fill {
   }
   .header-top-lan-curr .dropdown .dropdown-toggle i {
     margin-left: 15px;
-    color: #f3454f;
+    color: #bd3d06;
   }
   .header-top-lan-curr .dropdown .dropdown-menu {
     top: 0 !important;
@@ -21713,7 +21713,7 @@ i.ecicon.eci-star.fill {
   .ec-nav-toolbar .ec-nav-panel .ec-nav-panel-icons a .header_svg {
     width: 25px;
     height: 25px;
-    fill: #f3454f;
+    fill: #bd3d06;
   }
   .ec-nav-toolbar .ec-nav-panel .ec-nav-panel-icons a .ec-cart-noti {
     width: 15px;

@@ -1,7 +1,7 @@
 <div class="col-md-4 mb-30">
     <div class="item">
             <div class="position-re o-hidden"> <img src="{{Voyager::image($post->image)}}" alt="">
-                <div class="date" style="background-color: #f3454f">
+                <div class="date" style="background-color: #bd3d06">
                     <a href="{{route('post',$post->slug)}}"> <span>{{$post->created_at->format('M')}}</span> <i>{{$post->created_at->format('d')}}</i> </a>
                 </div>
             </div>
