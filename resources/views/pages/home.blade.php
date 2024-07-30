@@ -87,31 +87,6 @@
         </div>
     </section>
 
-
-
-    {{-- <section class="facilties section-padding">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="section-subtitle">{{ __('words.facilities_sec_subtittle') }}</div>
-                    <div class="section-title">{{ __('words.facilities_sec_tittle') }}</div>
-                </div>
-            </div>
-            <div class="row">
-                @foreach ($facilities as $facility)
-                    <div class="col-md-4">
-                        <div class="single-facility animate-box" data-animate-effect="fadeInUp">
-
-                            <h5>{{ $facility->name }}</h5>
-                            <p>{{ $facility->description }}</p>
-                            <div class="facility-shape"> <span class="flaticon-world"></span> </div>
-                        </div>
-                    </div>
-                @endforeach
-
-            </div>
-        </div>
-    </section> --}}
 @endsection
 @section('js')
     <script src="{{ asset('assets/js/star-rating.js') }}" type="text/javascript"></script>
