@@ -24,10 +24,10 @@
                                     <p>Email: {{ Auth::user()->email }}</p>
 
                                     <p>Phone:
-                                        @if (Auth::user()->phone)
-                                            {{ Auth::user()->phone }}
+                                        @if (Auth::user()->contact_number)
+                                            {{ Auth::user()->contact_number }}
                                         @else
-                                            <a href="{{ route('user.update_profile') }}" class="text-success">Add a phone
+                                            <a href="{{ route('user.update_profile') }}" class="text-success">Add a contact
                                                 number? </a>
                                         @endif
 
@@ -63,7 +63,7 @@
                                     style="   border: none;
                                 background: none;">Default
                                     address </h6> --}}
-{{-- 
+                                {{-- 
                                 @if (Auth()->user()->addresses->count() == !0)
                                     @foreach (Auth()->user()->addresses as $address)
                                         <div class="mb-1">
@@ -93,9 +93,7 @@
                                 background: none;">Credit/Debit
                                     Cards </h6> --}}
                                 @php
-                                    $methods = auth()
-                                        ->user()
-                                        ->paymentMethods();
+                                    $methods = auth()->user()->paymentMethods();
                                 @endphp
                                 <div class="row">
 

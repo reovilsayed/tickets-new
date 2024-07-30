@@ -43,7 +43,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-12 form-group">
+                            <div class="col-md-6 form-group">
                                 <input id="email" type="email" placeholder="{{ __('Email Address') }}"
                                     class=" @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
                                     required autocomplete="email" autofocus>
@@ -53,7 +53,16 @@
                                     </span>
                                 @enderror
                             </div>
-
+                            <div class="col-md-6 form-group">
+                                <input id="contact_number" type="text" placeholder="{{ __('Contact Number') }}"
+                                    class=" @error('contact_number') is-invalid @enderror" name="contact_number" value=""
+                                    required autocomplete="contact_number" autofocus>
+                                @error('contact_number')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                             <div class="col-md-6 form-group">
                                 <input id="password" type="password" placeholder="{{ __('Password') }}"
                                     class="@error('password') is-invalid @enderror" name="password" required

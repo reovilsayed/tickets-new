@@ -30,6 +30,7 @@ class User extends \TCG\Voyager\Models\User
     protected $fillable = [
         'name',
         'email',
+        'contact_number',
         'password',
         'avatar',
         'role_id',
@@ -87,7 +88,7 @@ class User extends \TCG\Voyager\Models\User
     }
     public function massages()
     {
-        return $this->hasMany(Massage::class,'reciver_id');
+        return $this->hasMany(Massage::class, 'reciver_id');
     }
 
     public function followedShops()
@@ -157,10 +158,10 @@ class User extends \TCG\Voyager\Models\User
     {
         $currentWeekStart = Carbon::now()->startOfWeek();
         $currentWeekEnd = Carbon::now()->endOfWeek();
-        
+
         return $query->whereHas('orders', function ($query) {
-                $query->where('shop_id', auth()->user()->shop->id);
-            })
+            $query->where('shop_id', auth()->user()->shop->id);
+        })
             ->when(request('customers') == 2, function ($query) {
                 $query->whereYear('created_at', '=', Carbon::now()->year);
             })
