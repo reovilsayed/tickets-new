@@ -23,7 +23,7 @@
                                 @csrf
                                
                             </form>
-                            <button onclick="document.getElementById('logoutform').submit()" type="submit" class="user-log"><i class="fa-solid fa-gear"></i>
+                            <button onclick="document.getElementById('logoutform').submit()" type="submit" class="user-log"><i class="fa-solid fa-user"></i>
                                 logout</button>
                         </li>
                     </ul>

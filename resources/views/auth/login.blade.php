@@ -30,7 +30,7 @@
                         @enderror
                     </div>
                     <div class="col-md-12 form-group">
-                        <input class="login-pass" id="password" type="password" placeholder="{{ __('Password') }}"
+                        <input class="login-pass" id="password" type="password" placeholder="Password"
                             class="@error('password') is-invalid @enderror" name="password" required
                             autocomplete="current-password">
                         @error('password')
@@ -41,14 +41,14 @@
                     </div>
                     <div class="col-md-12">
                         <a href="{{ route('password.request') }}" class="" style="color: #ffffff">I Forgot
-                            password</a>
+                            Password</a>
                     </div>
                     <div class="col-md-12">
-                        <button type="submit" class="login-btn"> Login </button>
+                        <button type="submit" class="login-btn text-white"> Login </button>
                     </div>
                     <div class="col-md-12">
 
-                        <span class="">Don't Have an account ? <a class="text-success" href="{{ route('register') }}">
+                        <span class="">Don't Have an account ? <a class="text-warning" href="{{ route('register') }}">
                                 Register</a></span>
                     </div>
                 </div>
