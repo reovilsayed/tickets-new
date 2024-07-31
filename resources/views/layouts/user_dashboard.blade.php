@@ -2,7 +2,7 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('assets/frontend-old-assets/css/style.css') }}" />
 <link rel="stylesheet"
-    href="{{ asset('assets/frontend-assets/css/plugins/slick.min.css') }}" />
+    href="{{ asset('assets/frontend-old-assets/css/plugins/slick.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('assets/frontend-old-assets/responsive.css') }}" />
 <link rel="stylesheet" id="bg-switcher-css"
     href="{{ asset('assets/frontend-old-assets/css/backgrounds/bg-4.css') }}">
@@ -35,10 +35,10 @@
 <!-- End Vendor dashboard section -->
 @endsection
 @section('js')
-<script src="{{ asset('assets/frontend-assets/js/vendor/jquery.magnific-popup.min.js') }}">
+<script src="{{ asset('assets/frontend-old-assets/js/vendor/jquery.magnific-popup.min.js') }}">
 </script>
-<script src="{{ asset('assets/frontend-assets/js/plugins/jquery.sticky-sidebar.js') }}">
+<script src="{{ asset('assets/frontend-old-assets/js/plugins/jquery.sticky-sidebar.js') }}">
 </script>
 
-<script src="{{ asset('assets/frontend-assets/js/main.js') }}"></script>
+<script src="{{ asset('assets/frontend-old-assets/js/main.js') }}"></script>
 @endsection

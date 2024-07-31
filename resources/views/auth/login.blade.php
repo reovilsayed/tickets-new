@@ -15,15 +15,12 @@
 @endsection
 @section('content')
     <div class="container login-wrapper">
-        <div class="col-md-5 mb-20 offset-md-1 p-5"
-            style="background-color:#ffff; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
-            <h3 class="text-center">Login</h3>
-            
+        <div class="col-md-5 mb-20 offset-md-1 p-5">
             <form method="post" class="" action="{{ route('login') }}">
                 @csrf
                 <div class="row">
                     <div class="col-md-12 form-group">
-                        <input id="email" type="email" placeholder="{{ __('Email Address') }}"
+                        <input class="login-input" id="email" type="email" placeholder="{{ __('Email') }}"
                             class=" @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
                             required autocomplete="email" autofocus>
                         @error('email')
@@ -33,7 +30,7 @@
                         @enderror
                     </div>
                     <div class="col-md-12 form-group">
-                        <input id="password" type="password" placeholder="{{ __('Password') }}"
+                        <input class="login-pass" id="password" type="password" placeholder="Password"
                             class="@error('password') is-invalid @enderror" name="password" required
                             autocomplete="current-password">
                         @error('password')
@@ -42,15 +39,16 @@
                             </span>
                         @enderror
                     </div>
-                    <div class="col-md-12 d-flex justify-content-end">
-                        <a href="{{ route('password.request') }}" class="" style="color: #bd3d06">Recover
-                            password</a>
-                    </div>
-
                     <div class="col-md-12">
-                        <button type="submit" class="butn-dark2 me-3"><span>Login</span></button>
-                        <span class="">Don't Have an account ? <a class="text-success"
-                                href="{{ route('register') }}">
+                        <a href="{{ route('password.request') }}" class="" style="color: #ffffff">I Forgot
+                            Password</a>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="login-btn text-white"> Login </button>
+                    </div>
+                    <div class="col-md-12">
+
+                        <span class="">Don't Have an account ? <a class="text-warning" href="{{ route('register') }}">
                                 Register</a></span>
                     </div>
                 </div>

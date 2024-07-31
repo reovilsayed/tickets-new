@@ -13,7 +13,7 @@
         <!-- Button -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
             aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span
-                class="navbar-toggler-icon"><i class="ti-menu"></i></span> </button>
+                class="navbar-toggler-icon"><i class="fa fa-bars fa-2x text-white"></i></span></button>
         <!-- Menu -->
         <div class="collapse navbar-collapse" id="navbar">
             <ul class="navbar-nav ms-auto">
@@ -58,13 +58,15 @@
                 </li> --}}
                 {{-- <li class="nav-item"><a class="nav-link {{ Route::is('contact') ? 'active' : '' }}"
                         href="{{ route('contact') }}">{{ __('contact_us') }}</a></li> --}}
+
                 @if (auth()->check())
-                    <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button"
-                            data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                            aria-expanded="false">{{ auth()->user()->name }} <i class="fa-solid fa-caret-down"></i></a>
+                    <li class="nav-item dropdown"> <a
+                            class="nav-link dropdown-toggle @if (request()->segment(1) == 'user') active @endif"
+                            href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                            aria-expanded="false">Account</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('user.dashboard') }}"
-                                    class="dropdown-item"><span>{{ __('User Dashboard') }}</span></a>
+                                    class="dropdown-item {{ Route::is('user.dashboard') ? 'active' : '' }}"><span>{{ __('User Dashboard') }}</span></a>
                             </li>
                             {{-- @if (auth()->user()->role_id == 3)
                                 <li><a href="{{ route('vendor.dashboard') }}" class="dropdown-item"><span>Vendor

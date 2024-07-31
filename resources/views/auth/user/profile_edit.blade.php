@@ -2,11 +2,19 @@
 
 @section('dashboard-content')
     <div class="ec-shop-rightside col-lg-9 col-md-12">
+        <div class="card user-name">
+            <div class="card-body">
+                <span class="user-dash-font">Hello, {{ Auth::user()->name }}!</span>
+            </div>
+        </div>
         <div class="ec-vendor-dashboard-card ec-vendor-setting-card">
             <div class="ec-vendor-card-body">
+                <h4 class="dashboard-title mb-5">
+                    Update profile
+                </h4>
                 <form action="{{ route('user.profile.update') }}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <div class="row">
+                    <div class="row ">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="first_name">
@@ -22,7 +30,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6 mt-2">
+                        <div class="col-md-6 ">
                             <div class="form-group">
                                 <label for="last_name">
                                     Last name
@@ -37,7 +45,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        {{-- <div class="col-md-12">
                             <div class="form-group">
                                 <label for="avatar">
                                     Avatar
@@ -51,7 +59,7 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
@@ -81,8 +89,8 @@
                                 @enderror
                             </div>
                         </div>
-
-                        <button type="submit" class="btn btn-lg btn-dark mt-2 rounded">Update</button>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary mt-5 rounded">Update</button>
 
                 </form>
             </div>
