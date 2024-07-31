@@ -48,31 +48,21 @@
 </style>
 <div class="item" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
     <a href="{{ $product->path() }}" class="thumb d-block">
-        <img src="{{ Voyager::image($product->image) }}" alt="" style="">
+        <img src="{{ Voyager::image($product->thumbnail) }}" alt="" style="">
     </a>
     {{-- <span class="category">
         {{ $product->event_start_date->format('d M') }}
     </span> --}}
     <div class="con">
-        <h6><a href="{{ $product->path() }}">
-                @if ($product->sale_price)
-                    <del>{{ Sohoj::price($product->price) }} </del>
-                    {{ Sohoj::price($product->sale_price) }}
-                @else
-                    {{ Sohoj::price($product->price) }}
-                @endif
-                <br>
-                @foreach ($product->prodcats as $item)
-                    /{{ $item->name }}
-                @endforeach
-
-
-            </a></h6>
-        <h5 style="height: 85px"><a href="{{ $product->path() }}" class="w-100">{{ $product->name }}</a> </h5>
-       @if($product->event_start_date->format('d M') == $product->event_end_date->format('d M'))
-       <h6>{{ $product->event_start_date->format('d M')}} </h6>
+        <h6>
+            {{Sohoj::price(30)}} - {{Sohoj::price(50)}}
+        </h6>
+            
+        <h5 style="height: 85px"><a href="{{ $product->path() }}" title="{{$product->name}}" class="w-100">{{ Str::limit($product->name,30) }}</a> </h5>
+       @if($product->start_at->format('d M') == $product->end_at->format('d M'))
+       <h6>{{ $product->start_at->format('d M')}} </h6>
        @else
-       <h6>{{ $product->event_start_date->format('d M')}} - {{ $product->event_end_date->format('d M')}} </h6>
+       <h6>{{ $product->start_at->format('d M')}} - {{ $product->end_at->format('d M')}} </h6>
        @endif
         <div class="line"></div>
         <div class=" facilities">

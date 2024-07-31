@@ -7,6 +7,7 @@ use App\Models\Address;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Email;
+use App\Models\Event;
 use App\Models\Facility;
 use App\Models\Offer;
 use App\Models\Order;
@@ -26,29 +27,14 @@ class PageController extends Controller
 {
     public function home()
     {
-        $latest_products = Product::orderBy('views', 'desc')
-            ->where("status", 1)
-            ->where("status", 1)
-            ->whereHas('shop', function ($q) {
-                $q->where('featured', 0);
-            })
-            ->latest()->limit(12)->whereNull('parent_id')->get();
-
-        $prodcats = Prodcat::with('childrens')->where('parent_id', null)->get();
-        $sliders = Slider::latest()->get();
-        $featureOffers = Product::where('featured', 1)->get();
-        // $bestdeals=Product::where('bestdeals',1)->first();
-        // $featureOffers=Product::where('featured',1)->where('expired_at','>=',Carbon::today())->get();
-        // $bestdeals=Product::where('bestdeals',1)->where('expired_at','>=',Carbon::today())->first();
-        $ratings = Rating::latest()->get();
-        $facilities = Facility::latest()->get();
-
-        return view('pages.home', compact('latest_products', 'prodcats', 'sliders', 'featureOffers', 'ratings', 'facilities'));
+        $events = Event::where('status', 1)->get();
+        $featureEvents = Event::where('status', 1)->where('featured', 1)->take(3)->get();
+        
+        return view('pages.home', compact( 'events', 'featureEvents'));
     }
     public function shops()
     {
-        $products = Product::where("status", 1)->limit(12)->
-            filter()->paginate(10);
+        $products = Product::where("status", 1)->limit(12)->filter()->paginate(10);
         $categories = Prodcat::has('products')->latest()->get();
         $cities = City::all();
 
@@ -155,7 +141,6 @@ class PageController extends Controller
             'shop_id' => $product->shop->id,
         ]);
         return back()->with('success_msg', 'Thanks for your review');
-
     }
     public function subscribe(Request $request)
     {

@@ -46,27 +46,7 @@
 @endsection
 
 @section('content')
-    <section class="mobile-cards-sec scroll-none" id="mobile-cards-sec" style="background-color: black">
-        <div class="d-flex justify-content-between">
-            @foreach ($featureOffers->take(3) as $mobileItem)
-                <div class="" style="width: 32%">
-                    <div class="mobile-card" style="background-image:url({{ Voyager::image($mobileItem->image) }})"
-                        onclick="window.location.href = '{{ $mobileItem->path() }}';">
-
-
-                        <a href="{{ $mobileItem->path() }}" class="px-2 py-1 text-white "
-                            style="background-color: #bd3d06;font-size:12px">
-                            <span
-                                title="{{ $mobileItem->name }}">{{ Illuminate\Support\Str::limit($mobileItem->name, 10) }}</span>
-                        </a>
-
-
-                    </div>
-                </div>
-            @endforeach
-
-        </div>
-    </section>
+  
 
     <section class="rooms1 section-padding bg-cream" data-scroll-index="1">
         <div class="container">
@@ -77,7 +57,7 @@
                 </div>
             </div>
             <div class="row">
-                @foreach ($featureOffers as $product)
+                @foreach ($events as $product)
                     <div class="col-md-4">
                         <x-products.product :product=$product />
                     </div>
