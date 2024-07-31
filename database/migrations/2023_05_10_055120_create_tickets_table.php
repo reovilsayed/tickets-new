@@ -15,14 +15,15 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('parent_id')->nullable()->default(null);
-            $table->foreignId('shop_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
-            $table->string('subject')->nullable();
-            $table->text('massage')->nullable();
-            $table->string('image')->nullable();
-            $table->boolean('status')->default(false);
-            $table->tinyInteger('action')->default(null)->nullable();
+            $table->json('owner');
+            $table->foreignId('event_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->bigInteger('order_id')->nullable();
+            $table->bigInteger('user_id')->nullable();
+            $table->string('ticket');
+            $table->tinyInteger('status')->default(1);
+            $table->json('dates');
+            $table->bigInteger('price')->nullable();
             $table->timestamps();
         });
     }

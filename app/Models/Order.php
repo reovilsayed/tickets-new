@@ -11,74 +11,13 @@ class Order extends Model
     use HasFactory;
 
     protected $guarded = [];
-    public function shop()
-    {
-        return $this->belongsTo(Shop::class);
-    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function products()
-    {
-        return $this->belongsToMany(Product::class)->using(OrderProduct::class)->withPivot(['ticket', 'price', 'check_in_at', 'check_out_at'])->withTimestamps();
-    }
 
-    public function parent()
-    {
-        return $this->belongsTo(Order::class, 'parent_id', 'id');
-    }
-    public function childrens()
-    {
-        return $this->hasMany(Order::class, 'parent_id');
-    }
 
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
-    public function feedback()
-    {
-        return $this->hasOne(Feedback::class, 'order_id');
-    }
-    public function getFirstNameAttribute()
-    {
-        return json_decode($this->shipping)->first_name;
-    }
-    public function getEmailAttribute()
-    {
-        return json_decode($this->shipping)->email;
-    }
-    public function getPhoneAttribute()
-    {
-        return json_decode($this->shipping)->phone;
-    }
-    public function getPostCodeAttribute()
-    {
-        // dd($this->shipping);
-        return json_decode($this->shipping)->post_code ?? null;
-    }
-    public function getCityAttribute()
-    {
-        return json_decode($this->shipping)->city ?? null;
-    }
-    public function getAddressAttribute()
-    {
-        return json_decode($this->shipping)->address_1 ?? null;
-    }
-    public function getLastNameAttribute()
-    {
-        return json_decode($this->shipping)->last_name;
-    }
-    public function getFullNameAttribute()
-    {
-        return $this->first_name . ' ' . $this->last_name;
-    }
-
-    public function orderProduct()
-    {
-        return $this->hasOne(OrderProduct::class, 'order_id');
-    }
     public function scopeFilter($query)
     {
         $currentWeekStart = Carbon::now()->startOfWeek();
@@ -110,5 +49,10 @@ class Order extends Model
             ->when(request('orders') == 1, function ($query) use ($currentWeekStart, $currentWeekEnd) {
                 $query->whereBetween('created_at', [$currentWeekStart, $currentWeekEnd]);
             });
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
     }
 }

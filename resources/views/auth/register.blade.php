@@ -11,6 +11,9 @@
         .navbar .navbar-nav .nav-link {
             color: black;
         }
+        .invalid-feedback{
+            font-size: 12px;
+        }
     </style>
 @endsection
 @section('content')
@@ -18,6 +21,7 @@
         <div class="col-md-5 mb-20 offset-md-1 p-5">
             <h3 class="text-center">{{ __('Register') }}<h3>
                     <form method="post" class="" action="{{ route('register') }}">
+                        @csrf
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <input id="name" type="text" placeholder="{{ __('First Name') }}"
@@ -45,7 +49,7 @@
                                     value="{{ old('email') }}" required autocomplete="email" autofocus>
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
+                                     {{ $message }}
                                     </span>
                                 @enderror
                             </div>
@@ -74,7 +78,6 @@
                                 <input id="password-confirm" type="password" placeholder="Confirm Password" class="reg-pass"
                                     name="password_confirmation" required autocomplete="new-password">
                             </div>
-                            <input type="hidden" name="role_id" value="2" id="">
                             <div class="col-md-12">
                                 <button type="submit" class="reg-btn text-white" style="font-size: 22px">Register</button>
                             </div>

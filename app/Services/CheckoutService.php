@@ -31,7 +31,6 @@ class CheckoutService
             'last_name' => ['required', 'max:40'],
             'email' => ['required', 'max:40', 'email'],
             'phone' => ['required'],
-            'terms' => ['required'],
         ]);
 
 
@@ -42,9 +41,15 @@ class CheckoutService
             $item->model->quantity -= $item->quantity;
             $item->model->save();
             for ($i = 1; $i <= $item->quantity; $i++) {
-                $order->products()->attach($item->model, [
-                    'ticket' => $item->id . '-' . Str::random(10) . '-' . now()->format('dmy'),
+                $order->tickets()->create([
+                    'user_id' => auth()->id() ?? null,
+                    'owner' => $this->billingObject(),
+                    'event_id' => $item->model->event_id,
+                    'product_id' => $item->id,
+                    'order_id' => $order->id,
+                    'ticket' => uniqid(),
                     'price' => $item->price,
+                    'dates' => $item->model->dates
                 ]);
             }
         }
@@ -59,7 +64,7 @@ class CheckoutService
         $total = (Cart::getSubTotal() + Sohoj::tax()) - Sohoj::discount();
         return Order::create([
             'user_id' => auth()->id() ?? null,
-            'shipping' => $this->shippingObject(),
+            'billing' => $this->billingObject(),
             'subtotal' => Cart::getSubTotal(),
             'discount' => Sohoj::round_num(Sohoj::discount()),
             'discount_code' => Sohoj::discount_code(),
@@ -74,7 +79,7 @@ class CheckoutService
     //     $total = 
     // }
 
-    protected function shippingObject()
+    protected function billingObject()
     {
         return json_encode([
             'first_name' => request()->first_name,

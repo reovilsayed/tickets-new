@@ -22,7 +22,10 @@ class Product extends Model
 
     public function dates(): Attribute
     {
-        return Attribute::make(set: fn ($value) => json_encode($value));
+        return Attribute::make(
+            set: fn ($value) => json_encode($value),
+            get: fn ($value) => json_decode($value)
+        );
     }
 
     public function discount()
@@ -30,6 +33,11 @@ class Product extends Model
         $discount_amount  = $this->price - $this->sale_price;
         $discount_percantage = ($discount_amount / $this->price) * 100;
         return round($discount_percantage);
+    }
+
+
+    public function event(){
+        return $this->belongsTo(Event::class);
     }
 
     public function currentPrice()

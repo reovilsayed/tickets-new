@@ -48,9 +48,6 @@ class RegisterController extends Controller
                 return RouteServiceProvider::USER;
                 break;
 
-            // case 3:
-            //     return '/verify-email';
-            //     break;
 
             default:
                 return RouteServiceProvider::HOME;
@@ -83,7 +80,7 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'contact_number' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role_id' => ['required'],
+            
         ]);
     }
 
@@ -102,16 +99,12 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'contact_number' => $data['contact_number'],
             'password' => Hash::make($data['password']),
-            'role_id' => $data['role_id'],
+            'role_id' => 2,
 
         ];
         $user= User::create($array);
         $verify_token=Str::random(20);
 
-        if($data['role_id']==3){
-            // Mail::to(setting('site.email'))->send(new NotifyEmail($user));
-            Mail::to($user->email)->send(new VerifyEmail($user,$verify_token));
-        }
 
         return $user;
     }

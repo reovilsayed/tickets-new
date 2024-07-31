@@ -432,7 +432,7 @@ body {
 }
 
 .order-table th {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .order-table td {
@@ -480,4 +480,7 @@ body {
     width: 100%;
     background-color: #f36a30 !important;
     border-radius: 20px !important;
+}
+.payinfo td,th{
+    padding: 4px;
 }

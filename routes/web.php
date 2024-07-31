@@ -95,7 +95,6 @@ Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name
 
 
 
-
 // Wishlist 
 Route::get('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
 Route::get('/wishlist/remove/{productId}', [WishlistController::class, 'remove'])->name('wishlist.remove');

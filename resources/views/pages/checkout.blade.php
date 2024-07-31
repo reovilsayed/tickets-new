@@ -1,13 +1,18 @@
 @php
-    $states = ['Capital Region of Denmark', 'Central Denmark Region', 'North Denmark Region', 'Region Zealand', 'Region of Southern Denmark	'];
+    $states = [
+        'Capital Region of Denmark',
+        'Central Denmark Region',
+        'North Denmark Region',
+        'Region Zealand',
+        'Region of Southern Denmark	',
+    ];
 @endphp
 
 @extends('layouts.app')
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/frontend-old-assets/css/style.css') }}" />
-    {{-- <link rel="stylesheet" href="{{ asset('assets/frontend-assets/css/plugins/slick.min.css') }}" /> --}}
+    <link rel="stylesheet" href="{{ asset('assets/frontend-assets/css/plugins/slick.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/frontend-old-assets/responsive.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/checkout.css') }}">
     <style>
         .navbar .navbar-nav .nav-link {
             color: black;
@@ -15,241 +20,169 @@
     </style>
 @endsection
 @section('content')
-    <!-- Ec checkout page -->
-    <section class="ec-page-content section-space-p">
-        <div class="container">
-            <form class="" action="{{ route('checkout.store') }}" method="POST">
-                @csrf
-                <div class="row justify-content-between">
-                    <div class="ec-checkout-leftside col-lg-7 col-md-12 ">
-                        <!-- checkout content Start -->
-                        <div class="ec-checkout-content">
-                            <div class="ec-checkout-inner">
-                                <div class="ec-checkout-wrap margin-bottom-30">
+    <form method="POST" action="{{ route('coupon') }}" id="coupon-form">
+        @csrf
 
-                                    <div class="">
-                                        {{-- <h3 >Enter order information </h3> --}}
-                                        <div class=""style="background-color:#F8F5F0;">
-
-                                            <input type="hidden" name="shop_id" value="">
-
-                                            <fieldset class="p-4">
-                                                <h3 class="ec-checkout-title mb-3" style="font-size: 20px;">{{ __('personal_info') }}
-                                                </h3>
-                                                <div class="row">
-                                                    <div class=" col-md-6">
-
-                                                        <input type="text"
-                                                            class="bg-white ps-2 @error('first_name') is-invalid @enderror"
-                                                            value="{{ Auth()->user() ? Auth()->user()->name : '' }}"
-                                                            name="first_name" placeholder="{{ __('first_name') }} *" id="inputEmail4">
-                                                        @error('first_name')
-                                                            <span class="text-danger">
-                                                                {{ $message }}
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="col-md-6">
-
-                                                        <input type="text" placeholder="{{ __('last_name') }} *"
-                                                            value="{{ Auth()->user() ? Auth()->user()->l_name : '' }}"
-                                                            name="last_name"
-                                                            class="bg-white ps-2 @error('last_name') is-invalid @enderror"
-                                                            id="inputPassword4">
-                                                        @error('last_name')
-                                                            <span class="text-danger">
-                                                                {{ $message }}
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-
-                                                    <div class="col-6">
-
-                                                        <input type="email"
-                                                            class="bg-white ps-2 @error('email') is-invalid @enderror"
-                                                            value="{{ Auth()->user() ? Auth()->user()->email : '' }}"
-                                                            name="email" id="inputAddress" placeholder="{{ __('email') }} *">
-                                                        @error('email')
-                                                            <span class="text-danger">
-                                                                {{ $message }}
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="col-6">
-
-                                                        <input type="text"
-                                                            class="bg-white ps-2 @error('phone') is-invalid @enderror"
-                                                            value="{{ Auth()->user() ? Auth()->user()->phone : '' }}" name="phone" id="phone"
-                                                            placeholder="{{ __('phone') }} *">
-                                                        @error('phone')
-                                                            <span class="text-danger">
-                                                                {{ $message }}
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                   
-
-                                                </div>
-                                            </fieldset>
-
+    </form>
+    <form action="{{ route('checkout.store') }}" method="post">
+        @csrf
+        <!-- Ec checkout page -->
+        <section class="ec-page-content section-space-p">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="card" style="box-shadow: 0px 10px 10px #000">
+                            <div class="card-body">
+                                <h3 class="dashboard-title">
+                                    Billing information
+                                </h3>
+                                <div class="row mt-5">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="mb-0" for="first_name">First name</label>
+                                            <input type="text" id="first_name" name="first_name" class="form-control">
                                         </div>
                                     </div>
-
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label class="mb-0" for="last_name">Last name</label>
+                                            <input type="text" id="last_name" name="last_name" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label class="mb-0" for="email">Email</label>
+                                            <input type="email" id="email" name="email" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label class="mb-0" for="phone">Phone</label>
+                                            <input type="text" id="phone" name="phone" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
 
+                                <hr>
+                                @if (!session()->has('discount'))
+                                    <h6 class="dashboard-title">
+                                        Apply coupon
+                                    </h6>
+
+
+                                    <div class="form-group  col-md-12 d-flex">
+                                        <input class="form-control" type="text" required=""
+                                            placeholder="Enter Your Coupan Code" id="coupon-input" value="">
+                                        <button type="button" 
+                                            type="submit" class="btn border btn-dark " style="margin-right: 0 !important"
+                                            id="basic-addon2"><span>Apply</span></button>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-5">
+                        <div class="card">
 
-                    <div class="ec-checkout-rightside  col-lg-4 col-md-12 ">
-                        <div class="ec-sidebar-wrap order-side border-0" style="background-color:#f8f5f0;border-radius:0px">
-                            <!-- Sidebar Summary Block -->
-                            <div class="ec-sidebar-block">
-                                <div class="ec-sb-title">
-                                    <h3 class="ec-sidebar-title">{{ __('order_summery') }}</h3>
-                                </div>
-                                <div class="ec-sb-block-content">
-                                    <div class="ec-checkout-summary">
-                                        @php
-                                            $flatCharge = Sohoj::flatCommision(Sohoj::newItemTotal()) - Sohoj::newItemTotal();
-                                            $tax = Sohoj::tax();
-                                            $prices = Sohoj::newItemTotal();
-                                        @endphp
-                                        <div>
-                                            <span class="text-left">{{ __('items') }}({{ Cart::getTotalQuantity() }}):</span>
-                                            <span class="text-right">{{ Sohoj::price($prices) }}</span>
-                                        </div>
-                                      
-                                        <div>
-                                            <span class="text-left">{{ __('tax') }}:</span>
-                                            <span class="text-right">{{ Sohoj::price($tax) }}</span>
-                                        </div>
-                                        @if (session()->has('discount'))
-                                            <div>
-                                                <span class="text-left">{{ __('discount') }}:</span>
-                                                <span class="text-right">{{ Sohoj::price(Sohoj::discount()) }}</span>
-                                            </div>
-                                        @endif
+                            <div class="card-body">
+                                <h3 class="dashboard-title mb-3">
+                                    Order Information
+                                </h3>
+                                <table class="table">
+                                    <tr>
+                                        <th>
+                                            Ticket
+                                        </th>
+                                        <th>
+                                            Quantity
+                                        </th>
+                                        <th>
+                                            Price
+                                        </th>
+                                    </tr>
+                                    @foreach (Cart::getContent() as $cart)
+                                        <tr>
+                                            <th>
+                                                {{ $cart->name }}
+                                            </th>
+                                            <td>
+                                                X {{ $cart->quantity }}
+                                            </td>
+                                            <td>
+                                                {{ Sohoj::price($cart->price) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    <tr>
+                                        <th rowspan="2" colspan="3">
+
+                                        </th>
+                                    </tr>
+                                    <tr>
 
 
-                                        <div class="ec-checkout-summary-total">
-                                            <span class="text-left order-title" style="font-size: 20px !important;">{{ __('order_total') }}:</span>
-                                            <span class="text-right"
-                                                style="font-weight: 800 !important;">{{ Sohoj::price($prices + $tax + $flatCharge - Sohoj::discount()) }}</span>
-                                        </div>
-                                        <div class="d-flex">
+                                    </tr>
+                                    <tr>
+                                        <th>
 
-                                            <input type="checkbox" required class="@error('terms') is-invalid @enderror"
-                                                id="terms" style="width: 25px;" value="1" name="terms"
-                                                required><a href="#" style="" class="mt-3 ms-3">{!! __('terms & policy') !!}</span></a><span class="checked"></span>
-                                            @error('terms')
-                                                <span class="invalid-feedback " role="alert">
-                                                    <strong>{{ $message }}</strong>
+                                        </th>
+                                        <th>
+
+                                            <span class="h6 uppercase">Subtotal :</span>
+                                        </th>
+                                        <th>
+                                            <span class="h6">
+                                                {{ Sohoj::price(Cart::getTotal()) }}
+                                            </span>
+                                        </th>
+                                    </tr>
+
+                                    @if (session()->has('discount'))
+                                        <tr>
+                                            <th>
+
+                                            </th>
+                                            <th>
+
+                                                <span class="h6 uppercase">Discount :</span>
+                                            </th>
+                                            <th>
+                                                <span class="h6">
+                                                    {{ Sohoj::price(Sohoj::discount()) }}
                                                 </span>
-                                            @enderror
-                                        </div>
+                                            </th>
+                                        </tr>
+                                    @endif
+                                    <tr>
+                                        <th>
 
-                                        <div class="col-md-12 justify-content-center" style="margin-top: 17px; ">
-                                            <button class="butn-dark2" style="" type="submit"><span>{{ __('place_order') }}</span> </button>
-                                        </div>
+                                        </th>
+                                        <th>
+                                            <span class="h4">Total :</span>
+                                        </th>
+                                        <th>
+                                            <span class="h4">
+                                                {{ Sohoj::price(Cart::getTotal() - Sohoj::discount()) }}
+                                            </span>
+                                        </th>
+                                    </tr>
+                                </table>
 
-                                    </div>
+                                <button class="btn btn-primary rounded ">
+                                    <span class="mr-3">Go To Payment</span> <i class="fa fa-arrow-right"></i>
+                                </button>
 
-                                </div>
                             </div>
-
-                            <!-- Sidebar Summary Block -->
                         </div>
-                        <div class="shipment-text  text-white" style="border-radius: 0px">
-                            <span>{!! __('checkout_cart_footer') !!} <a href="" target="_blank"><u class="text-white">{{ __('learn_more') }}</u></a></span>
-
-                        </div>
-
                     </div>
-            </form>
-        </div>
-
-
-       
-        </fieldset>
-    </section>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Personal Information</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
 
-                    <form action="{{ route('user.address.store') }}" method="post">
-                        @csrf
-                        <div class="row">
-                            <div class="col-12">
-
-                                <input type="text" name="address_1" value="" required
-                                    class="form-control mb-2 @error('address_1') is-invalid @enderror" id="inputAddress"
-                                    placeholder="Street Address">
-                                @error('address_1')
-                                    <span class="text-danger">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-
-                                <input type="text" name="address_2" placeholder="Address 2" required
-                                    class="form-control mb-2 @error('address_2') is-invalid @enderror" value=""
-                                    id="inputAddress2">
-                                @error('address_2')
-                                    <span class="text-danger">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
-                            </div>
-                            {{-- <div class="col-md-6">
-
-                                <x-country />
-                            </div>
-                            <div class="col-md-6">
-
-                                <x-state />
-                            </div> --}}
-                            <div class="col-md-6">
-
-                                <input type="text" placeholder="City" required value="" name="city"
-                                    class="form-control my-2 @error('city') is-invalid @enderror" id="inputPassword4">
-                                @error('city')
-                                    <span class="text-danger">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6">
-                                <input type="text" required
-                                    class="form-control my-2 @error('post_code') is-invalid @enderror" value=""
-                                    name="post_code" placeholder="Zip/Postal Code" id="inputEmail4">
-                                @error('post_code')
-                                    <span class="text-danger">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
-                            </div>
-
-                        </div>
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-                </form>
             </div>
-        </div>
-    </div>
+
+
+
+        </section>
+    </form>
 @endsection
 @section('js')
     <script src="{{ asset('assets/frontend-assets/js/vendor/jquery.magnific-popup.min.js') }}"></script>
