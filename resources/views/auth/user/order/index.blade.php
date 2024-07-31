@@ -1,58 +1,35 @@
 @extends('layouts.user_dashboard')
 @section('dashboard-content')
     <div class="ec-shop-rightside col-lg-9 col-md-12 mt-2">
+        <div class="card user-name">
+            <div class="card-body">
+                <span class="user-dash-font">Hello, {{ Auth::user()->name }}!</span>
+            </div>
+        </div>
         @foreach ($latest_orders as $order)
-            <div class="card mb-3">
-                {{-- <div class="card-header">
-                    {{$order->status}}
-                </div> --}}
-                <div class="card-body">
+        <div class="ec-vendor-dashboard-card ec-vendor-setting-card mb-3">
+            <div class="ec-vendor-card-body">
 
 
                     @foreach ($order->products->groupBy('id') as $id => $products)
                         @php
                             $model = App\Models\Product::find($id);
                         @endphp
-                        <h5 class="text-cus-secondary">
+                        <h4 class="dashboard-title mt-5 mb-3">
                             {{ $model->name }}
-                        </h5>
+                        </h4>
 
-                        <div class="row my-2">
-                            <div class="col-12 col-md-6">
-
-
-                                <p>
-                                    Event : {{ $model->event_name }}
-                                    <br>
-                                    Host : {{ $model->event_host }}
-                                    <br>
-                                    Location : {{ $model->event_location }}
-                                </p>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <p>
-                                    Start At : {{ $model->event_start_date->format('d M, Y') }} <br>
-                                    End At : {{ $model->event_end_date->format('d M, Y') }}
-                                </p>
-
-                            </div>
-
-                        </div>
-                        <br>
-                        <table class="table">
+                       
+                        <table class="order-table">
                             <tr>
                                 <th>
-                                    #
-                                </th>
-
-                                <th>
-                                    Ticket
+                                    Ticket ID
                                 </th>
                                 <th>
-                                    Cehck-In
+                                    Payment Status
                                 </th>
                                 <th>
-                                    Check-Out
+                                    Payment Type
                                 </th>
                                 <th>
                                     Status
@@ -66,9 +43,6 @@
 
                             @foreach ($products as $product)
                                 <tr>
-                                    <td>
-                                        {{ $loop->iteration }}
-                                    </td>
 
                                     <td>
                                         {{ $product->pivot->ticket }}
@@ -95,41 +69,50 @@
 
 
                 </div>
+                
                 <div class="card-footer bg-transparent p-2 ">
-                    <table class="table table-striped ">
-                        <tr>
-                            <th style="font-size: 18px">
-                                Subtotal 
-                            </th>
-                            <td style="font-size: 18px">
-                                + {{ Sohoj::price($order->subtotal) }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th style="font-size: 18px">
-                                Tax 
-                            </th>
-                            <td style="font-size: 18px">
-                                + {{ Sohoj::price($order->tax) }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th style="font-size: 18px">
-                                Discount 
-                            </th>
-                            <td style="font-size: 18px">
-                                - {{ Sohoj::price($order->discount) }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th style="font-size: 25px">
-                                Total
-                            </th>
-                            <td style="font-size: 25px">
-                                = {{ Sohoj::price($order->total) }}
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="row g-5">
+                        <div class="col-md-6 col-12 d-flex align-items-center justify-content-center order-md-1 order-2 ">
+                            <a class="btn btn-primary btn-lg rounded " href=""><i class="fa fa-download"></i> Download</a>
+                        </div>
+                        <div class="col-md-6 col-12 order-md-2 order-1">
+                            <table class="payinfo">
+                                <tr>
+                                    <th style="font-size: 18px">
+                                        Subtotal 
+                                    </th>
+                                    <td style="font-size: 18px">
+                                        + {{ Sohoj::price($order->subtotal) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="font-size: 18px">
+                                        Tax 
+                                    </th>
+                                    <td style="font-size: 18px">
+                                        + {{ Sohoj::price($order->tax) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="font-size: 18px">
+                                        Discount 
+                                    </th>
+                                    <td style="font-size: 18px">
+                                        - {{ Sohoj::price($order->discount) }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th style="font-size: 25px">
+                                        Total
+                                    </th>
+                                    <td style="font-size: 25px">
+                                        = {{ Sohoj::price($order->total) }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                   
 
                 </div>
             </div>

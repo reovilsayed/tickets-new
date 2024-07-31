@@ -17,7 +17,7 @@
     <div class="contaner login-wrapper">
         <div class="col-md-5 mb-20 offset-md-1 p-5"
             style="background-color:#ffff; box-shadow: rgba(15, 15, 15, 0.24) 0px 3px 8px;">
-            <h3>{{ __('Register') }}<h3>
+            <h3 class="text-center">{{ __('Register') }}<h3>
 
                     <form method="post" class="" action="{{ route('register') }}">
                         @csrf
@@ -93,8 +93,8 @@
 @endsection
 
 @section('js')
-    <script src="{{ asset('assets/frontend-assets/js/vendor/jquery.magnific-popup.min.js') }}"></script>
-    <script src="{{ asset('assets/frontend-assets/js/plugins/jquery.sticky-sidebar.js') }}"></script>
+    <script src="{{ asset('assets/frontend-old-assets/js/vendor/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('assets/frontend-old-assets/js/plugins/jquery.sticky-sidebar.js') }}"></script>
 
-    <script src="{{ asset('assets/frontend-assets/js/main.js') }}"></script>
+    <script src="{{ asset('assets/frontend-old-assets/js/main.js') }}"></script>
 @endsection

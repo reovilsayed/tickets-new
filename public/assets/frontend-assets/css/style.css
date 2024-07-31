@@ -928,16 +928,16 @@ blockquote cite:before {
 
 .navbar .navbar-toggler-icon,
 .navbar .icon-bar {
-    color: #FFF;
+    color: #ffff;
 }
 
 .navbar .navbar-nav .nav-link {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
     color: #fff;
     margin: 1px;
-    letter-spacing: 3px;
+    letter-spacing: 1px;
     text-transform: uppercase;
     -webkit-transition: all .4s;
     transition: all .4s;
@@ -946,23 +946,23 @@ blockquote cite:before {
 }
 
 .navbar .navbar-nav .nav-link.nav-color {
-    color: #fff;
+    color: #ffff !important;
 }
 
 .navbar .navbar-nav .nav-link:hover {
-    color: #ffffff;
+    color: #bd3d06;
 }
 
 .navbar .navbar-nav .active {
-    color: #ffffff !important;
+    color: #bd3d06 !important;
 }
 
 .navbar .navbar-nav .active i {
-    color: #ffffff;
+    color: #bd3d06;
 }
 
 .nav-scroll {
-    background: #fff;
+    background: #ffff !important;
     padding: 0 0 0 0;
     position: fixed;
     top: -100px;
@@ -985,11 +985,11 @@ blockquote cite:before {
 }
 
 .nav-scroll .navbar-nav .nav-link {
-    color: #bd3d06;
+    color: #ffff;
 }
 
 .nav-scroll .navbar-nav .active {
-    color: #ffffff !important;
+    color: #bd3d06 !important;
 }
 
 .nav-scroll .navbar-nav .logo {
@@ -1099,9 +1099,9 @@ blockquote cite:before {
 
 .navbar .dropdown-menu .dropdown-item {
     padding: 5px 0;
-    font-family: 'Barlow', sans-serif;
-    font-size: 15px;
-    font-weight: 400;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
     color: #bd3d06;
     position: relative;
     -webkit-transition: all .4s;
@@ -1112,6 +1112,11 @@ blockquote cite:before {
 .navbar .dropdown-menu .dropdown-item span {
     display: block;
     cursor: pointer;
+    color: #ffff;
+}
+
+.navbar .dropdown-menu .dropdown-item span:hover {
+    color: #bd3d06;
 }
 
 .navbar .dropdown-menu .dropdown-item i {
@@ -1123,7 +1128,7 @@ blockquote cite:before {
 .navbar .dropdown-menu .dropdown:hover>.dropdown-item,
 .navbar .dropdown-menu .dropdown-item.active,
 .navbar .dropdown-menu .dropdown-item:hover {
-    color: #ffffff;
+    color: #bd3d06;
 }
 
 .navbar .dropdown-toggle::after {
@@ -1213,7 +1218,6 @@ blockquote cite:before {
         margin-left: 0px;
     }
 
-    .nav-scroll .logo {}
 
     .logo-img {
         margin-bottom: 0px;
@@ -1259,7 +1263,7 @@ blockquote cite:before {
     }
 
     .nav-scroll .navbar-collapse .active {
-        color: #ffffff !important;
+        color: #bd3d06 !important;
     }
 
     .navbar .dropdown-menu .dropdown-item {
