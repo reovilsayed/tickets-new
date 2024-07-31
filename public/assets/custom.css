@@ -361,75 +361,102 @@ body {
     border: 5px solid #f36a30 !important;
     border-radius: 12px !important;
     margin-bottom: 15px;
-   
+
 }
-.user-dash-font{
+
+.user-dash-font {
     color: #001232 !important;
     font-size: 18px;
     font-weight: 600;
 }
 
-.ec-vendor-dashboard-card{
+.ec-vendor-dashboard-card {
     position: relative;
     border: 5px solid #f36a30 !important;
     border-radius: 12px !important;
-    
+
 }
 
-.dashboard-title{
-        color: #f36a30;
-        font-weight: 600;
+.dashboard-title {
+    color: #f36a30;
+    font-weight: 600;
 }
-.dashboard-edit{
+
+.dashboard-edit {
     position: absolute;
     bottom: 10px;
     right: 10px;
     color: #f36a30;
 }
 
-.ec-vendor-card-body .form-group{
+.ec-vendor-card-body .form-group {
     margin: 0px !important;
 }
-.ec-vendor-card-body .form-group > label{
+
+.ec-vendor-card-body .form-group>label {
     margin: 0px;
     color: #1d1c1c !important;
     font-size: 18px;
     font-weight: 700;
 }
-.ec-vendor-card-body .form-group > input{
+
+.ec-vendor-card-body .form-group>input {
     padding: 0px;
-    border:  none;
+    border: none;
     border-bottom: 2px solid #1d1c1c;
     border-radius: 0px;
 }
 
-.ec-vendor-card-body .form-group > input{
-   color: #2b2b2b;
-   font-size: 18px;
-   font-weight: 500;
+.ec-vendor-card-body .form-group>input {
+    color: #2b2b2b;
+    font-size: 18px;
+    font-weight: 500;
 }
 
-.btn-primary{
+.btn-primary {
     background-color: #f36a30 !important;
 }
 
-.sidebar-dashboard{
+.sidebar-dashboard {
     display: flex;
     flex-direction: column;
-    gap:10px
+    gap: 10px
 }
-.order-table th{
+
+.order-table th {
     font-size: 18px;
 }
 
-.order-table td{
+.order-table td {
     font-size: 14px;
 }
 
-.payinfo th{
+.payinfo th {
     text-transform: uppercase;
 }
-.payinfo td{
+
+.payinfo td {
     padding: 0px;
     font-weight: 700;
+}
+
+.login-input {
+    width: 80% !important;
+    background-color: #ffff !important;
+    border-radius: 20px !important;
+    padding: 3px 5px;
+}
+
+.login-pass {
+    width: 80% !important;
+    background-color: #ffff !important;
+    border-radius: 20px !important;
+    padding: 3px 5px;
+}
+
+.login-btn {
+    width: 80%;
+    background-color: #f36a30 !important;
+    border-radius: 20px !important;
+    padding: 5px 0px;
 }

@@ -1327,7 +1327,7 @@ blockquote cite:before {
     .navbar .navbar-collapse {
         max-height: 450px;
         overflow: auto;
-        background: #fff;
+        background: #0a1e5e;
         text-align: left;
         padding: 20px;
     }

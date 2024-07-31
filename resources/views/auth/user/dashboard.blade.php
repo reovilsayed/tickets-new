@@ -2,7 +2,7 @@
 
 @section('dashboard-content')
     <div class="ec-shop-rightside col-lg-9 col-md-12">
-  
+
         <div class="card user-name">
             <div class="card-body">
                 <span class="user-dash-font">Hello, {{ Auth::user()->name }}!</span>
@@ -21,61 +21,64 @@
                                     <h4 class="dashboard-title">
                                         Personal Information
                                     </h4>
-                                    <table class="dashboard-table">
-                                        <tr>
-                                            <th>
-                                                Name :
-                                            </th>
-                                            <td>
-                                                {{auth()->user()->name}}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Email :
-                                            </th>
-                                            <td>
-                                                {{auth()->user()->email}}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Phone :
-                                            </th>
-                                            <td>
-                                                {{ Auth::user()->contact_number }}    
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Country :
-                                            </th>
-                                            <td>
-                                                {{auth()->user()->country ?? 'N/A'}}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Address :
-                                            </th>
-                                            <td>
-                                                {{auth()->user()->address ?? 'N/A'}}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                Taxpayer :
-                                            </th>
-                                            <td>
-                                                {{auth()->user()->taxpayer ?? 'N/A'}}
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="dashboard-table ">
+                                            <tr>
+                                                <th>
+                                                    Name :
+                                                </th>
+                                                <td>
+                                                    {{ auth()->user()->name }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    Email :
+                                                </th>
+                                                <td>
+                                                    {{ auth()->user()->email }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    Phone :
+                                                </th>
+                                                <td>
+                                                    {{ Auth::user()->contact_number }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    Country :
+                                                </th>
+                                                <td>
+                                                    {{ auth()->user()->country ?? 'N/A' }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    Address :
+                                                </th>
+                                                <td>
+                                                    {{ auth()->user()->address ?? 'N/A' }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    Taxpayer :
+                                                </th>
+                                                <td>
+                                                    {{ auth()->user()->taxpayer ?? 'N/A' }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
 
-                                 <a class="dashboard-edit" href="{{ route('user.update_profile') }}"><i class="fa fa-edit fa-2x"></i></a>
+                                    <a class="dashboard-edit" href="{{ route('user.update_profile') }}"><i
+                                            class="fa fa-edit fa-2x"></i></a>
                                 </div>
-                         
-                            
+
+
                             </div>
 
 
@@ -89,5 +92,4 @@
             </div>
         </div>
     </div>
- 
 @endsection

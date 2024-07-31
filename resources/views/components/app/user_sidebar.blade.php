@@ -6,7 +6,7 @@
 
                 <div class="ec-vendor-block-items">
                     <ul class="sidebar-dashboard">
-                        <li class="{{ Route::is('user.dashboard') ? 'active-class' : '' }} mb-4 mt-3"><a
+                        <li class="{{ Route::is('user.dashboard') ? 'active-class' : '' }}"><a
                                 href="{{ route('user.dashboard') }}"><i class="fa-solid fa-house fa-1x"></i>
                                 Dashboard</a></li>
                         <li class=" {{ Route::is('user.ordersIndex') ? 'active-class' : '' }}"><a
@@ -14,16 +14,16 @@
                                 Orders</a></li>
 
 
-                        <li class=" {{ Route::is('user.change_password') ? 'active-class' : '' }}"><a
+                        <li class="{{ Route::is('user.change_password') ? 'active-class' : '' }}"><a
                                 href="{{ route('user.change_password') }}"><i class="fa-solid fa-user"></i>
                                 Security</a>
                         </li>
-                        <li class="mt-3">
+                        <li class="">
                             <form action="{{ route('logout') }}" id="logoutform" method="post" style="display: inline-block">
                                 @csrf
                                
                             </form>
-                            <button onclick="document.getElementById('logoutform').submit()" type="submit" class=" user-log"><i class="fa-solid fa-gear"></i>
+                            <button onclick="document.getElementById('logoutform').submit()" type="submit" class="user-log"><i class="fa-solid fa-gear"></i>
                                 logout</button>
                         </li>
                     </ul>

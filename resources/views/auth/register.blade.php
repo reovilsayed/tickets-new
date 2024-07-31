@@ -15,13 +15,9 @@
 @endsection
 @section('content')
     <div class="contaner login-wrapper">
-        <div class="col-md-5 mb-20 offset-md-1 p-5"
-            style="background-color:#ffff; box-shadow: rgba(15, 15, 15, 0.24) 0px 3px 8px;">
+        <div class="col-md-5 mb-20 offset-md-1 p-5">
             <h3 class="text-center">{{ __('Register') }}<h3>
-
                     <form method="post" class="" action="{{ route('register') }}">
-                        @csrf
-
                         <div class="row">
                             <div class="col-md-6 form-group">
                                 <input id="name" type="text" placeholder="{{ __('First Name') }}"

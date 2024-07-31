@@ -181,7 +181,7 @@
         </div>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js"></script> --}}
     <x-alert :exclude="[route('user.update_profile')]" />
     <!-- jQuery -->
     <script src="{{ asset('assets/frontend-assets/js/jquery-3.6.3.min.js') }}"></script>
