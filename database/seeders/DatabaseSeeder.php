@@ -27,7 +27,9 @@ class DatabaseSeeder extends Seeder
         //     ProdcatTableSeeder::class,
 
         // ]);
-        Event::factory(20)->create();
+        Event::factory(20)->hasProducts(rand(3, 20), function (array $attributes, Event $event) {
+            return ['dates' => $event->getDateRange()];
+        })->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

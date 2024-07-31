@@ -17,50 +17,26 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
-        $event_name = [
-            "Coachella",
-            "SXSW",
-            "Glastonbury Festival",
-            "Lollapalooza",
-            "Burning Man",
-            "Tomorrowland",
-            "TED Conference",
-            "Google I/O",
-            "Apple WWDC",
-            "TechCrunch Disrupt",
-            "Microsoft Build",
-            "DreamHack",
-            "DEF CON",
-            "HackMIT",
-            "Music Midtown",
-            "Summerfest",
-            "Cannes Film Festival",
-            "Comic-Con International",
-            "New York Fashion Week",
-            "Venice Biennale"
+        $ticketNames = [
+            'Early Bird',
+            'Standard Admission',
+            'VIP Pass',
+            'Student Ticket',
+            'Group Package',
+            'Day Pass',
+            'Workshop Access',
+            'Exhibition Only',
+            'Speaker Pass',
+            'Sponsor Ticket',
         ];
-
-        $name = fake()->randomElement($event_name);
 
         return [
-
-            'name' => $name . ' Ticket',
-            'slug' => Str::slug($name . ' ' . uniqid()),
-            'featured' => true,
-            'event_name' => $name,
-            'event_host' => fake()->company(),
-            'event_start_date' => now()->addDays(10),
-            'event_end_date' => now()->addDays(12),
-            'last_date_of_purchase' => now()->addDays(8),
-            'event_location' => fake()->city(),
-            'short_description' => fake()->paragraphs(3, true),
-            'description' => fake()->paragraphs(3, true),
-            'price' => 120,
-            'sale_price' => 100,
-            'quantity' => 100,
-            'image' => ['product/one.jpg', 'product/two.jpg', 'product/three.jpg', 'product/four.jpg'][rand(0, 3)],
-
+            'name' => fake()->randomElement($ticketNames),
+            'description' => fake()->sentence(),
+            'price' => 20,
+            'sale_price' => rand(0, 1) ? rand(8, 15) : null,
+            'sold_out' => rand(0, 1),
+            'quantity' => rand(300, 1000),
         ];
-
     }
 }

@@ -77,7 +77,6 @@ Route::post('/contact-store', [PageController::class, 'contactStore'])->name('co
 Route::get('/shops', [PageController::class, 'shops'])->name('shops');
 Route::get('/cart', [PageController::class, 'cart'])->name('cart');
 
-Route::get('/service/{slug}', [PageController::class, 'product_details'])->name('product_details');
 Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout')->middleware('auth');
 // Route::get('/order_page', [PageController::class, 'order_page'])->name('order_page');
 Route::get('/verify-email', [HomeController::class, 'verifyMassage'])->name('verify.massage');
@@ -91,7 +90,7 @@ Route::get('/set-location', [PageController::class, 'setLocation'])->name('set.l
 Route::get('/location-reset', [PageController::class, 'locationReset'])->name('location.reset');
 Route::get('/posts', [PageController::class, 'posts'])->name('posts');
 Route::get('/post/{slug}', [PageController::class, 'post'])->name('post');
-Route::get('/event-details{slug}', [PageController::class, 'event_details'])->name('product_details');
+Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
 
 
 

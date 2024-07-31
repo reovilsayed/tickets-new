@@ -6,10 +6,10 @@
                 <div class="col-md-5 event-details">
 
                     <div class="event_img">
-                        <img src=" {{ Voyager::image($product->image) }}" alt="">
+                        <img src=" {{ Voyager::image($event->thumbnail) }}" alt="">
                     </div>
 
-                    <h2 class="events-title mt-5">{{ $product->name }}</h2>
+                    <h2 class="events-title mt-2 px-3 text-center">{{ $event->name }}</h2>
                     <div class="accordins">
                         <div class="accordin-item">
                             <div>
@@ -17,13 +17,14 @@
                             </div>
                             <div>
                                 <h5>
-                                    Start in 10 days
+                                    Start in {{ $event->start_at->diffForHumans() }}
                                 </h5>
                                 <h6>
-                                    9 Aug
+                                    {{ $event->start_at->format('d M') }}
                                 </h6>
                                 <h6>
-                                    22:00 h
+                                    {{ $event->start_at->format('H:i') }}
+
                                 </h6>
                             </div>
                         </div>
@@ -33,12 +34,9 @@
                             </div>
                             <div>
                                 <h5>
-                                    Location
+                                    {{ $event->location }}
                                 </h5>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis libero sequi
-                                    voluptates necessitatibus, consectetur excepturi esse sit beatae quos rem?
-                                </p>
+
                             </div>
                         </div>
                         <div class="accordin-item">
@@ -50,18 +48,19 @@
                                     Description
                                 </h5>
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis libero sequi
-                                    voluptates necessitatibus, consectetur excepturi esse sit beatae quos rem?
+                                    {{ $event->description }}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-7 event-box">
+                <div x-data="{ tickets: {} }"
+                    x-effect="$refs.total.innerText = 'Є'+(Object.values(tickets)).reduce((partialSum, a) => partialSum + a, 0)"
+                    class="col-md-7 event-box">
                     <ul class="nav nav-pills sec-hd mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
-                                data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
+                                data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-home"
                                 aria-selected="true">
                                 <div class="days">
                                     <p class="days-select">ALL</p>
@@ -70,432 +69,87 @@
                                 </div>
                             </button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
-                                data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile"
-                                aria-selected="false">
-                                <div class="days">
-                                    <p class="days-select">09</p>
-                                    <p class="info-date">AUG</p>
-                                    <span class="dot"></span>
-                                </div>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
-                                data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact"
-                                aria-selected="false">
-                                <div class="days">
-                                    <p class="days-select">10</p>
-                                    <p class="info-date">AUG</p>
-                                    <span class="dot"></span>
-                                </div>
-                            </button>
-                        </li>
+                        @foreach ($event->dates() as $date)
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
+                                    data-bs-target="#pills-{{ $date }}" type="button" role="tab"
+                                    aria-controls="pills-profile" aria-selected="false">
+                                    <div class="days">
+                                        <p class="days-select">{{ Carbon\Carbon::parse($date)->format('d') }}</p>
+                                        <p class="info-date">{{ Carbon\Carbon::parse($date)->format('M') }}</p>
+                                        <span class="dot"></span>
+                                    </div>
+                                </button>
+                            </li>
+                        @endforeach
+
                     </ul>
                     <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
-                            aria-labelledby="pills-home-tab">
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                            <span class="sold">SOLD</span>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                        @foreach ($products as $key => $data)
+                            <div class="tab-pane fade show @if ($loop->first) active @endif"
+                                id="pills-{{ $key }}" role="tabpanel" aria-labelledby="pills-home-tab">
+                                @foreach ($data as $product)
+                                    <div :class="tickets[{{$product->id}}] ? 'card card-ticket active' : 'card card-ticket'  ">
+                                        <div class="card-body tick">
+                                            <div class="ticket-info">
+                                                <div class="t-info">
+                                                    <p class="t-date">
+                                                        {{ collect($product->dates)->map(fn($date) => Carbon\Carbon::parse($date)->format('d M'))->implode(', ') }}
+                                                    </p>
+                                                    <p class="t-title">{{ $product->name }}</p>
+                                                    <p class="t-des">{{ $product->description }}
+                                                    </p>
+                                                    @if ($product->sold_out)
+                                                        <span class="sold">SOLD</span>
+                                                    @endif
+                                                </div>
+                                                <div class="t-prize">
+                                                    <span
+                                                        class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
+                                                    <select name="tickets[$product->id]" @if ($product->sold_out)
+                                                        disabled
+                                @endif
+                                data-price="{{ $product->currentPrice() }}" min="0"
+                                max="{{ $product->quantity }}"
+                                x-on:change="tickets[{{ $product->id }}]={{ $product->currentPrice() }}* $el.value"
+                                class="ticket-select"
+                                x-model="category"
+                                >
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                </select>
                             </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                            <span class="sold">SOLD</span>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="pills-profile" role="tabpanel"
-                            aria-labelledby="pills-profile-tab">
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                            <span class="sold">SOLD</span>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                            <span class="sold">SOLD</span>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div class="tab-pane fade" id="pills-contact" role="tabpanel"
-                            aria-labelledby="pills-contact-tab">
-
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                            <span class="sold">SOLD</span>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                            <span class="sold">SOLD</span>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card card-ticket">
-                                <div class="card-body tick">
-                                    <div class="ticket-info">
-                                        <div class="t-info">
-                                            <p class="t-date">09 AUG</p>
-                                            <p class="t-title">Dia-9 Tz Da Coronel</p>
-                                            <p class="t-des">Este bilhete garante entrada normal no dia 9 do Light
-                                                Festival
-                                            </p>
-                                        </div>
-                                        <div class="t-prize">
-                                            <span class="text-dark me-2 ticket-prize">25€</span>
-                                            <select class="form-select ticket-input" aria-label="Default select example">
-                                                <option selected>0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
                     </div>
-                    <button class="event-buttton">
-                        <span>Confirmed</span>
-                        <span>25€ <i class="fa fa-arrow-right"></i></span>
-                    </button>
-
                 </div>
-
             </div>
+            @endforeach
+
+        </div>
+        @endforeach
+        </div>
+        <button class="event-buttton">
+            <span>Confirmed</span>
+            <span id="totalPrice" x-ref="total"> <i class="fa fa-arrow-right"></i></span>
+        </button>
+
+        </div>
+
+        </div>
         </div>
     </section>
+@endsection
+@section('js')
+    <script defer src="{{ asset('assets/js/alpine.js') }}"></script>
+    <script>
+        let data = Alpine.reactive({
+            tickets: {}
+        })
+        Alpine.effect(() => {
+            console.log(data.tickets);
+        })
+    </script>
 @endsection

@@ -13,12 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('facilities', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
+            $table->string('thumbnail');
             $table->string('name');
             $table->string('slug');
+            $table->string('organizer');
+            $table->string('country');
+            $table->string('city');
+            $table->string('location');
             $table->text('description');
-            $table->integer('parent_id')->nullable();
+            $table->timestamp('start_at');
+            $table->timestamp('end_at');
+            $table->boolean('status')->default(true);
+            $table->boolean('featured')->default(false);
             $table->timestamps();
         });
     }
@@ -30,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('facilities');
+        Schema::dropIfExists('events');
     }
 };

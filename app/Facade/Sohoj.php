@@ -11,7 +11,7 @@ class Sohoj
 {
     public function price($price)
     {
-        return "Є " . $this->round_num($price);
+        return "Є" . $this->round_num($price);
     }
     public function tax()
     {

@@ -55,7 +55,7 @@
     </span> --}}
     <div class="con">
         <h6>
-            {{Sohoj::price(30)}} - {{Sohoj::price(50)}}
+            {{Sohoj::price($product->priceRange()['min'])}} - {{Sohoj::price($product->priceRange()['max'])}}
         </h6>
             
         <h5 style="height: 85px"><a href="{{ $product->path() }}" title="{{$product->name}}" class="w-100">{{ Str::limit($product->name,30) }}</a> </h5>

@@ -19,8 +19,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->bigInteger('price');
-            $table->bigInteger('sale_price');
+            $table->bigInteger('sale_price')->nullable();
             $table->json('dates');
+            $table->boolean('sold_out')->default(false);
+            $table->bigInteger('quantity')->default(0);
             $table->timestamps();
         });
     }

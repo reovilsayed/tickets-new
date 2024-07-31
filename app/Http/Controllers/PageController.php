@@ -29,8 +29,8 @@ class PageController extends Controller
     {
         $events = Event::where('status', 1)->get();
         $featureEvents = Event::where('status', 1)->where('featured', 1)->take(3)->get();
-        
-        return view('pages.home', compact( 'events', 'featureEvents'));
+
+        return view('pages.home', compact('events', 'featureEvents'));
     }
     public function shops()
     {
@@ -261,11 +261,16 @@ class PageController extends Controller
         $categories = Category::all();
         return view('pages.post_details', compact('post', 'recentPosts', 'categories'));
     }
-    public function event_details($slug)
+    public function event_details(Event $event)
     {
-        $product = Product::where('slug', $slug)->firstOrFail();
-        $related_products = Product::whereNull('parent_id')->limit(16)->get();
-        $amenities = explode(',', $product->amenities);
-        return view('pages.event_details', compact('related_products', 'product', 'amenities'));
+        $event->load('products');
+
+        $products = [];
+        $products['all'] = $event->products()->whereJsonContains('dates', $event->dates())->get();
+        foreach ($event->dates() as $date) {
+            $products[$date] = $event->products()->whereJsonContains('dates', $date)->get();
+        }
+
+        return view('pages.event_details', compact('event', 'products'));
     }
 }

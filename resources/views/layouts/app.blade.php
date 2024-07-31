@@ -19,7 +19,7 @@
 
     <link rel="shortcut icon" href="{{ asset('assets/frontend-assets/img/favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('assets/frontend-old-assets/css/vendor/ecicons.min.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <link rel="stylesheet" href="{{asset('assets/css/fontawsome/all.min.css')}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
@@ -181,7 +181,7 @@
         </div>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js"></script>
+    <script src="{{ asset('assets/js/fontawsome/all.min.js') }}"></script>
     <x-alert :exclude="[route('user.update_profile')]" />
     <!-- jQuery -->
     <script src="{{ asset('assets/frontend-assets/js/jquery-3.6.3.min.js') }}"></script>
