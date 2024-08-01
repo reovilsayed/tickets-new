@@ -26,12 +26,7 @@ class CheckoutService
 
     public function generate($request)
     {
-        $request->validate([
-            'first_name' => ['required'],
-            'last_name' => ['required', 'max:40'],
-            'email' => ['required', 'max:40', 'email'],
-            'phone' => ['required'],
-        ]);
+
 
 
         $order = $this->createOrder();

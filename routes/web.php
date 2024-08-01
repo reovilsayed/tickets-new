@@ -62,6 +62,7 @@ Route::post('/add-address', [CheckoutController::class, 'userAddress'])->name('u
 Route::get('/', [PageController::class, 'home'])->name('homepage');
 Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
 Route::get('checkout', [PageController::class, 'checkout'])->name('checkout')->middleware('auth');
+Route::post('store-checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('auth');
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
@@ -108,7 +109,7 @@ Route::post('/add-coupon', [CouponController::class, 'add'])->name('coupon');
 Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon.destroy');
 
 //checkout routes
-Route::post('/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('auth');
+
 
 //Rating
 Route::post('rating/{product_id}', [PageController::class, 'rating'])->name('rating');

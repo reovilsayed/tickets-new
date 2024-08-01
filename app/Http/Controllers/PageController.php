@@ -39,7 +39,6 @@ class PageController extends Controller
         foreach ($event->dates() as $date) {
             $products[$date] = $event->products()->whereJsonContains('dates', $date)->get();
         }
-
         return view('pages.event_details', compact('event', 'products'));
     }
     public function checkout()
