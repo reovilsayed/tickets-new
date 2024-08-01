@@ -171,7 +171,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="footer-bottom-inner">
-                            <img src="/assets/easypay.png" alt="" style="width:80%; hight:auto;">
+                            <img src="{{asset('assets/easypay.png')}}" alt="" style="width:313px;">
                             <p class="footer-bottom-copy-right">© Copyright 2024 by <a
                                     href="#">{{ setting('site.title') }}</a></p>
                         </div>

@@ -58,7 +58,7 @@
             </div>
             <div class="row">
                 @foreach ($events as $product)
-                    <div class="col-md-4">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-4">
                         <x-products.product :product=$product />
                     </div>
                 @endforeach
