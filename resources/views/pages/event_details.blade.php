@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div x-data="{ tickets: {}, quantities: {} }"
-                        x-effect="$refs.total.innerText = 'Є'+(Object.values(tickets)).reduce((partialSum, a) => partialSum + a, 0)"
+                        x-effect="$refs.total.innerText = 'Є'+(Object.values(tickets)).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)"
                         class="col-md-7 event-box">
 
                         <ul class="nav nav-pills sec-hd mb-3" id="pills-tab" role="tablist">
