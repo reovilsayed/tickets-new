@@ -78,31 +78,41 @@ class Sohoj
 
     public function flatCommision($price)
     {
-        if($price < 15){
+        if ($price < 15) {
             return $price + 1.95;
-        }elseif($price > 15 && $price < 300){
+        } elseif ($price > 15 && $price < 300) {
             return $price + 3.75;
-        }elseif($price > 15 && $price < 300){
+        } elseif ($price > 15 && $price < 300) {
             return $price + 3.75;
-        }elseif($price > 300 && $price < 1000){
+        } elseif ($price > 300 && $price < 1000) {
             return $price + 7.95;
-        }else{
+        } else {
             return $price + 20;
         }
-        
     }
     public function vendorprice($price)
     {
         // return $price;
 
-        $tenPercent=$price * .1;
-        $sixPercent=$price * .06;
-        if($price < 1000){
+        $tenPercent = $price * .1;
+        $sixPercent = $price * .06;
+        if ($price < 1000) {
             return ($price - $tenPercent);
-        }else{
+        } else {
             return ($price - $sixPercent);
         }
     }
-  
-  
+
+    public function getEventObject($event)
+    {
+
+        $object = ['tickets' => [], 'quantities' => []];
+        foreach (Cart::session($event->slug)->getContent() as $key => $cart) {
+
+            $object['tickets'][$key] = number_format($cart->price * $cart->quantity, 2);
+            $object['quantities'][$key] =  $cart->quantity;
+        }
+
+        return $object;
+    }
 }

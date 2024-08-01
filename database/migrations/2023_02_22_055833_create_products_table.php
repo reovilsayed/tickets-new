@@ -20,9 +20,11 @@ return new class extends Migration
             $table->string('description');
             $table->bigInteger('price');
             $table->bigInteger('sale_price')->nullable();
-            $table->json('dates');
-            $table->boolean('sold_out')->default(false);
+            $table->tinyInteger('status')->default(false);
             $table->bigInteger('quantity')->default(0);
+            $table->integer('limit_per_order')->default(10);
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
         });
     }

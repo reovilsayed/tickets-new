@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\User;
 use Database\Factories\ShopFactory;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,8 +28,12 @@ class DatabaseSeeder extends Seeder
         //     ProdcatTableSeeder::class,
 
         // ]);
+        Product::query()->delete();
+        Event::query()->delete();
+
         Event::factory(20)->hasProducts(rand(3, 20), function (array $attributes, Event $event) {
-            return ['dates' => $event->getDateRange()];
+            $start = rand(0, count($event->dates()) - 1);
+            return ['start_date' => Carbon::parse($event->dates()[$start]), 'end_date' => Carbon::parse($event->dates()[rand($start, count($event->dates()) - 1)])];
         })->create();
 
         // \App\Models\User::factory()->create([

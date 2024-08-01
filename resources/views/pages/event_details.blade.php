@@ -56,7 +56,8 @@
                             </div>
                         </div>
                     </div>
-                    <div x-data="{ tickets: {}, quantities: {} }"
+
+                    <div x-data=@json(Sohoj::getEventObject($event))
                         x-effect="$refs.total.innerText = 'Є'+(Object.values(tickets)).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)"
                         class="col-md-7 event-box">
 
@@ -112,19 +113,20 @@
                                                         <div class="t-prize">
                                                             <span
                                                                 class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
-                                                            @if ($product->status ==1)
+                                                            @if ($product->status == 1)
                                                                 <select name="tickets[{{ $product->id }}]"
                                                                     @if ($product->sold_out) disabled @endif
-                                                                    data-price="{{ $product->currentPrice() }}" min="0"
-                                                                    max="{{ $product->quantity }}"
+                                                                    data-price="{{ $product->currentPrice() }}"
+                                                                    min="0" max="{{ $product->quantity }}"
                                                                     x-on:change="tickets[{{ $product->id }}]={{ $product->currentPrice() }}* $el.value;quantities[{{ $product->id }}]= $el.value;"
                                                                     class="ticket-select"
                                                                     x-model="quantities[{{ $product->id }}]">
                                                                     <option value="0">0</option>
-                                                                    @for ($i = 1;$i <= $product->limit_per_order; $i++)
-                                                                    <option value="{{$i}}">{{$i}}</option>
+                                                                    @for ($i = 1; $i <= $product->limit_per_order; $i++)
+                                                                        <option value="{{ $i }}">
+                                                                            {{ $i }}</option>
                                                                     @endfor
-                                                                </select> 
+                                                                </select>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -137,7 +139,8 @@
                         </div>
                         <button class="event-buttton" type="submit">
                             <span>Confirmed</span>
-                            <span id="totalPrice" x-ref="total"> <i class="fa fa-arrow-right"></i></span>
+                            <span id="totalPrice" x-ref="total" x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
+                                    class="fa fa-arrow-right"></i></span>
                         </button>
 
                     </div>

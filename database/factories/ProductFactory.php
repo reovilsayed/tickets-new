@@ -34,8 +34,9 @@ class ProductFactory extends Factory
             'name' => fake()->randomElement($ticketNames),
             'description' => fake()->sentence(),
             'price' => 20,
+            'limit_per_order' => 10,
             'sale_price' => rand(0, 1) ? rand(8, 15) : null,
-            'sold_out' => rand(0, 1),
+            'status' => rand(0, 1),
             'quantity' => rand(300, 1000),
         ];
     }

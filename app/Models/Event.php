@@ -31,32 +31,7 @@ class Event extends Model
         return ['min' => $prices->min(), 'max' => $prices->max()];
     }
 
-    public function getDateRange()
-    {
-
-        $startDate = $this->start_at;
-        $endDate = $this->end_at;
-
-        $arraySize = rand(1, $endDate->diffInDays($startDate));
-        if ($arraySize != $endDate->diffInDays($startDate)) {
-            $interval = $endDate->diffInDays($startDate) / $arraySize;
-            $dates = [];
-            for ($i = 0; $i < $arraySize; $i++) {
-                $date = $startDate->copy()->addDays($interval * $i);
-                $dates[] = $date->format('Y-m-d');
-            }
-            return $dates;
-        } else {
-            $period = CarbonPeriod::create($startDate, $endDate);
-            $formattedDates = [];
-            foreach ($period as $date) {
-                $formattedDates[] = $date->format('Y-m-d');
-            }
-
-            return $formattedDates;
-        }
-    }
-
+ 
     public function dates()
     {
         $period = CarbonPeriod::create($this->start_at, $this->end_at);
