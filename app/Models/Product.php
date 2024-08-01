@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\City;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,8 +24,7 @@ class Product extends Model
     public function dates(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => json_encode($value),
-            get: fn ($value) => json_decode($value)
+            get: fn () => $this->datesArray()
         );
     }
     public function price(): Attribute
@@ -43,7 +43,8 @@ class Product extends Model
     }
 
 
-    public function event(){
+    public function event()
+    {
         return $this->belongsTo(Event::class);
     }
 
@@ -54,5 +55,16 @@ class Product extends Model
         } else {
             return $this->price;
         }
+    }
+
+    protected function datesArray()
+    {
+        $period = CarbonPeriod::create($this->start_date, $this->end_date);
+        $formattedDates = [];
+        foreach ($period as $date) {
+            $formattedDates[] = $date->format('Y-m-d');
+        }
+
+        return $formattedDates;
     }
 }

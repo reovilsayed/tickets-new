@@ -84,7 +84,7 @@
                                                 Price
                                             </th>
                                         </tr>
-                                        @foreach (Cart::getContent() as $cart)
+                                        @foreach (Cart::session($event->slug)->getContent() as $cart)
                                             <tr>
                                                 <th>
                                                     {{ $cart->name }}

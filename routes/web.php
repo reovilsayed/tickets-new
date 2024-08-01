@@ -70,7 +70,7 @@ Route::post('/contact-store', [PageController::class, 'contactStore'])->name('co
 Route::get('/shops', [PageController::class, 'shops'])->name('shops');
 Route::get('/cart', [PageController::class, 'cart'])->name('cart');
 
-
+Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout')->middleware('auth');
 // Route::get('/order_page', [PageController::class, 'order_page'])->name('order_page');
 Route::get('/verify-email', [HomeController::class, 'verifyMassage'])->name('verify.massage');
 Route::get('/thankyou', [PageController::class, 'thankyou'])->name('thankyou');
@@ -95,7 +95,7 @@ Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.in
 Route::get('wishlist-to-cart/{product_id}', [WishlistController::class, 'wishlistToCart'])->name('wishlistToCart');
 
 //cart
-Route::post('/add-cart', [CartController::class, 'add'])->name('cart.store');
+Route::post('event/{event:slug}/add-cart', [CartController::class, 'add'])->name('cart.store');
 Route::post('/buynow', [CartController::class, 'buynow'])->name('cart.boynow');
 Route::post('/add-update', [CartController::class, 'update'])->name('cart.update');
 Route::get('/cart-destroy/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
@@ -109,7 +109,7 @@ Route::post('/add-coupon', [CouponController::class, 'add'])->name('coupon');
 Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon.destroy');
 
 //checkout routes
-
+Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('auth');
 
 //Rating
 Route::post('rating/{product_id}', [PageController::class, 'rating'])->name('rating');

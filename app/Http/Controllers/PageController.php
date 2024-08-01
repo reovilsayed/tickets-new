@@ -35,17 +35,17 @@ class PageController extends Controller
         $event->load('products');
 
         $products = [];
-        $products['all'] = $event->products()->whereJsonContains('dates', $event->dates())->get();
+        $products['all'] = $event->products;
         foreach ($event->dates() as $date) {
-            $products[$date] = $event->products()->whereJsonContains('dates', $date)->get();
+            $products[$date] = $event->products->filter(fn ($product) => in_array($date, $product->dates));
         }
         return view('pages.event_details', compact('event', 'products'));
     }
     public function checkout()
     {
         $slug = request('event');
-        $event = Event::where('slug', $slug)->first();
-        return view('pages.checkout', compact('event'));
+        $event = Event::where('slug',$slug)->first();
+        return view('pages.checkout',compact('event'));
     }
     public function shops()
     {
@@ -119,7 +119,11 @@ class PageController extends Controller
     }
 
 
+    public function checkout(Event $event)
+    {
 
+        return view('pages.checkout', compact('event'));
+    }
     public function store_front($slug)
     {
         $shop = Shop::where('slug', $slug)->products()->firstOrFail();
@@ -273,8 +277,4 @@ class PageController extends Controller
         return view('pages.post_details', compact('post', 'recentPosts', 'categories'));
     }
 
-    public function ticket_pdf()
-    {
-        return view('pages.ticket_pdf');
-    }
 }
