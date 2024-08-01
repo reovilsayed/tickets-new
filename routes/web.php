@@ -55,20 +55,9 @@ use Illuminate\Http\Request;
 Route::get('/test/{ticket}', function (Ticket $ticket) {
     return new TicketPlaced($ticket, 'This message is for test purpose');
 });
-// Route::get('/hello', function () {
-//     dd(Shop::find(1)->monthlyCharge());
-// });
-//Vendors
-
-
-// Route::get('/vendors', [PageController::class, 'vendors'])->name('vendors');
-
-
-Route::post('follow/{shop}', [PageController::class, 'follow'])->name('follow');
-Route::get('liked/shops', [PageController::class, 'followShops'])->name('follow.shops');
 
 Route::post('/add-address', [CheckoutController::class, 'userAddress'])->name('user.address.store');
-
+Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
 Route::get('/about', [PageController::class, 'about'])->name('about');
@@ -90,7 +79,7 @@ Route::get('/set-location', [PageController::class, 'setLocation'])->name('set.l
 Route::get('/location-reset', [PageController::class, 'locationReset'])->name('location.reset');
 Route::get('/posts', [PageController::class, 'posts'])->name('posts');
 Route::get('/post/{slug}', [PageController::class, 'post'])->name('post');
-Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
+
 
 
 
@@ -138,14 +127,6 @@ Route::get('login/facebook/callback', [LoginController::class, 'handleFacebookCa
 
 Route::get('admin/payout/{order}', [PayoutsController::class, 'payouts'])->name('payout')->middleware('auth', 'role:admin');
 
-// Route::get('/vendor-register', [RegisterController::class, 'vendorCreate'])->name('vendor.create');
-// Route::get('/vendor-register-2nd-step', [HomeController::class, 'vendorSecondStep'])->name('vendor.second.step');
-// Route::post('/2nd-step-store', [HomeController::class, 'vendorSecondStepStore'])->name('vendor.second.step.store');
-
-// Route::get('/shop', [SellerPagesController::class, 'shop'])->name('vendor.shop')->middleware(['auth']);
-// Route::post('/store-shop', [SellerPagesController::class, 'shopStore'])->middleware('auth')->name('vendor.store');
-
-// Route::get('/shop/set-up-payment-method', [PaymentsController::class, 'setUpPaymentMethod'])->middleware('auth', 'verifiedEmail', 'second')->name('vendor.setUpPaymentMethod');
 
 Route::get('email/{offer}', function (Offer $offer) {
     return new OfferEmail($offer);
@@ -176,73 +157,7 @@ Route::post('setting/shopAddress/update', [SellerPagesController::class, 'shopAd
 Route::post('/shop/socialLink/store', [SellerPagesController::class, 'shopSocialLinksStore'])->name('vendor.shopSocialLinksStore.store')->middleware('auth');
 
 
-Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
-    Route::get('/shop/{shop}/active', [HomeController::class, 'shopActive'])->name('admin.shop.active');
-    Route::get('/shops/create', [AdminController::class, 'shopCreate'])->name('admin.shop.create');
-    Route::post('/shops/store', [AdminController::class, 'shopStore'])->name('admin.shops.store');
-    Route::get('/shops', [AdminController::class, 'shopIndex'])->name('admin.shop.index');
-    Route::get('/shops/edit/{shop}', [AdminController::class, 'shopEdit'])->name('admin.shops.edit');
-    Route::post('/shops/update/{shop}', [AdminController::class, 'shopUpdate'])->name('admin.shops.update');
-    Route::post('/shops/delete/{shop}', [AdminController::class, 'shopDelete'])->name('admin.shops.delete');
-});
 
 
 
-Route::get('test', function () {
-
-
-
-
-    $customer = new Customer(
-        $email = 'example@test.com',
-        $fullName = 'John Doe',
-        $phone = '+306987654321',
-        $countryCode = 'GR',
-        $requestLang = RequestLang::Greek,
-    );
-
-
-    $payment = new Payment();
-
-    $payment
-        ->setAmount(2500)
-        ->setCustomerTrns('short description of the items/services being purchased')
-        ->setCustomer($customer)
-        ->setPaymentTimeout(3600)
-        ->setPreauth(false)
-        ->setAllowRecurring(true)
-        ->setMaxInstallments(3)
-        ->setPaymentNotification(true)
-        ->setTipAmount(250)
-        ->setDisableExactAmount(false)
-        ->setDisableCash(true)
-        ->setDisableWallet(false)
-        ->setSourceCode(4235)
-        ->setMerchantTrns('customer order reference number')
-        ->setTags(['tag-1', 'tag-2'])
-        ->setBrandColor('009688')
-        ->setPreselectedPaymentMethod(PaymentMethod::PayPal);
-
-    $checkoutUrl = VivaWallet::createPaymentOrder($payment, $customer);
-    return redirect($checkoutUrl);
-});
-
-
-Route::get('/callback/payment/success', function (Request $request) {
-
-    $transactionId = $request->t;
-    $transaction = VivaWallet::retrieveTransaction($transactionId);
-    $order = Order::where('order_number', $transaction['merchantTrns'])->first();
-    if ($order && $transaction['statusId'] == 'F') {
-        $order->status = 1;
-        $order->save();
-        foreach ($order->childrens as $child) {
-            $child->status = 1;
-            $child->save();
-        }
-    }
-    return redirect()->route('thankyou', $order);
-});
-Route::get('/callback/payment/failed', function () {
-});
 
