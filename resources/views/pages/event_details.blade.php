@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <form action="{{ route('cart.store') }}" method="post">
+    <form action="{{ route('cart.store',['event_slug'=>$event->slug]) }}" method="post">
         @csrf
         <section class="rooms1 section-padding">
             <div class="container">

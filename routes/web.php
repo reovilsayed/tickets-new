@@ -57,16 +57,19 @@ Route::get('/test/{ticket}', function (Ticket $ticket) {
 });
 
 Route::post('/add-address', [CheckoutController::class, 'userAddress'])->name('user.address.store');
-Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
+
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
+Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
+Route::get('checkout', [PageController::class, 'checkout'])->name('checkout')->middleware('auth');
+
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact-store', [PageController::class, 'contactStore'])->name('contact.store');
 Route::get('/shops', [PageController::class, 'shops'])->name('shops');
 Route::get('/cart', [PageController::class, 'cart'])->name('cart');
 
-Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout')->middleware('auth');
+
 // Route::get('/order_page', [PageController::class, 'order_page'])->name('order_page');
 Route::get('/verify-email', [HomeController::class, 'verifyMassage'])->name('verify.massage');
 Route::get('/thankyou', [PageController::class, 'thankyou'])->name('thankyou');
