@@ -28,10 +28,20 @@ class PageController extends Controller
     public function home()
     {
         $events = Event::where('status', 1)->get();
-        $featureEvents = Event::where('status', 1)->where('featured', 1)->take(3)->get();
-
-        return view('pages.home', compact('events', 'featureEvents'));
+        return view('pages.home', compact('events'));
     }
+    public function event_details(Event $event)
+    {
+        $event->load('products');
+
+        $products = [];
+        $products['all'] = $event->products()->whereJsonContains('dates', $event->dates())->get();
+        foreach ($event->dates() as $date) {
+            $products[$date] = $event->products()->whereJsonContains('dates', $date)->get();
+        }
+        return view('pages.event_details', compact('event', 'products'));
+    }
+    
     public function shops()
     {
         $products = Product::where("status", 1)->limit(12)->filter()->paginate(10);
@@ -261,16 +271,5 @@ class PageController extends Controller
         $categories = Category::all();
         return view('pages.post_details', compact('post', 'recentPosts', 'categories'));
     }
-    public function event_details(Event $event)
-    {
-        $event->load('products');
 
-        $products = [];
-        $products['all'] = $event->products()->whereJsonContains('dates', $event->dates())->get();
-        foreach ($event->dates() as $date) {
-            $products[$date] = $event->products()->whereJsonContains('dates', $date)->get();
-        }
-
-        return view('pages.event_details', compact('event', 'products'));
-    }
 }

@@ -27,6 +27,13 @@ class Product extends Model
             get: fn ($value) => json_decode($value)
         );
     }
+    public function price(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
 
     public function discount()
     {

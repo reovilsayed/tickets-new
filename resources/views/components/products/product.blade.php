@@ -47,7 +47,7 @@
     }
 </style>
 <div class="item" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
-    <a href="{{ $product->path() }}" class="thumb d-block">
+    <a href="{{ $product->path() }}" class="d-block">
         <img src="{{ Voyager::image($product->thumbnail) }}" alt="" style="">
     </a>
     {{-- <span class="category">

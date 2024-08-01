@@ -92,47 +92,46 @@
                                 <div class="tab-pane fade show @if ($loop->first) active @endif"
                                     id="pills-{{ $key }}" role="tabpanel" aria-labelledby="pills-home-tab">
                                     @foreach ($data as $product)
-                                        <div
-                                            :class="tickets[{{ $product->id }}] ? 'card card-ticket active' :
-                                                'card card-ticket'">
-                                            <div class="card-body tick">
-                                                <div class="ticket-info">
-                                                    <div class="t-info">
-                                                        <p class="t-date">
-                                                            {{ collect($product->dates)->map(fn($date) => Carbon\Carbon::parse($date)->format('d M'))->implode(', ') }}
-                                                        </p>
-                                                        <p class="t-title">{{ $product->name }}</p>
-                                                        <p class="t-des">{{ $product->description }}
-                                                        </p>
-                                                        @if ($product->sold_out)
-                                                            <span class="sold">SOLD</span>
-                                                        @endif
-                                                    </div>
-                                                    <div class="t-prize">
-                                                        <span
-                                                            class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
-                                                        <select name="tickets[{{ $product->id }}]"
-                                                            @if ($product->sold_out) disabled @endif
-                                                            data-price="{{ $product->currentPrice() }}" min="0"
-                                                            max="{{ $product->quantity }}"
-                                                            x-on:change="tickets[{{ $product->id }}]={{ $product->currentPrice() }}* $el.value;quantities[{{ $product->id }}]= $el.value;"
-                                                            class="ticket-select"
-                                                            x-model="quantities[{{ $product->id }}]">
-                                                            <option value="0">0</option>
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
-                                                        </select>
+                                        @if ($product->status == 1 || $product->status == 2)
+                                            <div
+                                                :class="tickets[{{ $product->id }}] ? 'card card-ticket active' :
+                                                    'card card-ticket'">
+                                                <div class="card-body tick">
+                                                    <div class="ticket-info">
+                                                        <div class="t-info">
+                                                            <p class="t-date">
+                                                                {{ collect($product->dates)->map(fn($date) => Carbon\Carbon::parse($date)->format('d M'))->implode(', ') }}
+                                                            </p>
+                                                            <p class="t-title">{{ $product->name }}</p>
+                                                            <p class="t-des">{{ $product->description }}
+                                                            </p>
+                                                            @if ($product->status == 2)
+                                                                <span class="sold">SOLD</span>
+                                                            @endif
+                                                        </div>
+                                                        <div class="t-prize">
+                                                            <span
+                                                                class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
+                                                            @if ($product->status ==1)
+                                                                <select name="tickets[{{ $product->id }}]"
+                                                                    @if ($product->sold_out) disabled @endif
+                                                                    data-price="{{ $product->currentPrice() }}" min="0"
+                                                                    max="{{ $product->quantity }}"
+                                                                    x-on:change="tickets[{{ $product->id }}]={{ $product->currentPrice() }}* $el.value;quantities[{{ $product->id }}]= $el.value;"
+                                                                    class="ticket-select"
+                                                                    x-model="quantities[{{ $product->id }}]">
+                                                                    <option value="0">0</option>
+                                                                    @for ($i = 1;$i <= $product->limit_per_order; $i++)
+                                                                    <option value="{{$i}}">{{$i}}</option>
+                                                                    @endfor
+                                                                </select> 
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
-
                                             </div>
-
-                                        </div>
+                                        @endif
                                     @endforeach
-
                                 </div>
                             @endforeach
                         </div>
