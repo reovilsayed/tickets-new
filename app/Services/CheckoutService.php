@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Event;
 use App\Models\Order;
 use Cart;
 use Exception;
@@ -13,14 +14,16 @@ class CheckoutService
 {
 
     protected $cart;
-    public function __construct()
+    protected $event;
+    public function __construct(Event $event)
     {
-        $this->cart = Cart::getContent();
+        $this->event = $event;
+        $this->cart = Cart::session($event->slug)->getContent();
     }
 
-    public static function  create(Request $request)
+    public static function  create(Event $event,Request $request)
     {
-        return (new self)->generate($request);
+        return (new self($event))->generate($request);
     }
 
 
@@ -30,7 +33,8 @@ class CheckoutService
             'first_name' => ['required'],
             'last_name' => ['required', 'max:40'],
             'email' => ['required', 'max:40', 'email'],
-            'phone' => ['required'],
+            'phone' => ['nullable'],
+            'taxid' => ['nullable'],
         ]);
 
 
@@ -61,11 +65,11 @@ class CheckoutService
 
     protected function createOrder()
     {
-        $total = (Cart::getSubTotal() + Sohoj::tax()) - Sohoj::discount();
+        $total = (Cart::session($this->event->slug)->getSubTotal() + Sohoj::tax()) - Sohoj::discount();
         return Order::create([
             'user_id' => auth()->id() ?? null,
             'billing' => $this->billingObject(),
-            'subtotal' => Cart::getSubTotal(),
+            'subtotal' => Cart::session($this->event->slug)->getSubTotal(),
             'discount' => Sohoj::round_num(Sohoj::discount()),
             'discount_code' => Sohoj::discount_code(),
             'tax' => Sohoj::round_num(Sohoj::tax()),
@@ -86,6 +90,7 @@ class CheckoutService
             'last_name' => request()->last_name,
             'email' => request()->email,
             'phone' => request()->phone,
+            'taxid' => request()->taxid,
         ]);
     }
 }

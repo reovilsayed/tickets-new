@@ -24,7 +24,7 @@
         @csrf
 
     </form>
-    <form action="{{ route('checkout.store') }}" method="post">
+    <form action="{{ route('checkout.store',$event) }}" method="post">
         @csrf
         <!-- Ec checkout page -->
         <section class="ec-page-content section-space-p">
@@ -61,10 +61,16 @@
                                             <input type="text" id="phone" name="phone" class="form-control">
                                         </div>
                                     </div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label class="mb-0" for="phone">Tax payer number</label>
+                                            <input type="text" id="taxid" name="taxid" class="form-control">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <hr>
-                                @if (!session()->has('discount'))
+                                {{-- @if (!session()->has('discount'))
                                     <h6 class="dashboard-title">
                                         Apply coupon
                                     </h6>
@@ -77,7 +83,7 @@
                                             type="submit" class="btn border btn-dark " style="margin-right: 0 !important"
                                             id="basic-addon2"><span>Apply</span></button>
                                     </div>
-                                @endif
+                                @endif --}}
                             </div>
                         </div>
                     </div>
@@ -100,7 +106,7 @@
                                             Price
                                         </th>
                                     </tr>
-                                    @foreach (Cart::getContent() as $cart)
+                                    @foreach (Cart::session($event->slug)->getContent() as $cart)
                                         <tr>
                                             <th>
                                                 {{ $cart->name }}
@@ -132,7 +138,7 @@
                                         </th>
                                         <th>
                                             <span class="h6">
-                                                {{ Sohoj::price(Cart::getTotal()) }}
+                                                {{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}
                                             </span>
                                         </th>
                                     </tr>
@@ -162,7 +168,7 @@
                                         </th>
                                         <th>
                                             <span class="h4">
-                                                {{ Sohoj::price(Cart::getTotal() - Sohoj::discount()) }}
+                                                {{ Sohoj::price(Cart::session($event->slug)->getTotal() - Sohoj::discount()) }}
                                             </span>
                                         </th>
                                     </tr>

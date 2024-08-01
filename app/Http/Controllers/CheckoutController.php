@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderRequest;
 use App\Mail\OrderPlaced;
 use App\Models\Address;
+use App\Models\Event;
 use App\Models\Notification;
 use Sohoj;
 use App\Models\Order;
@@ -20,16 +21,16 @@ use Illuminate\Support\Facades\DB;
 
 class CheckoutController extends Controller
 {
-    public function store(Request $request)
+    public function store(Event $event, Request $request)
     {
-       
+
 
         try {
             DB::beginTransaction();
-            CheckoutService::create($request);
+            CheckoutService::create($event,$request);
             DB::commit();
 
-            Cart::clear();
+            Cart::session($event)->clear();
             session()->forget('discount');
             session()->forget('discount_code');
             return redirect()->route('thankyou')->with('success_msg', 'Order create successfull ');

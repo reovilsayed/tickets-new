@@ -104,10 +104,10 @@ class PageController extends Controller
     }
 
 
-    public function checkout()
+    public function checkout(Event $event)
     {
 
-        return view('pages.checkout');
+        return view('pages.checkout',compact('event'));
     }
     public function store_front($slug)
     {
