@@ -20,24 +20,30 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-12 form-group">
-                        <input class="login-input" id="email" type="email" placeholder="{{ __('Email') }}"
-                            class=" @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
-                            required autocomplete="email" autofocus>
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div class="i-class">
+                            <i class="fa-solid fa-user input-fontawesome"></i>
+                            <input class="login-input" id="email" type="email" placeholder="{{ __('Email') }}"
+                                class=" @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
+                                required autocomplete="email" autofocus>
+                            @error('email')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
-                    <div class="col-md-12 form-group">
-                        <input class="login-pass" id="password" type="password" placeholder="Password"
-                            class="@error('password') is-invalid @enderror" name="password" required
-                            autocomplete="current-password">
-                        @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                    <div class="col-md-12 col-sm-12 form-group">
+                        <div class="i-class">
+                            <i class="fa-solid fa-key input-fontawesome"></i>
+                            <input class="login-pass" id="password" type="password" placeholder="Password"
+                                class="@error('password') is-invalid @enderror" name="password" required
+                                autocomplete="current-password">
+                            @error('password')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
                     </div>
                     <div class="col-md-12">
                         <a href="{{ route('password.request') }}" class="" style="color: #ffffff">I Forgot

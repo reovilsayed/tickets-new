@@ -44,8 +44,8 @@ class PageController extends Controller
     public function checkout()
     {
         $slug = request('event');
-        $event = Event::where('slug',$slug)->first();
-        return view('pages.checkout',compact('event'));
+        $event = Event::where('slug', $slug)->first();
+        return view('pages.checkout', compact('event'));
     }
     public function shops()
     {
@@ -273,4 +273,8 @@ class PageController extends Controller
         return view('pages.post_details', compact('post', 'recentPosts', 'categories'));
     }
 
+    public function ticket_pdf()
+    {
+        return view('pages.ticket_pdf');
+    }
 }

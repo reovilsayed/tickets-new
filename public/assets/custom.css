@@ -169,10 +169,11 @@ body {
     align-items: center;
 }
 
-.ticket-select{
+.ticket-select {
     height: 50px;
     width: 80px;
 }
+
 .ticket-input {
     margin-top: 14px;
 }
@@ -182,9 +183,10 @@ body {
 }
 
 
-.card-ticket.active{
+.card-ticket.active {
     border: #f3510b 3px solid;
 }
+
 .ticket-prize {
     font-size: 25px;
     font-weight: 400;
@@ -448,18 +450,29 @@ body {
     font-weight: 700;
 }
 
+.i-class {
+    position: relative;
+}
+
+.input-fontawesome {
+    position: absolute;
+    top: 10px;
+    left: 22px;
+    font-size: 22px;
+}
+
 .login-input {
     width: 80% !important;
     background-color: #ffff !important;
     border-radius: 20px !important;
-    padding: 10px 70px !important;
+    padding: 10px 60px !important;
 }
 
 .login-pass {
     width: 80% !important;
     background-color: #ffff !important;
     border-radius: 20px !important;
-    padding: 10px 70px !important;
+    padding: 10px 60px !important;
 }
 
 .login-btn {
@@ -467,6 +480,38 @@ body {
     background-color: #f36a30 !important;
     border-radius: 20px !important;
     padding: 5px 0px;
+}
+
+@media (max-width: 600px) {
+
+    .login-input {
+        width: 80% !important;
+        background-color: #ffff !important;
+        border-radius: 20px !important;
+        padding: 10px 60px !important;
+    }
+
+    .login-pass {
+        width: 80% !important;
+        background-color: #ffff !important;
+        border-radius: 20px !important;
+        padding: 10px 60px !important;
+    }
+
+    .login-btn {
+        width: 80%;
+        background-color: #f36a30 !important;
+        border-radius: 20px !important;
+        padding: 5px 0px;
+    }
+
+    .input-fontawesome {
+        position: absolute;
+        top: 10px;
+        left: 32px;
+        font-size: 22px;
+    }
+
 }
 
 .reg-pass {
@@ -481,6 +526,16 @@ body {
     background-color: #f36a30 !important;
     border-radius: 20px !important;
 }
-.payinfo td,th{
+
+.payinfo td,
+th {
     padding: 4px;
+}
+
+.pdf {
+    background-color: #ffff;
+}
+
+.ticket-pdf {
+    border: 3px solid #c16842;
 }

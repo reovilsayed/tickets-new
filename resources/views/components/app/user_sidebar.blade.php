@@ -15,7 +15,7 @@
 
 
                         <li class="{{ Route::is('user.change_password') ? 'active-class' : '' }}"><a
-                                href="{{ route('user.change_password') }}"><i class="fa-solid fa-user"></i>
+                                href="{{ route('user.change_password') }}"><i class="fa-solid fa-key"></i>
                                 Security</a>
                         </li>
                         <li class="">

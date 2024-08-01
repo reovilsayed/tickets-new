@@ -38,8 +38,8 @@
 
                             </div>
                         </div>
-                        <div class="col-md-4  ">
-                            <div class="ec-sidebar-block  side-bar-box ">
+                        <div class="col-md-4">
+                            <div class="ec-sidebar-block side-bar-box ">
 
                                 <div class="ec-sb-block-content">
                                     <div class="">
