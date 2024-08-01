@@ -79,6 +79,7 @@ class TOCOnlineService
             'message' => $response->body(),
         ];
     }
+    // this method need to call when a order is created
     public function createCommercialSalesDocument()
     {
         $accessToken = $this->getAccessToken();
@@ -140,6 +141,8 @@ class TOCOnlineService
             'message' => $response->body(),
         ];
     }
+
+    // this method need to call when payment completed
     public function sendEmailDocument()
     {
         $accessToken = $this->getAccessToken();
@@ -157,7 +160,7 @@ class TOCOnlineService
                     'to_email' => 'carlos.oliveira@sebasi.pt',
                     'type' => 'Document',
                 ],
-                'id' => 3,
+                'id' => 3, // document id
                 'type' => 'email/document',
             ],
         ];
