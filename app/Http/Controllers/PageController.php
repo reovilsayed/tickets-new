@@ -41,7 +41,12 @@ class PageController extends Controller
         }
         return view('pages.event_details', compact('event', 'products'));
     }
-
+    public function checkout()
+    {
+        $slug = request('event');
+        $event = Event::where('slug',$slug)->first();
+        return view('pages.checkout',compact('event'));
+    }
     public function shops()
     {
         $products = Product::where("status", 1)->limit(12)->filter()->paginate(10);
@@ -271,4 +276,5 @@ class PageController extends Controller
         $categories = Category::all();
         return view('pages.post_details', compact('post', 'recentPosts', 'categories'));
     }
+
 }

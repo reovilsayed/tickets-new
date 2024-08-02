@@ -116,6 +116,7 @@ Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'st
 Route::post('rating/{product_id}', [PageController::class, 'rating'])->name('rating');
 Route::get('/store_front/{slug}', [PageController::class, 'store_front'])->name('store_front');
 
+
 // Route::get('/seller', [SellerPagesController::class, 'dashboard'])->middleware('role:vendor')->name('dashboard');
 
 
@@ -160,7 +161,7 @@ Route::post('setting/bankInfo/update', [SellerPagesController::class, 'bankInfoU
 Route::post('setting/generalInfo/update', [SellerPagesController::class, 'generalInfoUpdate'])->name('vendor.generalInfo.update');
 Route::post('setting/shopAddress/update', [SellerPagesController::class, 'shopAddressUpdate'])->middleware('auth', )->name('vendor.shopAddress.update');
 Route::post('/shop/socialLink/store', [SellerPagesController::class, 'shopSocialLinksStore'])->name('vendor.shopSocialLinksStore.store')->middleware('auth');
-
+Route::get('/ticket_pdf', [PageController::class, 'ticket_pdf'])->name('ticket_pdf');
 
 
 

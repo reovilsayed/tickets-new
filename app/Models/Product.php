@@ -42,6 +42,45 @@ class Product extends Model
         );
     }
 
+    public function tax(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
+
+    public function secondaryTax(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
+
+    public function secondaryTaxPercentage(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
+
+    public function tartiaryTax(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
+
+    public function tartiaryTaxPercentage(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
     public function discount()
     {
         $discount_amount  = $this->price - $this->sale_price;
@@ -73,5 +112,26 @@ class Product extends Model
         }
 
         return $formattedDates;
+    }
+    public function totalTax()
+    {
+        $price = $this->price;
+        $totalTax = 0;
+        if (!is_null($this->tartiary_tax_percentage) && !is_null($this->tartiary_tax)) {
+            $tartiaryTaxBase = $price * ($this->tartiary_tax_percentage / 100);
+            $tartiaryTax = $tartiaryTaxBase * ($this->tartiary_tax / 100);
+            $totalTax += $tartiaryTax;
+            $price -= $tartiaryTaxBase;
+        }
+        if (!is_null($this->secondary_tax_percentage) && !is_null($this->secondary_tax)) {
+            $secondaryTaxBase = $price * ($this->secondary_tax_percentage / 100);
+            $secondaryTax = $secondaryTaxBase * ($this->secondary_tax / 100);
+            $totalTax += $secondaryTax;
+            $price -= $secondaryTaxBase;
+        }
+        $regularTax = $price * ($this->tax / 100);
+        $totalTax += $regularTax;
+
+        return $totalTax;
     }
 }
