@@ -171,7 +171,7 @@ Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTi
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
     if ($type == 'generic') {
-        $order = Order::where('transaction_id', $request->id)->firstOrFail();
+        $order = Order::where('transaction_id', $request->key)->firstOrFail();
 
         if ($request->status == 'success') {
             $order->payment_status = 1;
@@ -181,7 +181,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
         $order->save();
     }
     if ($type == 'payment') {
-        $order = Order::where('payment_id', $request->id)->firstOrFail();
+        $order = Order::where('transaction_id', $request->key)->firstOrFail();
         $order->currency = $request->currency;
         $order->payment_method_title = $request->method;
         $order->save();
