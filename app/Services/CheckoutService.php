@@ -10,6 +10,7 @@ use Exception;
 use Sohoj;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutService
 {
@@ -58,10 +59,13 @@ class CheckoutService
         }
 
         $payment = EasyPay::createPaymentLink($order);
-
+        Log::info('This is order info');
+        Log::info($payment);
+        Log::info('This is order end info');
         $order->payment_link = $payment['url'];
         $order->payment_id = $payment['id'];
         $order->save();
+
 
         return $order;
     }
