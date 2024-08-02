@@ -19,7 +19,7 @@ use App\Models\Shop;
 use App\Models\User;
 use App\Slider;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Illuminate\Http\Request;    
 use Illuminate\Support\Facades\Session;
 use TCG\Voyager\Models\Page;
 
