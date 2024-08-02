@@ -134,18 +134,18 @@ class Product extends Model
 
         return $totalTax;
     }
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($product) {
-            $product->generateDates();
-        });
+    //     static::creating(function ($product) {
+    //         $product->generateDates();
+    //     });
 
-        static::updating(function ($product) {
-            $product->generateDates();
-        });
-    }
+    //     static::updating(function ($product) {
+    //         $product->generateDates();
+    //     });
+    // }
 
     public function generateDates()
     {
