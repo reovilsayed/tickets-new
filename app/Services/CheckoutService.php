@@ -54,6 +54,7 @@ class CheckoutService
                     'ticket' => uniqid(),
                     'price' => $item->price,
                     'dates' => $item->model->dates,
+                    
                 ]);
             }
         }
@@ -83,7 +84,8 @@ class CheckoutService
             'tax' => Sohoj::round_num(Sohoj::tax()),
             'total' => $total,
             'status' => 4,
-            'payment_method' => 'easypay.pt'
+            'payment_method' => 'easypay.pt',
+            'transaction_id'=> Str::uuid()
         ]);
     }
 
