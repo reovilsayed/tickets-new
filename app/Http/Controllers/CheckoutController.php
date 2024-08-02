@@ -35,6 +35,7 @@ class CheckoutController extends Controller
             // session()->forget('discount');
             // session()->forget('discount_code');
 
+            dd(EasyPay::createPaymentLink($order));
             $paymentLink = EasyPay::createPaymentLink($order)['url'];
             return redirect($paymentLink)->with('success_msg', 'Order create successfull ');
         } catch (Exception $e) {
