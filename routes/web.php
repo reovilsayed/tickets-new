@@ -161,6 +161,7 @@ Route::post('setting/generalInfo/update', [SellerPagesController::class, 'genera
 Route::post('setting/shopAddress/update', [SellerPagesController::class, 'shopAddressUpdate'])->middleware('auth', )->name('vendor.shopAddress.update');
 Route::post('/shop/socialLink/store', [SellerPagesController::class, 'shopSocialLinksStore'])->name('vendor.shopSocialLinksStore.store')->middleware('auth');
 Route::get('/ticket_pdf', [PageController::class, 'ticket_pdf'])->name('ticket_pdf');
+Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTicket');
 
 
 
