@@ -1033,7 +1033,7 @@ blockquote cite:before {
     letter-spacing: 6px;
 }
 
-.nav-scroll .logo-wrapper {}
+
 
 .logo-wrapper {
     float: left;
@@ -1116,7 +1116,7 @@ blockquote cite:before {
 }
 
 .navbar .dropdown-menu .dropdown-item span:hover {
-    color: #bd3d06;
+    color: #bd3d06 !important;
 }
 
 .navbar .dropdown-menu .dropdown-item i {
