@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TicketDownload;
 use Error;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -109,5 +110,19 @@ class TicketsController extends Controller
             ]);
             return redirect()->back()->withSuccess('Tickets Open successfully');
         }
+    }
+    public function mailTicket(Request $request)
+    {
+
+        $data = [
+            'eventName' => $request->eventName,
+            'eventDate' => $request->eventDate,
+            'eventTime' => $request->eventTime,
+            'eventVenue' => $request->eventVenue,
+            'downloadLink' => $request->downloadLink    ,
+
+        ];
+        return new TicketDownload($data);
+        Mail::to('shuvoakonda42p@gmail.com')->send(new TicketDownload($data));
     }
 }

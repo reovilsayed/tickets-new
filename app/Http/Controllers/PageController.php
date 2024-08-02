@@ -41,7 +41,7 @@ class PageController extends Controller
         }
         return view('pages.event_details', compact('event', 'products'));
     }
-
+  
     public function shops()
     {
         $products = Product::where("status", 1)->limit(12)->filter()->paginate(10);
