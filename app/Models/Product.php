@@ -134,4 +134,32 @@ class Product extends Model
 
         return $totalTax;
     }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($product) {
+            $product->generateDates();
+        });
+
+        static::updating(function ($product) {
+            $product->generateDates();
+        });
+    }
+
+    public function generateDates()
+    {
+        if ($this->start_date && $this->end_date) {
+            $dates = [];
+            $currentDate = Carbon::parse($this->start_date);
+            $endDate = Carbon::parse($this->end_date);
+
+            while ($currentDate->lessThanOrEqualTo($endDate)) {
+                $dates[] = $currentDate->toDateString();
+                $currentDate->addDay();
+            }
+
+            $this->dates = $dates;
+        }
+    }
 }
