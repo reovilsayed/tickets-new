@@ -40,6 +40,7 @@ use KaziRayhan\VivaWallet\Facades\VivaWallet;
 use KaziRayhan\VivaWallet\Customer;
 use KaziRayhan\VivaWallet\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -167,3 +168,7 @@ Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTi
 
 
 
+Route::get('payment-callback/{type}',function($type,Request $request){
+    Log::info($type);
+    Log::success($request->all());
+});

@@ -149,19 +149,21 @@
                                             </th>
                                         </tr>
                                     </table>
-                                    <form>
+                                    <form method="post" action="{{ route('checkout.store', $event) }}">
+                                        @csrf
                                         <div class="mb-3">
                                             <label for="vatNumber" class="form-label">VAT Number</label>
-                                            <input type="text" class="form-control" id="vatNumber"  placeholder="Ex: AKD234345UNDGETLKJN77">
+                                            <input type="text" name="vatNumber" class="form-control" id="vatNumber"
+                                                placeholder="Ex: AKD234345UNDGETLKJN77">
                                         </div>
                                         <div class="mb-3">
                                             <label for="name" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="name"
-                                                placeholder="Enter Name" value="{{auth()->user()->name}}">
+                                            <input type="text" name="name" class="form-control" id="name"
+                                                placeholder="Enter Name" value="{{ auth()->user()->name }}">
                                         </div>
                                         <div class="mb-3">
                                             <label for="address" class="form-label">Address</label>
-                                            <input type="text" class="form-control" id="address"
+                                            <input type="text" name="address" class="form-control" id="address"
                                                 placeholder="Enter Address">
                                         </div>
                                         <button type="submit" class="btn btn-primary">Proceed To Payment</button>
