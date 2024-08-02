@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('payment_id')->nullable();
             $table->string('payment_link')->nullable();
             $table->tinyInteger('payment_status')->default(0);
+            
         });
     }
 

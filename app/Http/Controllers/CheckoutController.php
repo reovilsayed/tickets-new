@@ -31,13 +31,12 @@ class CheckoutController extends Controller
             $order = CheckoutService::create($event, $request);
             DB::commit();
 
-            // Cart::session($event)->clear();
-            // session()->forget('discount');
-            // session()->forget('discount_code');
 
-            dd(EasyPay::createPaymentLink($order));
-            $paymentLink = EasyPay::createPaymentLink($order)['url'];
-            return redirect($paymentLink)->with('success_msg', 'Order create successfull ');
+            Cart::session($event->slug)->clear();
+            session()->forget('discount');
+            session()->forget('discount_code');
+
+            return redirect($order->payment_link)->with('success_msg', 'Order create successfull');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors($e->getMessage());

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Event;
 use App\Models\Order;
+use App\Services\Payment\EasyPay;
 use Cart;
 use Exception;
 use Sohoj;
@@ -21,7 +22,7 @@ class CheckoutService
         $this->cart = Cart::session($event->slug)->getContent();
     }
 
-    public static function  create(Event $event,Request $request)
+    public static function  create(Event $event, Request $request)
     {
         return (new self($event))->generate($request);
     }
@@ -51,11 +52,16 @@ class CheckoutService
                     'order_id' => $order->id,
                     'ticket' => uniqid(),
                     'price' => $item->price,
-                    'dates' => $item->model->dates
+                    'dates' => $item->model->dates,
                 ]);
             }
         }
 
+        $payment = EasyPay::createPaymentLink($order);
+
+        $order->payment_link = $payment['url'];
+        $order->payment_id = $payment['id'];
+        $order->save();
 
         return $order;
     }
@@ -73,6 +79,7 @@ class CheckoutService
             'tax' => Sohoj::round_num(Sohoj::tax()),
             'total' => $total,
             'status' => 4,
+            'payment_method' => 'easypay.pt'
         ]);
     }
 

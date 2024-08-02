@@ -157,9 +157,9 @@ Route::get('/massage/store/{id}', [MassageController::class, 'store'])->name('ma
 Route::post('logo-or-cover/upload', [SellerPagesController::class, 'logoCover'])->middleware('auth')->name('vendor.logo.cover');
 
 
-Route::post('setting/bankInfo/update', [SellerPagesController::class, 'bankInfoUpdate'])->middleware('auth', )->name('vendor.bankInfo.update');
+Route::post('setting/bankInfo/update', [SellerPagesController::class, 'bankInfoUpdate'])->middleware('auth',)->name('vendor.bankInfo.update');
 Route::post('setting/generalInfo/update', [SellerPagesController::class, 'generalInfoUpdate'])->name('vendor.generalInfo.update');
-Route::post('setting/shopAddress/update', [SellerPagesController::class, 'shopAddressUpdate'])->middleware('auth', )->name('vendor.shopAddress.update');
+Route::post('setting/shopAddress/update', [SellerPagesController::class, 'shopAddressUpdate'])->middleware('auth',)->name('vendor.shopAddress.update');
 Route::post('/shop/socialLink/store', [SellerPagesController::class, 'shopSocialLinksStore'])->name('vendor.shopSocialLinksStore.store')->middleware('auth');
 Route::get('/ticket_pdf', [PageController::class, 'ticket_pdf'])->name('ticket_pdf');
 Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTicket');
@@ -168,7 +168,21 @@ Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTi
 
 
 
-Route::post('payment-callback/{type}',function($type,Request $request){
-    Log::info($type);
-    Log::info($request->all());
+Route::post('payment-callback/{type}', function ($type, Request $request) {
+    if ($type == 'generic') {
+        $order = Order::where('payment_id', $request->id)->firstOrFail();
+
+        if ($request->status == 'success') {
+            $order->payment_status = 1;
+        } else {
+            $order->payment_status = 2;
+        }
+        $order->save();
+    }
+    if ($type == 'payment') {
+        $order = Order::where('payment_id', $request->id)->firstOrFail();
+        $order->currency = $request->currency;
+        $order->payment_method_title = $request->method;
+        $order->save();
+    }
 });
