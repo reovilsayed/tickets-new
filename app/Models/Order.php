@@ -18,6 +18,38 @@ class Order extends Model
     }
 
 
+    public function total(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
+
+    public function subtotal(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
+
+    public function tax(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
+
+    public function discount(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
+
     public function scopeFilter($query)
     {
         $currentWeekStart = Carbon::now()->startOfWeek();

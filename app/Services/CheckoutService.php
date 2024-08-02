@@ -30,11 +30,9 @@ class CheckoutService
     public function generate($request)
     {
         $request->validate([
-            'first_name' => ['required'],
-            'last_name' => ['required', 'max:40'],
-            'email' => ['required', 'max:40', 'email'],
-            'phone' => ['nullable'],
-            'taxid' => ['nullable'],
+            'name' => ['required'],
+            'vatNumber' => ['required'],
+            'address' => ['required'],
         ]);
 
 
@@ -86,11 +84,9 @@ class CheckoutService
     protected function billingObject()
     {
         return json_encode([
-            'first_name' => request()->first_name,
-            'last_name' => request()->last_name,
-            'email' => request()->email,
-            'phone' => request()->phone,
-            'taxid' => request()->taxid,
+            'name' => request()->name,
+            'vatNumber' => request()->vatNumber,
+            'address' => request()->address,
         ]);
     }
 }

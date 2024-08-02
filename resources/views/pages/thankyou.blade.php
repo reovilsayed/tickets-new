@@ -38,7 +38,7 @@
                                 <h2 class="ec-title text-center">Thank You</h2>
                                 {{-- <p class="sub-title">For Shopping with us.</p> --}}
                                 <div class="d-flex justify-content-center">
-                                    <i class="ecicon eci-check-circle" aria-hidden="true"></i>
+                                    <i class="fa fa-check-circle" aria-hidden="true"></i>
                                 </div>
                             </div>
                         </div>

@@ -13,6 +13,7 @@ use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\User;
 use App\Services\CheckoutService;
+use App\Services\Payment\EasyPay;
 use Cart;
 use Error;
 use Exception;
@@ -27,13 +28,15 @@ class CheckoutController extends Controller
 
         try {
             DB::beginTransaction();
-            CheckoutService::create($event,$request);
+            $order = CheckoutService::create($event, $request);
             DB::commit();
 
-            Cart::session($event)->clear();
-            session()->forget('discount');
-            session()->forget('discount_code');
-            return redirect()->route('thankyou')->with('success_msg', 'Order create successfull ');
+            // Cart::session($event)->clear();
+            // session()->forget('discount');
+            // session()->forget('discount_code');
+
+            $paymentLink = EasyPay::createPaymentLink($order)['url'];
+            return redirect($paymentLink)->with('success_msg', 'Order create successfull ');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors($e->getMessage());
