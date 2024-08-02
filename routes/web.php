@@ -170,5 +170,5 @@ Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTi
 
 Route::get('payment-callback/{type}',function($type,Request $request){
     Log::info($type);
-    Log::success($request->all());
+    // Log::success($request->all());
 });
