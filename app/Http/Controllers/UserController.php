@@ -27,33 +27,17 @@ class UserController extends Controller
         $request->validate([
             'first_name' => ['required', 'max:40'],
             'last_name' => ['required', 'max:40'],
-            'email' => ['required', 'max:40'],
-            // 'contact_number' => ['required', 'max:200'],
-
-            // 'avatar' => ['nullable','mimes:jpg,png,jpeg,gif'],
+            'contact_number' => ['required', 'max:200'],
+            'vatNumber' => ['required','string'],
+            'address' => ['required','string'],
         ]);
 
-        if ($request->has('avatar')) {                          //If any image is uploaded
-
-            if (Storage::exists(auth()->user()->avatar)) {
-                Storage::delete(auth()->user()->avatar);
-            }
-
-            $avatar = $request->avatar->store('users');
-        } else {                                   //if nothing is uploaded
-
-            $avatar = auth()->user()->avatar;
-        }
-        $phone = auth()->user();
-        $phone->createMetas($request->meta);
         auth()->user()->update([
-
             'name' => $request->first_name,
             'l_name' => $request->last_name,
-
-            'email' => $request->email,
-            'avatar' => $avatar,
-
+            'contact_number' => $request->contact_number,
+            'vatNumber' => $request->vatNumber,
+            'address' => $request->address,
         ]);
         // auth()->user()->addresses()->updateOrCreate(['user_id' => auth()->id()], [
 

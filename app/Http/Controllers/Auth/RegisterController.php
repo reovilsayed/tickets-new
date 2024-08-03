@@ -7,6 +7,7 @@ use App\Mail\VerifyEmail;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Verification;
+use App\Rules\PortuguesePhoneNumber;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -78,7 +79,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'l_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'contact_number' => ['required', 'string', 'max:255'],
+            'contact_number' => ['required', 'string'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             
         ]);

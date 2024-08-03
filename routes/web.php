@@ -197,7 +197,7 @@ Route::get('download-ticket', function (Request $request) {
 })->name('download.ticket');
 Route::get('send-toco', function () {
     $order = Order::latest()->first();
- 
+
     //dd($toco->getAccessTokenFromRefreshToken());
     dd();
 });
@@ -228,4 +228,11 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
         $order->payment_method_title = $request->method;
         $order->save();
     }
+});
+
+
+Route::get('/test', function () {
+    $toco = new TOCOnlineService;
+    // return $toco->getAccessTokenFromRefreshToken();
+    return $toco->getCustomer();
 });

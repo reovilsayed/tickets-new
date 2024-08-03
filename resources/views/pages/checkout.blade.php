@@ -1,36 +1,61 @@
 @extends('layouts.app')
 @section('css')
     <style>
-        .coupon-form div{
+        .coupon-form div {
             display: grid;
             grid-template-columns: 4fr 1fr;
         }
 
         .coupon-form input {
-%;
+            %;
             height: 40px;
             padding: 10px;
             border: 1px solid #f36a30;
 
         }
-        
+
         .coupon-form button {
-            box-shadow: 0px 0px  #f36a30;
+            box-shadow: 0px 0px #f36a30;
             height: 40px;
             border: 1px solid #f36a30;
-            border-left:none; 
+            border-left: none;
             transition: 1s cubic-bezier(0.075, 0.82, 0.165, 1);
         }
-        .coupon-form button:hover{
+
+        .coupon-form button:hover {
             background-color: #f36b306d;
-            box-shadow: 5px 5px  #f36a30;
-            
+            box-shadow: 5px 5px #f36a30;
+
         }
+        .event-box{
+            height: 700px;
+            overflow: scroll;
+            background-color:#fff !important; 
+        }
+
+        .accordion-button:not(.collapsed){
+            
+            background-color:#ef5411b2;   
+
+        }
+
+        .accordion-button{
+            
+            color: #fff !important;
+            font-weight: 600;
+            padding:10px 20px;
+            background-color:#ef5411b2;
+        }
+
+        .accordion-body{
+            border: none;
+        }
+        
     </style>
 @endsection
 @section('content')
     <section class="rooms1 section-padding">
-        <div class="container">
+        <div class="container" >
             <div class="row ">
                 <div class="col-md-4 event-details">
 
@@ -83,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8 event-box">
+                <div class="col-md-8 event-box" >
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
@@ -94,8 +119,8 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body">
+                            <div class="card" >
+                                <div class="card-body" >
 
                                     @if (!session()->has('discount'))
                                         <div>
@@ -196,23 +221,48 @@
                                     </table>
                                     <form method="post" action="{{ route('checkout.store', $event) }}">
                                         @csrf
-                                        <div class="mb-3">
-                                            <label for="vatNumber" class="form-label">VAT Number</label>
-                                            <input type="text" name="vatNumber" class="form-control" id="vatNumber"
-                                                placeholder="Ex: AKD234345UNDGETLKJN77">
+                                    <div class="accordion" id="accordionExample">
+                                        <div class="accordion-item bg-transparent">
+                                            <h2 class="accordion-header" id="headingOne">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#collapseOne" aria-expanded="true"
+                                                    aria-controls="collapseOne">
+                                                {{__('words.billing_info')}}
+                                                </button>
+                                            </h2>
+                                            <div id="collapseOne" class="accordion-collapse collapse show"
+                                                aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    
+                                                        <div class="mb-3">
+                                                            <label for="vatNumber" class="form-label">VAT Number</label>
+                                                            <input type="text" name="vatNumber" class="form-control"
+                                                                id="vatNumber"
+                                                                value=""{{ auth()->user()->vatNumber }}"
+                                                                placeholder="Ex: AKD234345UNDGETLKJN77">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="name" class="form-label">Name</label>
+                                                            <input type="text" name="name" class="form-control"
+                                                                id="name" placeholder="Enter Name"
+                                                                value="{{ auth()->user()->name }}">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="address" class="form-label">Address</label>
+                                                            <input type="text" name="address" class="form-control"
+                                                                id="address" placeholder="Enter Address"
+                                                                value=""{{ auth()->user()->address }}">
+                                                        </div>
+                                                        
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="name" class="form-label">Name</label>
-                                            <input type="text" name="name" class="form-control" id="name"
-                                                placeholder="Enter Name" value="{{ auth()->user()->name }}">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="address" class="form-label">Address</label>
-                                            <input type="text" name="address" class="form-control" id="address"
-                                                placeholder="Enter Address">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Proceed To Payment</button>
-                                    </form>
+
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-3">Proceed To
+                                        Payment</button>
+                                </form>
+
                                 </div>
                             </div>
                         </div>
