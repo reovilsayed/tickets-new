@@ -28,7 +28,7 @@ class TOCOnlineService
                 'Accept' => 'application/json',
             ])->post($this->oauthUrl . '/token', [
                 'grant_type' => 'authorization_code',
-                'code' => 'ffa5c596fc94f9c201c902ccbc0cce46aaff8b3a80a846d7146f7097fe2bbe54',
+                'code' => '1a558fa8af9359d8995beb8270ddf38f74d157fc00db84b35e5ef9471418b282',
                 'scope' => 'commercial'
             ]);
 
@@ -48,7 +48,7 @@ class TOCOnlineService
                 'Accept' => 'application/json',
             ])->post($this->oauthUrl . '/token', [
                 'grant_type' => 'refresh_token',
-                'refresh_token' => '15-341575-1929572-6f368c17a1131437bc299da735243bf169e1910ba2ce9ade0be095de34c51e26',
+                'refresh_token' => '15-341575-1929572-d452bcc02ec441bfdcf9e8e86c0e28a69b49f2aa950eb45a5faaf6a02728237b',
                 'scope' => 'commercial'
             ]);
 
