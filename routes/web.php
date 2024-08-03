@@ -64,7 +64,7 @@ Route::get('/', [PageController::class, 'home'])->name('homepage');
 Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
 Route::get('checkout', [PageController::class, 'checkout'])->name('checkout')->middleware('auth');
 Route::post('store-checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('auth');
-Route::post('toconline/callback', [PageController::class, 'toconlineCallback']);
+Route::get('toconline/callback', [PageController::class, 'toconlineCallback']);
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
