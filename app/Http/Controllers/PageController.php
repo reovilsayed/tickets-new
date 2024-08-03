@@ -271,5 +271,7 @@ class PageController extends Controller
         $categories = Category::all();
         return view('pages.post_details', compact('post', 'recentPosts', 'categories'));
     }
-
+    public function toconlineCallback(){
+        return request('code');
+    }
 }

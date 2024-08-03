@@ -15,21 +15,42 @@ class TOCOnlineService
     public function __construct()
     {
         $this->identifier = 'pt506844374_c341575-18049488f6d1021a';
-        $this->secret = '80aae45b8648bfe45aae48be2b6a4a8a';
+        $this->secret = '1e212663f2f8cceae946daf42e6f75c2';
         $this->oauthUrl = 'https://app15.toconline.pt/oauth';
         // $this->oauthUrl = 'https://apiv1.toconline.com/api';
     }
-    //https://app15.toconline.pt/oauth/auth?response_type=code&client_id=pt506844374_c341575-18049488f6d1021a&scope=commercial&redirect_uri=https%3A%2F%2Foauth.pstmn.io%2Fv1%2Fcallback
+    // https://app15.toconline.pt/oauth/auth?response_type=code&client_id=pt506844374_c341575-18049488f6d1021a&scope=commercial&redirect_uri=https://ticket.sohojware.com/toconline/callback
+
     // this url will give you a code. by using that code we need to generate access_token and refresh_token. bys using refresh token use can generate access token again. and each request we have to send access token
 
-    public function getAccessToken()
+    public function getAccessTokenFromAuthorizationCode()
+    {
+        $response = Http::asForm()->withBasicAuth($this->identifier, $this->secret)
+            ->withHeaders([
+                'Accept' => 'application/json',
+            ])->post($this->oauthUrl . '/token', [
+                'grant_type' => 'authorization_code',
+                'code' => '1a558fa8af9359d8995beb8270ddf38f74d157fc00db84b35e5ef9471418b282',
+                'scope' => 'commercial'
+            ]);
+
+        if ($response->successful()) {
+            return $response->json()->access_token;
+        }
+
+        return [
+            'error' => $response->status(),
+            'message' => $response->body(),
+        ];
+    }
+    public function getAccessTokenFromRefreshToken()
     {
         $response = Http::asForm()->withBasicAuth($this->identifier, $this->secret)
             ->withHeaders([
                 'Accept' => 'application/json',
             ])->post($this->oauthUrl . '/token', [
                 'grant_type' => 'refresh_token',
-                'refresh_token' => '15-341575-1929572-6f368c17a1131437bc299da735243bf169e1910ba2ce9ade0be095de34c51e26',
+                'refresh_token' => '15-341575-1929572-d452bcc02ec441bfdcf9e8e86c0e28a69b49f2aa950eb45a5faaf6a02728237b',
                 'scope' => 'commercial'
             ]);
 
