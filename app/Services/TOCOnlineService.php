@@ -14,7 +14,7 @@ class TOCOnlineService
     public function __construct()
     {
         $this->identifier = 'pt506844374_c341575-18049488f6d1021a';
-        $this->secret = '80aae45b8648bfe45aae48be2b6a4a8a';
+        $this->secret = '1e212663f2f8cceae946daf42e6f75c2';
         $this->oauthUrl = 'https://app15.toconline.pt/oauth';
         $this->oauthUrl = 'https://apiv1.toconline.com/api';
     }
