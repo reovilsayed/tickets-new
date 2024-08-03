@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Document</title>
+    <style>
+        :root {
+            --primary-color: #ef5927;
+            --secondary-color: #ff990a;
+            --dark-color: #221e1f;
+        }
+
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .content {
+            margin: 20px 0;
+        }
+
+        /* .footer {
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        } */
+
+        table {
+            padding: 30px 0px;
+            border: 2px solid var(--primary-color);
+            width: 90%;
+            margin: 20px auto;
+        }
+
+        table td{
+            padding: 10px;
+        }
+
+        .event-date-and-price .date {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .event-date-and-price .country {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .event-date-and-price .price {
+            font-size: 26px;
+            font-weight: 100;
+
+        }
+
+        .event-title {
+            border-right: 2px solid var(--primary-color);
+            border-left: 2px solid var(--primary-color);
+        }
+
+
+        .text-mian {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .text-sub {
+            font-weight: 100;
+            font-size: 12px;
+        }
+
+        .event-title h1 {
+            text-align: center width: 80%;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            position: relative;
+            top: -40px;
+            height: 30px;
+            width: 60px;
+        }
+
+        .event-qr-code img {
+            margin-bottom: 10px;
+        }
+
+        .content {
+            width: 80%;
+            margin: 40px auto;
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .content ul {
+            padding: 20px 40px;
+        }
+
+        .content ul li {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .address{
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <table>
+
+                    <tr>
+                        <td style="width: 25%">
+                            <div class="event-date-and-price">
+                                <p class="date">AUG 30, 2024</p>
+                                <p class="country">Localization</p>
+                                <p class="price">25Є</p>
+                                <p class="text-main">
+                                    Final Price
+                                </p>
+                                <p class="text-sub">
+                                    Tax Included
+                                </p>
+                            </div>
+                        </td>
+                        <td style="width: 50%">
+                            <div class="event-title">
+                                <img class="logo" height="30" width="60" src="{{ asset('assets/logo-black.png') }}" alt="">
+                                <h1>EVENT NAME</h1>
+                                <h5>TICKET NAME</h5>
+                            </div>
+                        </td>
+                        <td style="width: 25%">
+                            <div class="event-qr-code">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=helloworld&color=ef5927"
+                                    alt="" height="100" width="100">
+                                <p>hlw-world-2014</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+
+
+            </div>
+        </div>
+        <div class="content">
+            <h2>
+                CONDIÇÕES GERAIS
+            </h2>
+            <ul>
+                <li>
+                    O bilhete de acesso é individual e corresponde a uma entrada.
+                </li>
+                <li>
+                    O bilhete de acesso confere um copo oficial do evento.
+                </li>
+                <li>
+                    O processo de cancelamento ou devolução é tratado caso a caso pela Essência Company. O
+                    pedido deverá chegar por escrito para o e-mail de contacto tickets@essenciacompany.com,
+                    até 14 dias após a encomenda, sendo as instruções de cancelamento ou devolução do valor
+                    pago respondidas e definidas pela EMPRESA, pelo mesmo meio de comunicação.
+                </li>
+                <li>
+                    Não é permitida a entrada de pessoas acompanhadas de animais excepto nos casos
+                    previstos por lei.
+                </li>
+                <li>
+                    Não é permitida a entrada de pessoas munidas de objetos perigosos.
+                </li>
+                <li>
+                    Não é permitido o consumo de bebidas alcoólicas por menores de 18 anos e a todos os que
+                    apresentarem sinais de embrieguez ou de aparente anomalia psíquica.
+                </li>
+                <li>
+                    Na sua qualidade de organizadora do evento, a Essência Company reserva-se o direito de
+                    recusar a entrada e/ou expulsar qualquer pessoa que apresente comportamento indevido e
+                    inapropriado, prejudicando o bom funcionamento do evento e/ou causando um risco à
+                    segurança de outros participantes. Aqui se inclui, mas não se limita a, comportamento
+                    agressivo, uso de drogas ilegais ou porte de objetos perigosos.
+                </li>
+                <li>
+                    A organização reserva-se no direito de alterar o programa sem aviso prévio.
+                </li>
+                <li>
+                    Existência do livro de reclamações – O Decreto-lei nº 156/2005, de 15 de Setembro, alterado
+                    pelos Decretos-Lei nº 371/2007 de 06 de Novembro nº 118/2009 de 19 de Maio
+                </li>
+                <li>
+                    Existência de tabela de preços.
+                </li>
+
+            </ul>
+            <h2>
+                ADDRESS
+            </h2>
+            <p class="address">Centro de Congressos de Lisboa
+                <br>
+                Rua António Carneiro, 185, Lisboa</p>
+
+        </div>
+
+    </div>
+</body>
+
+</html>

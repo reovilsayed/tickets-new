@@ -41,7 +41,7 @@ use KaziRayhan\VivaWallet\Customer;
 use KaziRayhan\VivaWallet\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
+use Spatie\LaravelPdf\Facades\Pdf;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -161,10 +161,15 @@ Route::post('setting/bankInfo/update', [SellerPagesController::class, 'bankInfoU
 Route::post('setting/generalInfo/update', [SellerPagesController::class, 'generalInfoUpdate'])->name('vendor.generalInfo.update');
 Route::post('setting/shopAddress/update', [SellerPagesController::class, 'shopAddressUpdate'])->middleware('auth',)->name('vendor.shopAddress.update');
 Route::post('/shop/socialLink/store', [SellerPagesController::class, 'shopSocialLinksStore'])->name('vendor.shopSocialLinksStore.store')->middleware('auth');
-Route::get('/ticket_pdf', [PageController::class, 'ticket_pdf'])->name('ticket_pdf');
 Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTicket');
 
 
+Route::get('/ticket_pdf', function () {
+
+   return Pdf::view('ticketpdf')
+    ->format('a4')
+    ->name(uniqid().'.pdf');
+})->name('ticket_pdf');
 
 
 
