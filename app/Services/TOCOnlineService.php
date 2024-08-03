@@ -151,7 +151,7 @@ class TOCOnlineService
         $response = Http::withToken($accessToken)
             ->withHeaders([
                 'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
+                'Content-Type' => 'application/vnd.api+json;charset=utf-8',
             ])->post($this->apiBaseUrl . '/v1/commercial_sales_documents', $salesDocumentData);
 
         if ($response->successful()) {
