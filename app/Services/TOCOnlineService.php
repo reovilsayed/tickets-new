@@ -35,7 +35,6 @@ class TOCOnlineService
                 'scope' => 'commercial'
             ]);
 
-            dd($response->json());
         if ($response->successful()) {
             return $response->json()->access_token;
         }
@@ -75,10 +74,7 @@ class TOCOnlineService
         }
 
         $response = Http::withToken($accessToken)
-            ->withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-            ])->post($this->apiBaseUrl . '/customers', [
+            ->acceptJson()->post($this->apiBaseUrl . '/customers', [
                 'data' => [
                     'attributes' => [
                         'business_name' => 'Empresa de Testes',
@@ -136,7 +132,7 @@ class TOCOnlineService
                     'item_type' => 'Product',
                     'description' => $name . ' for ' . $ticket?->event?->name,
                     'quantity' => 1,
-                    'price' => $ticket->price
+                    'unit_price' => $ticket->price
                 ];
             })->toArray(),
             'notes' => '',
