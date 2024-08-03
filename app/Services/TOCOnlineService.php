@@ -52,7 +52,7 @@ class TOCOnlineService
                 'Accept' => 'application/json',
             ])->post($this->oauthUrl . '/token', [
                 'grant_type' => 'refresh_token',
-                'refresh_token' => '15-341575-1929572-d452bcc02ec441bfdcf9e8e86c0e28a69b49f2aa950eb45a5faaf6a02728237b',
+                'refresh_token' => '15-341575-1929572-426990aa4e9dbdb6d5e9a2db23356620eef12c926f8f386a07a3f7158412498a',
                 'scope' => 'commercial'
             ]);
 

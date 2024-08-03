@@ -186,7 +186,7 @@ Route::get('send-toco', function () {
     $order = Order::latest()->first();
     $toco = new TOCOnlineService;
 
-    dd($toco->createCommercialSalesDocument($order));
+    dd($toco->getAccessTokenFromRefreshToken());
 });
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
