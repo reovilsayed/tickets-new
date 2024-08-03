@@ -12,7 +12,6 @@
 
 
                     @foreach ($order->tickets->groupBy('product_id') as $id => $tickets)
-                    
                         @php
                             $model = App\Models\Product::find($id);
                         @endphp
@@ -20,57 +19,56 @@
                             {{ $model->name }}
                         </h4>
                         <small>
-                            {{$model->event->name}}
+                            {{ $model->event->name }}
                         </small>
-<br>
-<div class="table-responsive">
-    <table class="order-table table mt-3">
-        <tr>
-            <th>
-                Ticket ID
-            </th>
-            <th>
-                Payment Status
-            </th>
-            <th>
-                Payment Type
-            </th>
-            <th>
-                Status
-            </th>
-            <th>
-                Price
-            </th>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="order-table table mt-3">
+                                <tr>
+                                    <th>
+                                        Ticket ID
+                                    </th>
+                                    <th>
+                                        Payment Status
+                                    </th>
+                                    <th>
+                                        Payment Type
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        Price
+                                    </th>
 
 
-        </tr>
+                                </tr>
 
-        @foreach ($tickets as $ticket)
-            <tr>
+                                @foreach ($tickets as $ticket)
+                                    <tr>
 
-                <td>
-                    {{ $ticket->ticket }}
-                </td>
-                <td>
-                    Paid
-                </td>
-                <td>
-                   Visa
+                                        <td>
+                                            {{ $ticket->ticket }}
+                                        </td>
+                                        <td>
+                                            Paid
+                                        </td>
+                                        <td>
+                                            Visa
 
-                </td>
-                <td>
-                    {{ $ticket->status() }}
+                                        </td>
+                                        <td>
+                                            {{ $ticket->status() }}
 
-                </td>
-                <td>
-                    {{ Sohoj::price($ticket->price) }}
-                </td>
+                                        </td>
+                                        <td>
+                                            {{ Sohoj::price($ticket->price) }}
+                                        </td>
 
-            </tr>
-        @endforeach
-    </table>
-</div>
-                     
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
                     @endforeach
 
 
@@ -79,8 +77,12 @@
                 <div class="card-footer bg-transparent p-2 ">
                     <div class="row g-5">
                         <div class="col-md-6 col-12 d-flex align-items-center justify-content-center order-md-1 order-2 ">
-                            <a class="btn btn-primary btn-lg rounded " href=""><i class="fa fa-download"></i>
-                                Download</a>
+                            <a target="_blank"  class="btn btn-primary btn-lg rounded" href="{{ route('download.ticket',['order'=>$order->id,'product'=>$id]) }}">
+                                <i class="fa fa-download"></i>
+                                Download
+                            </a>
+                           
+                          
                         </div>
                         <div class="col-md-6 col-12 order-md-2 order-1">
                             <div class="table-responsive">
@@ -119,7 +121,7 @@
                                     </tr>
                                 </table>
                             </div>
-                          
+
                         </div>
                     </div>
 
@@ -167,6 +169,7 @@
             </div>
         </div>
     </div>
+    
     <!-- modal end -->
 @endsection
 @section('js')

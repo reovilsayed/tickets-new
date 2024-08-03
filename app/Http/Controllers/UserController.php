@@ -32,7 +32,7 @@ class UserController extends Controller
 
             // 'avatar' => ['nullable','mimes:jpg,png,jpeg,gif'],
         ]);
-        
+
         if ($request->has('avatar')) {                          //If any image is uploaded
 
             if (Storage::exists(auth()->user()->avatar)) {
@@ -95,19 +95,15 @@ class UserController extends Controller
     //-----order showing & filtering----start//
     public function ordersIndex(Request $request)
     {
-
-        $latest_orders = Order::where('user_id', auth()->user()->id)
-
-            ->when($request->filled('status'), function ($query) use ($request) {
-                $query->where('status', $request->status);
-            })->latest()->get();
-        // $past_orders = Order::where('user_id', auth()->user()->id)->where('status',1)->latest()->get();
-
+        $latest_orders = Order::where('user_id', auth()->user()->id)->where('payment_status',1)->latest()->get();
         return view('auth.user.order.index', compact('latest_orders'));
     }
     //-----order showing & filtering---- end//
     public function invoice(Order $order)
     {
+        if ($order->payment_status != 1) {
+            abort(403);
+        }
         return view('auth.user.order.invoice', compact('order'));
     }
     public function order_cancel(Order $order)

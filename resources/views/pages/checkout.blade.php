@@ -1,4 +1,33 @@
 @extends('layouts.app')
+@section('css')
+    <style>
+        .coupon-form div{
+            display: grid;
+            grid-template-columns: 4fr 1fr;
+        }
+
+        .coupon-form input {
+%;
+            height: 40px;
+            padding: 10px;
+            border: 1px solid #f36a30;
+
+        }
+        
+        .coupon-form button {
+            box-shadow: 0px 0px  #f36a30;
+            height: 40px;
+            border: 1px solid #f36a30;
+            border-left:none; 
+            transition: 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+        }
+        .coupon-form button:hover{
+            background-color: #f36b306d;
+            box-shadow: 5px 5px  #f36a30;
+            
+        }
+    </style>
+@endsection
 @section('content')
     <section class="rooms1 section-padding">
         <div class="container">
@@ -54,9 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <div x-data="{ tickets: {}, quantities: {} }"
-                    x-effect="$refs.total.innerText = 'Є'+(Object.values(tickets)).reduce((partialSum, a) => partialSum + a, 0)"
-                    class="col-md-8 event-box">
+                <div class="col-md-8 event-box">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
@@ -69,6 +96,24 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
+
+                                    @if (!session()->has('discount'))
+                                        <div>
+                                            <h5>
+                                                Apply coupon code
+                                            </h5>
+                                        </div>
+
+                                        <form class="coupon-form" name="ec-cart-coupan-form" method="POST"
+                                            action="{{ route('coupon') }}">
+                                            @csrf
+                                            <div class="">
+                                                <input type="text" required="" placeholder="Enter Your Coupan Code"
+                                                    name="coupon_code" value="">
+                                                <button type="submit"><span>Apply</span></button>
+                                            </div>
+                                        </form>
+                                    @endif
                                     <h3 class="dashboard-title mb-3">
                                         Order Summary
                                     </h3>

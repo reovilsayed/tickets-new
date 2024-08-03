@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,6 +40,14 @@ class Order extends Model
         return Attribute::make(
             set: fn ($value) => $value * 100,
             get: fn ($value) => $value / 100
+        );
+    }
+    public function billing(): Attribute
+    {
+
+        return Attribute::make(
+            set: fn ($value) => json_encode($value),
+            get: fn ($value) => json_decode($value)
         );
     }
 
@@ -83,6 +92,7 @@ class Order extends Model
             });
     }
 
+    
     public function tickets()
     {
         return $this->hasMany(Ticket::class);

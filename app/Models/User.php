@@ -6,12 +6,11 @@ use App\Models\Traits\HasMeta;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends \TCG\Voyager\Models\User
 {
-    use HasApiTokens, HasFactory, Notifiable, HasMeta, Billable;
+    use HasApiTokens, HasFactory, Notifiable, HasMeta;
 
     /**
      * The attributes that are mass assignable.

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TicketPlaced;
+use App\Models\Order;
+use App\Models\Product;
 use App\Models\Ticket;
 use Illuminate\Support\Carbon;
 
@@ -114,15 +116,13 @@ class TicketsController extends Controller
     public function mailTicket(Request $request)
     {
 
-        $data = [
-            'eventName' => $request->eventName,
-            'eventDate' => $request->eventDate,
-            'eventTime' => $request->eventTime,
-            'eventVenue' => $request->eventVenue,
-            'downloadLink' => $request->downloadLink    ,
+        $order = Order::latest()->first();
 
-        ];
-        return new TicketDownload($data);
-        Mail::to('shuvoakonda42p@gmail.com')->send(new TicketDownload($data));
+        $products = $order->tickets->groupBy('product_id');
+        foreach ($products as $key => $tickets) {
+            $product = Product::find($key);
+            return new TicketDownload($order, $product);
+            Mail::to('shuvoakonda42p@gmail.com')->send(new TicketDownload($order, $product));
+        }
     }
 }

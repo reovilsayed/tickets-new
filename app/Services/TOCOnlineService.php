@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Order;
 use Illuminate\Support\Facades\Http;
 
 class TOCOnlineService
@@ -14,21 +15,23 @@ class TOCOnlineService
     public function __construct()
     {
         $this->identifier = 'pt506844374_c341575-18049488f6d1021a';
-        $this->secret = '80aae45b8648bfe45aae48be2b6a4a8a';
+        $this->secret = '1e212663f2f8cceae946daf42e6f75c2';
         $this->oauthUrl = 'https://app15.toconline.pt/oauth';
-        $this->oauthUrl = 'https://apiv1.toconline.com/api';
+        $this->apiBaseUrl = 'https://app8.toconline.pt/api';
+        // $this->oauthUrl = 'https://apiv1.toconline.com/api';
     }
-    //https://app15.toconline.pt/oauth/auth?response_type=code&client_id=pt506844374_c341575-18049488f6d1021a&scope=commercial&redirect_uri=https%3A%2F%2Foauth.pstmn.io%2Fv1%2Fcallback
+    // https://app15.toconline.pt/oauth/auth?response_type=code&client_id=pt506844374_c341575-18049488f6d1021a&scope=commercial&redirect_uri=https://ticket.sohojware.com/toconline/callback
+
     // this url will give you a code. by using that code we need to generate access_token and refresh_token. bys using refresh token use can generate access token again. and each request we have to send access token
 
-    public function getAccessToken()
+    public function getAccessTokenFromAuthorizationCode()
     {
         $response = Http::asForm()->withBasicAuth($this->identifier, $this->secret)
             ->withHeaders([
                 'Accept' => 'application/json',
             ])->post($this->oauthUrl . '/token', [
-                'grant_type' => 'refresh_token',
-                'refresh_token' => '15-341575-1929572-6f368c17a1131437bc299da735243bf169e1910ba2ce9ade0be095de34c51e26',
+                'grant_type' => 'authorization_code',
+                'code' => '6dffe8772b932a5c3464c41584061615f30f572dfeb6d89330494ce492e889b2',
                 'scope' => 'commercial'
             ]);
 
@@ -41,19 +44,37 @@ class TOCOnlineService
             'message' => $response->body(),
         ];
     }
+    public function getAccessTokenFromRefreshToken()
+    {
+        $response = Http::asForm()->withBasicAuth($this->identifier, $this->secret)
+            ->withHeaders([
+                'Accept' => 'application/json',
+            ])->post($this->oauthUrl . '/token', [
+                'grant_type' => 'refresh_token',
+                'refresh_token' => '15-341575-1929572-426990aa4e9dbdb6d5e9a2db23356620eef12c926f8f386a07a3f7158412498a',
+                'scope' => 'commercial'
+            ]);
+
+        if ($response->successful()) {
+            return $response->json()['access_token'];
+        }
+
+        return [
+            'error' => $response->status(),
+            'message' => $response->body(),
+        ];
+    }
     public function createCustomer()
     {
-        $accessToken = $this->getAccessToken();
+        $accessToken = $this->getAccessTokenFromAuthorizationCode();
+
 
         if (isset($accessToken['error'])) {
-            return $accessToken; 
+            return $accessToken;
         }
 
         $response = Http::withToken($accessToken)
-            ->withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-            ])->post($this->apiBaseUrl . '/customers', [
+            ->acceptJson()->post($this->apiBaseUrl . '/customers', [
                 'data' => [
                     'attributes' => [
                         'business_name' => 'Empresa de Testes',
@@ -80,72 +101,65 @@ class TOCOnlineService
         ];
     }
     // this method need to call when a order is created
-    public function createCommercialSalesDocument()
+    public function createCommercialSalesDocument(Order $order)
     {
-        $accessToken = $this->getAccessToken();
-
-        if (isset($accessToken['error'])) {
-            return $accessToken;
-        }
-
-        $salesDocumentData = [
-            'apply_retention_when_paid' => true,
-            'currency_conversion_rate' => 1.21,
-            'currency_iso_code' => 'EUR',
-            'customer_address_detail' => 'Praceta da Liberdade n5',
-            'customer_business_name' => 'Ricardo Ribeiro',
-            'customer_city' => 'Lisboa',
-            'customer_country' => 'PT',
-            'customer_postcode' => '1000-101',
-            'customer_tax_registration_number' => '229659179',
-            'date' => '2023-01-01',
+        $token = $this->getAccessTokenFromRefreshToken();
+     
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token
+        ])->post('https://api15.toconline.pt/api/v1/commercial_sales_documents', [
             'document_type' => 'FT',
-            'due_date' => '2023-02-01',
-            'external_reference' => 'Referência do documento externo',
+            'date' => $order->created_at->format('Y-m-d'),
             'finalize' => 0,
-            'lines' => [
-                [
-                    'item_type' => 'Product', 
-                    'description' => 'Example Product Description',
-                    'quantity' => 10,
-                    'unit_price' => 19.99, 
-                ],
-                [
-                    'item_type' => 'Product', 
-                    'description' => 'Example Product Description',
-                    'quantity' => 10,
-                    'unit_price' => 19.99, 
-                ],
-            ],
-            'notes' => 'Notas ao documento',
-            'operation_country' => 'PT-MA',
+            'customer_tax_registration_number' => '229659179',
+            'customer_business_name' => $order->user->name,
+            'customer_address_detail' => '',
+            'customer_postcode' => '',
+            'customer_city' => '',
+            'customer_country' => 'PT',
+            'due_date' => $order->created_at->format('Y-m-d'),
+            'settlement_expression' => '7.5',
             'payment_mechanism' => 'MO',
+            'vat_included_prices' => false,
+            'operation_country' => 'PT-MA',
+            'currency_iso_code' => 'EUR',
+            'currency_conversion_rate' => 1.21,
             'retention' => 7.5,
             'retention_type' => 'IRS',
-            'settlement_expression' => '7.5',
-            'vat_included_prices' => true,
-        ];
+            'apply_retention_when_paid' => false,
+            'notes' => '',
+            'external_reference' => $order->id,
 
-        $response = Http::withToken($accessToken)
-            ->withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-            ])->post($this->apiBaseUrl . '/v1/commercial_sales_documents', $salesDocumentData);
+            'lines' => $order->tickets->map(function ($ticket) {
+                $name = $ticket->product->name;
 
+                return [
+                    'item_type' => 'Product',
+                    'description' => $name . ' for ' . $ticket?->event?->name,
+                    'quantity' => 1,
+                    'unit_price' => $ticket->price
+                ];
+            })->toArray(),
+        ]);
+
+        // Handle the response
         if ($response->successful()) {
-            return $response->json();
+            $data = $response->json();
+            return $data;
+            // Process the response data
+        } else {
+            $error = $response->body();
+            return $error;
+            // Handle the error
         }
-
-        return [
-            'error' => $response->status(),
-            'message' => $response->body(),
-        ];
     }
 
     // this method need to call when payment completed
     public function sendEmailDocument()
     {
-        $accessToken = $this->getAccessToken();
+        $accessToken = $this->getAccessTokenFromRefreshToken();
 
         if (isset($accessToken['error'])) {
             return $accessToken; // Return the error if there is any

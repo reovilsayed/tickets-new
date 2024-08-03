@@ -19,20 +19,21 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Middleware\EmailVerified;
 use App\Mail\OfferEmail;
 use App\Mail\OrderPlaced;
+use App\Mail\TicketDownload;
 use App\Mail\TicketPlaced;
 use App\Mail\VerifyEmail;
 use App\Models\Offer;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\TOCOnlineService;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Route;
-use Stripe\Price;
-use Stripe\Product;
-use Stripe\Stripe;
+use Illuminate\Support\Facades\Route;;
+
 use TCG\Voyager\Facades\Voyager;
 use KaziRayhan\VivaWallet\Enums\RequestLang;
 use KaziRayhan\VivaWallet\Enums\PaymentMethod;
@@ -41,7 +42,8 @@ use KaziRayhan\VivaWallet\Customer;
 use KaziRayhan\VivaWallet\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
+use Spatie\Browsershot\Browsershot;
+use Spatie\LaravelPdf\Facades\Pdf;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -64,6 +66,7 @@ Route::get('/', [PageController::class, 'home'])->name('homepage');
 Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
 Route::get('checkout', [PageController::class, 'checkout'])->name('checkout')->middleware('auth');
 Route::post('store-checkout', [CheckoutController::class, 'store'])->name('checkout.store')->middleware('auth');
+Route::get('toconline/callback', [PageController::class, 'toconlineCallback']);
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
@@ -161,13 +164,43 @@ Route::post('setting/bankInfo/update', [SellerPagesController::class, 'bankInfoU
 Route::post('setting/generalInfo/update', [SellerPagesController::class, 'generalInfoUpdate'])->name('vendor.generalInfo.update');
 Route::post('setting/shopAddress/update', [SellerPagesController::class, 'shopAddressUpdate'])->middleware('auth',)->name('vendor.shopAddress.update');
 Route::post('/shop/socialLink/store', [SellerPagesController::class, 'shopSocialLinksStore'])->name('vendor.shopSocialLinksStore.store')->middleware('auth');
-Route::get('/ticket_pdf', [PageController::class, 'ticket_pdf'])->name('ticket_pdf');
 Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTicket');
 
 
+Route::get('/ticket_pdf', function () {
+})->name('ticket_pdf');
+
+// Route::get('/download-ticket', function (Request $request) {
+//     $order = Order::find($request->order);
+//     $product = Product::find($request->product);
+//     $tickets = $order->tickets()->where('product_id', $request->product)->get();
+
+
+//     Browsershot::url('https://example.com')->save($pathToImage);
+
+//     $name = '#' . $order->id . '_' . str_replace(' ', '_', strtolower($product->name)) . '_for_' . str_replace(' ', '_', strtolower($product->event->name)) . '_' . now()->timestamp . '.pdf';
+
+//     // Browsershot::html('Foo')
+//     //         ->setNodeBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/node')
+//     //         ->setNpmBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/npm');
+
+// })->name('download.ticket');
 
 
 
+Route::get('download-ticket', function (Request $request) {
+    $order = Order::find($request->order);
+    $product = Product::find($request->product);
+    $tickets = $order->tickets()->where('product_id', $request->product)->get();
+
+    return view('ticketpdf', compact('tickets'));
+})->name('download.ticket');
+Route::get('send-toco', function () {
+    $order = Order::latest()->first();
+ 
+    //dd($toco->getAccessTokenFromRefreshToken());
+    dd();
+});
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
     if ($type == 'generic') {
@@ -175,10 +208,19 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
 
         if ($request->status == 'success') {
             $order->payment_status = 1;
+            $order->save();
+
+            $products = $order->tickets->groupBy('product_id');
+            foreach ($products as $key => $tickets) {
+                $product = Product::find($key);
+                Mail::to($order->user->email)->send(new TicketDownload($order, $product));
+            }
+            $toco = new TOCOnlineService;
+            $toco->createCommercialSalesDocument($order);
         } else {
             $order->payment_status = 2;
+            $order->save();
         }
-        $order->save();
     }
     if ($type == 'payment') {
         $order = Order::where('transaction_id', $request->key)->firstOrFail();

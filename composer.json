@@ -5,19 +5,17 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.0.2",
-        "barryvdh/laravel-dompdf": "^2.2",
+        "php": "^8.1",
         "darryldecode/cart": "^4.2",
         "guzzlehttp/guzzle": "^7.2",
-        "kazi-rayhan/laravel-viva-wallet": "dev-main",
-        "laravel/cashier": "^14.12",
-        "laravel/framework": "^9.19",
+        "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.0",
         "laravel/socialite": "^5.10",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.2",
         "livewire/livewire": "^2.12",
         "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/laravel-pdf": "^1.5",
         "tcg/voyager": "^1.6"
     },
     "require-dev": {
@@ -26,8 +24,8 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "phpunit/phpunit": "^10.0",
+        "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -70,11 +68,5 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/Kazi-Rayhan/laravel-viva-wallet"
-        }
-    ]
+    "prefer-stable": true
 }

@@ -70,10 +70,12 @@
             border: 4px solid #e86c3d;
             width: 98.6%
         }
-        .email-footer strong{
+
+        .email-footer strong {
             color: #000000
         }
-        .email-content strong{
+
+        .email-content strong {
             color: #e86c3d;
         }
     </style>
@@ -86,15 +88,19 @@
     <div class="email-container">
         <div class="email-ticket-boreder"></div>
         <div class="email-content">
-            <h1>YOURS TICKETS</h1>
-            <p>Thank you for purchasing tickets to <strong></strong>! We are thrilled to have you join us for this
+            <div style="text-align: right">
+
+                <p>Thank you for purchasing tickets to <strong></strong>! We are thrilled to have you join us for this
+                <h1>{{ $product->name }}</h1>
                 exciting event. Here are the details of your purchase:</p>
-            <p><strong>Event:</strong> Wizkhalifa </p>
-            <p><strong>Date:</strong> 24AUG,2024</p>
-            <p><strong>Time:</strong> 12:30 am</p>
-            <p><strong>Location:</strong> befiefl wennlncsnf,</p>
+                <p><strong>Event:</strong> {{ $product->event->name }} </p>
+                <p><strong>Date:</strong> {{ $product->event->start_at->format('d m, Y') }}</p>
+                <p><strong>Time:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
+                <p><strong>Location:</strong>{{ $product->event->location }}</p>
+            </div>
         </div>
-        <a href="#" class="btn-download">DOWNLOAD TICKETS</a>
+        <a href="{{ route('download.ticket', ['order' => $order->id, 'product' => $product->id]) }}"
+            class="btn-download">DOWNLOAD TICKETS</a>
         <div class="email-footer">
             <p><strong>Please keep this email as a confirmation of your purchase.</strong> <br>
                 Remember to bring a copy of your ticket or
