@@ -167,7 +167,7 @@ class TOCOnlineService
     // this method need to call when payment completed
     public function sendEmailDocument()
     {
-        $accessToken = $this->getAccessToken();
+        $accessToken = $this->getAccessTokenFromRefreshToken();
 
         if (isset($accessToken['error'])) {
             return $accessToken; // Return the error if there is any
