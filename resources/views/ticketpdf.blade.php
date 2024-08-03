@@ -32,7 +32,7 @@
             padding: 20px;
             width: 100%;
             margin: 0 auto;
-            height: 100vh;
+            /* height: 100vh; */
         }
 
         .header {
@@ -146,6 +146,33 @@
         }
         .event-qr-code > p{
             font-size: 14px;
+        }
+        .print-btn{
+            width: 70px;
+            height: 70px;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4b41de;
+            color: #fff;
+            border:none;
+            border-radius:10px;
+            transition: box-shadow .2s ease-in;
+        }
+        .print-btn:hover{
+            box-shadow: 5px 5px 0px #221e1f;
+        }
+
+        @media print {
+            /* Hide the print button during print */
+            .print-btn {
+                display: none;
+            }
+            
+            /* Example of other print-specific styles */
+            .container {
+              height: 100vh;
+            }
         }
     </style>
 <script>
@@ -264,7 +291,9 @@
         </div>
     @endforeach
 
-
+    <button class="print-btn" onclick="autoPrint()">
+        Print
+    </button>
 </body>
 
 </html>

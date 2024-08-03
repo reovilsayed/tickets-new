@@ -169,6 +169,7 @@
             </div>
         </div>
     </div>
+    
     <!-- modal end -->
 @endsection
 @section('js')
