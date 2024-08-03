@@ -21,7 +21,27 @@ class TOCOnlineService
     //https://app15.toconline.pt/oauth/auth?response_type=code&client_id=pt506844374_c341575-18049488f6d1021a&scope=commercial&redirect_uri=https%3A%2F%2Foauth.pstmn.io%2Fv1%2Fcallback
     // this url will give you a code. by using that code we need to generate access_token and refresh_token. bys using refresh token use can generate access token again. and each request we have to send access token
 
-    public function getAccessToken()
+    public function getAccessTokenFromAuthorizationCode()
+    {
+        $response = Http::asForm()->withBasicAuth($this->identifier, $this->secret)
+            ->withHeaders([
+                'Accept' => 'application/json',
+            ])->post($this->oauthUrl . '/token', [
+                'grant_type' => 'authorization_code',
+                'code' => 'ffa5c596fc94f9c201c902ccbc0cce46aaff8b3a80a846d7146f7097fe2bbe54',
+                'scope' => 'commercial'
+            ]);
+
+        if ($response->successful()) {
+            return $response->json()->access_token;
+        }
+
+        return [
+            'error' => $response->status(),
+            'message' => $response->body(),
+        ];
+    }
+    public function getAccessTokenFromRefreshToken()
     {
         $response = Http::asForm()->withBasicAuth($this->identifier, $this->secret)
             ->withHeaders([
