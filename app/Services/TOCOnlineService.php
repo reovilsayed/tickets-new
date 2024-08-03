@@ -18,7 +18,8 @@ class TOCOnlineService
         $this->oauthUrl = 'https://app15.toconline.pt/oauth';
         $this->oauthUrl = 'https://apiv1.toconline.com/api';
     }
-    //https://app15.toconline.pt/oauth/auth?response_type=code&client_id=pt506844374_c341575-18049488f6d1021a&scope=commercial&redirect_uri=https%3A%2F%2Foauth.pstmn.io%2Fv1%2Fcallback
+    // https://app15.toconline.pt/oauth/auth?response_type=code&client_id=pt506844374_c341575-18049488f6d1021a&scope=commercial&redirect_uri=https://ticket.sohojware.com/toconline/callback
+
     // this url will give you a code. by using that code we need to generate access_token and refresh_token. bys using refresh token use can generate access token again. and each request we have to send access token
 
     public function getAccessTokenFromAuthorizationCode()
