@@ -144,7 +144,6 @@ class TOCOnlineService
             })->toArray(),
         ]);
 
-        dd($response->json());
         // Handle the response
         if ($response->successful()) {
             $data = $response->json();

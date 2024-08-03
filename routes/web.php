@@ -197,9 +197,9 @@ Route::get('download-ticket', function (Request $request) {
 })->name('download.ticket');
 Route::get('send-toco', function () {
     $order = Order::latest()->first();
-    $toco = new TOCOnlineService;
+ 
     //dd($toco->getAccessTokenFromRefreshToken());
-    dd($toco->createCommercialSalesDocument($order));
+    dd();
 });
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
@@ -208,16 +208,19 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
 
         if ($request->status == 'success') {
             $order->payment_status = 1;
+            $order->save();
 
             $products = $order->tickets->groupBy('product_id');
             foreach ($products as $key => $tickets) {
                 $product = Product::find($key);
                 Mail::to($order->user->email)->send(new TicketDownload($order, $product));
             }
+            $toco = new TOCOnlineService;
+            $toco->createCommercialSalesDocument($order);
         } else {
             $order->payment_status = 2;
+            $order->save();
         }
-        $order->save();
     }
     if ($type == 'payment') {
         $order = Order::where('transaction_id', $request->key)->firstOrFail();
