@@ -148,7 +148,6 @@ class TOCOnlineService
 
             'lines' => $order->tickets->map(function ($ticket) {
                 $name = $ticket->product->name;
-
                 return [
                     'item_type' => 'Product',
                     'description' => $name . ' for ' . $ticket?->event?->name,
