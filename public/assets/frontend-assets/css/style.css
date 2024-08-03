@@ -548,8 +548,8 @@ blockquote cite:before {
 }
 
 ::selection {
-    color: #fff;
-    background: #ffffff;
+    color: #444444;
+    background: #a5b0f1;
 }
 
 
