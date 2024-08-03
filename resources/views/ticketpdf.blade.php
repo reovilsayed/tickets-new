@@ -32,7 +32,7 @@
             padding: 20px;
             width: 100%;
             margin: 0 auto;
-            page-break-after: auto;
+            height: 100vh;
         }
 
         .header {
@@ -148,7 +148,15 @@
             font-size: 14px;
         }
     </style>
+<script>
+    // This function triggers the print dialog
+    function autoPrint() {
+        window.print();
+    }
 
+    // Attach the autoPrint function to the window load event
+    window.onload = autoPrint;
+</script>
 
 </head>
 
@@ -175,15 +183,15 @@
                             </td>
                             <td style="width: 50%">
                                 <div class="event-title">
-                                    {{-- <img class="logo" height="30" width="60" src="{{ asset('assets/logo-black.png') }}" alt=""> --}}
+                                    <img class="logo" height="30" width="60" src="{{ asset('assets/logo-black.png') }}" alt="">
                                     <h1>{{ $ticket->event->name }}</h1>
                                     <h5>{{ $ticket->product->name }}</h5>
                                 </div>
                             </td>
                             <td style="width: 25%">
                                 <div class="event-qr-code">
-                                    {{-- <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ $ticket->ticket }}&color=ef5927"
-                                        alt="" height="120" width="120"> --}}
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ $ticket->ticket }}&color=ef5927"
+                                        alt="" height="120" width="120">
                                     <p>{{ $ticket->ticket }}</p>
                                 </div>
                             </td>

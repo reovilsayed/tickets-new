@@ -77,15 +77,11 @@
                 <div class="card-footer bg-transparent p-2 ">
                     <div class="row g-5">
                         <div class="col-md-6 col-12 d-flex align-items-center justify-content-center order-md-1 order-2 ">
-                            <form action="{{ route('download.ticket') }}">
-
-                                <input type="hidden" name="order" value="{{ $order->id }}">
-                                <input type="hidden" name="product" value="{{ $id }}">
-                                <button class="btn btn-primary btn-lg rounded ">
-                                    <i class="fa fa-download"></i>
-                                    Download
-                                </button>
-                            </form>
+                            <a  class="btn btn-primary btn-lg rounded" href="{{ route('download.ticket',['order'=>$order->id,'product'=>$id]) }}">
+                                <i class="fa fa-download"></i>
+                                Download
+                            </a>
+                           
                           
                         </div>
                         <div class="col-md-6 col-12 order-md-2 order-1">

@@ -170,23 +170,31 @@ Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTi
 Route::get('/ticket_pdf', function () {
 })->name('ticket_pdf');
 
-Route::get('/download-ticket', function (Request $request) {
+// Route::get('/download-ticket', function (Request $request) {
+//     $order = Order::find($request->order);
+//     $product = Product::find($request->product);
+//     $tickets = $order->tickets()->where('product_id', $request->product)->get();
+
+
+//     Browsershot::url('https://example.com')->save($pathToImage);
+
+//     $name = '#' . $order->id . '_' . str_replace(' ', '_', strtolower($product->name)) . '_for_' . str_replace(' ', '_', strtolower($product->event->name)) . '_' . now()->timestamp . '.pdf';
+
+//     // Browsershot::html('Foo')
+//     //         ->setNodeBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/node')
+//     //         ->setNpmBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/npm');
+
+// })->name('download.ticket');
+
+
+
+Route::get('download-ticket', function (Request $request) {
     $order = Order::find($request->order);
     $product = Product::find($request->product);
     $tickets = $order->tickets()->where('product_id', $request->product)->get();
 
-    $name = '#' . $order->id . '_' . str_replace(' ', '_', strtolower($product->name)) . '_for_' . str_replace(' ', '_', strtolower($product->event->name)) . '_' . now()->timestamp . '.pdf';
-
-    Browsershot::html('Foo')
-            ->setNodeBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/node')
-            ->setNpmBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/npm');
-    return Pdf::view('ticketpdf', compact('tickets'))
-    
-        ->format('a4')
-        ->name($name);
+    return view('ticketpdf', compact('tickets'));
 })->name('download.ticket');
-
-
 Route::get('send-toco', function () {
     $order = Order::latest()->first();
     $toco = new TOCOnlineService;
