@@ -67,10 +67,10 @@ class TOCOnlineService
     public function createCustomer()
     {
         $accessToken = $this->getAccessTokenFromAuthorizationCode();
-      
+
 
         if (isset($accessToken['error'])) {
-            return $accessToken; 
+            return $accessToken;
         }
 
         $response = Http::withToken($accessToken)
@@ -103,21 +103,23 @@ class TOCOnlineService
     // this method need to call when a order is created
     public function createCommercialSalesDocument(Order $order)
     {
+        $token = $this->getAccessTokenFromRefreshToken();
+     
         $response = Http::withHeaders([
             'Content-Type' => 'application/vnd.api+json',
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer 15-341575-1929572-a426c600ad19d4174befb7df328493024f35677065212937d4c10c3fa96f531c',
+            'Authorization' => 'Bearer ' . $token
         ])->post('https://api15.toconline.pt/api/v1/commercial_sales_documents', [
             'document_type' => 'FT',
-            'date' => '2023-01-01',
+            'date' => $order->created_at->format('Y-m-d'),
             'finalize' => 0,
             'customer_tax_registration_number' => '229659179',
-            'customer_business_name' => 'Ricardo Ribeiro',
-            'customer_address_detail' => 'Praceta da Liberdade n5',
-            'customer_postcode' => '1000-101',
-            'customer_city' => 'Lisboa',
+            'customer_business_name' => $order->user->name,
+            'customer_address_detail' => '',
+            'customer_postcode' => '',
+            'customer_city' => '',
             'customer_country' => 'PT',
-            'due_date' => '2023-02-01',
+            'due_date' => $order->created_at->format('Y-m-d'),
             'settlement_expression' => '7.5',
             'payment_mechanism' => 'MO',
             'vat_included_prices' => false,
@@ -127,24 +129,30 @@ class TOCOnlineService
             'retention' => 7.5,
             'retention_type' => 'IRS',
             'apply_retention_when_paid' => false,
-            'notes' => 'Notas ao documento',
-            'external_reference' => 'Referência do documento externo',
-            'lines' => [
-                [
+            'notes' => '',
+            'external_reference' => $order->id,
+
+            'lines' => $order->tickets->map(function ($ticket) {
+                $name = $ticket->product->name;
+
+                return [
                     'item_type' => 'Product',
-                    'description' => 'sadsad asdfasfasdfasdf',
+                    'description' => $name . ' for ' . $ticket?->event?->name,
                     'quantity' => 1,
-                    'unit_price' => 7.5
-                ]
-            ]
+                    'unit_price' => $ticket->price
+                ];
+            })->toArray(),
         ]);
+
         dd($response->json());
         // Handle the response
         if ($response->successful()) {
             $data = $response->json();
+            return $data;
             // Process the response data
         } else {
             $error = $response->body();
+            return $error;
             // Handle the error
         }
     }

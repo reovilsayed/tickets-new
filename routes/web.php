@@ -42,6 +42,7 @@ use KaziRayhan\VivaWallet\Customer;
 use KaziRayhan\VivaWallet\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Facades\Pdf;
 /*
 |--------------------------------------------------------------------------
@@ -176,7 +177,11 @@ Route::get('/download-ticket', function (Request $request) {
 
     $name = '#' . $order->id . '_' . str_replace(' ', '_', strtolower($product->name)) . '_for_' . str_replace(' ', '_', strtolower($product->event->name)) . '_' . now()->timestamp . '.pdf';
 
+    Browsershot::html('Foo')
+            ->setNodeBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/node')
+            ->setNpmBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/npm');
     return Pdf::view('ticketpdf', compact('tickets'))
+    
         ->format('a4')
         ->name($name);
 })->name('download.ticket');
