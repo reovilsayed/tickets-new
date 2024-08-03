@@ -17,6 +17,7 @@ class TOCOnlineService
         $this->identifier = 'pt506844374_c341575-18049488f6d1021a';
         $this->secret = '1e212663f2f8cceae946daf42e6f75c2';
         $this->oauthUrl = 'https://app15.toconline.pt/oauth';
+        $this->apiBaseUrl = 'https://app8.toconline.pt/api';
         // $this->oauthUrl = 'https://apiv1.toconline.com/api';
     }
     // https://app15.toconline.pt/oauth/auth?response_type=code&client_id=pt506844374_c341575-18049488f6d1021a&scope=commercial&redirect_uri=https://ticket.sohojware.com/toconline/callback
@@ -30,10 +31,11 @@ class TOCOnlineService
                 'Accept' => 'application/json',
             ])->post($this->oauthUrl . '/token', [
                 'grant_type' => 'authorization_code',
-                'code' => '1a558fa8af9359d8995beb8270ddf38f74d157fc00db84b35e5ef9471418b282',
+                'code' => '6dffe8772b932a5c3464c41584061615f30f572dfeb6d89330494ce492e889b2',
                 'scope' => 'commercial'
             ]);
 
+            dd($response->json());
         if ($response->successful()) {
             return $response->json()->access_token;
         }
@@ -55,7 +57,7 @@ class TOCOnlineService
             ]);
 
         if ($response->successful()) {
-            return $response->json()->access_token;
+            return $response->json()['access_token'];
         }
 
         return [
@@ -65,7 +67,8 @@ class TOCOnlineService
     }
     public function createCustomer()
     {
-        $accessToken = $this->getAccessToken();
+        $accessToken = $this->getAccessTokenFromAuthorizationCode();
+      
 
         if (isset($accessToken['error'])) {
             return $accessToken; 
@@ -104,7 +107,7 @@ class TOCOnlineService
     // this method need to call when a order is created
     public function createCommercialSalesDocument(Order $order)
     {
-        $accessToken = $this->getAccessToken();
+        $accessToken = $this->getAccessTokenFromRefreshToken();
 
         if (isset($accessToken['error'])) {
             return $accessToken;
