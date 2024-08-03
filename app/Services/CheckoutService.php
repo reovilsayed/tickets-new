@@ -54,7 +54,7 @@ class CheckoutService
                     'ticket' => uniqid(),
                     'price' => $item->price,
                     'dates' => $item->model->dates,
-                    
+
                 ]);
             }
         }
@@ -75,6 +75,7 @@ class CheckoutService
     protected function createOrder()
     {
         $total = (Cart::session($this->event->slug)->getSubTotal() + Sohoj::tax()) - Sohoj::discount();
+        
         return Order::create([
             'user_id' => auth()->id() ?? null,
             'billing' => $this->billingObject(),
@@ -85,7 +86,7 @@ class CheckoutService
             'total' => $total,
             'status' => 4,
             'payment_method' => 'easypay.pt',
-            'transaction_id'=> Str::uuid()
+            'transaction_id' => Str::uuid()
         ]);
     }
 
@@ -96,10 +97,10 @@ class CheckoutService
 
     protected function billingObject()
     {
-        return json_encode([
+        return [
             'name' => request()->name,
             'vatNumber' => request()->vatNumber,
             'address' => request()->address,
-        ]);
+        ];
     }
 }

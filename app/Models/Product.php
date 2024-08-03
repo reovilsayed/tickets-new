@@ -16,8 +16,8 @@ class Product extends Model
     protected $guarded = [];
     protected $casts = [
         'expired_at' => 'datetime',
-        'event_start_date' => 'datetime',
-        'event_end_date' => 'datetime',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
         'dates' => 'json'
     ];
 

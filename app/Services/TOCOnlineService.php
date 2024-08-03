@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Order;
 use Illuminate\Support\Facades\Http;
 
 class TOCOnlineService
@@ -16,7 +17,7 @@ class TOCOnlineService
         $this->identifier = 'pt506844374_c341575-18049488f6d1021a';
         $this->secret = '80aae45b8648bfe45aae48be2b6a4a8a';
         $this->oauthUrl = 'https://app15.toconline.pt/oauth';
-        $this->oauthUrl = 'https://apiv1.toconline.com/api';
+        // $this->oauthUrl = 'https://apiv1.toconline.com/api';
     }
     //https://app15.toconline.pt/oauth/auth?response_type=code&client_id=pt506844374_c341575-18049488f6d1021a&scope=commercial&redirect_uri=https%3A%2F%2Foauth.pstmn.io%2Fv1%2Fcallback
     // this url will give you a code. by using that code we need to generate access_token and refresh_token. bys using refresh token use can generate access token again. and each request we have to send access token
@@ -80,7 +81,7 @@ class TOCOnlineService
         ];
     }
     // this method need to call when a order is created
-    public function createCommercialSalesDocument()
+    public function createCommercialSalesDocument(Order $order)
     {
         $accessToken = $this->getAccessToken();
 
@@ -88,38 +89,35 @@ class TOCOnlineService
             return $accessToken;
         }
 
+
         $salesDocumentData = [
             'apply_retention_when_paid' => true,
             'currency_conversion_rate' => 1.21,
             'currency_iso_code' => 'EUR',
-            'customer_address_detail' => 'Praceta da Liberdade n5',
-            'customer_business_name' => 'Ricardo Ribeiro',
-            'customer_city' => 'Lisboa',
+            'customer_address_detail' => $order->billing->address,
+            'customer_business_name' => $order->billing->name,
+            'customer_city' => '',
             'customer_country' => 'PT',
-            'customer_postcode' => '1000-101',
-            'customer_tax_registration_number' => '229659179',
-            'date' => '2023-01-01',
+            'customer_postcode' => '',
+            'customer_tax_registration_number' => $order->billing->vatNumber,
+            'date' => $order->created_at->format('Y-m-d'),
             'document_type' => 'FT',
-            'due_date' => '2023-02-01',
-            'external_reference' => 'Referência do documento externo',
+            'due_date' => $order->created_at->format('Y-m-d'),
+            'external_reference' => $order->id,
             'finalize' => 0,
-            'lines' => [
-                [
-                    'item_type' => 'Product', 
-                    'description' => 'Example Product Description',
-                    'quantity' => 10,
-                    'unit_price' => 19.99, 
-                ],
-                [
-                    'item_type' => 'Product', 
-                    'description' => 'Example Product Description',
-                    'quantity' => 10,
-                    'unit_price' => 19.99, 
-                ],
-            ],
-            'notes' => 'Notas ao documento',
+            'lines' => $order->tickets->map(function ($ticket) {
+                $name = $ticket->product->name;
+                
+                return [
+                    'item_type' => 'Product',
+                    'description' => $name . ' for ' . $ticket?->event?->name,
+                    'quantity' => 1,
+                    'price' => $ticket->price
+                ];
+            })->toArray(),
+            'notes' => '',
             'operation_country' => 'PT-MA',
-            'payment_mechanism' => 'MO',
+            'payment_mechanism' => $order->payment_method_title,
             'retention' => 7.5,
             'retention_type' => 'IRS',
             'settlement_expression' => '7.5',

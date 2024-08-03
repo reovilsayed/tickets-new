@@ -13,16 +13,18 @@ class TicketDownload extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data;
+    public $order;
+    public $product;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($order, $product)
     {
-        $this->data = (object) $data;
+        $this->order = $order;
+        $this->product = $product;
     }
 
     /**

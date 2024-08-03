@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Document</title>
+    <title>Your tickets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
+
     <style>
         :root {
             --primary-color: #ef5927;
@@ -13,18 +18,21 @@
         }
 
         * {
+            
             margin: 0px;
             padding: 0px;
         }
 
         body {
+            font-family: "Montserrat", sans-serif !important;
             margin: 0;
-            padding: 20px;
         }
 
         .container {
+            padding: 20px;
             width: 100%;
             margin: 0 auto;
+            page-break-after: auto;
         }
 
         .header {
@@ -50,7 +58,7 @@
             margin: 20px auto;
         }
 
-        table td{
+        table td {
             padding: 10px;
         }
 
@@ -90,8 +98,13 @@
         }
 
         .event-title h1 {
+            font-size: 26px;
             text-align: center width: 80%;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
+        }
+
+        .event-title h5 {
+            font-size: 18px;
         }
 
         .logo {
@@ -113,123 +126,137 @@
         h2 {
             color: var(--secondary-color);
             padding-bottom: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-bottom: 3px solid var(--secondary-color);
         }
 
         .content ul {
-            padding: 20px 40px;
+            padding: 10px 40px;
         }
 
         .content ul li {
-            margin-bottom: 15px;
-            font-size: 16px;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
-        .address{
+
+        .address {
+
             font-size: 20px;
             font-weight: bold;
         }
+        .event-qr-code > p{
+            font-size: 14px;
+        }
     </style>
+
+
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <div>
-                <table>
+    @foreach ($tickets as $ticket)
+    
+        <div class="container">
+            <div class="header">
+                <div>
+                    <table>
+                        <tr>
+                            <td style="width: 25%">
+                                <div class="event-date-and-price">
+                                    <p class="date">{{ $ticket->product->start_date->format('M d, Y') }}</p>
+                                    <p class="country">{{ $ticket->event->city }}</p>
+                                    <p class="price">{{ Sohoj::price($ticket->price) }}</p>
+                                    <p class="text-main">
+                                        Final Price
+                                    </p>
+                                    <p class="text-sub">
+                                        Tax Included
+                                    </p>
+                                </div>
+                            </td>
+                            <td style="width: 50%">
+                                <div class="event-title">
+                                    <img class="logo" height="30" width="60" src="{{ asset('assets/logo-black.png') }}" alt="">
+                                    <h1>{{ $ticket->event->name }}</h1>
+                                    <h5>{{ $ticket->product->name }}</h5>
+                                </div>
+                            </td>
+                            <td style="width: 25%">
+                                <div class="event-qr-code">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ $ticket->ticket }}&color=ef5927"
+                                        alt="" height="120" width="120">
+                                    <p>{{ $ticket->ticket }}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
 
-                    <tr>
-                        <td style="width: 25%">
-                            <div class="event-date-and-price">
-                                <p class="date">AUG 30, 2024</p>
-                                <p class="country">Localization</p>
-                                <p class="price">25Є</p>
-                                <p class="text-main">
-                                    Final Price
-                                </p>
-                                <p class="text-sub">
-                                    Tax Included
-                                </p>
-                            </div>
-                        </td>
-                        <td style="width: 50%">
-                            <div class="event-title">
-                                <img class="logo" height="30" width="60" src="{{ asset('assets/logo-black.png') }}" alt="">
-                                <h1>EVENT NAME</h1>
-                                <h5>TICKET NAME</h5>
-                            </div>
-                        </td>
-                        <td style="width: 25%">
-                            <div class="event-qr-code">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=helloworld&color=ef5927"
-                                    alt="" height="100" width="100">
-                                <p>hlw-world-2014</p>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
 
 
+                </div>
+            </div>
+            <div class="content">
+                <h2>
+                    CONDIÇÕES GERAIS
+                </h2>
+                <ul>
+                    <li>
+                        O bilhete de acesso é individual e corresponde a uma entrada.
+                    </li>
+                    <li>
+                        O bilhete de acesso confere um copo oficial do evento.
+                    </li>
+                    <li>
+                        O processo de cancelamento ou devolução é tratado caso a caso pela Essência Company. O
+                        pedido deverá chegar por escrito para o e-mail de contacto tickets@essenciacompany.com,
+                        até 14 dias após a encomenda, sendo as instruções de cancelamento ou devolução do valor
+                        pago respondidas e definidas pela EMPRESA, pelo mesmo meio de comunicação.
+                    </li>
+                    <li>
+                        Não é permitida a entrada de pessoas acompanhadas de animais excepto nos casos
+                        previstos por lei.
+                    </li>
+                    <li>
+                        Não é permitida a entrada de pessoas munidas de objetos perigosos.
+                    </li>
+                    <li>
+                        Não é permitido o consumo de bebidas alcoólicas por menores de 18 anos e a todos os que
+                        apresentarem sinais de embrieguez ou de aparente anomalia psíquica.
+                    </li>
+                    <li>
+                        Na sua qualidade de organizadora do evento, a Essência Company reserva-se o direito de
+                        recusar a entrada e/ou expulsar qualquer pessoa que apresente comportamento indevido e
+                        inapropriado, prejudicando o bom funcionamento do evento e/ou causando um risco à
+                        segurança de outros participantes. Aqui se inclui, mas não se limita a, comportamento
+                        agressivo, uso de drogas ilegais ou porte de objetos perigosos.
+                    </li>
+                    <li>
+                        A organização reserva-se no direito de alterar o programa sem aviso prévio.
+                    </li>
+                    <li>
+                        Existência do livro de reclamações – O Decreto-lei nº 156/2005, de 15 de Setembro, alterado
+                        pelos Decretos-Lei nº 371/2007 de 06 de Novembro nº 118/2009 de 19 de Maio
+                    </li>
+                    <li>
+                        Existência de tabela de preços.
+                    </li>
+
+                </ul>
+                <br>
+                <br>
+                <h2>
+                    ADDRESS
+                </h2>
+                <p class="address">Centro de Congressos de Lisboa
+                    <br>
+                    Rua António Carneiro, 185, Lisboa
+                </p>
 
             </div>
-        </div>
-        <div class="content">
-            <h2>
-                CONDIÇÕES GERAIS
-            </h2>
-            <ul>
-                <li>
-                    O bilhete de acesso é individual e corresponde a uma entrada.
-                </li>
-                <li>
-                    O bilhete de acesso confere um copo oficial do evento.
-                </li>
-                <li>
-                    O processo de cancelamento ou devolução é tratado caso a caso pela Essência Company. O
-                    pedido deverá chegar por escrito para o e-mail de contacto tickets@essenciacompany.com,
-                    até 14 dias após a encomenda, sendo as instruções de cancelamento ou devolução do valor
-                    pago respondidas e definidas pela EMPRESA, pelo mesmo meio de comunicação.
-                </li>
-                <li>
-                    Não é permitida a entrada de pessoas acompanhadas de animais excepto nos casos
-                    previstos por lei.
-                </li>
-                <li>
-                    Não é permitida a entrada de pessoas munidas de objetos perigosos.
-                </li>
-                <li>
-                    Não é permitido o consumo de bebidas alcoólicas por menores de 18 anos e a todos os que
-                    apresentarem sinais de embrieguez ou de aparente anomalia psíquica.
-                </li>
-                <li>
-                    Na sua qualidade de organizadora do evento, a Essência Company reserva-se o direito de
-                    recusar a entrada e/ou expulsar qualquer pessoa que apresente comportamento indevido e
-                    inapropriado, prejudicando o bom funcionamento do evento e/ou causando um risco à
-                    segurança de outros participantes. Aqui se inclui, mas não se limita a, comportamento
-                    agressivo, uso de drogas ilegais ou porte de objetos perigosos.
-                </li>
-                <li>
-                    A organização reserva-se no direito de alterar o programa sem aviso prévio.
-                </li>
-                <li>
-                    Existência do livro de reclamações – O Decreto-lei nº 156/2005, de 15 de Setembro, alterado
-                    pelos Decretos-Lei nº 371/2007 de 06 de Novembro nº 118/2009 de 19 de Maio
-                </li>
-                <li>
-                    Existência de tabela de preços.
-                </li>
-
-            </ul>
-            <h2>
-                ADDRESS
-            </h2>
-            <p class="address">Centro de Congressos de Lisboa
-                <br>
-                Rua António Carneiro, 185, Lisboa</p>
 
         </div>
+    @endforeach
 
-    </div>
+
 </body>
 
 </html>

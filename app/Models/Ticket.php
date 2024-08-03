@@ -26,6 +26,13 @@ class Ticket extends Model
         );
     }
 
+    public function event(){
+        return $this->belongsTo(Event::class);
+    }
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
+
     public function status(){
         return 'pending';
     }

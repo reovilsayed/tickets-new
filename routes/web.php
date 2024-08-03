@@ -19,20 +19,21 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Middleware\EmailVerified;
 use App\Mail\OfferEmail;
 use App\Mail\OrderPlaced;
+use App\Mail\TicketDownload;
 use App\Mail\TicketPlaced;
 use App\Mail\VerifyEmail;
 use App\Models\Offer;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Shop;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\TOCOnlineService;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Route;
-use Stripe\Price;
-use Stripe\Product;
-use Stripe\Stripe;
+use Illuminate\Support\Facades\Route;;
+
 use TCG\Voyager\Facades\Voyager;
 use KaziRayhan\VivaWallet\Enums\RequestLang;
 use KaziRayhan\VivaWallet\Enums\PaymentMethod;
@@ -165,14 +166,27 @@ Route::get('/send-mail', [TicketsController::class, 'mailTicket'])->name('mailTi
 
 
 Route::get('/ticket_pdf', function () {
-
-   return Pdf::view('ticketpdf')
-    ->format('a4')
-    ->name(uniqid().'.pdf');
 })->name('ticket_pdf');
 
+Route::get('/download-ticket', function (Request $request) {
+    $order = Order::find($request->order);
+    $product = Product::find($request->product);
+    $tickets = $order->tickets()->where('product_id', $request->product)->get();
+
+    $name = '#' . $order->id . '_' . str_replace(' ', '_', strtolower($product->name)) . '_for_' . str_replace(' ', '_', strtolower($product->event->name)) . '_' . now()->timestamp . '.pdf';
+
+    return Pdf::view('ticketpdf', compact('tickets'))
+        ->format('a4')
+        ->name($name);
+})->name('download.ticket');
 
 
+Route::get('send-toco', function () {
+    $order = Order::latest()->first();
+    $toco = new TOCOnlineService;
+
+    dd($toco->createCommercialSalesDocument($order));
+});
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
     if ($type == 'generic') {
@@ -180,6 +194,12 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
 
         if ($request->status == 'success') {
             $order->payment_status = 1;
+
+            $products = $order->tickets->groupBy('product_id');
+            foreach ($products as $key => $tickets) {
+                $product = Product::find($key);
+                Mail::to($order->user->email)->send(new TicketDownload($order, $product));
+            }
         } else {
             $order->payment_status = 2;
         }
