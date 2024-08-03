@@ -107,61 +107,50 @@ class TOCOnlineService
     // this method need to call when a order is created
     public function createCommercialSalesDocument(Order $order)
     {
-        $accessToken = $this->getAccessTokenFromRefreshToken();
-
-        if (isset($accessToken['error'])) {
-            return $accessToken;
-        }
-
-
-        $salesDocumentData = [
-            'apply_retention_when_paid' => true,
-            'currency_conversion_rate' => 1.21,
-            'currency_iso_code' => 'EUR',
-            'customer_address_detail' => $order->billing->address,
-            'customer_business_name' => $order->billing->name,
-            'customer_city' => '',
-            'customer_country' => 'PT',
-            'customer_postcode' => '',
-            'customer_tax_registration_number' => $order->billing->vatNumber,
-            'date' => $order->created_at->format('Y-m-d'),
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer 15-341575-1929572-a426c600ad19d4174befb7df328493024f35677065212937d4c10c3fa96f531c',
+        ])->post('https://api15.toconline.pt/api/v1/commercial_sales_documents', [
             'document_type' => 'FT',
-            'due_date' => $order->created_at->format('Y-m-d'),
-            'external_reference' => $order->id,
+            'date' => '2023-01-01',
             'finalize' => 0,
-            'lines' => $order->tickets->map(function ($ticket) {
-                $name = $ticket->product->name;
-                
-                return [
-                    'item_type' => 'Product',
-                    'description' => $name . ' for ' . $ticket?->event?->name,
-                    'quantity' => 1,
-                    'price' => $ticket->price
-                ];
-            })->toArray(),
-            'notes' => '',
+            'customer_tax_registration_number' => '229659179',
+            'customer_business_name' => 'Ricardo Ribeiro',
+            'customer_address_detail' => 'Praceta da Liberdade n5',
+            'customer_postcode' => '1000-101',
+            'customer_city' => 'Lisboa',
+            'customer_country' => 'PT',
+            'due_date' => '2023-02-01',
+            'settlement_expression' => '7.5',
+            'payment_mechanism' => 'MO',
+            'vat_included_prices' => false,
             'operation_country' => 'PT-MA',
-            'payment_mechanism' => $order->payment_method_title,
+            'currency_iso_code' => 'EUR',
+            'currency_conversion_rate' => 1.21,
             'retention' => 7.5,
             'retention_type' => 'IRS',
-            'settlement_expression' => '7.5',
-            'vat_included_prices' => true,
-        ];
-
-        $response = Http::withToken($accessToken)
-            ->withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/vnd.api+json;charset=utf-8',
-            ])->post($this->apiBaseUrl . '/v1/commercial_sales_documents', $salesDocumentData);
-
+            'apply_retention_when_paid' => false,
+            'notes' => 'Notas ao documento',
+            'external_reference' => 'Referência do documento externo',
+            'lines' => [
+                [
+                    'item_type' => 'Product',
+                    'description' => 'sadsad asdfasfasdfasdf',
+                    'quantity' => 1,
+                    'unit_price' => 7.5
+                ]
+            ]
+        ]);
+        dd($response->json());
+        // Handle the response
         if ($response->successful()) {
-            return $response->json();
+            $data = $response->json();
+            // Process the response data
+        } else {
+            $error = $response->body();
+            // Handle the error
         }
-
-        return [
-            'error' => $response->status(),
-            'message' => $response->body(),
-        ];
     }
 
     // this method need to call when payment completed
