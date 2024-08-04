@@ -1,20 +1,30 @@
 @extends('layouts.app')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('assets/frontend-assets/css/style.css') }}" />
-    {{-- <link rel="stylesheet" href="{{ asset('assets/frontend-assets/css/plugins/slick.min.css') }}" /> --}}
-    <link rel="stylesheet" href="{{ asset('assets/frontend-assetss/responsive.css') }}" />
-    <link rel="stylesheet" id="bg-switcher-css" href="{{ asset('assets/frontend-assetss/css/backgrounds/bg-4.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('assets/css/checkout.css') }}"> --}}
+    <style>
+        .login-wrapper {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar .navbar-nav .nav-link {
+            color: black;
+        }
+        .invalid-feedback{
+            font-size: 12px;
+        }
+    </style>
 @endsection
 @section('content')
-    <x-app.header />
-    <div class="container">
+    <div class="container login-wrapper">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Verify Your Email Address') }}</div>
-
                     <div class="card-body">
+                        <h3 class="text-center">
+                            {{ __('Verify Your Email Address') }}
+                        </h3>
                         @if (session('resent'))
                             <div class="alert alert-success" role="alert">
                                 {{ __('A fresh verification link has been sent to your email address.') }}
