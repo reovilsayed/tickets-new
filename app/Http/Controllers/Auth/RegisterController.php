@@ -79,8 +79,9 @@ class RegisterController extends Controller
             'l_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'contact_number' => ['required', 'string', 'max:255'],
+            'country' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            
+
         ]);
     }
 
@@ -92,18 +93,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-      
-        $array=[
+
+        $array = [
             'name' => $data['name'],
             'l_name' => $data['l_name'],
             'email' => $data['email'],
             'contact_number' => $data['contact_number'],
+            'country' => $data['country'],
             'password' => Hash::make($data['password']),
             'role_id' => 2,
 
         ];
-        $user= User::create($array);
-        $verify_token=Str::random(20);
+        $user = User::create($array);
+        $verify_token = Str::random(20);
 
 
         return $user;
@@ -113,7 +115,4 @@ class RegisterController extends Controller
 
         return view('auth.seller.register');
     }
-
- 
-
 }

@@ -60,6 +60,7 @@ class CheckoutService
         }
 
         $payment = EasyPay::createPaymentLink($order);
+    
         Log::info('This is order info');
         Log::info($payment);
         Log::info('This is order end info');

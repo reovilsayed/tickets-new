@@ -52,7 +52,8 @@
                                                     Country :
                                                 </th>
                                                 <td>
-                                                    {{ auth()->user()->country ?? 'N/A' }}
+                                                  
+                                                    {{ auth()->user()->country }}
                                                 </td>
                                             </tr>
                                             <tr>

@@ -19,7 +19,9 @@
 
     <link rel="shortcut icon" href="{{ asset('assets/frontend-assets/img/favicon.png') }}" />
     <link rel="stylesheet" href="{{ asset('assets/frontend-old-assets/css/vendor/ecicons.min.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
@@ -84,8 +86,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="footer-column footer-about">
-                            {{-- <h3 class="footer-title">{{ __('words.about') }}</h3>
-                            <p class="footer-about-text">{{ setting('site.about') }}</p> --}}
+                            {{-- <h3 class="footer-title">{{ __('words.about') }}</h3> --}}
+                            {{-- <p class="footer-about-text">{{ setting('site.about') }}</p> --}}
 
                             <div class=" mt-3 mb-3 d-flex justify-content-end align-items-center p-0">
 
@@ -130,8 +132,10 @@
                                 <li><a href="{{ route('homepage') }}">Home</a></li>
                                 <li><a href="{{ route('about') }}">About</a></li>
                                 <li><a href="{{ route('contact') }}">Contact</a></li>
+                                <li><a href="{{ url('page/terms-and-conditions') }}">Terms & Conditions</a></li>
                             </ul>
                             {{-- {!! menu('main', 'menus.bootstrap') !!} --}}
+                           
                         </div>
 
                     </div>
@@ -171,7 +175,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="footer-bottom-inner">
-                            <img src="{{asset('assets/easypay.png')}}" alt="" style="width:313px;">
+                            <img src="{{ asset('assets/easypay.png') }}" alt="" style="width:313px;">
                             <p class="footer-bottom-copy-right">© Copyright 2024 by <a
                                     href="#">{{ setting('site.title') }}</a></p>
                         </div>
@@ -181,7 +185,9 @@
         </div>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js" integrity="sha512-6sSYJqDreZRZGkJ3b+YfdhB3MzmuP9R7X1QZ6g5aIXhRvR1Y/N/P47jmnkENm7YL3oqsmI6AK+V6AD99uWDnIw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js"
+        integrity="sha512-6sSYJqDreZRZGkJ3b+YfdhB3MzmuP9R7X1QZ6g5aIXhRvR1Y/N/P47jmnkENm7YL3oqsmI6AK+V6AD99uWDnIw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <x-alert :exclude="[route('user.update_profile')]" />
     <!-- jQuery -->
     <script src="{{ asset('assets/frontend-assets/js/jquery-3.6.3.min.js') }}"></script>

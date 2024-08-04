@@ -10,26 +10,20 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends \TCG\Voyager\Models\User
 {
-    use HasApiTokens, HasFactory, Notifiable, HasMeta;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $meta_attributes = [
-        "phone",
-        'address',
-        'city',
-        'state',
-        'post_code',
-        'country',
-    ];
+    
 
     protected $fillable = [
         'name',
         'email',
         'contact_number',
+        'country',
         'password',
         'avatar',
         'role_id',
