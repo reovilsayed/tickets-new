@@ -27,11 +27,10 @@ class UserController extends Controller
         $request->validate([
             'first_name' => ['required', 'max:40'],
             'last_name' => ['required', 'max:40'],
-            'contact_number' => ['required', 'max:200'],
-            'vatNumber' => ['required','string'],
-            'address' => ['required','string'],
+            'contact_number' => ['required','regex:/^\+351\d{9}$/'],
+            'vatNumber' => ['nullable','string'],
+            'address' => ['nullable','string'],
         ]);
-
         auth()->user()->update([
             'name' => $request->first_name,
             'l_name' => $request->last_name,

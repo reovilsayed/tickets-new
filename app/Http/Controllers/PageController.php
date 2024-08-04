@@ -19,7 +19,7 @@ use App\Models\Shop;
 use App\Models\User;
 use App\Slider;
 use Carbon\Carbon;
-use Illuminate\Http\Request;    
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use TCG\Voyager\Models\Page;
 
@@ -41,7 +41,7 @@ class PageController extends Controller
         }
         return view('pages.event_details', compact('event', 'products'));
     }
-  
+
     public function shops()
     {
         $products = Product::where("status", 1)->limit(12)->filter()->paginate(10);
@@ -271,7 +271,12 @@ class PageController extends Controller
         $categories = Category::all();
         return view('pages.post_details', compact('post', 'recentPosts', 'categories'));
     }
-    public function toconlineCallback(){
+    public function toconlineCallback()
+    {
         return request('code');
+    }
+    public function invoiceOrder()
+    {
+        return view('invoicepdf');
     }
 }

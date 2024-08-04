@@ -81,6 +81,10 @@
                                 <i class="fa fa-download"></i>
                                 Download
                             </a>
+                            <a target="_blank"  class="btn btn-primary btn-lg rounded" href="#">
+                                <i class="fa fa-download"></i>
+                                Invoice
+                            </a>
                            
                           
                         </div>

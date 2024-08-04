@@ -130,7 +130,7 @@
 
                             <ul class="footer-explore-list list-unstyled">
                                 <li><a href="{{ route('homepage') }}">Home</a></li>
-                                <li><a href="{{ route('about') }}">About</a></li>
+                                {{-- <li><a href="{{ route('about') }}">About</a></li> --}}
                                 <li><a href="{{ route('contact') }}">Contact</a></li>
                                 <li><a href="{{ url('page/terms-and-conditions') }}">Terms & Conditions</a></li>
                             </ul>

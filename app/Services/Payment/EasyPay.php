@@ -53,7 +53,7 @@ class EasyPay
             'customer' => [
                 'name' => $order->user->name . ' ' . $order->user->l_name,
                 'email' => $order->user->email,
-                'phone' => $order->user->phone,
+                'phone' => $order->user->contact_number,
                 'language' => 'PT'
             ],
             'communication_channels' => [

@@ -11,6 +11,8 @@
         rel="stylesheet">
 
     <style>
+      
+
         :root {
             --primary-color: #ef5927;
             --secondary-color: #ff990a;
@@ -18,7 +20,7 @@
         }
 
         * {
-            
+
             margin: 0px;
             padding: 0px;
         }
@@ -144,10 +146,12 @@
             font-size: 20px;
             font-weight: bold;
         }
-        .event-qr-code > p{
+
+        .event-qr-code>p {
             font-size: 14px;
         }
-        .print-btn{
+
+        .print-btn {
             width: 70px;
             height: 70px;
             position: fixed;
@@ -155,41 +159,42 @@
             right: 20px;
             background: #4b41de;
             color: #fff;
-            border:none;
-            border-radius:10px;
+            border: none;
+            border-radius: 10px;
             transition: box-shadow .2s ease-in;
         }
-        .print-btn:hover{
+
+        .print-btn:hover {
             box-shadow: 5px 5px 0px #221e1f;
         }
 
         @media print {
+
             /* Hide the print button during print */
             .print-btn {
                 display: none;
             }
-            
+
             /* Example of other print-specific styles */
             .container {
-              height: 100vh;
+                height: 100vh;
             }
         }
     </style>
-<script>
-    // This function triggers the print dialog
-    function autoPrint() {
-        window.print();
-    }
+    <script>
+        // This function triggers the print dialog
+        function autoPrint() {
+            window.print();
+        }
 
-    // Attach the autoPrint function to the window load event
-    window.onload = autoPrint;
-</script>
+        // Attach the autoPrint function to the window load event
+        window.onload = autoPrint;
+    </script>
 
 </head>
 
 <body>
     @foreach ($tickets as $ticket)
-    
         <div class="container">
             <div class="header">
                 <div>
@@ -210,7 +215,8 @@
                             </td>
                             <td style="width: 50%">
                                 <div class="event-title">
-                                    <img class="logo" height="30" width="60" src="{{ asset('assets/logo-black.png') }}" alt="">
+                                    <img class="logo" height="30" width="60"
+                                        src="{{ asset('assets/logo-black.png') }}" alt="">
                                     <h1>{{ $ticket->event->name }}</h1>
                                     <h5>{{ $ticket->product->name }}</h5>
                                 </div>

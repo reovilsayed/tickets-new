@@ -89,6 +89,7 @@ Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon
 //Rating
 Route::post('rating/{product_id}', [PageController::class, 'rating'])->name('rating');
 Route::get('/store_front/{slug}', [PageController::class, 'store_front'])->name('store_front');
+Route::get('invoice-order', [PageController::class, 'invoiceOrder'])->name('invoiceOrder');
 
 
 // Route::get('/seller', [SellerPagesController::class, 'dashboard'])->middleware('role:vendor')->name('dashboard');
