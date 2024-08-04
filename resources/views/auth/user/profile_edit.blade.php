@@ -45,29 +45,13 @@
                                 @enderror
                             </div>
                         </div>
-                        {{-- <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="avatar">
-                                    Avatar
-                                </label>
-                                <input id="avatar" type="file" name="avatar"
-                                    class="form-control @error('avatar') is-invalid @enderror"
-                                    value="{{ Auth::user()->avatar }}">
-                                @error('avatar')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div> --}}
-
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label for="email">
                                     Email
                                 </label>
                                 <input class="form-control @error('email') is-invalid @enderror" name="email"
-                                    id="email" value="{{ Auth::user()->email }}">
+                                    id="email" disabled value="{{ Auth::user()->email }}">
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -80,13 +64,25 @@
                                 <label for="contact_number">
                                     Contact number
                                 </label>
-                                <input class="form-control  @error('meta') is-invalid @enderror" name="meta[phone]"
-                                    id="contact_number" value="{{ Auth::user()->phone }}">
+                                <input class="form-control  @error('meta') is-invalid @enderror" name="contact_number"
+                                    id="contact_number" value="{{ Auth::user()->contact_number }}">
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group">
+                                <label for="vatNumber">Taxpayer</label>
+                                <input type="text" class="form-control" name="vatNumber" value="{{auth()->user()->vatNumber}}">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" class="form-control" name="address" value="{{auth()->user()->address}}">
                             </div>
                         </div>
                     </div>

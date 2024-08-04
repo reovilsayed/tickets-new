@@ -33,8 +33,8 @@ class CheckoutService
     {
         $request->validate([
             'name' => ['required'],
-            'vatNumber' => ['required'],
-            'address' => ['required'],
+            'vatNumber' => ['nullable'],
+            'address' => ['nullable'],
         ]);
 
 
@@ -76,7 +76,7 @@ class CheckoutService
     protected function createOrder()
     {
         $total = (Cart::session($this->event->slug)->getSubTotal() + Sohoj::tax()) - Sohoj::discount();
-        
+
         return Order::create([
             'user_id' => auth()->id() ?? null,
             'billing' => $this->billingObject(),
@@ -100,7 +100,7 @@ class CheckoutService
     {
         return [
             'name' => request()->name,
-            'vatNumber' => request()->vatNumber,
+            'vatNumber' => request()->vatNumber ?? 999999990,
             'address' => request()->address,
         ];
     }

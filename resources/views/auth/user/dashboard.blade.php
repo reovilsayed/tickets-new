@@ -56,6 +56,7 @@
                                                     {{ auth()->user()->country }}
                                                 </td>
                                             </tr>
+                                           
                                             <tr>
                                                 <th>
                                                     Address :
@@ -69,7 +70,7 @@
                                                     Taxpayer :
                                                 </th>
                                                 <td>
-                                                    {{ auth()->user()->taxpayer ?? 'N/A' }}
+                                                    {{ auth()->user()->vatNumber ?? 'N/A' }}
                                                 </td>
                                             </tr>
                                         </table>

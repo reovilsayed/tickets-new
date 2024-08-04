@@ -35,7 +35,7 @@ class CheckoutController extends Controller
             Cart::session($event->slug)->clear();
             session()->forget('discount');
             session()->forget('discount_code');
-
+            
             return redirect($order->payment_link)->with('success_msg', 'Order create successfull');
         } catch (Exception $e) {
             DB::rollBack();

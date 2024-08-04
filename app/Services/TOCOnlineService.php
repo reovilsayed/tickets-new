@@ -31,7 +31,7 @@ class TOCOnlineService
                 'Accept' => 'application/json',
             ])->post($this->oauthUrl . '/token', [
                 'grant_type' => 'authorization_code',
-                'code' => '6dffe8772b932a5c3464c41584061615f30f572dfeb6d89330494ce492e889b2',
+                'code' => 'a61c6650a5cb1c16a2e8677d4e452a87482409a4f59a17d515fe264ce110095e',
                 'scope' => 'commercial'
             ]);
 
@@ -100,11 +100,25 @@ class TOCOnlineService
             'message' => $response->body(),
         ];
     }
+
+    public function getCustomer()
+    {
+        // $accessToken = $this->getAccessTokenFromRefreshToken();
+
+
+        // if (isset($accessToken['error'])) {
+        //     return $accessToken;
+        // }
+        $response = Http::withToken('15-341575-1929572-cfcdc85c1e10331bd05190cb56077d49c07b1c1671f74b168c129a7b1a8f9497')
+            ->get('https://api15.toconline.pt/api/customers/1116');
+
+        return $response->json();
+    }
     // this method need to call when a order is created
     public function createCommercialSalesDocument(Order $order)
     {
         $token = $this->getAccessTokenFromRefreshToken();
-     
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/vnd.api+json',
             'Accept' => 'application/json',
@@ -134,7 +148,6 @@ class TOCOnlineService
 
             'lines' => $order->tickets->map(function ($ticket) {
                 $name = $ticket->product->name;
-
                 return [
                     'item_type' => 'Product',
                     'description' => $name . ' for ' . $ticket?->event?->name,
