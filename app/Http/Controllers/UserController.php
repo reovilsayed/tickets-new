@@ -27,9 +27,10 @@ class UserController extends Controller
         $request->validate([
             'first_name' => ['required', 'max:40'],
             'last_name' => ['required', 'max:40'],
-            'contact_number' => ['required','regex:/^\+351\d{9}$/'],
-            'vatNumber' => ['nullable','string'],
-            'address' => ['nullable','string'],
+            'contact_number' => ['required'],
+            'vatNumber' => ['nullable', 'string'],
+            'address' => ['nullable', 'string'],
+            'country' => ['nullable', 'string'],
         ]);
         auth()->user()->update([
             'name' => $request->first_name,
@@ -37,6 +38,7 @@ class UserController extends Controller
             'contact_number' => $request->contact_number,
             'vatNumber' => $request->vatNumber,
             'address' => $request->address,
+            'country' => $request->country,
         ]);
         // auth()->user()->addresses()->updateOrCreate(['user_id' => auth()->id()], [
 
@@ -78,7 +80,7 @@ class UserController extends Controller
     //-----order showing & filtering----start//
     public function ordersIndex(Request $request)
     {
-        $latest_orders = Order::where('user_id', auth()->user()->id)->where('payment_status',1)->latest()->get();
+        $latest_orders = Order::where('user_id', auth()->user()->id)->where('payment_status', 1)->latest()->get();
         return view('auth.user.order.index', compact('latest_orders'));
     }
     //-----order showing & filtering---- end//

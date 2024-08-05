@@ -423,6 +423,17 @@ body {
     font-weight: 500;
 }
 
+
+.ec-vendor-card-body .form-group>select {
+    padding: 0px !important;
+    border: none !important;
+    border-bottom: 2px solid #1d1c1c !important;
+    border-radius: 0px !important;
+    color: #2b2b2b !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
+}
+
 .btn-primary {
     background-color: #f36a30 !important;
 }
@@ -555,4 +566,3 @@ th {
     margin-top: 110px !important;
     margin-bottom: 110px !important;
 }
-
