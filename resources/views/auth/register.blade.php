@@ -15,6 +15,10 @@
         .invalid-feedback {
             font-size: 12px;
         }
+
+        #country {
+            height: 45px !important
+        }
     </style>
 @endsection
 @section('content')
