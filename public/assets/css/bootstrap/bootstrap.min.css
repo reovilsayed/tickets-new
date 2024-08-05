@@ -50,7 +50,7 @@
 }
 body {
     margin: 0;
-    font-family: var(--bs-font-sans-serif);
+    font-family: "Montserrat", sans-serif !important;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
@@ -219,7 +219,7 @@ code,
 kbd,
 pre,
 samp {
-    font-family: var(--bs-font-monospace);
+    font-family: "Montserrat", sans-serif !important;
     font-size: 1em;
     direction: ltr;
     unicode-bidi: bidi-override;
@@ -302,7 +302,7 @@ optgroup,
 select,
 textarea {
     margin: 0;
-    font-family: inherit;
+    font-family: "Montserrat", sans-serif !important;
     font-size: inherit;
     line-height: inherit;
 }
@@ -5247,7 +5247,7 @@ fieldset:disabled .btn {
     z-index: 1080;
     display: block;
     margin: 0;
-    font-family: var(--bs-font-sans-serif);
+    font-family: "Montserrat", sans-serif !important;
     font-style: normal;
     font-weight: 400;
     line-height: 1.5;
@@ -5355,7 +5355,7 @@ fieldset:disabled .btn {
     z-index: 1070;
     display: block;
     max-width: 276px;
-    font-family: var(--bs-font-sans-serif);
+    font-family: "Montserrat", sans-serif !important;
     font-style: normal;
     font-weight: 400;
     line-height: 1.5;
@@ -6689,7 +6689,7 @@ fieldset:disabled .btn {
     padding-left: 3rem !important;
 }
 .font-monospace {
-    font-family: var(--bs-font-monospace) !important;
+    font-family: "Montserrat", sans-serif !important;
 }
 .fs-1 {
     font-size: calc(1.375rem + 1.5vw) !important;

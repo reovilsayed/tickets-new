@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Forum&family=Inter:wght@300;400;500&family=Poppins:wght@200&display=swap");
 
 .product_details-body {
-    font-family: "Inter", sans-serif;
+    font-family: "Montserrat", sans-serif !important;
     font-style: normal;
 }
 

@@ -140,7 +140,7 @@ select {
 .mid-header::after {
     content: "\f107";
     position: absolute;
-    font-family: "Ecicons";
+    font-family: "Montserrat", sans-serif !important;
     top: 0;
     right: 0;
     padding: 0 10px;
@@ -166,7 +166,7 @@ select {
 .mid-header::before {
     content: "\f009";
     position: absolute;
-    font-family: "Ecicons";
+    font-family: "Montserrat", sans-serif !important;
     top: 10px;
     left: 0;
     padding: 0 10px;
