@@ -325,7 +325,7 @@
                             <div class="col-md-6 form-group">
                                 <input id="contact_number" type="text" placeholder="{{ __('Contact Number') }}"
                                     class="reg-pass @error('contact_number') is-invalid @enderror" name="contact_number"
-                                    value="" required autocomplete="contact_number" autofocus>
+                                    value="{{ old('contact_number') }}" required autocomplete="contact_number" autofocus>
                                 @error('contact_number')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>

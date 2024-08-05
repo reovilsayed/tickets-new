@@ -5883,9 +5883,7 @@ button.mfp-arrow {
 }
 
 select {
-    width: 160px !important;
-    height: 46px !important;
-    padding: 0 20px !important;
+    height: 45px !important;
     color: #665c5c;
 }
 
