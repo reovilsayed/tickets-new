@@ -89,7 +89,7 @@ Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon
 //Rating
 Route::post('rating/{product_id}', [PageController::class, 'rating'])->name('rating');
 Route::get('/store_front/{slug}', [PageController::class, 'store_front'])->name('store_front');
-Route::get('invoice-order', [PageController::class, 'invoiceOrder'])->name('invoiceOrder');
+
 
 
 // Route::get('/seller', [SellerPagesController::class, 'dashboard'])->middleware('role:vendor')->name('dashboard');
@@ -101,6 +101,7 @@ Route::group(['prefix' => 'admin'], function () {
 Auth::routes(['verify' => true]);
 
 Route::get('page/{slug}', [PageController::class, 'getPage']);
+// Route::get('user-invoice/{$order}', [PageController::class, 'invoiceOrder'])->name('invoiceOrder');
 
 Route::get('download-ticket', function (Request $request) {
     $order = Order::find($request->order);
@@ -109,6 +110,13 @@ Route::get('download-ticket', function (Request $request) {
 
     return view('ticketpdf', compact('tickets'));
 })->name('download.ticket');
+Route::get('user-invoice', function (Request $request) {
+    $order = Order::find($request->order);
+    $product = Product::find($request->product);
+    $tickets = $order->tickets()->where('product_id', $request->product)->get();
+
+    return view('invoice', compact('order', 'tickets'));
+})->name('invoice.order');
 
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());

@@ -77,16 +77,18 @@
                 <div class="card-footer bg-transparent p-2 ">
                     <div class="row g-5">
                         <div class="col-md-6 col-12 d-flex align-items-center justify-content-center order-md-1 order-2 ">
-                            <a target="_blank"  class="btn btn-primary btn-lg rounded" href="{{ route('download.ticket',['order'=>$order->id,'product'=>$id]) }}">
+                            <a target="_blank" class="btn btn-primary btn-lg rounded me-2"
+                                href="{{ route('download.ticket', ['order' => $order->id, 'product' => $id]) }}">
                                 <i class="fa fa-download"></i>
                                 Download
                             </a>
-                            <a target="_blank"  class="btn btn-primary btn-lg rounded" href="#">
-                                <i class="fa fa-download"></i>
+                            <a target="_blank" class="btn btn-primary btn-sm rounded"
+                                href="{{ route('invoice.order', ['order' => $order->id, 'product' => $id]) }}">
+                                <i class="fa-solid fa-file-invoice"></i>
                                 Invoice
                             </a>
-                           
-                          
+
+
                         </div>
                         <div class="col-md-6 col-12 order-md-2 order-1">
                             <div class="table-responsive">
@@ -173,7 +175,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- modal end -->
 @endsection
 @section('js')

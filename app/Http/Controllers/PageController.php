@@ -16,6 +16,7 @@ use App\Models\Prodcat;
 use App\Models\Product;
 use App\Models\Rating;
 use App\Models\Shop;
+use App\Models\Ticket;
 use App\Models\User;
 use App\Slider;
 use Carbon\Carbon;
@@ -275,8 +276,5 @@ class PageController extends Controller
     {
         return request('code');
     }
-    public function invoiceOrder()
-    {
-        return view('invoicepdf');
-    }
+    
 }
