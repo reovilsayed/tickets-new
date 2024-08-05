@@ -332,6 +332,21 @@
                                     </span>
                                 @enderror
                             </div>
+                            <div class="col-md-12 form-group">
+                                <select class="reg-pass  @error('password') is-invalid @enderror" name="country"
+                                    id="country">
+                                    <option selected>Select country </option>
+                                    @foreach ($country_array as $key => $country)
+                                        <option value="{{ $key }}">{{ $country }}</option>
+                                    @endforeach
+                                    @error('country')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </select>
+
+                            </div>
                             <div class="col-md-6 form-group">
                                 <input id="password" type="password" placeholder="{{ __('Password') }}"
                                     class="reg-pass @error('password') is-invalid @enderror" name="password" required
@@ -344,22 +359,11 @@
 
                             </div>
                             <div class="col-md-6 form-group">
-                                <div class="mb-3">
-                                   
-                                    <select class="form-control" name="country" id="country">
-                                        <option selected>Select country</option>
-                                        @foreach ($country_array as $key=>$country)
-                                        <option value="{{$key}}">{{$country}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-
-                            </div>
-                            <div class="col-md-6 form-group">
                                 <input id="password-confirm" type="password" placeholder="Confirm Password" class="reg-pass"
                                     name="password_confirmation" required autocomplete="new-password">
                             </div>
+
+
                             <div class="col-md-12">
                                 <button type="submit" class="reg-btn text-white" style="font-size: 22px">Register</button>
                             </div>
