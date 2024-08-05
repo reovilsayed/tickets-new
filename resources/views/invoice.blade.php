@@ -26,7 +26,7 @@
     <section class="theme-invoice-3">
         <div class="container">
             <div class="row">
-                <div class="col-xxl-6 col-xl-8 mx-auto my-3">
+                <div class="col-xxl-6 col-xl-8 col-sm-10 mx-auto my-3">
 
                     <div class="invoice-wrapper">
                         <div class="invoice-header">
