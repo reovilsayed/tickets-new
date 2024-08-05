@@ -17,7 +17,8 @@
         }
 
         #country {
-            height: 45px !important
+            height: 45px !important;
+            color: #656060 !important;
         }
     </style>
 @endsection
