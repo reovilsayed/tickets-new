@@ -93,7 +93,7 @@
                                 <div class="tab-pane fade show @if ($loop->first) active @endif"
                                     id="pills-{{ $key }}" role="tabpanel" aria-labelledby="pills-home-tab">
                                     @foreach ($data as $product)
-                                        @if ($product->status == 1 || $product->status == 2 || $product->status == 3)
+                                        @if ($product->status == 1 || $product->status == 2 || $product->status == 3 || $product->status == 4)
                                             <div
                                                 :class="tickets[{{ $product->id }}] ? 'card card-ticket active' :
                                                     'card card-ticket'">
