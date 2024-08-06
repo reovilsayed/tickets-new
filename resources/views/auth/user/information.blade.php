@@ -19,7 +19,7 @@
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label for="country">
-                                    Country
+                                    {{ __('words.country') }}
                                 </label>
                                 <input id="country" type="text" name="country"
                                     class="form-control @error('country') is-invalid @enderror"
@@ -34,7 +34,7 @@
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label for="city">
-                                    City
+                                    {{ __('words.city') }}
                                 </label>
                                 <input id="city" type="text" name="city"
                                     class="form-control @error('city') is-invalid @enderror" value="{{ $address->city }}">
@@ -48,7 +48,7 @@
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label for="state">
-                                    State
+                                    {{ __('words.state') }}
                                 </label>
                                 <input id="state" type="text" name="state"
                                     class="form-control @error('state') is-invalid @enderror" value="{{ $address->state }}">
@@ -63,10 +63,11 @@
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label for="post_code">
-                                    Post code
+                                    {{ __('words.post_code') }}
                                 </label>
                                 <input id="post_code" type="text" name="post_code"
-                                    class="form-control @error('post_code') is-invalid @enderror" value="{{ $address->post_code }}">
+                                    class="form-control @error('post_code') is-invalid @enderror"
+                                    value="{{ $address->post_code }}">
                                 @error('post_code')
                                     <span class="text-danger">
                                         {{ $message }}
@@ -77,7 +78,7 @@
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label for="address">
-                                    Permanent address
+                                    {{ __('words.payment_address') }}
                                 </label>
                                 <textarea class="form-control @error('address') is-invalid @enderror" name="address_1" id="address">{{ $address->address_1 }}</textarea>
                                 @error('address')
@@ -90,7 +91,7 @@
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label for="home_address">
-                                    Home address
+                                    {{ __('words.home_address') }}
                                 </label>
                                 <textarea class="form-control @error('home_address') is-invalid @enderror" name="address_2" id="home_address">{{ $address->address_2 }}</textarea>
                                 @error('home_address')
@@ -103,7 +104,7 @@
                     </div>
 
 
-                    <button type="submit" class="btn btn-lg btn-dark mt-2 rounded">Update</button>
+                    <button type="submit" class="btn btn-lg btn-dark mt-2 rounded"> {{ __('words.update') }}</button>
 
                 </form>
             </div>
