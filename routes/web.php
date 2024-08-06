@@ -109,8 +109,14 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 $product = Product::find($key);
                 Mail::to($order->user->email)->send(new TicketDownload($order, $product));
             }
-            // $toco = new TOCOnlineService;
-            // $toco->createCommercialSalesDocument($order);
+            $toco = new TOCOnlineService;
+            $response = $toco->createCommercialSalesDocument($order);
+            $order->invoice_id = $response['id'];
+            $order->invoice_url = $response['public_link'];
+            $order->invoice_body = json_encode($response);
+            $order->save();
+            $response = $toco->sendEmailDocument($order);
+            
         } else {
             $order->payment_status = 2;
             $order->save();
@@ -128,3 +134,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
+

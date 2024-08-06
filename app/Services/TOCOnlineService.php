@@ -35,10 +35,11 @@ class TOCOnlineService
             'Authorization' => 'Basic ' . $encodedCredentials,
         ])->asForm()->post('https://app15.toconline.pt/oauth/token', [
             'grant_type' => 'authorization_code',
-            'code' => '17677679a5b94fe5b1613f933dba56a51193ad80c7cf0fd0ac6eae9942ffe5e8',
+            'code' => 'ebc639b3b8605e903372161f9f4a95ec7e29713dfd886e9068434b7bc3f66bf1',
             'scope' => 'commercial',
         ]);
 
+        dd($response->json());
         if ($response->successful()) {
             return $response->json()->access_token;
         }
@@ -55,7 +56,7 @@ class TOCOnlineService
                 'Accept' => 'application/json',
             ])->post($this->oauthUrl . '/token', [
                 'grant_type' => 'refresh_token',
-                'refresh_token' => '15-341575-1929572-426990aa4e9dbdb6d5e9a2db23356620eef12c926f8f386a07a3f7158412498a',
+                'refresh_token' => '15-341575-1929572-5ad450871b3b9dddc9c690bd24acc9d98e8eb6ce6ecc520c4c5f345c7dc56e2d',
                 'scope' => 'commercial'
             ]);
 
@@ -121,19 +122,20 @@ class TOCOnlineService
     // this method need to call when a order is created
     public function createCommercialSalesDocument(Order $order)
     {
-        $token = $this->getAccessTokenFromRefreshToken();
+        // $token = $this->getAccessTokenFromRefreshToken();
+
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/vnd.api+json',
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token
+            'Authorization' => 'Bearer 15-341575-1929572-a3eea70bd5faa2fad672fbdd2d66612dd7f44ae3d0f7c4c2c8944aeb92a401df'
         ])->post('https://api15.toconline.pt/api/v1/commercial_sales_documents', [
             'document_type' => 'FT',
             'date' => $order->created_at->format('Y-m-d'),
             'finalize' => 0,
-            'customer_tax_registration_number' => '229659179',
-            'customer_business_name' => $order->user->name,
-            'customer_address_detail' => '',
+            'customer_tax_registration_number' => $order->user->vatNumber,
+            'customer_business_name' => $order->user->name . ' ' . $order->user->l_name,
+            'customer_address_detail' => $order->user->address,
             'customer_postcode' => '',
             'customer_city' => '',
             'customer_country' => 'PT',
@@ -174,34 +176,33 @@ class TOCOnlineService
     }
 
     // this method need to call when payment completed
-    public function sendEmailDocument()
+    public function sendEmailDocument(Order $order)
     {
-        $accessToken = $this->getAccessTokenFromRefreshToken();
+        // $accessToken = $this->getAccessTokenFromRefreshToken();
 
-        if (isset($accessToken['error'])) {
-            return $accessToken; // Return the error if there is any
-        }
+        // if (isset($accessToken['error'])) {
+        //     return $accessToken; // Return the error if there is any
+        // }
 
         $emailData = [
             'data' => [
                 'attributes' => [
-                    'from_email' => 'carlos.oliveira@sebasi.pt',
-                    'from_name' => 'Nome do remetente',
-                    'subject' => 'Assunto da mensagem',
-                    'to_email' => 'carlos.oliveira@sebasi.pt',
+                    'from_email' => setting('site.email', 'test@mail.com'),
+                    'from_name' => 'Essencia Company',
+                    'subject' => __('words.toconiline_subject'),
+                    'to_email' => $order->user->email,
                     'type' => 'Document',
                 ],
-                'id' => 3, // document id
+                'id' => $order->invoice_id, // document id
                 'type' => 'email/document',
             ],
         ];
 
-        $response = Http::withToken($accessToken)
-            ->withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-            ])->patch($this->apiBaseUrl . '/email/document', $emailData);
-
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer 15-341575-1929572-a3eea70bd5faa2fad672fbdd2d66612dd7f44ae3d0f7c4c2c8944aeb92a401df'
+        ])->patch($this->apiBaseUrl . '/email/document', $emailData);
         if ($response->successful()) {
             return $response->json();
         }

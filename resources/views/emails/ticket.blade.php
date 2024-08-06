@@ -93,7 +93,7 @@
                 <p>{{ __('words.thank_you_for_purchasing_tickets_to') }}
                     <strong></strong>!{{ __('words.we_are_thrilled_to_have_you_join_us_for_this') }}
                 <h1>{{ $product->name }}</h1>
-                {{ __('words.exciting_event._Here_are_the_details_of_your_purchase') }}:</p>
+                {{ __('words.exciting_event_here_are_the_details_of_your_purchase') }}:</p>
                 <p><strong>{{ __('words.name') }}:</strong> {{ $product->event->name }} </p>
                 <p><strong>{{ __('words.date') }}:</strong> {{ $product->event->start_at->format('d m, Y') }}</p>
                 <p><strong>{{ __('words.time') }}:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
