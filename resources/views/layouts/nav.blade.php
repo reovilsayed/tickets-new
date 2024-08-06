@@ -19,7 +19,7 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown"> <a
                         class="nav-link dropdown-toggle {{ Route::is('homepage') ? 'active' : '' }}"
-                        href="{{ route('homepage') }}">{{ __('words.Home') }}</a>
+                        href="{{ route('homepage') }}">{{ __('words.home') }}</a>
                 </li>
                 {{-- <li class="nav-item dropdown"> <a
                         class="nav-link dropdown-toggle {{ Route::is('shops') ? 'active' : '' }}"
