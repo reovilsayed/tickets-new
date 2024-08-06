@@ -21,25 +21,25 @@
                     <div class="reservations mb-30">
                         <div class="icon"><span class="flaticon-call"></span></div>
                         <div class="text">
-                            <p>{{__('contact_reservation')}}</p> <a href="tel:{{setting('site.phone')}}">{{setting('site.phone')}}</a>
+                            <p>{{__('words.contact_reservation')}}</p> <a href="tel:{{setting('site.phone')}}">{{setting('site.phone')}}</a>
                         </div>
                     </div>
                     <div class="reservations mb-30">
                         <div class="icon"><span class="flaticon-envelope"></span></div>
                         <div class="text">
-                            <p>{{__('contact_email_info')}}</p> <a href="mailto:{{setting('site.email')}}">{{setting('site.email')}}</a>
+                            <p>{{__('words.contact_email_info')}}</p> <a href="mailto:{{setting('site.email')}}">{{setting('site.email')}}</a>
                         </div>
                     </div>
                     <div class="reservations">
                         <div class="icon"><span class="flaticon-location-pin"></span></div>
                         <div class="text">
-                            <p>{{__('contact_address')}}</p>
+                            <p>{{__('words.contact_address')}}</p>
                             {!! setting('site.address') !!}
                         </div>
                     </div>
                 </div>
                 <div class="col-md-5 mb-10 offset-md-1">
-                    <h3>{{__('Contact Form')}}</h3>
+                    <h3>{{__('words.Contact Form')}}</h3>
                     <form method="post" class="" action="{{route('contact.store')}}">
                         @csrf
                         <!-- form message -->

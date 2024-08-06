@@ -91,26 +91,24 @@
 
                             <div class=" mt-3 mb-3 d-flex justify-content-end align-items-center p-0">
 
-                                <form style="width: 100%" name="ec-newsletter-form" method="post"
-                                    action="{{ route('subscribe') }}">
-                                    @csrf
-                                    <div class="ec-subscribe-form ">
-                                        <label for="" class="text-white mb-3" style="font-size:22px">Subscribe
-                                            now :</label>
-                                        <div id="ec_news_signup" class="ec-form footer-email">
 
-                                            <input class="ec-email" type="email" style="margin-bottom: 0" required
-                                                placeholder="Your email.." name="email" value="">
-                                            <button id="ec-news-btn" class="butn-dark2 " type="submit" name="subscribe"
-                                                value="">
-                                                <span>Subscribe</span>
-                                            </button>
+                                <div class="ec-subscribe-form ">
+                                    <label for="" class="text-white mb-3" style="font-size:22px">Subscribe
+                                        now :</label>
+                                    <div id="ec_news_signup" class="ec-form footer-email">
 
 
-                                        </div>
+                                        <button id="ec-news-btn" class="butn-dark2 " type="submit" name="subscribe"
+                                            value="">
+                                            <span><a
+                                                    href=" https://lp.egoi.page/1eke6Y8m/signup ">{{ __('words.Subscribe') }}</a></span>
+                                        </button>
+
 
                                     </div>
-                                </form>
+
+                                </div>
+
                             </div>
 
                             {{-- <div class="footer-language"> <i class="lni ti-world"></i>
@@ -135,7 +133,7 @@
                                 <li><a href="{{ url('page/terms-and-conditions') }}">Terms & Conditions</a></li>
                             </ul>
                             {{-- {!! menu('main', 'menus.bootstrap') !!} --}}
-                           
+
                         </div>
 
                     </div>

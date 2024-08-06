@@ -19,7 +19,7 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item dropdown"> <a
                         class="nav-link dropdown-toggle {{ Route::is('homepage') ? 'active' : '' }}"
-                        href="{{ route('homepage') }}">{{ __('Home') }} </a>
+                        href="{{ route('homepage') }}">{{ __('words.Home') }}</a>
                 </li>
                 {{-- <li class="nav-item dropdown"> <a
                         class="nav-link dropdown-toggle {{ Route::is('shops') ? 'active' : '' }}"
@@ -63,10 +63,10 @@
                     <li class="nav-item dropdown"> <a
                             class="nav-link dropdown-toggle @if (request()->segment(1) == 'user') active @endif"
                             href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                            aria-expanded="false">Account</a>
+                            aria-expanded="false">{{ __('words.Account') }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('user.dashboard') }}"
-                                    class="dropdown-item {{ Route::is('user.dashboard') ? 'active' : '' }}"><span>{{ __('User Dashboard') }}</span></a>
+                                    class="dropdown-item {{ Route::is('user.dashboard') ? 'active' : '' }}"><span>{{ __('words.User Dashboard') }}</span></a>
                             </li>
                             {{-- @if (auth()->user()->role_id == 3)
                                 <li><a href="{{ route('vendor.dashboard') }}" class="dropdown-item"><span>Vendor
@@ -77,7 +77,7 @@
                                 <form action="{{ route('logout') }}" method="post">
                                     @csrf
                                     <button href="{{ route('user.dashboard') }}"
-                                        class="dropdown-item"><span>Logout</span></button>
+                                        class="dropdown-item"><span>{{ __('words.Logout') }}</span></button>
                                 </form>
                             </li>
                         </ul>
@@ -87,15 +87,28 @@
                             role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                             Login</a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('login') }}" class="dropdown-item"><span>Login</span></a>
+                            <li><a href="{{ route('login') }}" class="dropdown-item"><span>{{ __('words.Login') }}</span></a>
                             </li>
                             <li><a href="{{ route('register') }}"
-                                    class="dropdown-item"><span>{{ __('Register') }}</span></a>
+                                    class="dropdown-item"><span>{{ __('words.Register') }}</span></a>
                             </li>
 
                         </ul>
                     </li>
                 @endif
+                <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button"
+                        data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">{{ __('words.Language') }}<i
+                            class="fa-solid fa-angle-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{app()->getLocale() == 'en' ? 'selected' :''}}">
+                            {{ __('words.en') }}
+                            </a>
+                        </li>
+                        <li><a href="{{app()->getLocale() == 'pt' ? 'selected' :''}}">
+                            {{ __('words.pt') }}
+                            </a></li>
+                    </ul>
+                </li>
             </ul>
         </div>
     </div>

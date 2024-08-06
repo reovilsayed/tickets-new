@@ -151,3 +151,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
+// Route::get('set-locale/{locale}', function ($locale) {
+//     App::setLocale($locale);
+//     session()->put('locale', $locale);
+//     return redirect()->back();
+// })->middleware('check.locale')->name('locale.setting');
