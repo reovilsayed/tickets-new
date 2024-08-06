@@ -159,8 +159,6 @@
                                         class="fa-brands fa-twitter fa-lg"></i></a>
                                 <a href="{{ setting('social.youtube') }}"><i
                                         class="fa-brands fa-youtube fa-lg"></i></a>
-                                <a href="{{ setting('social.pinterest') }}"><i
-                                        class="fa-brands fa-pinterest fa-lg"></i></a>
                             </div>
                         </div>
                     </div>
