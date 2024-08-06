@@ -26,21 +26,20 @@
                             <table class="order-table table mt-3">
                                 <tr>
                                     <th>
-                                        Ticket ID
+                                        {{ __('words.ticket_id') }}
                                     </th>
                                     <th>
-                                        Payment Status
+                                        {{ __('words.paymeys_status') }}
                                     </th>
                                     <th>
-                                        Payment Type
+                                        {{ __('words.payment_type') }}
                                     </th>
                                     <th>
-                                        Status
+                                        {{ __('words.status') }}
                                     </th>
                                     <th>
-                                        Price
+                                        {{ __('words.price') }}
                                     </th>
-
 
                                 </tr>
 
@@ -51,10 +50,10 @@
                                             {{ $ticket->ticket }}
                                         </td>
                                         <td>
-                                            Paid
+                                            {{ __('words.paid') }}
                                         </td>
                                         <td>
-                                            Visa
+                                            {{ __('words.visa') }}
 
                                         </td>
                                         <td>
@@ -80,12 +79,12 @@
                             <a target="_blank" class="btn btn-primary btn-lg rounded me-2"
                                 href="{{ route('download.ticket', ['order' => $order->id, 'product' => $id]) }}">
                                 <i class="fa fa-download"></i>
-                                Download
+                                {{ __('words.download') }}
                             </a>
                             <a target="_blank" class="btn btn-primary btn-sm rounded"
                                 href="{{ route('invoice.order', ['order' => $order->id, 'product' => $id]) }}">
                                 <i class="fa-solid fa-file-invoice"></i>
-                                Invoice
+                                {{ __('words.invoice') }}
                             </a>
 
 
@@ -95,7 +94,7 @@
                                 <table class="payinfo table">
                                     <tr>
                                         <th style="font-size: 14px">
-                                            Subtotal
+                                            {{ __('words.subtotal') }}
                                         </th>
                                         <td style="font-size: 14px">
                                             + {{ Sohoj::price($order->subtotal) }}
@@ -103,7 +102,7 @@
                                     </tr>
                                     <tr>
                                         <th style="font-size: 14px">
-                                            Tax
+                                            {{ __('words.tax') }}
                                         </th>
                                         <td style="font-size: 14px">
                                             + {{ Sohoj::price($order->tax) }}
@@ -111,7 +110,7 @@
                                     </tr>
                                     <tr>
                                         <th style="font-size: 14px">
-                                            Discount
+                                            {{ __('words.discount') }}
                                         </th>
                                         <td style="font-size: 14px">
                                             - {{ Sohoj::price($order->discount) }}
@@ -119,7 +118,7 @@
                                     </tr>
                                     <tr>
                                         <th style="font-size: 18px">
-                                            Total
+                                            {{ __('words.total') }}
                                         </th>
                                         <td style="font-size: 18px">
                                             = {{ Sohoj::price($order->total) }}
@@ -142,7 +141,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Give Feedback</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel"> {{ __('words.give_feedback') }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -151,7 +150,7 @@
                         @csrf
                         <div class="row">
                             <div class="col-12">
-                                <label for="">Feedback</label>
+                                <label for=""> {{ __('words.feedback') }}</label>
                                 <textarea name="feedback" required class="form-control mb-2 @error('feedback') is-invalid @enderror" id="feedbackInput">
                             </textarea>
                                 @error('feedback')
@@ -168,8 +167,9 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ __('words.close') }}</button>
+                    <button type="submit" class="btn btn-primary"> {{ __('words.save') }}</button>
                 </div>
                 </form>
             </div>

@@ -5,7 +5,7 @@
 
         <div class="card user-name">
             <div class="card-body">
-                <span class="user-dash-font">Hello, {{ Auth::user()->name }}!</span>
+                <span class="user-dash-font"> {{ __('words.hello') }}, {{ Auth::user()->name }}!</span>
             </div>
         </div>
 
@@ -19,13 +19,13 @@
                                 <div>
 
                                     <h4 class="dashboard-title">
-                                        Personal Information
+                                        {{ __('words.personal_information') }}
                                     </h4>
                                     <div class="table-responsive">
                                         <table class="dashboard-table ">
                                             <tr>
                                                 <th>
-                                                    Name :
+                                                    {{ __('words.name') }} :
                                                 </th>
                                                 <td>
                                                     {{ auth()->user()->name }}
@@ -33,7 +33,7 @@
                                             </tr>
                                             <tr>
                                                 <th>
-                                                    Email :
+                                                    {{ __('words.email') }} :
                                                 </th>
                                                 <td>
                                                     {{ auth()->user()->email }}
@@ -41,7 +41,7 @@
                                             </tr>
                                             <tr>
                                                 <th>
-                                                    Phone :
+                                                    {{ __('words.phone') }} :
                                                 </th>
                                                 <td>
                                                     {{ Auth::user()->contact_number }}
@@ -49,7 +49,7 @@
                                             </tr>
                                             <tr>
                                                 <th>
-                                                    Country :
+                                                    {{ __('words.country') }} :
                                                 </th>
                                                 <td>
                                                   
@@ -59,7 +59,7 @@
                                            
                                             <tr>
                                                 <th>
-                                                    Address :
+                                                    {{ __('words.address') }} :
                                                 </th>
                                                 <td>
                                                     {{ auth()->user()->address ?? 'N/A' }}
@@ -67,7 +67,7 @@
                                             </tr>
                                             <tr>
                                                 <th>
-                                                    Taxpayer :
+                                                    {{ __('words.taxpayer') }} :
                                                 </th>
                                                 <td>
                                                     {{ auth()->user()->vatNumber ?? 'N/A' }}
