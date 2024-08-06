@@ -104,7 +104,7 @@
                                                                 {{ collect($product->dates)->map(fn($date) => Carbon\Carbon::parse($date)->format('d M'))->implode(', ') }}
                                                             </p>
                                                             <p class="t-title">{{ $product->name }}</p>
-                                                            <p class="t-des">{{ $product->description }}
+                                                            <p class="t-des">{!! $product->description !!}
                                                             </p>
                                                             @if ($product->status == 2)
                                                                 <span class="sold">SOLD</span>
