@@ -93,7 +93,7 @@
                                 <div class="tab-pane fade show @if ($loop->first) active @endif"
                                     id="pills-{{ $key }}" role="tabpanel" aria-labelledby="pills-home-tab">
                                     @foreach ($data as $product)
-                                        @if ($product->status == 1 || $product->status == 2 || $product->status == 3)
+                                        @if ($product->status == 1 || $product->status == 2 || $product->status == 3 || $product->status == 4)
                                             <div
                                                 :class="tickets[{{ $product->id }}] ? 'card card-ticket active' :
                                                     'card card-ticket'">
@@ -108,16 +108,18 @@
                                                             </p>
                                                             @if ($product->status == 2)
                                                                 <span class="sold">SOLD</span>
+                                                            @elseif($product->status == 4)
+                                                                <span class="sold">{{__('words.soon')}}</span>
                                                             @endif
                                                         </div>
                                                         @if ($product->status == 3)
                                                             <div class="t-prize d-flex flex-column align-items-end">
                                                                 <span
                                                                     class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
-                                                              
-                                                                    <a target="__blank" class="btn custom-button" href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
+
+                                                                <a target="__blank" class="btn custom-button"
+                                                                    href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
                                                             </div>
-                                                            
                                                         @else
                                                             <div class="t-prize">
                                                                 <span
