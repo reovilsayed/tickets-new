@@ -90,25 +90,23 @@
         <div class="email-content">
             <div style="text-align: right">
 
-                <p>Thank you for purchasing tickets to <strong></strong>! We are thrilled to have you join us for this
+                <p>{{ __('words.thank_you_for_purchasing_tickets_to') }}
+                    <strong></strong>!{{ __('words.we_are_thrilled_to_have_you_join_us_for_this') }}
                 <h1>{{ $product->name }}</h1>
-                exciting event. Here are the details of your purchase:</p>
-                <p><strong>Event:</strong> {{ $product->event->name }} </p>
-                <p><strong>Date:</strong> {{ $product->event->start_at->format('d m, Y') }}</p>
-                <p><strong>Time:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
-                <p><strong>Location:</strong>{{ $product->event->location }}</p>
+                {{ __('words.exciting_event._Here_are_the_details_of_your_purchase') }}:</p>
+                <p><strong>{{ __('words.name') }}:</strong> {{ $product->event->name }} </p>
+                <p><strong>{{ __('words.date') }}:</strong> {{ $product->event->start_at->format('d m, Y') }}</p>
+                <p><strong>{{ __('words.time') }}:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
+                <p><strong>{{ __('words.location') }}:</strong>{{ $product->event->location }}</p>
             </div>
         </div>
         <a href="{{ route('download.ticket', ['order' => $order->id, 'product' => $product->id]) }}"
-            class="btn-download">DOWNLOAD TICKETS</a>
+            class="btn-download">{{ __('words.download_ticket') }}</a>
         <div class="email-footer">
-            <p><strong>Please keep this email as a confirmation of your purchase.</strong> <br>
-                Remember to bring a copy of your ticket or
-                have it available on your mobile device for entry.</p>
-            <p>If you have any questions or need further assistance, feel free to contact us at
-                tickets@essenciacompany.com</p>
-            <p>Best regards,</p>
-            <p>Essência Company Team</p>
+            <p><strong>{{ __('words.ticket_email_note1') }}</p>
+            <p>{{ __('words.ticket_email_note2') }}</p>
+            <p>{{ __('words.ticket_email_note3') }}</p>
+            <p>{{ __('words.ticket_email_note4') }}</p>
         </div>
     </div>
 </body>

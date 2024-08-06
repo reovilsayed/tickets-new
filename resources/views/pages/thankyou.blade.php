@@ -2,8 +2,8 @@
 @section('css')
     <style>
         /* svg{
-                                height: 200px;
-                            } */
+                                    height: 200px;
+                                } */
         .navbar .navbar-nav .nav-link {
             color: black;
         }
@@ -38,7 +38,7 @@
                         </div>
 
 
-                        <h2 class="thank-title text-center">So Much For Purchasing A Ticket . </h2>
+                        <h2 class="thank-title text-center">{{ __('words.so_much_for_purchasing_a_Ticket') }} . </h2>
                         {{-- <p class="sub-title">For Shopping with us.</p> --}}
                         <div class="d-flex justify-content-center">
                             <i class="thank-i fa fa-check-circle"></i>

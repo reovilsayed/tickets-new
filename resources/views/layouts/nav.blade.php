@@ -63,7 +63,7 @@
                     <li class="nav-item dropdown"> <a
                             class="nav-link dropdown-toggle @if (request()->segment(1) == 'user') active @endif"
                             href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside"
-                            aria-expanded="false">{{ __('words.Account') }}</a>
+                            aria-expanded="false">{{ __('words.account') }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('user.dashboard') }}"
                                     class="dropdown-item {{ Route::is('user.dashboard') ? 'active' : '' }}"><span>{{ __('words.user_dashboard') }}</span></a>
@@ -87,11 +87,10 @@
                             role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                             Login</a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('login') }}"
-                                    class="dropdown-item"><span>{{ __('words.Login') }}</span></a>
+                            <li><a href="{{ route('login') }}" class="dropdown-item"><span>{{ __('words.login') }}</span></a>
                             </li>
                             <li><a href="{{ route('register') }}"
-                                    class="dropdown-item"><span>{{ __('words.Register') }}</span></a>
+                                    class="dropdown-item"><span>{{ __('words.register') }}</span></a>
                             </li>
 
                         </ul>

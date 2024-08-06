@@ -19,8 +19,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 caption mt-90">
-                    <h5>{{__('about_hero_subtittle')}}</h5>
-                    <h1>{{__('about_hero_tittle')}}</h1>
+                    <h5>{{__('words.about_hero_subtittle')}}</h5>
+                    <h1>{{__('words.about_hero_tittle')}}</h1>
                 </div>
             </div>
         </div>
@@ -154,8 +154,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="section-subtitle">{{__('team_sec_subtittle')}}</div>
-                    <div class="section-title">{{__('team_sec_tittle')}}</div>
+                    <div class="section-subtitle">{{__('words.team_sec_subtittle')}}</div>
+                    <div class="section-title">{{__('words.team_sec_tittle')}}</div>
                 </div>
             </div>
             <div class="row">
@@ -263,49 +263,7 @@
             </div>
         </div>
     </section>
-    <!-- Testiominals -->
-
-    {{-- <section class="testimonials">
-        <div class="background bg-img bg-fixed section-padding pb-0"
-            data-background="" data-overlay-dark="3">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-8 offset-md-2">
-                        <div class="testimonials-box">
-                            <div class="head-box">
-                                <h6>{{__('testimonials_sec_subtittle')}}</h6>
-                                <h4>{{__('testimonials_sec_tittle')}}</h4>
-                                <div class="line"></div>
-                            </div>
-                            <div class="owl-carousel owl-theme">
-                                @foreach ($ratings as $rating)
-                                    <div class="item">
-                                        <span class="quote"><img src="img/quot.png" alt=""></span>
-                                        <p>{{ $rating->review }}</p>
-                                        <div class="info">
-                                            <div class="author-img"> <img
-                                                    src="{{ $rating->shop ? Voyager::image($rating->shop->logo) : asset('assets/frontend-assets/img/team/4.jpg') }}"
-                                                    alt=""> </div>
-                                            <div class="cont">
-                                                <input name="rating" type="number" value="{{ $rating->rating }}"
-                                                    class="rating published_rating" data-size="xs">
-                                                <span><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i><i class="star-rating"></i></span>
-                                                <h6 class="ms-2 mt-3">{{ $rating->shop ? $rating->shop->name : 'Halal deals' }}</h6>
-                                                <span class="ms-2">Guest review</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> --}}
+   
     
 @endsection
 @section('js')

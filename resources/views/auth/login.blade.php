@@ -22,7 +22,7 @@
                     <div class="col-md-12 form-group">
                         <div class="i-class">
                             <i class="fa-solid fa-user input-fontawesome"></i>
-                            <input class="login-input" id="email" type="email" placeholder="{{ __('Email') }}"
+                            <input class="login-input" id="email" type="email" placeholder="{{ __('words.email') }}"
                                 class=" @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}"
                                 required autocomplete="email" autofocus>
                             @error('email')
@@ -46,16 +46,17 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <a href="{{ route('password.request') }}" class="" style="color: #ffffff">I Forgot
-                            Password</a>
+                        <a href="{{ route('password.request') }}" class=""
+                            style="color: #ffffff">{{ __('words.i_forgot_my_password') }}</a>
                     </div>
                     <div class="col-md-12">
-                        <button type="submit" class="login-btn text-white"> Login </button>
+                        <button type="submit" class="login-btn text-white">{{ __('words.login') }}</button>
                     </div>
                     <div class="col-md-12">
 
-                        <span class="">Don't Have an account ? <a class="text-warning" href="{{ route('register') }}">
-                                Register</a></span>
+                        <span class="">{{ __('words.dont_have_an_account') }} ? <a class="text-warning"
+                                href="{{ route('register') }}">
+                                {{ __('words.register') }}</a></span>
                     </div>
                 </div>
             </form>

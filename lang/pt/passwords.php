@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'reset'     => 'Din adgangskode er blevet nulstillet!',
-    'sent'      => 'Vi har sendt dig et link for at nulstille din adgangskode!',
-    'throttled' => 'Vent venligst, før du prøver igen.',
-    'token'     => 'Denne kode til nulstilling af adgangskode er ugyldig.',
-    'user'      => 'Vi kan ikke finde en bruger med den e-mailadresse.',
+    'reset'     => 'A password foi alterada!',
+    'sent'      => 'Enviamos um link para atualizar a password!',
+    'throttled' => 'Por favor, aguarde antes de tentar novamente.',
+    'token'     => 'Este link para atualizar a password é inválido.',
+    'user'      => 'Não conseguimos encontrar um utilizador com esse endereço de e-mail.',
 ];

@@ -19,7 +19,7 @@
                                 </div>
                                 <div>
                                     <h5>
-                                        Start in {{ $event->start_at->diffForHumans() }}
+                                       {{ __('words.start_in') }} {{ $event->start_at->diffForHumans() }}
                                     </h5>
                                     <h6>
                                         {{ $event->start_at->format('d M') }}
@@ -47,7 +47,7 @@
                                 </div>
                                 <div>
                                     <h5>
-                                        Description
+                                        {{ __('words.description') }}
                                     </h5>
                                     <p>
                                         {{ $event->description }}
@@ -67,8 +67,8 @@
                                     data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-home"
                                     aria-selected="true">
                                     <div class="days">
-                                        <p class="days-select">ALL</p>
-                                        <p class="info-date">DATE</p>
+                                        <p class="days-select">{{ __('words.all') }}</p>
+                                        <p class="info-date">{{ __('words.date') }}</p>
                                         <span class="dot"></span>
                                     </div>
                                 </button>
@@ -107,7 +107,7 @@
                                                             <p class="t-des">{!! $product->description !!}
                                                             </p>
                                                             @if ($product->status == 2)
-                                                                <span class="sold">SOLD</span>
+                                                                <span class="sold">{{__('words.sold')}}</span>
                                                             @elseif($product->status == 4)
                                                                 <span class="sold">{{__('words.soon')}}</span>
                                                             @endif
@@ -150,9 +150,8 @@
                             @endforeach
                         </div>
                         <button class="event-buttton" type="submit">
-                            <span>Confirmed</span>
-                            <span id="totalPrice" x-ref="total"
-                                x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
+                            <span>{{ __('words.confirmed') }}</span>
+                            <span id="totalPrice" x-ref="total" x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
                                     class="fa fa-arrow-right"></i></span>
                         </button>
 
