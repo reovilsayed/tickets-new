@@ -2,7 +2,15 @@
 @section('css')
     <style>
         .navbar .navbar-nav .nav-link {
-            color: black;
+            color: rgb(255, 255, 255);
+        }
+
+        p {
+            color: white !important;
+        }
+
+        strong {
+            color: #bd3d06 !important;
         }
     </style>
 @endsection

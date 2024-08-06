@@ -214,6 +214,7 @@ class PageController extends Controller
         $page = $page->firstOrFail();
         return view('pages.page')->with('page', $page);
     }
+    
     public function followShops()
     {
         return view('pages.likedShop');
