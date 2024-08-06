@@ -26,14 +26,18 @@ class TOCOnlineService
 
     public function getAccessTokenFromAuthorizationCode()
     {
-        $response = Http::asForm()->withBasicAuth($this->identifier, $this->secret)
-            ->withHeaders([
-                'Accept' => 'application/json',
-            ])->post($this->oauthUrl . '/token', [
-                'grant_type' => 'authorization_code',
-                'code' => 'a61c6650a5cb1c16a2e8677d4e452a87482409a4f59a17d515fe264ce110095e',
-                'scope' => 'commercial'
-            ]);
+        $identifier = $this->identifier;
+        $secret = $this->secret;
+        $encodedCredentials = base64_encode("{$identifier}:{$secret}");
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Authorization' => 'Basic ' . $encodedCredentials,
+        ])->asForm()->post('https://app15.toconline.pt/oauth/token', [
+            'grant_type' => 'authorization_code',
+            'code' => '17677679a5b94fe5b1613f933dba56a51193ad80c7cf0fd0ac6eae9942ffe5e8',
+            'scope' => 'commercial',
+        ]);
 
         if ($response->successful()) {
             return $response->json()->access_token;
