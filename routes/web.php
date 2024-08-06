@@ -127,8 +127,4 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-<<<<<<< Updated upstream
 });
-=======
-});
->>>>>>> Stashed changes
