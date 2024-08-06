@@ -71,6 +71,6 @@
 
         </div>
     @else
-        <h3 class="text-center text-danger">No Items Found</h3>
+        <h3 class="text-center text-danger">{{ __('words.no_item_found') }}</h3>
     @endif
 </div>

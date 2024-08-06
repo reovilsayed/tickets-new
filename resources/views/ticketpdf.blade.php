@@ -206,10 +206,10 @@
                                     <p class="country">{{ $ticket->event->city }}</p>
                                     <p class="price">{{ Sohoj::price($ticket->price) }}</p>
                                     <p class="text-main">
-                                        Final Price
+                                        {{ __('words.final_price') }}
                                     </p>
                                     <p class="text-sub">
-                                        Tax Included
+                                        {{ __('words.tax_include') }}
                                     </p>
                                 </div>
                             </td>
@@ -298,7 +298,7 @@
     @endforeach
 
     <button class="print-btn" onclick="autoPrint()">
-        Print
+        {{ __('words.print') }}
     </button>
 </body>
 

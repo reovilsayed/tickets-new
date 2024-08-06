@@ -93,8 +93,7 @@
 
 
                                 <div class="ec-subscribe-form ">
-                                    <label for="" class="text-white mb-3" style="font-size:22px">Subscribe
-                                        now :</label>
+                                    <label for="" class="text-white mb-3" style="font-size:22px">{{__('words.subcribe_now :')}}</label>
                                     <div id="ec_news_signup" class="ec-form footer-email">
 
 
@@ -123,14 +122,14 @@
                     <div class="col-md-3 offset-md-1">
                         <div class="footer-column footer-explore clearfix">
 
-                            <h3 class="footer-title">{{ __('Explore') }}</h3>
+                            <h3 class="footer-title">{{ __('words.explore') }}</h3>
                             <div class="line-footer mb-2"></div>
 
                             <ul class="footer-explore-list list-unstyled">
-                                <li><a href="{{ route('homepage') }}">Home</a></li>
+                                {{-- <li><a href="{{ route('homepage') }}"></a></li> --}}
                                 {{-- <li><a href="{{ route('about') }}">About</a></li> --}}
-                                <li><a href="{{ route('contact') }}">Contact</a></li>
-                                <li><a href="{{ url('page/terms-and-conditions') }}">Terms & Conditions</a></li>
+                                <li><a href="{{ route('contact') }}">{{ __('words.contact') }}</a></li>
+                                <li><a href="{{ url('page/terms-and-conditions') }}">{{ __('words.terms_&_conditions') }}</a></li>
                             </ul>
                             {{-- {!! menu('main', 'menus.bootstrap') !!} --}}
 
@@ -139,15 +138,15 @@
                     </div>
                     <div class="col-md-4">
                         <div class="footer-column footer-contact">
-                            <h3 class="footer-title line-cont">{{ __('Contact') }}</h3>
+                            <h3 class="footer-title line-cont">{{ __('words.contact') }}</h3>
                             <div class="line-footer mb-2"></div>
                             <p class="footer-contact-text">{{ setting('site.description') }}</p>
                             <div class="footer-contact-info">
                                 <p class="footer-contact-phone"><span class="flaticon-call"></span>
-                                    <a href="">{{ setting('site.phone') }}</a>
+                                    <a href="" class="text-white">{{ setting('site.phone') }}</a>
                                 </p>
                                 <p class="footer-contact-phone"><span class="flaticon-envelope"></span>
-                                    <a href="">{{ setting('site.email') }}</a>
+                                    <a href=""class="text-white">{{ setting('site.email') }}</a>
                                 </p>
                                 {{-- <p><a href="#" class="text-white">{{ __('Contact_us') }}</a></p> --}}
                             </div>
@@ -174,7 +173,7 @@
                     <div class="col-md-12">
                         <div class="footer-bottom-inner">
                             <img src="{{ asset('assets/easypay.png') }}" alt="" style="width:313px;">
-                            <p class="footer-bottom-copy-right">© Copyright 2024 by <a
+                            <p class="footer-bottom-copy-right">{{ __('words.© Copyright_2024_by ') }}<a
                                     href="#">{{ setting('site.title') }}</a></p>
                         </div>
                     </div>

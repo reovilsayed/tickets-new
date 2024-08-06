@@ -39,9 +39,11 @@
                                     <div class="address-right">
                                         <ul>
                                             <h2 class="theme-color mb-2"> {{ auth()->user()->name }}</h2>
-                                            <li class="text-content"><span class="theme-color"> Email :</span>
+                                            <li class="text-content"><span class="theme-color">{{ __('words.email') }}
+                                                    :</span>
                                                 {{ Auth::user()->email }}</li>
-                                            <li class="text-content"><span class="theme-color"> Create Date
+                                            <li class="text-content"><span class="theme-color">
+                                                    {{ __('words.create_date') }}
                                                     : </span>
                                                 {{ $order->created_at->format('M d, Y') }}</li>
 
@@ -51,7 +53,7 @@
                             </div>
 
                             <div class="header-right">
-                                <h3>Invoice</h3>
+                                <h3>{{ __('words.invoice') }}</h3>
 
                             </div>
 
@@ -62,19 +64,19 @@
                                     <thead>
                                         <tr>
                                             <th>
-                                                Ticket ID
+                                                {{ __('words.ticket_id') }}
                                             </th>
                                             <th>
-                                                Payment Status
+                                                {{ __('words.paymeys_status') }}
                                             </th>
                                             <th>
-                                                Payment Type
+                                                {{ __('words.payment_type') }}
                                             </th>
                                             <th>
-                                                Status
+                                                {{ __('words.status') }}
                                             </th>
                                             <th>
-                                                Price
+                                                {{ __('words.price') }}
                                             </th>
 
 
@@ -89,10 +91,10 @@
                                                     {{ $ticket->ticket }}
                                                 </td>
                                                 <td>
-                                                    Paid
+                                                    {{ __('words.paid') }}
                                                 </td>
                                                 <td>
-                                                    Visa
+                                                    {{ __('words.visa') }}
 
                                                 </td>
                                                 <td>
@@ -109,7 +111,7 @@
                                     <tfoot>
                                         <tr>
                                             <td colspan="2"></td>
-                                            <td colspan="2">TOTAL :</td>
+                                            <td colspan="2">{{ __('words.total') }} :</td>
                                             <td>{{ Sohoj::price($order->total) }}</td>
                                         </tr>
                                     </tfoot>
@@ -122,53 +124,11 @@
 
                                     <li>
                                         <button class="btn text-white print-button rounded ms-2"
-                                            onclick="window.print();">Print</button>
+                                            onclick="window.print();">{{ __('words.print') }}</button>
                                     </li>
                                 </ul>
                             </div>
-                            {{-- <div class="support-box">
-                                    <ul>
-                                        <li>
-                                            <div class="support-detail">
-                                                <div class="support-icon">
-                                                    <i class="fa-solid fa-phone"></i>
-                                                </div>
-                                                <div class="support-content">
-                                                    <ul>
-                                                        <li>+91 643-387-826</li>
-                                                        <li>+91 643-387-826</li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="support-detail">
-                                                <div class="support-icon">
-                                                    <i class="fa-solid fa-earth-americas"></i>
-                                                </div>
-                                                <div class="support-content">
-                                                    <ul>
-                                                        <li>support@fastkart.com</li>
-                                                        <li>www.fastkart.com</li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="support-detail">
-                                                <div class="support-icon">
-                                                    <i class="fa-solid fa-location-dot"></i>
-                                                </div>
-                                                <div class="support-content">
-                                                    <ul>
-                                                        <li>Fastkart Store</li>
-                                                        <li>Store India-2768283</li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div> --}}
+                         
                         </div>
                     </div>
 
