@@ -109,8 +109,8 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 $product = Product::find($key);
                 Mail::to($order->user->email)->send(new TicketDownload($order, $product));
             }
-            $toco = new TOCOnlineService;
-            $toco->createCommercialSalesDocument($order);
+            // $toco = new TOCOnlineService;
+            // $toco->createCommercialSalesDocument($order);
         } else {
             $order->payment_status = 2;
             $order->save();
