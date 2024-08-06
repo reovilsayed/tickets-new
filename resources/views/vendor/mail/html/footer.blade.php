@@ -4,7 +4,7 @@
 <tr>
 <td>
 
-Halal deals<br> 
+Essenciacompany<br> 
 E-Mail: <a href="mailto:{{env('MAIL_FROM_ADDRESS')}}">{{ env('MAIL_FROM_ADDRESS') }}</a><br>
 </td>
 

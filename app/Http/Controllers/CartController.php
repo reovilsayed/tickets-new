@@ -23,7 +23,7 @@ class CartController extends Controller
 				Cart::session($event->slug)->add($product->id, $product->name, $product->currentPrice(), $quantity)->associate('App\Models\Product');
 			}
 		}
-		return redirect()->route('checkout',$event)->with('success_msg', 'Varen er blevet tilføjet til indkøbskurven!');
+		return redirect()->route('checkout',$event);
 	}
 	public function update(Request $request)
 	{
