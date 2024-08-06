@@ -127,9 +127,8 @@
                             <div class="line-footer mb-2"></div>
 
                             <ul class="footer-explore-list list-unstyled">
-                                <li><a href="{{ route('homepage') }}">Home</a></li>
-                                {{-- <li><a href="{{ route('about') }}">About</a></li> --}}
-                                <li><a href="{{ route('contact') }}">Contact</a></li>
+                                <li><a href="{{ route('homepage') }}">{{ __('words.home') }}</a></li>
+                                <li><a href="{{ route('contact') }}">{{ __('words.contact') }}</a></li>
                                 <li><a href="{{ url('page/terms-and-conditions') }}">Terms & Conditions</a></li>
                             </ul>
                             {{-- {!! menu('main', 'menus.bootstrap') !!} --}}
@@ -160,8 +159,6 @@
                                         class="fa-brands fa-twitter fa-lg"></i></a>
                                 <a href="{{ setting('social.youtube') }}"><i
                                         class="fa-brands fa-youtube fa-lg"></i></a>
-                                <a href="{{ setting('social.pinterest') }}"><i
-                                        class="fa-brands fa-pinterest fa-lg"></i></a>
                             </div>
                         </div>
                     </div>
