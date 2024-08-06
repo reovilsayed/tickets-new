@@ -107,17 +107,19 @@
                                                             <p class="t-des">{!! $product->description !!}
                                                             </p>
                                                             @if ($product->status == 2)
-                                                                <span class="sold">{{ __('words.sold') }}</span>
+                                                                <span class="sold">{{__('words.sold')}}</span>
+                                                            @elseif($product->status == 4)
+                                                                <span class="sold">{{__('words.soon')}}</span>
                                                             @endif
                                                         </div>
                                                         @if ($product->status == 3)
                                                             <div class="t-prize d-flex flex-column align-items-end">
                                                                 <span
                                                                     class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
-                                                              
-                                                                    <a target="__blank" class="btn custom-button" href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
+
+                                                                <a target="__blank" class="btn custom-button"
+                                                                    href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
                                                             </div>
-                                                            
                                                         @else
                                                             <div class="t-prize">
                                                                 <span
