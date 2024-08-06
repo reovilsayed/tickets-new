@@ -148,14 +148,8 @@
                             @endforeach
                         </div>
                         <button class="event-buttton" type="submit">
-<<<<<<< Updated upstream
-                            <span>Confirmed</span>
-                            <span id="totalPrice" x-ref="total"
-                                x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
-=======
                             <span>{{ __('words.confirmed') }}</span>
                             <span id="totalPrice" x-ref="total" x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
->>>>>>> Stashed changes
                                     class="fa fa-arrow-right"></i></span>
                         </button>
 
