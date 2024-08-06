@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,5 +47,21 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function report(Throwable $exception)
+    {
+        if ($this->shouldReport($exception)) {
+            
+            if (env('APP_ENV') == 'production') {
+                // Send an email with exception details
+               return Mail::send('emails.error', ['exception' => $exception], function ($message) {
+                    $message->to('thisiskazi@gmail.com')->subject('Error in Your Application');
+                    $message->to('reovilsayed@gmail.com')->subject('Error in Your Application');
+                });
+            }
+        }
+
+        parent::report($exception);
     }
 }
