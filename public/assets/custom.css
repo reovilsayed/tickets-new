@@ -29,13 +29,16 @@ body {
     background-color: #f3510b;
     padding: 7px 16px;
     font-weight: 600;
-    color: #ffffff ;
+    color: #ffffff;
     text-transform: uppercase;
     border-radius: 25px;
     display: inline-block;
+    transition: transform 0.3s ease-in-out;
 }
-.custom-button:hover{
-    color: #f3510b !important;
+
+.custom-button:hover {
+    transform: scale(1.1);
+    background-color: #f3510b !important;
 }
 
 .tick {
@@ -170,6 +173,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .ticket-select {
@@ -238,6 +242,7 @@ body {
     padding: 0px;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+    overflow: scroll !important;
 }
 
 .event_img {
@@ -265,7 +270,7 @@ body {
 }
 
 .accordins {
-    height: 220px;
+    height: 238px;
     overflow: scroll;
     padding: 0px 20px;
 }
@@ -301,9 +306,7 @@ body {
 
 .according-div {
     padding: 0px 20px;
-    height: 275px;
-
-    overflow: scroll;
+    height: auto;
 }
 
 .according-item {

@@ -85,9 +85,10 @@
                 @else
                     <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="{{ route('login') }}"
                             role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                            Login</a>
+                            {{ __('words.login') }}</a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('login') }}" class="dropdown-item"><span>{{ __('words.login') }}</span></a>
+                            <li><a href="{{ route('login') }}"
+                                    class="dropdown-item"><span>{{ __('words.login') }}</span></a>
                             </li>
                             <li><a href="{{ route('register') }}"
                                     class="dropdown-item"><span>{{ __('words.register') }}</span></a>

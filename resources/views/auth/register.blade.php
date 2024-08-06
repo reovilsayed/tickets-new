@@ -342,7 +342,8 @@
                                     id="country">
                                     <option selected>{{ __('words.select_country') }}</option>
                                     @foreach ($country_array as $key => $country)
-                                        <option @if($key == 'PT') selected @endif value="{{ $key }}">{{ $country }}</option>
+                                        <option @if ($key == 'PT') selected @endif
+                                            value="{{ $key }}">{{ $country }}</option>
                                     @endforeach
                                     @error('country')
                                         <span class="invalid-feedback" role="alert">
@@ -353,7 +354,7 @@
 
                             </div>
                             <div class="col-md-6 form-group">
-                                <input id="password" type="password" placeholder="{{ __('Password') }}"
+                                <input id="password" type="password" placeholder="{{ __('words.password') }}"
                                     class="reg-pass @error('password') is-invalid @enderror" name="password" required
                                     autocomplete="current-password">
                                 @error('password')
@@ -364,18 +365,21 @@
 
                             </div>
                             <div class="col-md-6 form-group">
-                                <input id="password-confirm" type="password" placeholder="Confirm Password" class="reg-pass"
+                                <input id="password-confirm" type="password"
+                                    placeholder=" {{ __('words.confirm_password') }}" class="reg-pass"
                                     name="password_confirmation" required autocomplete="new-password">
                             </div>
 
 
                             <div class="col-md-12">
-                                <button type="submit" class="reg-btn text-white" style="font-size: 22px">Register</button>
+                                <button type="submit" class="reg-btn text-white" style="font-size: 22px">
+                                    {{ __('words.register') }}</button>
                             </div>
 
                             <div class="col-md-12">
-                                <span style="font-size: 18px">Already have an account ? <a class="text-warning"
-                                        href="{{ route('login') }}"> login</a></span>
+                                <span style="font-size: 18px"> {{ __('words.already_have_an_account') }}? <a
+                                        class="text-warning" href="{{ route('login') }}">
+                                        {{ __('words.login') }}</a></span>
                             </div>
                         </div>
                     </form>

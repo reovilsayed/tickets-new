@@ -93,14 +93,15 @@
 
 
                                 <div class="ec-subscribe-form ">
-                                    <label for="" class="text-white mb-3" style="font-size:22px">{{__('words.subcribe_now :')}}</label>
+                                    <label for="" class="text-white mb-3"
+                                        style="font-size:22px">{{ __('words.subcribe_now') }} :</label>
                                     <div id="ec_news_signup" class="ec-form footer-email">
 
 
                                         <button id="ec-news-btn" class="butn-dark2 " type="submit" name="subscribe"
                                             value="">
                                             <span><a
-                                                    href=" https://lp.egoi.page/1eke6Y8m/signup ">{{ __('words.Subscribe') }}</a></span>
+                                                    href="https://lp.egoi.page/1eIe6Y8m/signup">{{ __('words.subcribe') }}</a></span>
                                         </button>
 
 
@@ -129,7 +130,9 @@
                                 {{-- <li><a href="{{ route('homepage') }}"></a></li> --}}
                                 {{-- <li><a href="{{ route('about') }}">About</a></li> --}}
                                 <li><a href="{{ route('contact') }}">{{ __('words.contact') }}</a></li>
-                                <li><a href="{{ url('page/terms-and-conditions') }}">{{ __('words.terms_&_conditions') }}</a></li>
+                                <li><a
+                                        href="{{ url('page/terms-and-conditions') }}">{{ __('words.terms_&_conditions') }}</a>
+                                </li>
                             </ul>
                             {{-- {!! menu('main', 'menus.bootstrap') !!} --}}
 
