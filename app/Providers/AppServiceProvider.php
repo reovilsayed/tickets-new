@@ -34,5 +34,6 @@ class AppServiceProvider extends ServiceProvider
             ->setNpmBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/npm');
         Schema::defaultStringLength(191);
         Voyager::addAction(\App\Actions\ReplyAction::class);
+        Voyager::addAction(\App\Actions\DuplicateAction::class);
     }
 }

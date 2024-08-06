@@ -16,10 +16,10 @@ class Localization
      */
     public function handle(Request $request, Closure $next)
     {
-        if (request()->has('lang')) {
-            session()->put('lang', request()->lang);
+        if (request()->has('locale')) {
+            session()->put('locale', request()->locale);
         }
-        if (session()->has('lang')) app()->setLocale(session()->get('lang'));
+        if (session()->has('locale')) app()->setLocale(session()->get('locale'));
         return $next($request);
     }
 }

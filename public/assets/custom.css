@@ -29,10 +29,13 @@ body {
     background-color: #f3510b;
     padding: 7px 16px;
     font-weight: 600;
-    color: #ffffff !important;
+    color: #ffffff ;
     text-transform: uppercase;
     border-radius: 25px;
     display: inline-block;
+}
+.custom-button:hover{
+    color: #f3510b !important;
 }
 
 .tick {

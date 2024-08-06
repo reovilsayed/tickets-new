@@ -342,7 +342,7 @@
                                     id="country">
                                     <option selected>Select country </option>
                                     @foreach ($country_array as $key => $country)
-                                        <option value="{{ $key }}">{{ $country }}</option>
+                                        <option @if($key == 'PT') selected @endif value="{{ $key }}">{{ $country }}</option>
                                     @endforeach
                                     @error('country')
                                         <span class="invalid-feedback" role="alert">

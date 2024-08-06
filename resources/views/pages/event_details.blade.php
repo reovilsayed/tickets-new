@@ -93,7 +93,7 @@
                                 <div class="tab-pane fade show @if ($loop->first) active @endif"
                                     id="pills-{{ $key }}" role="tabpanel" aria-labelledby="pills-home-tab">
                                     @foreach ($data as $product)
-                                        @if ($product->status == 1 || $product->status == 2)
+                                        @if ($product->status == 1 || $product->status == 2 || $product->status == 3)
                                             <div
                                                 :class="tickets[{{ $product->id }}] ? 'card card-ticket active' :
                                                     'card card-ticket'">
@@ -110,25 +110,35 @@
                                                                 <span class="sold">SOLD</span>
                                                             @endif
                                                         </div>
-                                                        <div class="t-prize">
-                                                            <span
-                                                                class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
-                                                            @if ($product->status == 1)
-                                                                <select name="tickets[{{ $product->id }}]"
-                                                                    @if ($product->sold_out) disabled @endif
-                                                                    data-price="{{ $product->currentPrice() }}"
-                                                                    min="0" max="{{ $product->quantity }}"
-                                                                    x-on:change="tickets[{{ $product->id }}]={{ $product->currentPrice() }}* $el.value;quantities[{{ $product->id }}]= $el.value;"
-                                                                    class="ticket-select"
-                                                                    x-model="quantities[{{ $product->id }}]">
-                                                                    <option value="0">0</option>
-                                                                    @for ($i = 1; $i <= $product->limit_per_order; $i++)
-                                                                        <option value="{{ $i }}">
-                                                                            {{ $i }}</option>
-                                                                    @endfor
-                                                                </select>
-                                                            @endif
-                                                        </div>
+                                                        @if ($product->status == 3)
+                                                            <div class="t-prize d-flex flex-column align-items-end">
+                                                                <span
+                                                                    class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
+                                                              
+                                                                    <a target="__blank" class="btn custom-button" href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
+                                                            </div>
+                                                            
+                                                        @else
+                                                            <div class="t-prize">
+                                                                <span
+                                                                    class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
+                                                                @if ($product->status == 1)
+                                                                    <select name="tickets[{{ $product->id }}]"
+                                                                        @if ($product->sold_out) disabled @endif
+                                                                        data-price="{{ $product->currentPrice() }}"
+                                                                        min="0" max="{{ $product->quantity }}"
+                                                                        x-on:change="tickets[{{ $product->id }}]={{ $product->currentPrice() }}* $el.value;quantities[{{ $product->id }}]= $el.value;"
+                                                                        class="ticket-select"
+                                                                        x-model="quantities[{{ $product->id }}]">
+                                                                        <option value="0">0</option>
+                                                                        @for ($i = 1; $i <= $product->limit_per_order; $i++)
+                                                                            <option value="{{ $i }}">
+                                                                                {{ $i }}</option>
+                                                                        @endfor
+                                                                    </select>
+                                                                @endif
+                                                            </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -139,7 +149,8 @@
                         </div>
                         <button class="event-buttton" type="submit">
                             <span>Confirmed</span>
-                            <span id="totalPrice" x-ref="total" x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
+                            <span id="totalPrice" x-ref="total"
+                                x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
                                     class="fa fa-arrow-right"></i></span>
                         </button>
 

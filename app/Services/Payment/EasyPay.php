@@ -2,8 +2,10 @@
 
 namespace App\Services\Payment;
 
+use App\Exceptions\CustomValidationException;
 use App\Models\Order;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\ValidationException;
 
 class EasyPay
 {
@@ -16,6 +18,13 @@ class EasyPay
             ->acceptJson()
             ->post('https://api.test.easypay.pt/2.0/link', (new self)->createPaymentBody($order))->json();
 
+        if (isset($payment_link_create_request['status']) && $payment_link_create_request['status'] == 400) {
+            $messages = [];
+            foreach ($payment_link_create_request['invalid_params'] as $param) {
+                $messages[$param['name']] = $param['reason'];
+            }
+            throw CustomValidationException::withMessages($messages);
+        }
         return $payment_link_create_request;
     }
 

@@ -66,7 +66,7 @@
                             aria-expanded="false">{{ __('words.Account') }}</a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ route('user.dashboard') }}"
-                                    class="dropdown-item {{ Route::is('user.dashboard') ? 'active' : '' }}"><span>{{ __('words.User Dashboard') }}</span></a>
+                                    class="dropdown-item {{ Route::is('user.dashboard') ? 'active' : '' }}"><span>{{ __('words.user_dashboard') }}</span></a>
                             </li>
                             {{-- @if (auth()->user()->role_id == 3)
                                 <li><a href="{{ route('vendor.dashboard') }}" class="dropdown-item"><span>Vendor
@@ -77,7 +77,7 @@
                                 <form action="{{ route('logout') }}" method="post">
                                     @csrf
                                     <button href="{{ route('user.dashboard') }}"
-                                        class="dropdown-item"><span>{{ __('words.Logout') }}</span></button>
+                                        class="dropdown-item"><span>{{ __('words.logout') }}</span></button>
                                 </form>
                             </li>
                         </ul>
@@ -87,7 +87,8 @@
                             role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                             Login</a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('login') }}" class="dropdown-item"><span>{{ __('words.Login') }}</span></a>
+                            <li><a href="{{ route('login') }}"
+                                    class="dropdown-item"><span>{{ __('words.Login') }}</span></a>
                             </li>
                             <li><a href="{{ route('register') }}"
                                     class="dropdown-item"><span>{{ __('words.Register') }}</span></a>
@@ -97,18 +98,19 @@
                     </li>
                 @endif
                 <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button"
-                        data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">{{ __('words.Language') }}<i
-                            class="fa-solid fa-angle-down"></i></a>
+                        data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+                        {{ app()->getLocale() }} <i class="fa fa-caret-down"></i></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{app()->getLocale() == 'en' ? 'selected' :''}}">
-                            {{ __('words.en') }}
-                            </a>
+                        <li><a href="{{ url()->current() }}?locale=en"
+                                class="dropdown-item"><span>{{ __('words.en') }}</span></a>
                         </li>
-                        <li><a href="{{app()->getLocale() == 'pt' ? 'selected' :''}}">
-                            {{ __('words.pt') }}
-                            </a></li>
+                        <li><a href="{{ url()->current() }}?locale=pt"
+                                class="dropdown-item"><span>{{ __('words.pt') }}</span></a>
+                        </li>
+
                     </ul>
                 </li>
+
             </ul>
         </div>
     </div>

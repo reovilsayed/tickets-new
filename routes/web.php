@@ -97,6 +97,11 @@ Route::get('/store_front/{slug}', [PageController::class, 'store_front'])->name(
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+    Route::get('/admin/products/{product}/duplicate', function (Product $product) {
+        $newTicket = $product->replicate();
+        $newTicket->save();
+        return redirect()->back();
+    })->name('voyager.products.duplicate');
 });
 Auth::routes(['verify' => true]);
 
@@ -151,8 +156,3 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
-// Route::get('set-locale/{locale}', function ($locale) {
-//     App::setLocale($locale);
-//     session()->put('locale', $locale);
-//     return redirect()->back();
-// })->middleware('check.locale')->name('locale.setting');
