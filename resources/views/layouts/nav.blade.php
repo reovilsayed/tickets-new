@@ -87,11 +87,15 @@
                             role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                             Login</a>
                         <ul class="dropdown-menu">
+<<<<<<< Updated upstream
                             <li><a href="{{ route('login') }}"
                                     class="dropdown-item"><span>{{ __('words.Login') }}</span></a>
+=======
+                            <li><a href="{{ route('login') }}" class="dropdown-item"><span>{{ __('words.login') }}</span></a>
+>>>>>>> Stashed changes
                             </li>
                             <li><a href="{{ route('register') }}"
-                                    class="dropdown-item"><span>{{ __('words.Register') }}</span></a>
+                                    class="dropdown-item"><span>{{ __('words.register') }}</span></a>
                             </li>
 
                         </ul>

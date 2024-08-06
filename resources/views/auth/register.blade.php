@@ -293,12 +293,12 @@
     @endphp
     <div class="contaner login-wrapper">
         <div class="col-md-5 mb-20 offset-md-1 p-5">
-            <h3 class="text-center">{{ __('Register') }}<h3>
+            <h3 class="text-center">{{ __('words.register') }}<h3>
                     <form method="post" class="" action="{{ route('register') }}">
                         @csrf
                         <div class="row">
                             <div class="col-md-6 form-group">
-                                <input id="name" type="text" placeholder="{{ __('First Name') }}"
+                                <input id="name" type="text" placeholder="{{ __('words.first_name') }}"
                                     class="reg-pass @error('name') is-invalid @enderror" name="name" value=""
                                     required autocomplete="name" autofocus>
                                 @error('name')
@@ -308,7 +308,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 form-group">
-                                <input id="l_name" type="text" placeholder="{{ __('Last Name') }}"
+                                <input id="l_name" type="text" placeholder="{{ __('words.last_name') }}"
                                     class="reg-pass @error('l_name') is-invalid @enderror" name="l_name" value=""
                                     required autocomplete="l_name" autofocus>
                                 @error('l_name')
@@ -318,7 +318,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 form-group">
-                                <input id="email" type="email" placeholder="{{ __('Email Address') }}"
+                                <input id="email" type="email" placeholder="{{ __('words.email_address') }}"
                                     class="reg-pass @error('email') is-invalid @enderror" name="email"
                                     value="{{ old('email') }}" required autocomplete="email" autofocus>
                                 @error('email')
@@ -328,7 +328,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 form-group">
-                                <input id="contact_number" type="text" placeholder="{{ __('Contact Number') }}"
+                                <input id="contact_number" type="text" placeholder="{{ __('words.contact_Number') }}"
                                     class="reg-pass @error('contact_number') is-invalid @enderror" name="contact_number"
                                     value="{{ old('contact_number') }}" required autocomplete="contact_number" autofocus>
                                 @error('contact_number')
@@ -340,7 +340,7 @@
                             <div class="col-md-12 form-group">
                                 <select class="reg-pass  @error('password') is-invalid @enderror" name="country"
                                     id="country">
-                                    <option selected>Select country </option>
+                                    <option selected>{{ __('words.select_country') }}</option>
                                     @foreach ($country_array as $key => $country)
                                         <option @if($key == 'PT') selected @endif value="{{ $key }}">{{ $country }}</option>
                                     @endforeach

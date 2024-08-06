@@ -66,7 +66,7 @@
        @endif
         <div class="line"></div>
         <div class=" facilities">
-            <a class="custom-button back-button" href="{{ $product->path() }}">{{ __('Book Ticket') }}</a>
+            <a class="custom-button back-button" href="{{ $product->path() }}">{{ __('words.book_ticket') }}</a>
         </div>
     </div>
 </div>

@@ -27,35 +27,35 @@
             box-shadow: 5px 5px #f36a30;
 
         }
-        .event-box{
+
+        .event-box {
             height: 700px;
             overflow: scroll;
-            background-color:#fff !important; 
+            background-color: #fff !important;
         }
 
-        .accordion-button:not(.collapsed){
-            
-            background-color:#ef5411b2;   
+        .accordion-button:not(.collapsed) {
+
+            background-color: #ef5411b2;
 
         }
 
-        .accordion-button{
-            
+        .accordion-button {
+
             color: #fff !important;
             font-weight: 600;
-            padding:10px 20px;
-            background-color:#ef5411b2;
+            padding: 10px 20px;
+            background-color: #ef5411b2;
         }
 
-        .accordion-body{
+        .accordion-body {
             border: none;
         }
-        
     </style>
 @endsection
 @section('content')
     <section class="rooms1 section-padding">
-        <div class="container" >
+        <div class="container">
             <div class="row ">
                 <div class="col-md-4 event-details">
 
@@ -71,7 +71,7 @@
                             </div>
                             <div>
                                 <h5>
-                                    Start in {{ $event->start_at->diffForHumans() }}
+                                    {{ __('words.start_at') }} {{ $event->start_at->diffForHumans() }}
                                 </h5>
                                 <h6>
                                     {{ $event->start_at->format('d M') }}
@@ -99,7 +99,7 @@
                             </div>
                             <div>
                                 <h5>
-                                    Description
+                                    {{ __('words.description') }}
                                 </h5>
                                 <p>
                                     {{ $event->description }}
@@ -108,24 +108,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-8 event-box" >
+                <div class="col-md-8 event-box">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="mb-0">Hello, {{ auth()->user()->name }}</h3>
+                                    <h3 class="mb-0">{{ __('words.hello,') }} {{ auth()->user()->name }}</h3>
                                     <p>{{ auth()->user()->contact_number }}</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <div class="card" >
-                                <div class="card-body" >
+                            <div class="card">
+                                <div class="card-body">
 
                                     @if (!session()->has('discount'))
                                         <div>
                                             <h5>
-                                                Apply coupon code
+                                                {{ __('words.apply_cupon_code') }}
                                             </h5>
                                         </div>
 
@@ -133,25 +133,26 @@
                                             action="{{ route('coupon') }}">
                                             @csrf
                                             <div class="">
-                                                <input type="text" required="" placeholder="Enter Your Coupan Code"
+                                                <input type="text" required
+                                                    placeholder="{{ __('words.enter_your_coupan_code') }}"
                                                     name="coupon_code" value="">
-                                                <button type="submit"><span>Apply</span></button>
+                                                <button type="submit"><span>{{ __('words.apply') }}</span></button>
                                             </div>
                                         </form>
                                     @endif
                                     <h3 class="dashboard-title mb-3">
-                                        Order Summary
+                                        {{ __('words.order_summary') }}
                                     </h3>
                                     <table class="table">
                                         <tr>
                                             <th>
-                                                Ticket
+                                                {{ __('words.ticket') }}
                                             </th>
                                             <th>
-                                                Quantity
+                                                {{ __('words.quantity') }}
                                             </th>
                                             <th>
-                                                Price
+                                                {{ __('words.price') }}
                                             </th>
                                         </tr>
                                         @foreach (Cart::session($event->slug)->getContent() as $cart)
@@ -180,7 +181,7 @@
                                             </th>
                                             <th>
 
-                                                <span class="h6 uppercase">Subtotal :</span>
+                                                <span class="h6 uppercase"> {{ __('words.subtotal') }}:</span>
                                             </th>
                                             <th>
                                                 <span class="h6">
@@ -196,7 +197,7 @@
                                                 </th>
                                                 <th>
 
-                                                    <span class="h6 uppercase">Discount :</span>
+                                                    <span class="h6 uppercase"> {{ __('words.discount') }}:</span>
                                                 </th>
                                                 <th>
                                                     <span class="h6">
@@ -210,7 +211,7 @@
 
                                             </th>
                                             <th>
-                                                <span class="h4">Total :</span>
+                                                <span class="h4"> {{ __('words.total') }}:</span>
                                             </th>
                                             <th>
                                                 <span class="h4">
@@ -221,47 +222,50 @@
                                     </table>
                                     <form method="post" action="{{ route('checkout.store', $event) }}">
                                         @csrf
-                                    <div class="accordion" id="accordionExample">
-                                        <div class="accordion-item bg-transparent">
-                                            <h2 class="accordion-header" id="headingOne">
-                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseOne" aria-expanded="false"
-                                                    aria-controls="collapseOne">
-                                                {{__('words.billing_info')}}
-                                                </button>
-                                            </h2>
-                                            <div id="collapseOne" class="accordion-collapse collapse"
-                                                aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                <div class="accordion-body">
-                                                    
+                                        <div class="accordion" id="accordionExample">
+                                            <div class="accordion-item bg-transparent">
+                                                <h2 class="accordion-header" id="headingOne">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                                        aria-expanded="false" aria-controls="collapseOne">
+                                                        {{ __('words.billing_info') }}
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseOne" class="accordion-collapse collapse"
+                                                    aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+
                                                         <div class="mb-3">
-                                                            <label for="vatNumber" class="form-label">VAT Number</label>
+                                                            <label for="vatNumber" class="form-label">
+                                                                {{ __('words.vat_number') }}</label>
                                                             <input type="text" name="vatNumber" class="form-control"
-                                                                id="vatNumber"
-                                                                value=""{{ auth()->user()->vatNumber }}"
-                                                                placeholder="Ex: AKD234345UNDGETLKJN77">
+                                                                id="vatNumber" value="{{ auth()->user()->vatNumber }}"
+                                                                placeholder="{{ __('words.vat_number') }}">
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label for="name" class="form-label">Name</label>
+                                                            <label for="name"
+                                                                class="form-label">{{ __('words.name') }}</label>
                                                             <input type="text" name="name" class="form-control"
-                                                                id="name" placeholder="Enter Name"
+                                                                id="name" placeholder="{{ __('words.enter_name') }}"
                                                                 value="{{ auth()->user()->name }}">
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label for="address" class="form-label">Address</label>
+                                                            <label for="address"
+                                                                class="form-label">{{ __('words.address') }}</label>
                                                             <input type="text" name="address" class="form-control"
-                                                                id="address" placeholder="Enter Address"
-                                                                value=""{{ auth()->user()->address }}">
+                                                                id="address"
+                                                                placeholder="{{ __('words.enter_address') }}"
+                                                                value="{{ auth()->user()->address }}">
                                                         </div>
-                                                        
+
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                    </div>
-                                    <button type="submit" class="btn btn-primary mt-3">Proceed To
-                                        Payment</button>
-                                </form>
+                                        </div>
+                                        <button type="submit"
+                                            class="btn btn-primary mt-3">{{ __('words.proceed_to_payment') }}</button>
+                                    </form>
 
                                 </div>
                             </div>

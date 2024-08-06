@@ -56,16 +56,16 @@
                                     @if ($expiredDate > $today)
                                         ( {{ $today->diffInDays($expiredDate) }} {{ __('days_left') }})
                                     @elseif($expiredDate->isToday())
-                                        ({{ __('days_left') }})
+                                        ({{ __('words.days_left') }})
                                     @else
-                                        ({{ __('already_expired') }})
+                                        ({{ __('words.already_expired') }})
                                     @endif
                                     
                                 </p>
                             </h4>
                             <div class="d-flex justify-content-evenly">
 
-                                <span class="">{{ __('price :') }}</span>
+                                <span class="">{{ __('words.price') }}:</span>
                                 @if ($product->sale_price)
                                     <span class=""> {{ Sohoj::price($product->sale_price) }} </span>
                                 @else
@@ -81,7 +81,7 @@
                                         name="quantity">
                                     <input type="hidden" name="product_id"value="{{ $product->id }}" />
 
-                                    <button class="butn-dark2 mt-15 w-100"><span> {{ __('Add To Cart') }}</span></button>
+                                    <button class="butn-dark2 mt-15 w-100"><span> {{ __('words.add_to_cart') }}</span></button>
 
                                 </form>
                             </div>
