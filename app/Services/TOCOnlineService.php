@@ -144,25 +144,23 @@ class TOCOnlineService
             'customer_city' => '',
             'customer_country' => 'PT',
             'due_date' => $order->created_at->format('Y-m-d'),
-            'settlement_expression' => '7.5',
+            'settlement_expression' => '0',
             'payment_mechanism' => 'MO',
-            'vat_included_prices' => false,
+            'vat_included_prices' => true,
             'operation_country' => 'PT-MA',
             'currency_iso_code' => 'EUR',
-            'currency_conversion_rate' => 1.21,
-            'retention' => 7.5,
-            'retention_type' => 'IRS',
-            'apply_retention_when_paid' => false,
             'notes' => '',
             'external_reference' => $order->id,
 
             'lines' => $order->tickets->map(function ($ticket) {
                 $name = $ticket->product->name;
                 return [
-                    'item_type' => 'Product',
+                    'item_type' => 'Service',
                     'description' => $name . ' for ' . $ticket?->event?->name,
                     'quantity' => 1,
-                    'unit_price' => $ticket->price
+                    'unit_price' => $ticket->price,
+                    'tax_percentage'=>$ticket->product->tax,
+                    'tax_country_region'=>'PT',
                 ];
             })->toArray(),
         ]);
