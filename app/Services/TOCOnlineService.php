@@ -186,36 +186,21 @@ class TOCOnlineService
     {
         $token = $this->getAccessTokenFromRefreshToken();
 
-        if (isset($token['error'])) {
-            return $token; // Return the error if there is any
-        }
-
         $response = Http::withHeaders([
-            'Content-Type' => 'application/vnd.api+json',
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token
-        ])->patch($this->apiBaseUrl . '/email/document', [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer 15-341575-1929572-c8af2cbe6568fc29fc41dd03da490db5620ea861a96268bf36d0b7162d296fee'
+        ])->patch('https://api15.toconline.pt/api/email/document', [
             'data' => [
-                'attributes' => [
-                    'from_email' => 'info@events.essenciacompany.com',
-                    'from_name' => 'Essencia company',
-                    'subject' => 'Invoice',
-                    'to_email' => $order->user->email,
-                    'type' => 'Document',
-                ],
-                'id' => $invoice_id, // document id
                 'type' => 'email/document',
+                'id' => 2143,
+                'attributes' => [
+                    'type' => 'Document',
+                    'to_email' => 'reovilsayed@gmail.com',
+                    'from_email' => 'info@events.essenciacompany.com',
+                    'from_name' => 'essenciacompany',
+                    'subject' => 'event ticket'
+                ]
             ]
         ]);
-
-
-        if ($response->successful()) {
-            return $response->json();
-        }
-
-        return [
-            'error' => $response->status(),
-            'message' => $response->body(),
-        ];
     }
 }
