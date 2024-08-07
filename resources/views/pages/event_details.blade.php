@@ -50,7 +50,7 @@
                                         {{ __('words.description') }}
                                     </h5>
                                     <p>
-                                        {{ $event->description }}
+                                        {!! $event->description !!}
                                     </p>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
 
                                                     <div class="ticket-info">
                                                         <div class="t-info">
-                                                                                                                       <p class="t-title">{{ $product->name }}</p>
+                                                            <p class="t-title">{{ $product->name }}</p>
                                                             <p class="t-des">{!! $product->description !!}
                                                             </p>
                                                             @if ($product->status == 2)
@@ -157,11 +157,11 @@
                                                     </div>
 
                                                     @if ($product->status == 3)
-                                                    <div class="d-flex justify-content-end">
+                                                        <div class="d-flex justify-content-end">
 
-                                                        <a target="__blank" class="btn custom-button d-lg-none mt-2"
-                                                        href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
-                                                    </div>
+                                                            <a target="__blank" class="btn custom-button d-lg-none mt-2"
+                                                                href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
+                                                        </div>
                                                     @endif
                                                 </div>
                                             </div>
