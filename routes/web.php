@@ -119,7 +119,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 $new_order->invoice_url = $response['public_link'];
                 $new_order->invoice_body = json_encode($response);
                 $new_order->save();
-                $response = $toco->sendEmailDocument($order);
+                $response = $toco->sendEmailDocument($order,$response['id']);
                 Log::info($response);
             } else {
                 $order->payment_status = 2;

@@ -178,7 +178,7 @@ class TOCOnlineService
     }
 
     // this method need to call when payment completed
-    public function sendEmailDocument(Order $order)
+    public function sendEmailDocument(Order $order, $invoice_id)
     {
         $accessToken = $this->getAccessTokenFromRefreshToken();
 
@@ -195,7 +195,7 @@ class TOCOnlineService
                     'to_email' => $order->user->email,
                     'type' => 'Document',
                 ],
-                'id' => $order->invoice_id, // document id
+                'id' => $invoice_id, // document id
                 'type' => 'email/document',
             ],
         ];
