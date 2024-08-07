@@ -147,7 +147,7 @@ class TOCOnlineService
             'settlement_expression' => '0',
             'payment_mechanism' => 'MO',
             'vat_included_prices' => true,
-            'operation_country' => 'PT-MA',
+            'operation_country' => 'PT',
             'currency_iso_code' => 'EUR',
             'notes' => '',
             'external_reference' => $order->id,
@@ -156,6 +156,7 @@ class TOCOnlineService
                 $name = $ticket->product->name;
                 return [
                     'item_type' => 'Service',
+                    'item_code'=>'Serv001',
                     'description' => $name . ' for ' . $ticket?->event?->name,
                     'quantity' => 1,
                     'unit_price' => $ticket->price,
