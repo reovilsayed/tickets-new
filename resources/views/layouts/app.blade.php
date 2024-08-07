@@ -100,7 +100,7 @@
 
                                         <button id="ec-news-btn" class="butn-dark2 " type="submit" name="subscribe"
                                             value="">
-                                            <span><a
+                                            <span><a target="_blank"
                                                     href="https://lp.egoi.page/1eIe6Y8m/signup">{{__('words.subcribe') }}</a></span>
                                         </button>
 
