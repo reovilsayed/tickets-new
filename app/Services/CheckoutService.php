@@ -99,7 +99,7 @@ class CheckoutService
     {
         return [
             'name' => request()->name,
-            'vatNumber' => request()->vatNumber ?? null,
+            'vatNumber' => request()->vatNumber ?? '',
             'address' => request()->address,
         ];
     }
