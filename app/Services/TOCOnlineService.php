@@ -186,21 +186,21 @@ class TOCOnlineService
     {
         $token = $this->getAccessTokenFromRefreshToken();
 
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer 15-341575-1929572-c8af2cbe6568fc29fc41dd03da490db5620ea861a96268bf36d0b7162d296fee'
-        ])->patch('https://api15.toconline.pt/api/email/document', [
-            'data' => [
-                'type' => 'email/document',
-                'id' => $invoice_id,
-                'attributes' => [
-                    'type' => 'Document',
-                    'to_email' => 'reovilsayed@gmail.com',
-                    'from_email' => 'info@events.essenciacompany.com',
-                    'from_name' => 'essenciacompany',
-                    'subject' => 'event ticket'
-                ]
-            ]
-        ]);
+        // $response = Http::withHeaders([
+        //     'Content-Type' => 'application/json',
+        //     'Authorization' => 'Bearer 15-341575-1929572-c8af2cbe6568fc29fc41dd03da490db5620ea861a96268bf36d0b7162d296fee'
+        // ])->patch('https://api15.toconline.pt/api/email/document', [
+        //     'data' => [
+        //         'type' => 'email/document',
+        //         'id' => $invoice_id,
+        //         'attributes' => [
+        //             'type' => 'Document',
+        //             'to_email' => 'reovilsayed@gmail.com',
+        //             'from_email' => 'info@events.essenciacompany.com',
+        //             'from_name' => 'essenciacompany',
+        //             'subject' => 'event ticket'
+        //         ]
+        //     ]
+        // ]);
     }
 }
