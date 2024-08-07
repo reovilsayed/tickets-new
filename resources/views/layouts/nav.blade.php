@@ -5,9 +5,6 @@
             <a class="logo" href="{{ route('homepage') }}"> <img src="{{ Voyager::image(setting('site.logo')) }}"
                     id="light-logo" class="logo-img" alt="{{ setting('site.title') }}"> </a>
 
-            <a class="logo" href="{{ route('homepage') }}"> <img id="dark-logo" style="display: none"
-                    src="{{ Voyager::image(setting('site.logo_dark')) }}" class="logo-img"
-                    alt="{{ setting('site.title') }}"> </a>
             <!-- <a class="logo" href="index.html"> <h2>THE CAPPA <span>Luxury Hotel</span></h2> </a> -->
         </div>
         <!-- Button -->
