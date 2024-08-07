@@ -51,7 +51,7 @@ class TOCOnlineService
     }
     public function getAccessTokenFromRefreshToken()
     {
-        return '15-341575-1929572-c8af2cbe6568fc29fc41dd03da490db5620ea861a96268bf36d0b7162d296fee';
+        //return '15-341575-1929572-c8af2cbe6568fc29fc41dd03da490db5620ea861a96268bf36d0b7162d296fee';
         $jsonData = Storage::disk('local')->get('token.json');
         $data = json_decode($jsonData, true);
 
@@ -129,12 +129,12 @@ class TOCOnlineService
       
         $token = $this->getAccessTokenFromRefreshToken();
 
-        $body =[
+         $body =[
             'document_type' => 'FT',
             'date' => $order->created_at->format('Y-m-d'),
             'finalize' => 0,
             'customer_id' => $order->billing->vatNumber ? null : 452,
-            'customer_tax_registration_number' => $order->billing->vatNumber,
+            'customer_tax_registration_number' => $order->billing->vatNumber ? $order->billing->vatNumber : null,
             'customer_business_name' => $order->billing->vatNumber ? $order->billing->name : null,
             'customer_address_detail' => $order->billing->vatNumber ? $order->billing->address : null,
             'customer_postcode' => '',
