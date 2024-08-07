@@ -90,8 +90,8 @@ Route::get('download-ticket', function (Request $request) {
     return view('ticketpdf', compact('tickets'));
 })->name('download.ticket');
 Route::get('user-invoice', function (Request $request) {
-    $toco = new TOCOnlineService;
-    return $response = $toco->getAccessTokenFromRefreshToken();
+    // $toco = new TOCOnlineService;
+    // return $response = $toco->getAccessTokenFromRefreshToken();
     $order = Order::find($request->order);
     $product = Product::find($request->product);
     $tickets = $order->tickets()->where('product_id', $request->product)->get();

@@ -159,8 +159,10 @@ class TOCOnlineService
                     'description' => $name . ' for ' . $ticket?->event?->name,
                     'quantity' => 1,
                     'unit_price' => $ticket->price,
-                    'tax_id'=>$ticket->product->tax,
+                    'tax_id'=>1,
                     'tax_country_region'=>'PT',
+                    'tax_code'=>'NOR',
+                    'tax_percentage'=>$ticket->product->tax,
                 ];
             })->toArray(),
         ]);
