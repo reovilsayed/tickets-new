@@ -103,10 +103,13 @@
         <a href="{{ route('download.ticket', ['order' => $order->id, 'product' => $product->id]) }}"
             class="btn-download">{{ __('words.download_ticket') }}</a>
         <div class="email-footer">
-            <p><strong>{{ __('words.ticket_email_note1') }}</p>
-            <p>{{ __('words.ticket_email_note2') }}</p>
-            <p>{{ __('words.ticket_email_note3') }}</p>
-            <p>{{ __('words.ticket_email_note4') }}</p>
+            @if (App::getLocale() =='en')
+            <p> Please keep this email as a confirmation of your purchase. Remember to bring a copy of your ticket or have it available on your mobile device for entry.</p>
+            <p>If you have any questions or need further assistance, feel free to contact us at tickets@essenciacompany.com</p>
+            @else
+            <p>Por favor, guarde este e-mail como confirmação da sua compra. Lembre-se de trazer uma cópia do seu ingresso ou tê-lo disponível em seu dispositivo móvel para a entrada.</p>
+            <p>Se você tiver alguma dúvida ou precisar de mais assistência, sinta-se à vontade para nos contatar em tickets@essenciacompany.com</p>
+            @endif
         </div>
     </div>
 </body>
