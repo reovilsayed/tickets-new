@@ -247,7 +247,7 @@
                                                                 class="form-label">{{ __('words.name') }}</label>
                                                             <input type="text" name="name" class="form-control"
                                                                 id="name" placeholder="{{ __('words.enter_name') }}"
-                                                                value="{{ auth()->user()->name }}">
+                                                                value="{{ auth()->user()->name.' '.auth()->user()->l_name }}">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="address"
