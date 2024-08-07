@@ -53,7 +53,7 @@
                                             {{ __('words.paid') }}
                                         </td>
                                         <td>
-                                            {{ __('words.visa') }}
+                                           {{$order->payment_method_title}}
 
                                         </td>
                                         <td>

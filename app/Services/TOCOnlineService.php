@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class TOCOnlineService
 {
@@ -24,7 +25,7 @@ class TOCOnlineService
 
     // this url will give you a code. by using that code we need to generate access_token and refresh_token. bys using refresh token use can generate access token again. and each request we have to send access token
 
-    public function getAccessTokenFromAuthorizationCode()
+    public function getAccessTokenFromAuthorizationCode($code)
     {
         $identifier = $this->identifier;
         $secret = $this->secret;
@@ -35,13 +36,12 @@ class TOCOnlineService
             'Authorization' => 'Basic ' . $encodedCredentials,
         ])->asForm()->post('https://app15.toconline.pt/oauth/token', [
             'grant_type' => 'authorization_code',
-            'code' => 'ebc639b3b8605e903372161f9f4a95ec7e29713dfd886e9068434b7bc3f66bf1',
+            'code' => $code,
             'scope' => 'commercial',
         ]);
 
-        dd($response->json());
         if ($response->successful()) {
-            return $response->json()->access_token;
+            return $response->json();
         }
 
         return [
@@ -51,12 +51,16 @@ class TOCOnlineService
     }
     public function getAccessTokenFromRefreshToken()
     {
+
+        $jsonData = Storage::disk('local')->get('token.json');
+        $data = json_decode($jsonData, true);
+
         $response = Http::asForm()->withBasicAuth($this->identifier, $this->secret)
             ->withHeaders([
                 'Accept' => 'application/json',
             ])->post($this->oauthUrl . '/token', [
                 'grant_type' => 'refresh_token',
-                'refresh_token' => '15-341575-1929572-5ad450871b3b9dddc9c690bd24acc9d98e8eb6ce6ecc520c4c5f345c7dc56e2d',
+                'refresh_token' => $data['refresh_token'],
                 'scope' => 'commercial'
             ]);
 
@@ -71,7 +75,7 @@ class TOCOnlineService
     }
     public function createCustomer()
     {
-        $accessToken = $this->getAccessTokenFromAuthorizationCode();
+        $accessToken = $this->getAccessTokenFromRefreshToken();
 
 
         if (isset($accessToken['error'])) {
@@ -122,13 +126,13 @@ class TOCOnlineService
     // this method need to call when a order is created
     public function createCommercialSalesDocument(Order $order)
     {
-        // $token = $this->getAccessTokenFromRefreshToken();
+        $token = $this->getAccessTokenFromRefreshToken();
 
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/vnd.api+json',
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer 15-341575-1929572-a3eea70bd5faa2fad672fbdd2d66612dd7f44ae3d0f7c4c2c8944aeb92a401df'
+            'Authorization' => 'Bearer ' . $token
         ])->post('https://api15.toconline.pt/api/v1/commercial_sales_documents', [
             'document_type' => 'FT',
             'date' => $order->created_at->format('Y-m-d'),
@@ -178,11 +182,11 @@ class TOCOnlineService
     // this method need to call when payment completed
     public function sendEmailDocument(Order $order)
     {
-        // $accessToken = $this->getAccessTokenFromRefreshToken();
+        $accessToken = $this->getAccessTokenFromRefreshToken();
 
-        // if (isset($accessToken['error'])) {
-        //     return $accessToken; // Return the error if there is any
-        // }
+        if (isset($accessToken['error'])) {
+            return $accessToken; // Return the error if there is any
+        }
 
         $emailData = [
             'data' => [
@@ -201,7 +205,7 @@ class TOCOnlineService
         $response = Http::withHeaders([
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer 15-341575-1929572-a3eea70bd5faa2fad672fbdd2d66612dd7f44ae3d0f7c4c2c8944aeb92a401df'
+            'Authorization' => 'Bearer ' . $accessToken
         ])->patch($this->apiBaseUrl . '/email/document', $emailData);
         if ($response->successful()) {
             return $response->json();

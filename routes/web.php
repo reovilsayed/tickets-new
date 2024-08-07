@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;;
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -98,25 +100,25 @@ Route::get('user-invoice', function (Request $request) {
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
     if ($type == 'generic') {
-        $order = Order::where('transaction_id', $request->key)->firstOrFail();
+        $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->firstOrFail();
 
         if ($request->status == 'success') {
             $order->payment_status = 1;
             $order->save();
 
-            $products = $order->tickets->groupBy('product_id');
+            $new_order = Order::where('transaction_id', $request->key)->first();
+            $products = $new_order->tickets->groupBy('product_id');
             foreach ($products as $key => $tickets) {
                 $product = Product::find($key);
                 Mail::to($order->user->email)->send(new TicketDownload($order, $product));
             }
             $toco = new TOCOnlineService;
             $response = $toco->createCommercialSalesDocument($order);
-            $order->invoice_id = $response['id'];
-            $order->invoice_url = $response['public_link'];
-            $order->invoice_body = json_encode($response);
-            $order->save();
+            $new_order->invoice_id = $response['id'];
+            $new_order->invoice_url = $response['public_link'];
+            $new_order->invoice_body = json_encode($response);
+            $new_order->save();
             $response = $toco->sendEmailDocument($order);
-            
         } else {
             $order->payment_status = 2;
             $order->save();
@@ -130,8 +132,12 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
     }
 });
 
+Route::get('/test', function () {
+
+    $toconile = new TOCOnlineService;
+    dd($toconile->getAccessTokenFromRefreshToken());
+});
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
-

@@ -99,11 +99,7 @@
                                                     'card card-ticket'">
                                                 <div class="card-body tick">
 
-                                                    @if ($product->status == 2)
-                                                        <span class="d-md-none text-danger sold-sm">{{ __('words.sold') }}</span>
-                                                    @elseif($product->status == 4)
-                                                        <span class="d-md-none text-danger sold-sm">{{ __('words.soon') }}</span>
-                                                    @endif
+                                                   
 
 
                                                     <div class="ticket-info">

@@ -18,10 +18,13 @@ use App\Models\Rating;
 use App\Models\Shop;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\TOCOnlineService;
 use App\Slider;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use TCG\Voyager\Models\Page;
 
 class PageController extends Controller
@@ -214,7 +217,7 @@ class PageController extends Controller
         $page = $page->firstOrFail();
         return view('pages.page')->with('page', $page);
     }
-    
+
     public function followShops()
     {
         return view('pages.likedShop');
@@ -275,7 +278,9 @@ class PageController extends Controller
     }
     public function toconlineCallback()
     {
-        return request('code');
+        Log::info(request('code'));
+        $toconile = new TOCOnlineService;
+        $token = $toconile->getAccessTokenFromAuthorizationCode(request()->code);
+        Storage::disk('local')->put('token.json', json_encode((array) $token, JSON_PRETTY_PRINT));
     }
-    
 }

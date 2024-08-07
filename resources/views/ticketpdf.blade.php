@@ -11,8 +11,6 @@
         rel="stylesheet">
 
     <style>
-      
-
         :root {
             --primary-color: #ef5927;
             --secondary-color: #ff990a;
@@ -239,49 +237,7 @@
                 <h2>
                     CONDIÇÕES GERAIS
                 </h2>
-                <ul>
-                    <li>
-                        O bilhete de acesso é individual e corresponde a uma entrada.
-                    </li>
-                    <li>
-                        O bilhete de acesso confere um copo oficial do evento.
-                    </li>
-                    <li>
-                        O processo de cancelamento ou devolução é tratado caso a caso pela Essência Company. O
-                        pedido deverá chegar por escrito para o e-mail de contacto tickets@essenciacompany.com,
-                        até 14 dias após a encomenda, sendo as instruções de cancelamento ou devolução do valor
-                        pago respondidas e definidas pela EMPRESA, pelo mesmo meio de comunicação.
-                    </li>
-                    <li>
-                        Não é permitida a entrada de pessoas acompanhadas de animais excepto nos casos
-                        previstos por lei.
-                    </li>
-                    <li>
-                        Não é permitida a entrada de pessoas munidas de objetos perigosos.
-                    </li>
-                    <li>
-                        Não é permitido o consumo de bebidas alcoólicas por menores de 18 anos e a todos os que
-                        apresentarem sinais de embrieguez ou de aparente anomalia psíquica.
-                    </li>
-                    <li>
-                        Na sua qualidade de organizadora do evento, a Essência Company reserva-se o direito de
-                        recusar a entrada e/ou expulsar qualquer pessoa que apresente comportamento indevido e
-                        inapropriado, prejudicando o bom funcionamento do evento e/ou causando um risco à
-                        segurança de outros participantes. Aqui se inclui, mas não se limita a, comportamento
-                        agressivo, uso de drogas ilegais ou porte de objetos perigosos.
-                    </li>
-                    <li>
-                        A organização reserva-se no direito de alterar o programa sem aviso prévio.
-                    </li>
-                    <li>
-                        Existência do livro de reclamações – O Decreto-lei nº 156/2005, de 15 de Setembro, alterado
-                        pelos Decretos-Lei nº 371/2007 de 06 de Novembro nº 118/2009 de 19 de Maio
-                    </li>
-                    <li>
-                        Existência de tabela de preços.
-                    </li>
-
-                </ul>
+                {!! $ticket->product->terms !!}
                 <br>
                 <br>
                 <h2>
