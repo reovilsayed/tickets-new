@@ -82,7 +82,7 @@
                                 {{ __('words.download') }}
                             </a>
                             <a target="_blank" class="btn btn-primary btn-sm rounded"
-                                href="{{ route('invoice.order', ['order' => $order->id, 'product' => $id]) }}">
+                                href="{{$order->invoice_url}}">
                                 <i class="fa-solid fa-file-invoice"></i>
                                 {{ __('words.invoice') }}
                             </a>
