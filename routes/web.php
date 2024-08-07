@@ -114,11 +114,13 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 }
                 $toco = new TOCOnlineService;
                 $response = $toco->createCommercialSalesDocument($order);
+                Log::info($response);
                 $new_order->invoice_id = $response['id'];
                 $new_order->invoice_url = $response['public_link'];
                 $new_order->invoice_body = json_encode($response);
                 $new_order->save();
                 $response = $toco->sendEmailDocument($order);
+                Log::info($response);
             } else {
                 $order->payment_status = 2;
                 $order->save();
