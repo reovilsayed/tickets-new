@@ -127,7 +127,7 @@ body {
 .sold {
     position: absolute;
     color: #bd3d06;
-    font-size: 25px;
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: 2px;
     top: 12px;
@@ -135,6 +135,18 @@ body {
     transform: rotate(-20deg);
     border: 2px solid #bd3d06;
 }
+
+.sold-sm{
+    color: #bd3d06;
+    padding: 2px 10px;
+    border: 1px solid #bd3d06;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    border-radius: 10px;
+;
+}
+
 
 .t-info {
     margin: 0px;

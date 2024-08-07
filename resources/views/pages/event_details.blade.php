@@ -19,7 +19,7 @@
                                 </div>
                                 <div>
                                     <h5>
-                                       {{ __('words.start_in') }} {{ $event->start_at->diffForHumans() }}
+                                        {{ __('words.start_in') }} {{ $event->start_at->diffForHumans() }}
                                     </h5>
                                     <h6>
                                         {{ $event->start_at->format('d M') }}
@@ -98,6 +98,14 @@
                                                 :class="tickets[{{ $product->id }}] ? 'card card-ticket active' :
                                                     'card card-ticket'">
                                                 <div class="card-body tick">
+
+                                                    @if ($product->status == 2)
+                                                        <span class="d-md-none text-danger sold-sm">{{ __('words.sold') }}</span>
+                                                    @elseif($product->status == 4)
+                                                        <span class="d-md-none text-danger sold-sm">{{ __('words.soon') }}</span>
+                                                    @endif
+
+
                                                     <div class="ticket-info">
                                                         <div class="t-info">
                                                             <p class="t-date">
@@ -107,9 +115,11 @@
                                                             <p class="t-des">{!! $product->description !!}
                                                             </p>
                                                             @if ($product->status == 2)
-                                                                <span class="sold">{{__('words.sold')}}</span>
+                                                                <span
+                                                                    class="sold d-none d-lg-block">{{ __('words.sold') }}</span>
                                                             @elseif($product->status == 4)
-                                                                <span class="sold">{{__('words.soon')}}</span>
+                                                                <span
+                                                                    class="sold d-none d-lg-block">{{ __('words.soon') }}</span>
                                                             @endif
                                                         </div>
                                                         @if ($product->status == 3)
@@ -151,7 +161,8 @@
                         </div>
                         <button class="event-buttton" type="submit">
                             <span>{{ __('words.confirmed') }}</span>
-                            <span id="totalPrice" x-ref="total" x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
+                            <span id="totalPrice" x-ref="total"
+                                x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
                                     class="fa fa-arrow-right"></i></span>
                         </button>
 
