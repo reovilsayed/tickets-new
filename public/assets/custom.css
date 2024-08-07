@@ -136,7 +136,7 @@ body {
     border: 2px solid #bd3d06;
 }
 
-.sold-sm{
+.sold-sm {
     color: #bd3d06;
     padding: 2px 10px;
     border: 1px solid #bd3d06;
@@ -144,7 +144,7 @@ body {
     font-weight: 700;
     margin-bottom: 4px;
     border-radius: 10px;
-;
+    ;
 }
 
 
@@ -191,7 +191,7 @@ body {
 .ticket-select {
     height: 50px;
     width: 80px;
-    border-bottom: 3px solid #e55710 !important;
+    border: 2px solid #e55710 !important;
 }
 
 .ticket-input {
