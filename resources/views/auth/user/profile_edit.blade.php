@@ -278,7 +278,7 @@
         <div class="ec-vendor-dashboard-card ec-vendor-setting-card">
             <div class="ec-vendor-card-body">
                 <h4 class="dashboard-title mb-5">
-                    Update profile
+                    {{ __('words.update_profile') }}
                 </h4>
                 <form action="{{ route('user.profile.update') }}" method="post" enctype="multipart/form-data">
                     @csrf

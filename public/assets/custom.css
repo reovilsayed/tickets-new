@@ -191,6 +191,7 @@ body {
 .ticket-select {
     height: 50px;
     width: 80px;
+    border-bottom: 3px solid #e55710 !important;
 }
 
 .ticket-input {
@@ -282,8 +283,7 @@ body {
 }
 
 .accordins {
-    height: 238px;
-    overflow: scroll;
+    height: 290px;
     padding: 0px 20px;
 }
 

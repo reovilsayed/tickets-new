@@ -4,7 +4,7 @@
     <div class="ec-shop-rightside col-lg-9 col-md-12">
         <div class="card user-name">
             <div class="card-body">
-                <span class="user-dash-font">Hello, {{ Auth::user()->name }}!</span>
+                <span class="user-dash-font"> {{ __('words.hello') }}, {{ Auth::user()->name }}!</span>
             </div>
         </div>
         <div class="ec-vendor-dashboard-card ec-vendor-setting-card">
