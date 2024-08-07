@@ -159,8 +159,10 @@ class TOCOnlineService
                     'description' => $name . ' for ' . $ticket?->event?->name,
                     'quantity' => 1,
                     'unit_price' => $ticket->price,
-                    'tax_percentage'=>$ticket->product->tax,
+                    'tax_id'=>1,
                     'tax_country_region'=>'PT',
+                    'tax_code'=>'NOR',
+                    'tax_percentage'=>$ticket->product->tax,
                 ];
             })->toArray(),
         ]);
@@ -178,15 +180,19 @@ class TOCOnlineService
     }
 
     // this method need to call when payment completed
-    public function sendEmailDocument(Order $order)
+    public function sendEmailDocument(Order $order, $invoice_id)
     {
-        $accessToken = $this->getAccessTokenFromRefreshToken();
+        $token = $this->getAccessTokenFromRefreshToken();
 
-        if (isset($accessToken['error'])) {
-            return $accessToken; // Return the error if there is any
+        if (isset($token['error'])) {
+            return $token; // Return the error if there is any
         }
 
-        $emailData = [
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token
+        ])->patch($this->apiBaseUrl . '/email/document', [
             'data' => [
                 'attributes' => [
                     'from_email' => setting('site.email', 'test@mail.com'),
@@ -195,16 +201,12 @@ class TOCOnlineService
                     'to_email' => $order->user->email,
                     'type' => 'Document',
                 ],
-                'id' => $order->invoice_id, // document id
+                'id' => $invoice_id, // document id
                 'type' => 'email/document',
-            ],
-        ];
+            ]
+        ]);
 
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer ' . $accessToken
-        ])->patch($this->apiBaseUrl . '/email/document', $emailData);
+
         if ($response->successful()) {
             return $response->json();
         }
