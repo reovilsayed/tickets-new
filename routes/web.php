@@ -125,7 +125,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
         }
     }
     if ($type == 'payment') {
-        $order = Order::where('transaction_id', $request->key)->firstOrFail();
+        $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->firstOrFail();
         $order->currency = $request->currency;
         $order->payment_method_title = $request->method;
         $order->save();
