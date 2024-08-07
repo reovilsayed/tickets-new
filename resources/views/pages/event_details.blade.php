@@ -99,15 +99,21 @@
                                                     'card card-ticket'">
                                                 <div class="card-body tick">
 
-                                                   
+                                                    @if ($product->status == 2)
+                                                        <span
+                                                            class="d-md-none text-danger sold-sm">{{ __('words.sold') }}</span>
+                                                    @elseif($product->status == 4)
+                                                        <span
+                                                            class="d-md-none text-danger sold-sm">{{ __('words.soon') }}</span>
+                                                    @endif
 
+                                                    <p class="t-date">
+                                                        {{ collect($product->dates)->map(fn($date) => Carbon\Carbon::parse($date)->format('d M'))->implode(', ') }}
+                                                    </p>
 
                                                     <div class="ticket-info">
                                                         <div class="t-info">
-                                                            <p class="t-date">
-                                                                {{ collect($product->dates)->map(fn($date) => Carbon\Carbon::parse($date)->format('d M'))->implode(', ') }}
-                                                            </p>
-                                                            <p class="t-title">{{ $product->name }}</p>
+                                                                                                                       <p class="t-title">{{ $product->name }}</p>
                                                             <p class="t-des">{!! $product->description !!}
                                                             </p>
                                                             @if ($product->status == 2)
@@ -123,7 +129,8 @@
                                                                 <span
                                                                     class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
 
-                                                                <a target="__blank" class="btn custom-button"
+                                                                <a target="__blank"
+                                                                    class="btn custom-button d-none d-lg-block"
                                                                     href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
                                                             </div>
                                                         @else
@@ -148,6 +155,14 @@
                                                             </div>
                                                         @endif
                                                     </div>
+
+                                                    @if ($product->status == 3)
+                                                    <div class="d-flex justify-content-end">
+
+                                                        <a target="__blank" class="btn custom-button d-lg-none mt-2"
+                                                        href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
+                                                    </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                         @endif

@@ -130,7 +130,9 @@ body {
     font-size: 18px;
     font-weight: 700;
     letter-spacing: 2px;
-    top: 12px;
+    top: -3px;
+    padding: 5px;
+    border-radius: 10px;
     right: 150px;
     transform: rotate(-20deg);
     border: 2px solid #bd3d06;
@@ -157,7 +159,6 @@ body {
     margin: 0px;
     font-size: 14px;
     letter-spacing: 2px;
-    background-color: #fbf3f399;
     width: 80%;
     color: #161313;
 
