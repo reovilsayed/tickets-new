@@ -35,7 +35,7 @@
                     <div class="col-md-12 col-sm-12 form-group">
                         <div class="i-class">
                             <i class="fa-solid fa-key input-fontawesome"></i>
-                            <input class="login-pass" id="password" type="password" placeholder="Password"
+                            <input class="login-pass" id="password" type="password" placeholder=" {{ __('words.password') }}"
                                 class="@error('password') is-invalid @enderror" name="password" required
                                 autocomplete="current-password">
                             @error('password')

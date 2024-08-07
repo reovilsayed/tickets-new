@@ -179,6 +179,7 @@ body {
 .ticket-select {
     height: 50px;
     width: 80px;
+    border-bottom: 3px solid #e55710 !important;
 }
 
 .ticket-input {
