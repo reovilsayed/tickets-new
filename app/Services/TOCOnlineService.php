@@ -51,7 +51,7 @@ class TOCOnlineService
     }
     public function getAccessTokenFromRefreshToken()
     {
-
+        return '15-341575-1929572-c8af2cbe6568fc29fc41dd03da490db5620ea861a96268bf36d0b7162d296fee';
         $jsonData = Storage::disk('local')->get('token.json');
         $data = json_decode($jsonData, true);
 
@@ -126,21 +126,17 @@ class TOCOnlineService
     // this method need to call when a order is created
     public function createCommercialSalesDocument(Order $order)
     {
+      
         $token = $this->getAccessTokenFromRefreshToken();
 
-
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/vnd.api+json',
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token
-        ])->post('https://api15.toconline.pt/api/v1/commercial_sales_documents', [
+        $body =[
             'document_type' => 'FT',
             'date' => $order->created_at->format('Y-m-d'),
             'finalize' => 0,
-            'customer_id' => $order->billing->vatNumber ? '' : 452,
+            'customer_id' => $order->billing->vatNumber ? null : 452,
             'customer_tax_registration_number' => $order->billing->vatNumber,
-            'customer_business_name' => $order->billing->vatNumber ? $order->billing->name : null ,
-            'customer_address_detail' =>$order->billing->vatNumber ? $order->billing->address : null,
+            'customer_business_name' => $order->billing->vatNumber ? $order->billing->name : null,
+            'customer_address_detail' => $order->billing->vatNumber ? $order->billing->address : null,
             'customer_postcode' => '',
             'customer_city' => '',
             'customer_country' => 'PT',
@@ -157,17 +153,22 @@ class TOCOnlineService
                 $name = $ticket->product->name;
                 return [
                     'item_type' => 'Service',
-                    'item_code'=>'Serv001',
+                    'item_code' => 'Serv001',
                     'description' => $name . ' for ' . $ticket?->event?->name,
                     'quantity' => 1,
                     'unit_price' => $ticket->price,
-                    'tax_id'=>1,
-                    'tax_country_region'=>'PT',
-                    'tax_code'=>'NOR',
-                    'tax_percentage'=>$ticket->product->tax,
+                    'tax_id' => 1,
+                    'tax_country_region' => 'PT',
+                    'tax_code' => 'NOR',
+                    'tax_percentage' => $ticket->product->tax,
                 ];
             })->toArray(),
-        ]);
+        ];
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token
+        ])->post('https://api15.toconline.pt/api/v1/commercial_sales_documents', $body);
 
         // Handle the response
         if ($response->successful()) {
@@ -186,21 +187,23 @@ class TOCOnlineService
     {
         $token = $this->getAccessTokenFromRefreshToken();
 
-        // $response = Http::withHeaders([
-        //     'Content-Type' => 'application/json',
-        //     'Authorization' => 'Bearer 15-341575-1929572-c8af2cbe6568fc29fc41dd03da490db5620ea861a96268bf36d0b7162d296fee'
-        // ])->patch('https://api15.toconline.pt/api/email/document', [
-        //     'data' => [
-        //         'type' => 'email/document',
-        //         'id' => $invoice_id,
-        //         'attributes' => [
-        //             'type' => 'Document',
-        //             'to_email' => 'reovilsayed@gmail.com',
-        //             'from_email' => 'info@events.essenciacompany.com',
-        //             'from_name' => 'essenciacompany',
-        //             'subject' => 'event ticket'
-        //         ]
-        //     ]
-        // ]);
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Bearer '. $token
+        ])->patch('https://api15.toconline.pt/api/email/document', [
+            'data' => [
+                'type' => 'email/document',
+                'id' => $invoice_id,
+                'attributes' => [
+                    'type' => 'Document',
+                    'to_email' => $order->user->email,
+                    'from_email' => 'info@events.essenciacompany.com',
+                    'from_name' => 'essenciacompany',
+                    'subject' => 'Event ticket'
+                ]
+            ]
+        ]);
+
+        return $response->json();
     }
 }

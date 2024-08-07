@@ -146,3 +146,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
+
+Route::get('test', function(){
+//     $order = Order::find(60);
+//     $toco = new TOCOnlineService;
+//    return $toco->createCommercialSalesDocument($order);
+});
