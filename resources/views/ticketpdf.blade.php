@@ -239,7 +239,7 @@
                 <h2>
                     CONDIÇÕES GERAIS
                 </h2>
-                {!! $ticket->product->terms !!}
+                {!! $ticket->event->terms !!}
                 <br>
                 <br>
                 <h2>
