@@ -83,7 +83,6 @@
                             </a>
                             <a target="_blank" class="btn btn-primary btn-sm rounded"
                                 href="{{$order->invoice_url}}">
-                                <i class="fa-solid fa-file-invoice"></i>
                                 {{ __('words.invoice') }}
                             </a>
 
