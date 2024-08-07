@@ -89,27 +89,21 @@
         <div class="email-ticket-boreder"></div>
         <div class="email-content">
             <div style="text-align: right">
-
-                <p>{{ __('words.thank_you_for_purchasing_tickets_to') }}
-                    <strong></strong>!{{ __('words.we_are_thrilled_to_have_you_join_us_for_this') }}
-                <h1>{{ $product->name }}</h1>
-                {{ __('words.exciting_event_here_are_the_details_of_your_purchase') }}:</p>
-                <p><strong>{{ __('words.name') }}:</strong> {{ $product->event->name }} </p>
-                <p><strong>{{ __('words.date') }}:</strong> {{ $product->event->start_at->format('d m, Y') }}</p>
-                <p><strong>{{ __('words.time') }}:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
+                <h1>{{ __('words.email_title')}}</h1>
+                <p>{{ __('words.thank_you_for_purchasing_tickets_to') }} </p>
+               
+                <p><strong>{{ __('words.event_name') }}:</strong> {{ $product->event->name }} </p>
+                <p><strong>{{ __('words.ticket_name') }}:</strong> {{ $product->name }} </p>
+                <p><strong>{{ __('words.date') }}:</strong> {{ $product->start_date->format('d M, Y') }} - {{ $product->end_date->format('d M, Y') }}</p>
+                <p><strong>{{ __('words.doors_open') }}:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
                 <p><strong>{{ __('words.location') }}:</strong>{{ $product->event->location }}</p>
             </div>
         </div>
         <a href="{{ route('download.ticket', ['order' => $order->id, 'product' => $product->id]) }}"
             class="btn-download">{{ __('words.download_ticket') }}</a>
         <div class="email-footer">
-            @if (App::getLocale() =='en')
-            <p> Please keep this email as a confirmation of your purchase. Remember to bring a copy of your ticket or have it available on your mobile device for entry.</p>
-            <p>If you have any questions or need further assistance, feel free to contact us at tickets@essenciacompany.com</p>
-            @else
-            <p>Por favor, guarde este e-mail como confirmação da sua compra. Lembre-se de trazer uma cópia do seu ingresso ou tê-lo disponível em seu dispositivo móvel para a entrada.</p>
-            <p>Se você tiver alguma dúvida ou precisar de mais assistência, sinta-se à vontade para nos contatar em tickets@essenciacompany.com</p>
-            @endif
+            <p>{{ __('words.footer_text') }} </p>
+            <p>{{ __('words.footer_text2') }} </p>
         </div>
     </div>
 </body>

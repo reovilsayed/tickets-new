@@ -149,6 +149,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('test', function(){
     $order = Order::find(61);
-    $toco = new TOCOnlineService;
-   return $toco->createCommercialSalesDocument($order);
+    $product = Product::first();
+   return new TicketDownload($order, $product);
 });
