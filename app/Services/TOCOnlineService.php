@@ -137,9 +137,10 @@ class TOCOnlineService
             'document_type' => 'FT',
             'date' => $order->created_at->format('Y-m-d'),
             'finalize' => 0,
+            'customer_id' => $order->billing->vatNumber ? '' : 452,
             'customer_tax_registration_number' => $order->billing->vatNumber,
-            'customer_business_name' => $order->billing->name,
-            'customer_address_detail' => $order->billing->address,
+            'customer_business_name' => $order->billing->vatNumber ? $order->billing->name : null ,
+            'customer_address_detail' =>$order->billing->vatNumber ? $order->billing->address : null,
             'customer_postcode' => '',
             'customer_city' => '',
             'customer_country' => 'PT',
@@ -196,9 +197,9 @@ class TOCOnlineService
         ])->patch($this->apiBaseUrl . '/email/document', [
             'data' => [
                 'attributes' => [
-                    'from_email' => setting('site.email', 'test@mail.com'),
-                    'from_name' => 'Essencia Company',
-                    'subject' => __('words.toconiline_subject'),
+                    'from_email' => 'info@events.essenciacompany.com',
+                    'from_name' => 'Essencia company',
+                    'subject' => 'Invoice',
                     'to_email' => $order->user->email,
                     'type' => 'Document',
                 ],
