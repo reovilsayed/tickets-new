@@ -290,7 +290,7 @@
                                 </label>
                                 <input id="first_name" type="text" name="first_name"
                                     class="form-control @error('first_name') is-invalid @enderror"
-                                    value="{{ Auth::user()->name }}">
+                                    value="{{ old('first_name', Auth::user()->name) }}">
                                 @error('first_name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -305,7 +305,7 @@
                                 </label>
                                 <input id="last_name" type="text" name="last_name"
                                     class="form-control @error('last_name') is-invalid @enderror"
-                                    value="{{ Auth::user()->l_name }}">
+                                    value="{{ old('last_name', Auth::user()->l_name) }}">
                                 @error('last_name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -319,7 +319,7 @@
                                     {{ __('words.email') }}
                                 </label>
                                 <input class="form-control @error('email') is-invalid @enderror" name="email"
-                                    id="email" disabled value="{{ Auth::user()->email }}">
+                                    id="email" disabled value="{{ old('email', Auth::user()->email) }}">
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -333,8 +333,8 @@
                                     {{ __('words.contact_number') }}
                                 </label>
                                 <input class="form-control  @error('meta') is-invalid @enderror" name="contact_number"
-                                    id="contact_number" value="{{ Auth::user()->contact_number }}">
-                                @error('phone')
+                                    id="contact_number" value="{{ old('contact_number', Auth::user()->contact_number) }}">
+                                @error('contact_number')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -345,25 +345,42 @@
                             <div class="form-group">
                                 <label for="vatNumber"> {{ __('words.taxpayer') }}</label>
                                 <input type="text" class="form-control" name="vatNumber"
-                                    value="{{ auth()->user()->vatNumber }}">
+                                    value="{{ old('vatNumber', auth()->user()->vatNumber) }}">
+                                @error('vatNumber')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label for="address"> {{ __('words.address') }}</label>
                                 <input type="text" class="form-control" name="address"
-                                    value="{{ auth()->user()->address }}">
+                                    value="{{ old('address', auth()->user()->address) }}">
+                                @error('address')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
                         <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <select class="form-control" name="country" id="country">
-                                    <option value="{{ auth()->user()->country }}" selected> {{ __('words.select_country') }} </option>
+                                    <option value="{{ auth()->user()->country }}" selected>
+                                        {{ __('words.select_country') }} </option>
                                     @foreach ($country_array as $key => $country)
-                                        <option value="{{ $key }}">{{ $country }}</option>
+                                        <option value="{{ $key }}"
+                                            @if ($key == auth()->user()->country) selected @endif>{{ $country }}</option>
                                     @endforeach
 
                                 </select>
+                                @error('country')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
 
                         </div>
