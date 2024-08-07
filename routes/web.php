@@ -100,35 +100,39 @@ Route::get('user-invoice', function (Request $request) {
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
     if ($type == 'generic') {
-        $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->firstOrFail();
+        $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
+        if ($order) {
+            if ($request->status == 'success') {
+                $order->payment_status = 1;
+                $order->save();
 
-        if ($request->status == 'success') {
-            $order->payment_status = 1;
-            $order->save();
-
-            $new_order = Order::where('transaction_id', $request->key)->first();
-            $products = $new_order->tickets->groupBy('product_id');
-            foreach ($products as $key => $tickets) {
-                $product = Product::find($key);
-                Mail::to($order->user->email)->send(new TicketDownload($order, $product));
+                $new_order = Order::where('transaction_id', $request->key)->first();
+                $products = $new_order->tickets->groupBy('product_id');
+                foreach ($products as $key => $tickets) {
+                    $product = Product::find($key);
+                    Mail::to($order->user->email)->send(new TicketDownload($order, $product));
+                }
+                $toco = new TOCOnlineService;
+                $response = $toco->createCommercialSalesDocument($order);
+                $new_order->invoice_id = $response['id'];
+                $new_order->invoice_url = $response['public_link'];
+                $new_order->invoice_body = json_encode($response);
+                $new_order->save();
+                $response = $toco->sendEmailDocument($order);
+            } else {
+                $order->payment_status = 2;
+                $order->save();
             }
-            $toco = new TOCOnlineService;
-            $response = $toco->createCommercialSalesDocument($order);
-            $new_order->invoice_id = $response['id'];
-            $new_order->invoice_url = $response['public_link'];
-            $new_order->invoice_body = json_encode($response);
-            $new_order->save();
-            $response = $toco->sendEmailDocument($order);
-        } else {
-            $order->payment_status = 2;
-            $order->save();
         }
     }
     if ($type == 'payment') {
-        $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->firstOrFail();
-        $order->currency = $request->currency;
-        $order->payment_method_title = $request->method;
-        $order->save();
+
+        $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
+        if ($order) {
+            $order->currency = $request->currency;
+            $order->payment_method_title = $request->method;
+            $order->save();
+        }
     }
 });
 
