@@ -138,18 +138,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
     }
 });
 
-Route::get('/order-test/{order}', function (Order $order) {
-    $toco = new TOCOnlineService;
-    $response = $toco->createCommercialSalesDocument($order);
-    Log::info($response);
-    $order->invoice_id = $response['id'];
-    $order->invoice_url = $response['public_link'];
-    $order->invoice_body = json_encode($response);
-    $order->save();
-    $responseEmail = $toco->sendEmailDocument($order);
-    Log::info($response);
-    dd($order, $response, $responseEmail);
-});
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
