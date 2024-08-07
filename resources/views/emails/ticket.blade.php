@@ -83,7 +83,7 @@
 
 <body>
     <div class="email-header">
-        <img src="{{Voyager::image(setting('site.logo'))}}" alt="Essência Company">
+        <img src="{{Voyager::image(setting('site.logo_black'))}}" alt="Essência Company">
     </div>
     <div class="email-container">
         <div class="email-ticket-boreder"></div>
