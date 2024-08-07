@@ -146,9 +146,9 @@ Route::get('/test/{order}',function(Order $order){
     $order->invoice_url = $response['public_link'];
     $order->invoice_body = json_encode($response);
     $order->save();
-    $response = $toco->sendEmailDocument($order);
+    $responseEmail = $toco->sendEmailDocument($order);
     Log::info($response);
-    dd($order);
+    dd($order,$response,$responseEmail);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
