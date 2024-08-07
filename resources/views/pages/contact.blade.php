@@ -34,7 +34,11 @@
                         <div class="icon"><span class="flaticon-location-pin"></span></div>
                         <div class="text">
                             <p class="dashboard-title">{{__('words.contact_address')}}</p>
-                            {!! setting('site.address') !!}
+                       
+                       <p class="text-white">
+                           {!! setting('site.address') !!}
+                        
+                    </p>     
                         </div>
                     </div>
                 </div>
