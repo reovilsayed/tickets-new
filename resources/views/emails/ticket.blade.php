@@ -83,24 +83,25 @@
 
 <body>
     <div class="email-header">
-        <img src="{{Voyager::image(setting('site.logo_black'))}}" alt="Essência Company">
+        <img src="{{ Voyager::image(setting('site.logo_black')) }}" alt="Essência Company">
     </div>
     <div class="email-container">
         <div class="email-ticket-boreder"></div>
         <div class="email-content">
             <div style="text-align: right">
-                <h1>{{ __('words.email_title')}}</h1>
+                <h1>{{ __('words.email_title') }}</h1>
                 <p>{{ __('words.thank_you_for_purchasing_tickets_to') }} </p>
-               
+
                 <p><strong>{{ __('words.event_name') }}:</strong> {{ $product->event->name }} </p>
                 <p><strong>{{ __('words.ticket_name') }}:</strong> {{ $product->name }} </p>
-                <p><strong>{{ __('words.date') }}:</strong> {{ $product->start_date->format('d M, Y') }} - {{ $product->end_date->format('d M, Y') }}</p>
+                <p><strong>{{ __('words.date') }}:</strong> {{ $product->start_date->format('d M, Y') }} -
+                    {{ $product->end_date->format('d M, Y') }}</p>
                 <p><strong>{{ __('words.doors_open') }}:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
                 <p><strong>{{ __('words.location') }}:</strong>{{ $product->event->location }}</p>
             </div>
         </div>
         <a href="{{ route('download.ticket', ['order' => $order->id, 'product' => $product->id]) }}"
-            class="btn-download">{{ __('words.download_ticket') }}</a>
+            class="btn-download text-white">{{ __('words.download_ticket') }}</a>
         <div class="email-footer">
             <p>{{ __('words.footer_text') }} </p>
             <p>{{ __('words.footer_text2') }} </p>

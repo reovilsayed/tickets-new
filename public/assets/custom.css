@@ -229,11 +229,12 @@ body {
     background-color: #f3510b;
     display: flex;
     justify-content: space-between;
-    font-size: 26px;
+    font-size: 35px;
     letter-spacing: 2px;
     padding: 10px;
     color: #fff;
     font-weight: 500;
+    height: 86px;
 }
 
 .card-ticket {

@@ -116,6 +116,7 @@
                                     <h3 class="mb-0">{{ __('words.hello,') }} {{ auth()->user()->name }}</h3>
                                     <p>{{ auth()->user()->contact_number }}</p>
                                 </div>
+
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -247,7 +248,7 @@
                                                                 class="form-label">{{ __('words.name') }}</label>
                                                             <input type="text" name="name" class="form-control"
                                                                 id="name" placeholder="{{ __('words.enter_name') }}"
-                                                                value="{{ auth()->user()->name.' '.auth()->user()->l_name }}">
+                                                                value="{{ auth()->user()->name . ' ' . auth()->user()->l_name }}">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="address"
@@ -265,10 +266,16 @@
                                         </div>
                                         <button type="submit"
                                             class="btn btn-primary mt-3">{{ __('words.proceed_to_payment') }}</button>
+                                        <button class="">
+                                            <a href="#" class="btn btn-primary mt-3"
+                                                onclick="history.back();return false;"> <i
+                                                    class="fa-solid fa-chevron-left"></i>Go
+                                                back</a>
+                                        </button>
                                     </form>
-
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
