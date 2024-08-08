@@ -329,7 +329,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group ">
-                                    <input type="number" aria-label="country-code" class="form-control input-code" value=""
+                                    <input type="text" aria-label="country-code" class="form-control input-code" value=""
                                         placeholder="+351" name="country_code" maxlength="4" required>
                                     <input id="contact_number" class="inputs-number @error('contact_number') is-invalid @enderror" type="text"
                                         aria-label="contact-number" class="form-control"
