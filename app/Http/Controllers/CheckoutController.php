@@ -6,6 +6,8 @@ use App\Models\Event;
 use App\Models\Product;
 use App\Services\CheckoutService;
 use Cart;
+use Error;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
