@@ -121,7 +121,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 $new_order->invoice_url = $response['public_link'];
                 $new_order->invoice_body = json_encode($response);
                 $new_order->save();
-                $response = $toco->sendEmailDocument($order,$response['id']);
+                $response = $toco->sendEmailDocument($order, $response['id']);
                 Log::info($response);
             } else {
                 $order->payment_status = 2;
@@ -147,8 +147,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
-Route::get('test', function(){
+Route::get('test', function () {
     $order = Order::find(61);
     $product = Product::first();
-   return new TicketDownload($order, $product);
+    Mail::to('shuvoakonda42@gmail.com')->send(new TicketDownload($order, $product));
+    return new TicketDownload($order, $product);
 });

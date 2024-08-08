@@ -603,3 +603,20 @@ th {
     margin-top: 110px !important;
     margin-bottom: 110px !important;
 }
+
+.img-pop-up {
+    display: flex;
+    justify-content: center;
+
+}
+
+.img-pop {
+    width: 200px;
+    height: auto;
+}
+
+.btn-pop {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+}

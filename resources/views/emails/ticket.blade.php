@@ -56,8 +56,8 @@
         }
 
         .btn-download {
-            margin: 34%;
-            padding: 20px 8px;
+            margin: 10% auto;
+            padding: 5px 8px;
             background-color: #e86c3d;
             color: #d5d4d4;
             text-decoration: none;
@@ -100,8 +100,10 @@
                 <p><strong>{{ __('words.location') }}:</strong>{{ $product->event->location }}</p>
             </div>
         </div>
-        <a href="{{ route('download.ticket', ['order' => $order->id, 'product' => $product->id]) }}"
-            class="btn-download text-white">{{ __('words.download_ticket') }}</a>
+        <div class="" style="text-align: center">
+            <a href="{{ route('download.ticket', ['order' => $order->id, 'product' => $product->id]) }}"
+                class="btn-download text-white">{{ __('words.download_ticket') }}</a>
+        </div>
         <div class="email-footer">
             <p>{{ __('words.footer_text') }} </p>
             <p>{{ __('words.footer_text2') }} </p>
