@@ -26,7 +26,7 @@ class CheckoutController extends Controller
     {
 
 
-        try {
+        // try {
             DB::beginTransaction();
             $order = CheckoutService::create($event, $request);
             DB::commit();
@@ -37,13 +37,13 @@ class CheckoutController extends Controller
             session()->forget('discount_code');
             
             return redirect($order->payment_link)->with('success_msg', 'Order create successfull');
-        } catch (Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withErrors($e->getMessage());
-        } catch (Error $e) {
-            DB::rollBack();
-            return redirect()->back()->withErrors($e->getMessage());
-        }
+        // } catch (Exception $e) {
+        //     DB::rollBack();
+        //     return redirect()->back()->withErrors($e->getMessage());
+        // } catch (Error $e) {
+        //     DB::rollBack();
+        //     return redirect()->back()->withErrors($e->getMessage());
+        // }
     }
 
 
