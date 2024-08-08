@@ -17,9 +17,9 @@ class EasyPay
 
     public function __construct()
     {
-        $this->AccountId = setting('payment.AccountId');
-        $this->ApiKey = setting('payment.ApiKey');
-        $this->mode = setting('payment.sandbox', 'test'); // test , prod
+        $this->AccountId = setting('payment.AccountId', 'b1f46101-cdf2-480f-9f2f-b0dea7295fd8');
+        $this->ApiKey = setting('payment.ApiKey', 'a0ed2219-c394-46db-8a53-fdd2ade00261');
+        $this->mode = setting('payment.mode', 'test'); // test , prod
         $this->endpoint = [
             'test' => 'https://api.test.easypay.pt',
             'prod' => 'https://api.prod.easypay.pt',
@@ -29,8 +29,8 @@ class EasyPay
     {
         $client = (new self);
         $payment_link_create_request = Http::withHeaders([
-            'AccountId' => 'b1f46101-cdf2-480f-9f2f-b0dea7295fd8',
-            'ApiKey' => 'a0ed2219-c394-46db-8a53-fdd2ade00261',
+            'AccountId' => $client->AccountId,
+            'ApiKey' => $client->ApiKey,
         ])
             ->acceptJson()
             ->post($client->endpoint . '/2.0/link', $client->createPaymentBody($order))->json();
