@@ -150,6 +150,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('test', function () {
     $order = Order::find(61);
     $product = Product::first();
-    Mail::to('shuvoakonda42@gmail.com')->send(new TicketDownload($order, $product));
+    Mail::to('shuvoakonda429@gmail.com')->send(new TicketDownload($order, $product));
     return new TicketDownload($order, $product);
 });
