@@ -102,7 +102,7 @@
                                     {{ __('words.description') }}
                                 </h5>
                                 <p>
-                                    {{ $event->description }}
+                                    {!! $event->description !!}
                                 </p>
                             </div>
                         </div>
