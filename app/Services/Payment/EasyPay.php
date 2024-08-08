@@ -9,14 +9,31 @@ use Illuminate\Validation\ValidationException;
 
 class EasyPay
 {
+
+    public $AccountId;
+    public $ApiKey;
+    public $mode;
+    public $endpoint;
+
+    public function __construct()
+    {
+        $this->AccountId = setting('payment.AccountId');
+        $this->ApiKey = setting('payment.ApiKey');
+        $this->mode = setting('payment.sandbox', 'test'); // test , prod
+        $this->endpoint = [
+            'test' => 'https://api.test.easypay.pt',
+            'prod' => 'https://api.prod.easypay.pt',
+        ];
+    }
     public static function createPaymentLink(Order $order)
     {
+        $client = (new self);
         $payment_link_create_request = Http::withHeaders([
             'AccountId' => 'b1f46101-cdf2-480f-9f2f-b0dea7295fd8',
             'ApiKey' => 'a0ed2219-c394-46db-8a53-fdd2ade00261',
         ])
             ->acceptJson()
-            ->post('https://api.test.easypay.pt/2.0/link', (new self)->createPaymentBody($order))->json();
+            ->post($client->endpoint . '/2.0/link', $client->createPaymentBody($order))->json();
 
         if (isset($payment_link_create_request['status']) && $payment_link_create_request['status'] == 400) {
             $messages = [];
@@ -29,13 +46,13 @@ class EasyPay
     }
 
 
-    public function getPaymentLinkDetails($id)
-    {
-        return Http::withHeaders([
-            'AccountId' => 'b1f46101-cdf2-480f-9f2f-b0dea7295fd8',
-            'ApiKey' => 'a0ed2219-c394-46db-8a53-fdd2ade00261',
-        ])->get('https://api.test.easypay.pt/2.0/link/' . $id)->json();
-    }
+    // public function getPaymentLinkDetails($id)
+    // {
+    //     return Http::withHeaders([
+    //         'AccountId' => 'b1f46101-cdf2-480f-9f2f-b0dea7295fd8',
+    //         'ApiKey' => 'a0ed2219-c394-46db-8a53-fdd2ade00261',
+    //     ])->get('https://api.prod.easypay.pt/2.0/link/' . $id)->json();
+    // }
     private function createPaymentBody(Order $order)
     {
         return [
