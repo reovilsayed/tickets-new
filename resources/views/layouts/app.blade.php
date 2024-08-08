@@ -85,7 +85,7 @@
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content pop-up">
+            <div class="modal-content pop-up p-3">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">

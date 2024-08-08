@@ -632,13 +632,15 @@ th {
 
 .pop-footer-text {
     color: #f36a30 !important;
-
+    text-align: center !important;
 }
-
+.pop-header-text{
+    text-align: center !important;
+}
 .btn-yes {
     background-color: #ffff !important;
     color: #000000 !important;
-    border: 2px solid #bd3d06 !important;
+    border: 3px solid #bd3d06 !important;
     font-size: 22px;
     padding: 20px 20px;
     text-align: center;
@@ -647,7 +649,7 @@ th {
 .btn-no {
     background-color: #ffff !important;
     color: #000000 !important;
-    border: 2px solid #bd3d06 !important;
+    border: 3px solid #bd3d06 !important;
     font-size: 22px;
     padding: 20px 20px;
     text-align: center;
