@@ -21,7 +21,7 @@ class Event extends Model
 
     public function products()
     {
-        return $this->hasMany(Product::class)->orderBy('sequence', 'desc');
+        return $this->hasMany(Product::class)->orderBy('sequence', 'asc');
     }
 
 
