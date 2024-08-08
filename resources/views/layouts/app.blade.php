@@ -174,8 +174,8 @@
                     <div class="col-md-12">
                         <div class="footer-bottom-inner">
                             <img src="{{ asset('assets/easypay.png') }}" alt="" style="width:313px;">
-                            <p class="footer-bottom-copy-right">{{ __('words.© Copyright_2024_by ') }}<a
-                                    href="#">{{ setting('site.title') }}</a></p>
+                            <p class="footer-bottom-copy-right">{{ __('words.copyright') }}<a
+                                    href="{{url('/')}}">{{ setting('site.title') }}</a></p>
                         </div>
                     </div>
                 </div>
