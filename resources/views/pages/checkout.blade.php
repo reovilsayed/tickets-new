@@ -197,8 +197,7 @@
 
                                                 </th>
                                                 <th>
-
-                                                    <span class="h6 uppercase"> {{ __('words.discount') }}:</span>
+                                                    <span class="h6 uppercase"> {{ __('words.discount') }}:</span> <a class="text-danger" href="{{route('coupon.destroy')}}"> {{ __('words.remove_coupon') }}</a>
                                                 </th>
                                                 <th>
                                                     <span class="h6">
