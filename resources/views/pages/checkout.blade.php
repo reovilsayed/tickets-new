@@ -269,8 +269,7 @@
                                         <button class="">
                                             <a href="#" class="btn btn-primary mt-3"
                                                 onclick="history.back();return false;"> <i
-                                                    class="fa-solid fa-chevron-left"></i>Go
-                                                back</a>
+                                                    class="fa-solid fa-chevron-left"></i> {{ __('words.go_back') }}</a>
                                         </button>
                                     </form>
                                 </div>
