@@ -57,7 +57,7 @@
 
         .btn-download {
             margin: 10% auto;
-            padding: 5px 8px;
+            padding: 13px 15px;
             background-color: #e86c3d;
             color: #d5d4d4;
             text-decoration: none;

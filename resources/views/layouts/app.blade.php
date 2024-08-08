@@ -80,6 +80,38 @@
     <!-- Navbar -->
     @include('layouts.nav')
     @yield('content')
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content pop-up">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="img-pop-up">
+                                <img class="img-pop text-center" src="/assets/logo-black.png" alt="">
+                            </div>
+                            <h4 class="pop-header-text">
+                                {{ __('words.to_enter_this_website_you_must_be_of_legal_drinking_age_in_your_location') }}.
+                                <strong>{{ __('words.Please_confirm_if_you_are_of_legal_drinking_age') }}</strong>
+                            </h4>
+                            <div class="btn-pop">
+                                <button type="button" class="btn btn-yes">{{ __('words.yes') }}</button>
+                                <button type="button" class="btn btn-no">{{ __('words.no') }}</button>
+                            </div>
+                            <h6 class="pop-footer-text">
+                                {{ __('words.essencia_company_defends_a_responsible_and_moderate_alcohol_consumption.') }}
+                                <br>
+                                <br>
+                                {{ __('words.by_browsing_this_website_you_are_agreeing_to_the_Privacy_policy_and_cookies_policy.') }}
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <footer class="footer">
         <div class="footer-top">
             <div class="container">
@@ -101,23 +133,20 @@
                                         <button id="ec-news-btn" class="butn-dark2 " type="submit" name="subscribe"
                                             value="">
                                             <span><a target="_blank"
-                                                    href="https://lp.egoi.page/1eIe6Y8m/signup">{{__('words.subcribe') }}</a></span>
+                                                    href="https://lp.egoi.page/1eIe6Y8m/signup">{{ __('words.subcribe') }}</a></span>
                                         </button>
 
 
                                     </div>
-
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">
+                                        popup testing
+                                    </button>
                                 </div>
 
                             </div>
 
-                            {{-- <div class="footer-language"> <i class="lni ti-world"></i>
-                                <select id="language-select">
-                                    <option >Select</option>
-                                    <option value="en" {{app()->getLocale() == 'en' ? 'selected' :''}}>English</option>
-                                    <option value="da" {{app()->getLocale() == 'da' ? 'selected' :''}}>Danish</option>
-                                </select>
-                            </div> --}}
                         </div>
                     </div>
                     <div class="col-md-3 offset-md-1">
@@ -168,6 +197,7 @@
                 </div>
             </div>
         </div>
+
         <div class="footer-bottom">
             <div class="container">
                 <div class="row">
@@ -175,7 +205,7 @@
                         <div class="footer-bottom-inner">
                             <img src="{{ asset('assets/easypay.png') }}" alt="" style="width:313px;">
                             <p class="footer-bottom-copy-right">{{ __('words.copyright') }}<a
-                                    href="{{url('/')}}"> {{ setting('site.title') }}</a></p>
+                                    href="{{ url('/') }}"> {{ setting('site.title') }}</a></p>
                         </div>
                     </div>
                 </div>

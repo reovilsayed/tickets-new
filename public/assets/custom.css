@@ -604,19 +604,51 @@ th {
     margin-bottom: 110px !important;
 }
 
+/* .pop-up {
+    display: flex;
+    justify-content: center;
+    height: 630px;
+    width: 870px;
+    text-align: center;
+} */
+
 .img-pop-up {
     display: flex;
     justify-content: center;
-
+    margin: 50px auto;
 }
 
 .img-pop {
-    width: 200px;
+    width: 180px;
     height: auto;
 }
 
 .btn-pop {
     display: flex;
     justify-content: center;
-    gap: 2px;
+    gap: 15px;
+    margin: 50px auto;
+}
+
+.pop-footer-text {
+    color: #f36a30 !important;
+
+}
+
+.btn-yes {
+    background-color: #ffff !important;
+    color: #000000 !important;
+    border: 2px solid #bd3d06 !important;
+    font-size: 22px;
+    padding: 20px 20px;
+    text-align: center;
+}
+
+.btn-no {
+    background-color: #ffff !important;
+    color: #000000 !important;
+    border: 2px solid #bd3d06 !important;
+    font-size: 22px;
+    padding: 20px 20px;
+    text-align: center;
 }

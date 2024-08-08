@@ -147,9 +147,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
-Route::get('test', function () {
-    $order = Order::find(61);
-    $product = Product::first();
-    Mail::to('shuvoakonda429@gmail.com')->send(new TicketDownload($order, $product));
-    return new TicketDownload($order, $product);
-});
+// Route::get('test', function () {
+//     $order = Order::find(61);
+//     $product = Product::first();
+//     Mail::to('shuvoakonda429@gmail.com')->send(new TicketDownload($order, $product));
+//     return new TicketDownload($order, $product);
+// });

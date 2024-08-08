@@ -46,8 +46,6 @@
 @endsection
 
 @section('content')
-  
-
     <section class="rooms1 section-padding bg-cream" data-scroll-index="1">
         <div class="container">
             <div class="row">
@@ -65,8 +63,8 @@
 
             </div>
         </div>
+      
     </section>
-
 @endsection
 @section('js')
     <script src="{{ asset('assets/js/star-rating.js') }}" type="text/javascript"></script>
