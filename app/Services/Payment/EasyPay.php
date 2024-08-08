@@ -23,7 +23,7 @@ class EasyPay
         $this->endpoint = [
             'test' => 'https://api.test.easypay.pt',
             'prod' => 'https://api.prod.easypay.pt',
-        ];
+        ][$this->mode];
     }
     public static function createPaymentLink(Order $order)
     {
