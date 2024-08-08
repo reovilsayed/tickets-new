@@ -229,11 +229,12 @@ body {
     background-color: #f3510b;
     display: flex;
     justify-content: space-between;
-    font-size: 26px;
+    font-size: 35px;
     letter-spacing: 2px;
     padding: 10px;
     color: #fff;
     font-weight: 500;
+    height: 86px;
 }
 
 .card-ticket {
@@ -548,6 +549,23 @@ body {
     width: 100% !important;
     background-color: #ffff !important;
     border-radius: 20px !important;
+    padding: 10px 10px !important;
+}
+
+.inputs-number {
+    width: 80% !important;
+    background-color: #ffff !important;
+    border-top-right-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+    padding: 10px 10px !important;
+}
+
+.input-code {
+    width: 20% !important;
+    background-color: #ffff !important;
+
+    border-top-left-radius: 20px !important;
+    border-bottom-left-radius: 20px !important;
     padding: 10px 10px !important;
 }
 

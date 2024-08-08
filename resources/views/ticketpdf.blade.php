@@ -237,13 +237,13 @@
             </div>
             <div class="content">
                 <h2>
-                    CONDIÇÕES GERAIS
+                    {{ __('words.term') }}
                 </h2>
                 {!! $ticket->event->terms !!}
                 <br>
                 <br>
                 <h2>
-                    ADDRESS
+                    {{ __('words.address') }}
                 </h2>
                 <p class="address">Centro de Congressos de Lisboa
                     <br>

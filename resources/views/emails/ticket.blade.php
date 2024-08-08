@@ -83,30 +83,28 @@
 
 <body>
     <div class="email-header">
-        <img src="assets/logo.png" alt="Essência Company">
+        <img src="{{ Voyager::image(setting('site.logo_black')) }}" alt="Essência Company">
     </div>
     <div class="email-container">
         <div class="email-ticket-boreder"></div>
         <div class="email-content">
             <div style="text-align: right">
+                <h1>{{ __('words.email_title') }}</h1>
+                <p>{{ __('words.thank_you_for_purchasing_tickets_to') }} </p>
 
-                <p>{{ __('words.thank_you_for_purchasing_tickets_to') }}
-                    <strong></strong>!{{ __('words.we_are_thrilled_to_have_you_join_us_for_this') }}
-                <h1>{{ $product->name }}</h1>
-                {{ __('words.exciting_event_here_are_the_details_of_your_purchase') }}:</p>
-                <p><strong>{{ __('words.name') }}:</strong> {{ $product->event->name }} </p>
-                <p><strong>{{ __('words.date') }}:</strong> {{ $product->event->start_at->format('d m, Y') }}</p>
-                <p><strong>{{ __('words.time') }}:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
+                <p><strong>{{ __('words.event_name') }}:</strong> {{ $product->event->name }} </p>
+                <p><strong>{{ __('words.ticket_name') }}:</strong> {{ $product->name }} </p>
+                <p><strong>{{ __('words.date') }}:</strong> {{ $product->start_date->format('d M, Y') }} -
+                    {{ $product->end_date->format('d M, Y') }}</p>
+                <p><strong>{{ __('words.doors_open') }}:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
                 <p><strong>{{ __('words.location') }}:</strong>{{ $product->event->location }}</p>
             </div>
         </div>
         <a href="{{ route('download.ticket', ['order' => $order->id, 'product' => $product->id]) }}"
-            class="btn-download">{{ __('words.download_ticket') }}</a>
+            class="btn-download text-white">{{ __('words.download_ticket') }}</a>
         <div class="email-footer">
-            <p><strong>{{ __('words.ticket_email_note1') }}</p>
-            <p>{{ __('words.ticket_email_note2') }}</p>
-            <p>{{ __('words.ticket_email_note3') }}</p>
-            <p>{{ __('words.ticket_email_note4') }}</p>
+            <p>{{ __('words.footer_text') }} </p>
+            <p>{{ __('words.footer_text2') }} </p>
         </div>
     </div>
 </body>

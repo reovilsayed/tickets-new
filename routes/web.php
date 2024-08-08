@@ -114,15 +114,15 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                     $product = Product::find($key);
                     Mail::to($order->user->email)->send(new TicketDownload($order, $product));
                 }
-                $toco = new TOCOnlineService;
-                $response = $toco->createCommercialSalesDocument($order);
-                Log::info($response);
-                $new_order->invoice_id = $response['id'];
-                $new_order->invoice_url = $response['public_link'];
-                $new_order->invoice_body = json_encode($response);
-                $new_order->save();
-                $response = $toco->sendEmailDocument($order,$response['id']);
-                Log::info($response);
+                // $toco = new TOCOnlineService;
+                // $response = $toco->createCommercialSalesDocument($order);
+                // Log::info($response);
+                // $new_order->invoice_id = $response['id'];
+                // $new_order->invoice_url = $response['public_link'];
+                // $new_order->invoice_body = json_encode($response);
+                // $new_order->save();
+                // $response = $toco->sendEmailDocument($order,$response['id']);
+                // Log::info($response);
             } else {
                 $order->payment_status = 2;
                 $order->save();
@@ -148,7 +148,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('test', function(){
-//     $order = Order::find(60);
-//     $toco = new TOCOnlineService;
-//    return $toco->createCommercialSalesDocument($order);
+    $order = Order::find(61);
+    $product = Product::first();
+   return new TicketDownload($order, $product);
 });

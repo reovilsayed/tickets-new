@@ -317,7 +317,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-6 form-group">
+                            <div class="col-md-12 form-group">
                                 <input id="email" type="email" placeholder="{{ __('words.email_address') }}"
                                     class="reg-pass @error('email') is-invalid @enderror" name="email"
                                     value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -327,17 +327,36 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-6 form-group">
-                                <input id="contact_number" type="text" placeholder="{{ __('words.contact_Number') }}"
-                                    class="reg-pass @error('contact_number') is-invalid @enderror" name="contact_number"
-                                    value="{{ old('contact_number') }}" required autocomplete="contact_number" autofocus>
-                                @error('contact_number')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <div class="col-md-6">
+                                <div class="input-group ">
+                                    <input type="text" aria-label="country-code" class="form-control input-code" value=""
+                                        placeholder="+351" name="country_code" maxlength="4" required>
+                                    <input id="contact_number" class="inputs-number @error('contact_number') is-invalid @enderror" type="text"
+                                        aria-label="contact-number" class="form-control"
+                                        name="contact_number"value="{{ old('contact_number') }}" required
+                                        autocomplete="contact_number" placeholder="{{ __('words.contact_Number') }}"
+                                        autofocus style="width: 200px;" type="phone" required>
+                                    @error('contact_number')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                {{-- <div class="">
+                                    <input class="reg-pass" type="text" value="">
+                                    <input id="contact_number" type="text" placeholder="{{ __('words.contact_Number') }}"
+                                        class="reg-pass @error('contact_number') is-invalid @enderror" name="contact_number"
+                                        value="{{ old('contact_number') }}" required autocomplete="contact_number"
+                                        autofocus>
+                                    @error('contact_number')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div> --}}
+
                             </div>
-                            <div class="col-md-12 form-group">
+                            <div class="col-md-6 form-group">
                                 <select class="reg-pass  @error('password') is-invalid @enderror" name="country"
                                     id="country">
                                     <option selected>{{ __('words.select_country') }}</option>

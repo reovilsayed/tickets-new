@@ -37,8 +37,6 @@ class PageController extends Controller
     }
     public function event_details(Event $event)
     {
-        $event->load('products');
-
         $products = [];
         $products['all'] = $event->products;
         foreach ($event->dates() as $date) {

@@ -100,7 +100,7 @@
 
                                         <button id="ec-news-btn" class="butn-dark2 " type="submit" name="subscribe"
                                             value="">
-                                            <span><a
+                                            <span><a target="_blank"
                                                     href="https://lp.egoi.page/1eIe6Y8m/signup">{{__('words.subcribe') }}</a></span>
                                         </button>
 
@@ -174,8 +174,8 @@
                     <div class="col-md-12">
                         <div class="footer-bottom-inner">
                             <img src="{{ asset('assets/easypay.png') }}" alt="" style="width:313px;">
-                            <p class="footer-bottom-copy-right">{{ __('words.© Copyright_2024_by ') }}<a
-                                    href="#">{{ setting('site.title') }}</a></p>
+                            <p class="footer-bottom-copy-right">{{ __('words.copyright') }}<a
+                                    href="{{url('/')}}"> {{ setting('site.title') }}</a></p>
                         </div>
                     </div>
                 </div>
