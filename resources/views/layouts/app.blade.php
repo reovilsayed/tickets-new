@@ -83,7 +83,8 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" tabindex="-1"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content pop-up p-3">
                 <div class="modal-body">
@@ -93,18 +94,19 @@
                                 <img class="img-pop text-center" src="/assets/logo-black.png" alt="">
                             </div>
                             <h4 class="pop-header-text">
-                                {{ __('words.to_enter_this_website_you_must_be_of_legal_drinking_age_in_your_location') }}.
-                                <strong>{{ __('words.Please_confirm_if_you_are_of_legal_drinking_age') }}</strong>
+                                {!! __('words.popup_header_title_1') !!}.
+                                <br>
+                                <strong>{!! __('words.popup_header_title_2') !!}</strong>
                             </h4>
                             <div class="btn-pop">
-                                <button type="button" class="btn btn-yes">{{ __('words.yes') }}</button>
-                                <button type="button" class="btn btn-no">{{ __('words.no') }}</button>
+                                <button type="button" class="btn btn-yes">{!! __('words.yes') !!}</button>
+                                <button type="button" class="btn btn-no">{!! __('words.no') !!}</button>
                             </div>
                             <h6 class="pop-footer-text">
-                                {{ __('words.essencia_company_defends_a_responsible_and_moderate_alcohol_consumption.') }}
+                                {!! __('words.popup_footer_title_1') !!}
                                 <br>
                                 <br>
-                                {{ __('words.by_browsing_this_website_you_are_agreeing_to_the_Privacy_policy_and_cookies_policy.') }}
+                                {!! __('words.popup_footer_title_2') !!}
                             </h6>
                         </div>
                     </div>
@@ -140,7 +142,7 @@
                                     </div>
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal">
+                                        data-bs-target="#staticBackdrop">
                                         popup testing
                                     </button>
                                 </div>
@@ -263,7 +265,8 @@
         }
     </script>
     @yield('js')
-    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="8fc255b6-8403-4435-9842-852bd91ab47f" data-blockingmode="auto" type="text/javascript"></script>
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="8fc255b6-8403-4435-9842-852bd91ab47f"
+        data-blockingmode="auto" type="text/javascript"></script>
 </body>
 
 </html>

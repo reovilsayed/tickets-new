@@ -184,9 +184,6 @@
         function autoPrint() {
             window.print();
         }
-
-        // Attach the autoPrint function to the window load event
-        window.onload = autoPrint;
     </script>
 
 </head>
