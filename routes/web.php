@@ -147,6 +147,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 });
 
+Route::post('age-verification', function (Request $request) {
+
+    $cookie = cookie('age-verification', $request->verify ? 'true' : 'false', 24 * 60);
+    return redirect()->back()->withCookie($cookie);
+})->name('verify.age');
 // Route::get('test', function () {
 //     $order = Order::find(61);
 //     $product = Product::first();

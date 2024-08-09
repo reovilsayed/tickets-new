@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AgeVerification;
 use App\Http\Middleware\EmailVerified;
 use App\Http\Middleware\Localization;
 use App\Http\Middleware\NeedPaymentMethod;
@@ -42,6 +43,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            AgeVerification::class,
             Localization::class,
         ],
 

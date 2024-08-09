@@ -83,7 +83,7 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" tabindex="-1"
+    <div class="modal fade" id="ageVerifyModal" data-bs-backdrop="static" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content pop-up p-3">
@@ -99,8 +99,17 @@
                                 <strong>{!! __('words.popup_header_title_2') !!}</strong>
                             </h4>
                             <div class="btn-pop">
-                                <button type="button" class="btn btn-yes">{!! __('words.yes') !!}</button>
-                                <button type="button" class="btn btn-no">{!! __('words.no') !!}</button>
+                                <form action="{{ route('verify.age') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="verify" value="1">
+                                    <button type="submit" data-bs-dismiss="modal"
+                                        class="btn btn-yes">{!! __('words.yes') !!}</button>
+                                </form>
+                                <form action="{{ route('verify.age') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="verify" value="0">
+                                    <button type="submit" class="btn btn-no">{!! __('words.no') !!}</button>
+                                </form>
                             </div>
                             <h6 class="pop-footer-text">
                                 {!! __('words.popup_footer_title_1') !!}
@@ -141,10 +150,10 @@
 
                                     </div>
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop">
                                         popup testing
-                                    </button>
+                                    </button> --}}
                                 </div>
 
                             </div>
@@ -238,7 +247,16 @@
     <script src="{{ asset('assets/frontend-assets/js/datepicker.js') }}"></script>
     <script src="{{ asset('assets/frontend-assets/js/smooth-scroll.min.js') }}"></script>
     <script src="{{ asset('assets/frontend-assets/js/custom.js') }}"></script>
-
+    @if(request()->cookie('age-verification') == null)
+    <script>
+        const ageVerifyModal = document.getElementById('ageVerifyModal');
+        if (ageVerifyModal) {
+            // Assuming you are using Bootstrap for modal functionality
+            let modal = new bootstrap.Modal(ageVerifyModal);
+            modal.show();
+        }
+    </script>
+    @endif
     <script>
         $(document).ready(function() {
             $('.toast').toast('show');
