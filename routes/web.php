@@ -158,3 +158,5 @@ Route::post('age-verification', function (Request $request) {
 //     Mail::to('shuvoakonda429@gmail.com')->send(new TicketDownload($order, $product));
 //     return new TicketDownload($order, $product);
 // });
+Route::get('interzone-1', [PageController::class, 'interzone_1'])->name('interzone_1');
+Route::get('interzone-2', [PageController::class, 'interzone_2'])->name('interzone_2');
