@@ -14,7 +14,7 @@
                         <h2 class="events-title mt-2 px-3 text-center">{{ $event->name }}</h2>
                         <div class="text-center d-md-none">
                             <a href="#mobile-device"><button
-                                    class="btn btn-warning">{{ __('words.envent_list') }}</button></a>
+                                    class="custom-button back-button">{{ __('words.envent_list') }}</button></a>
                         </div>
                         <div class="accordins">
                             <div class="accordin-item">
