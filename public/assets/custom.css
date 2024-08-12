@@ -182,11 +182,11 @@ body {
 }
 
 .t-prize {
-    gap: 10px;
     display: flex;
     justify-content: center;
+  
     align-items: center;
-    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .ticket-select {
@@ -543,6 +543,15 @@ body {
         font-size: 22px;
     }
 
+    .t-prize {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap !important;
+        align-items: center;
+        flex-direction: column !important;
+        gap: 10px;
+    }
+
 }
 
 .reg-pass {
@@ -639,7 +648,8 @@ th {
     text-align: center !important;
 }
 
-.btn-yes , .btn-no {
+.btn-yes,
+.btn-no {
     background-color: #ffff !important;
     color: #000000 !important;
     border: 3px solid #bd3d06 !important;
@@ -648,8 +658,7 @@ th {
     text-align: center;
 }
 
-.btn-yes:hover , .btn-no:hover{
+.btn-yes:hover,
+.btn-no:hover {
     box-shadow: 5px 5px rgba(81, 29, 7, 0.32)
 }
-
- 

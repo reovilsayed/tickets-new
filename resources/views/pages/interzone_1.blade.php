@@ -42,7 +42,7 @@
                                 <input type="text" placeholder="{{__('words.enter_your_code')}}" name="">
                                 <div class="text-end">
                                     <a href="{{ route('interzone_2') }}" style="font-size:14px">
-                                        <button class="inter-btn mb-4"> {{ __('words.go') }}</button>
+                                        <button class="custom-button back-button"> {{ __('words.go') }}</button>
                                     </a>
                                 </div>
                             </div>
