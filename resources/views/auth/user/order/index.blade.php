@@ -69,7 +69,7 @@
                             </table>
                         </div>
                         <a target="_blank" class="btn btn-primary btn-lg rounded me-2"
-                        href="{{ route('download.ticket', ['order' => $order->id, 'product' => $id]) }}">
+                        href="{{ route('download.ticket', ['order' => $order, 'product' => $id]) }}">
                         <i class="fa fa-download"></i>
                         {{ __('words.download') }}
                     </a>

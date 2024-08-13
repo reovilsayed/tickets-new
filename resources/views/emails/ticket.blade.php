@@ -101,7 +101,7 @@
             </div>
         </div>
         <div class="" style="text-align: center">
-            <a href="{{ route('download.ticket', ['order' => $order->id, 'product' => $product->id]) }}"
+            <a href="{{ route('download.ticket', ['order' => $order, 'product' => $product->id]) }}"
                 class="btn-download text-white">{{ __('words.download_ticket') }}</a>
         </div>
         <div class="email-footer">

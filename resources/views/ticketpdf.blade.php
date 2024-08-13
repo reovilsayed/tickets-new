@@ -198,7 +198,7 @@
                             <td style="width: 25%">
                                 <div class="event-date-and-price">
                                     <p class="date">{{ $ticket->product->start_date->format('M d, Y') }}</p>
-                                    <p class="text-sub">-</p>
+                                    <p class="text-sub">{{__('words.to')}}</p>
                                     <p class="date">{{ $ticket->product->end_date->format('M d, Y') }}</p>
                                     <p class="country">{{ $ticket->event->city }}</p>
                                     <p class="price">{{ Sohoj::price($ticket->price) }}</p>

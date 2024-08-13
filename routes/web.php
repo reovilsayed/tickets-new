@@ -29,7 +29,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
-
+use Illuminate\Support\Str;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -87,36 +87,38 @@ Route::group(['prefix' => 'admin'], function () {
     })->name('voyager.products.duplicate');
 
     Route::group(['prefix' => '/events/{event}/analytics'], function () {
-        Route::get('/',[EventAnalyticsController::class, 'index'])->name('voyager.events.analytics');
-        Route::get('/ticket-participants-report',[EventAnalyticsController::class, 'ticketParticipanReport'])->name('voyager.events.ticketParticipanReport.analytics');
-        Route::get('/sales-report',[EventAnalyticsController::class, 'salesReport'])->name('voyager.events.salesReport.analytics');
-        Route::get('/customer-report',[EventAnalyticsController::class, 'customerReport'])->name('voyager.events.customer.analytics');
-        Route::get('/customer-report/{user}/orders',[EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');
-        Route::get('/customer-report/{user}/tickets',[EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
-     });
-
+        Route::get('/', [EventAnalyticsController::class, 'index'])->name('voyager.events.analytics');
+        Route::get('/ticket-participants-report', [EventAnalyticsController::class, 'ticketParticipanReport'])->name('voyager.events.ticketParticipanReport.analytics');
+        Route::get('/sales-report', [EventAnalyticsController::class, 'salesReport'])->name('voyager.events.salesReport.analytics');
+        Route::get('/customer-report', [EventAnalyticsController::class, 'customerReport'])->name('voyager.events.customer.analytics');
+        Route::get('/customer-report/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');
+        Route::get('/customer-report/{user}/tickets', [EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
+    });
 });
 Auth::routes(['verify' => true]);
 
 Route::get('page/{slug}', [PageController::class, 'getPage']);
 // Route::get('user-invoice/{$order}', [PageController::class, 'invoiceOrder'])->name('invoiceOrder');
 
-Route::get('download-ticket', function (Request $request) {
-    $order = Order::find($request->order);
-    $product = Product::find($request->product);
-    $tickets = $order->tickets()->where('product_id', $request->product)->get();
 
+// Route::get('download-ticket', function (Request $request) {
+//     $order = Order::find($request->order);
+//     $product = Product::find($request->product);
+//     $tickets = $order->tickets()->where('product_id', $request->product)->get();
+
+//     return view('ticketpdf', compact('tickets'));
+// })->name('download.ticket');
+
+Route::get('t/{order:security_key}', function (Request $request, Order $order) {
+    $tickets = $order->tickets;
+    if($request->filled('p')){
+      $tickets = $order->tickets()->where('product_id', $request->p)->get();
+    }
+    if(!$tickets->count()) abort(403,'No tickets found');
     return view('ticketpdf', compact('tickets'));
 })->name('download.ticket');
-Route::get('user-invoice', function (Request $request) {
-    // $toco = new TOCOnlineService;
-    // return $response = $toco->getAccessTokenFromRefreshToken();
-    $order = Order::find($request->order);
-    $product = Product::find($request->product);
-    $tickets = $order->tickets()->where('product_id', $request->product)->get();
 
-    return view('invoice', compact('order', 'tickets'));
-})->name('invoice.order');
+
 
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
@@ -174,18 +176,24 @@ Route::post('age-verification', function (Request $request) {
 })->name('verify.age');
 
 
-Route::get('test',function(){
+Route::get('test', function () {
+
     $orders = Order::all();
-    foreach ($orders as $order){
-        $order->event_id = $order->tickets()->first()->event_id;
-        $order->save();
+    foreach ($orders as $order) {
+   
+            if ($order->tickets->count()) {
+
+                $order->event_id = $order->tickets()->first()->event_id;
+                $order->security_key = Str::uuid();
+                $order->save();
+            }
+        
     }
 });
 
-Route::group(['prefix'=>'zone','as'=>'zone.'],function(){
+Route::group(['prefix' => 'zone', 'as' => 'zone.'], function () {
     Route::get('/', [EnterzoneContoller::class, 'enterForm'])->name('enter');
     Route::post('/enter', [EnterzoneContoller::class, 'enter'])->name('enter.post');
     Route::get('/scanner', [EnterzoneContoller::class, 'scanner'])->name('scanner');
-
 });
 Route::get('interzone-2', [PageController::class, 'interzone_2'])->name('interzone_2');
