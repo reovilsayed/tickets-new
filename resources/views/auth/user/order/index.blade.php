@@ -68,6 +68,11 @@
                                 @endforeach
                             </table>
                         </div>
+                        <a target="_blank" class="btn btn-primary btn-lg rounded me-2"
+                        href="{{ route('download.ticket', ['order' => $order->id, 'product' => $id]) }}">
+                        <i class="fa fa-download"></i>
+                        {{ __('words.download') }}
+                    </a>
                     @endforeach
 
 
@@ -76,11 +81,7 @@
                 <div class="card-footer bg-transparent p-2 ">
                     <div class="row g-5">
                         <div class="col-md-6 col-12 d-flex align-items-center justify-content-center order-md-1 order-2 ">
-                            <a target="_blank" class="btn btn-primary btn-lg rounded me-2"
-                                href="{{ route('download.ticket', ['order' => $order->id, 'product' => $id]) }}">
-                                <i class="fa fa-download"></i>
-                                {{ __('words.download') }}
-                            </a>
+                           
                             <a target="_blank" class="btn btn-primary btn-sm rounded"
                                 href="{{$order->invoice_url}}">
                                 {{ __('words.invoice') }}
