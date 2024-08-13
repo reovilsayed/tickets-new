@@ -6,6 +6,7 @@ use App\Charts\OrderSalesChart;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\EnterzoneContoller;
 use App\Http\Controllers\EventAnalyticsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
@@ -180,5 +181,11 @@ Route::get('test',function(){
         $order->save();
     }
 });
-Route::get('interzone-1', [PageController::class, 'interzone_1'])->name('interzone_1');
+
+Route::group(['prefix'=>'zone','as'=>'zone.'],function(){
+    Route::get('/', [EnterzoneContoller::class, 'enterForm'])->name('enter');
+    Route::post('/enter', [EnterzoneContoller::class, 'enter'])->name('enter.post');
+    Route::get('/scanner', [EnterzoneContoller::class, 'scanner'])->name('scanner');
+
+});
 Route::get('interzone-2', [PageController::class, 'interzone_2'])->name('interzone_2');
