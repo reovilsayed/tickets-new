@@ -86,14 +86,14 @@ Route::group(['prefix' => 'admin'], function () {
     })->name('voyager.products.duplicate');
 
     Route::group(['prefix' => '/events/{event}/analytics'], function () {
-        Route::get('/',[EventAnalyticsController::class, 'index'])->name('voyager.events.analytics');
-        Route::get('/ticket-participants-report',[EventAnalyticsController::class, 'ticketParticipanReport'])->name('voyager.events.ticketParticipanReport.analytics');
-        Route::get('/sales-report',[EventAnalyticsController::class, 'salesReport'])->name('voyager.events.salesReport.analytics');
-        Route::get('/customer-report',[EventAnalyticsController::class, 'customerReport'])->name('voyager.events.customer.analytics');
-        Route::get('/customer-report/{user}/orders',[EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');
-        Route::get('/customer-report/{user}/tickets',[EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
-     });
-
+        Route::get('/', [EventAnalyticsController::class, 'index'])->name('voyager.events.analytics');
+        Route::get('/ticket-participants-report', [EventAnalyticsController::class, 'ticketParticipanReport'])->name('voyager.events.ticketParticipanReport.analytics');
+        Route::get('/sales-report', [EventAnalyticsController::class, 'salesReport'])->name('voyager.events.salesReport.analytics');
+        Route::get('/customer-report', [EventAnalyticsController::class, 'customerReport'])->name('voyager.events.customer.analytics');
+        Route::get('/customer-report/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');
+        Route::get('/customer-report/{user}/tickets', [EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
+        Route::get('/event/{event}/user/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders.search');
+    });
 });
 Auth::routes(['verify' => true]);
 
@@ -173,9 +173,9 @@ Route::post('age-verification', function (Request $request) {
 })->name('verify.age');
 
 
-Route::get('test',function(){
+Route::get('test', function () {
     $orders = Order::all();
-    foreach ($orders as $order){
+    foreach ($orders as $order) {
         $order->event_id = $order->tickets()->first()->event_id;
         $order->save();
     }

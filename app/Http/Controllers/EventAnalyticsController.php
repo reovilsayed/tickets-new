@@ -46,16 +46,29 @@ class EventAnalyticsController extends Controller
         return view('vendor.voyager.events.ticket-customer-report', compact('users', 'event'));
     }
 
-    public function  customerReportOrders(Event $event, User $user)
+    public function  customerReportOrders(Event $event, User $user,)
     {
-        $orders = Order::where('event_id', $event->id)->where('payment_status', 1)->where('user_id', $user->id)->get();
-       dd($orders);
-        return view('vendor.voyager.events.orders', compact('orders', 'event'));
+
+        $orders = Order::where('event_id', $event->id)->where('payment_status', 1)->where('user_id', $user->id);
+        if (request()->has('search') && request('search') !== '') {
+            $search = request('search');
+            $orders->where(function ($q) use ($search) {
+                $q->where('id', $search);
+            });
+        }
+        $orders = $orders->get();
+        return view('vendor.voyager.events.orders', compact('orders', 'event', 'user'));
     }
     public function  customerReportTickets(Event $event, User $user)
     {
-        $tickets = Ticket::where('event_id', $event->id)->where('user_id', $user->id)->get();
-        dd($tickets);
-        return view('vendor.voyager.events.tickets', compact('tickets', 'event'));
+        $tickets = Ticket::where('event_id', $event->id)->where('user_id', $user->id);
+        if (request()->has('search') && request('search') !== '') {
+            $search = request('search');
+            $tickets->where(function ($q) use ($search) {
+                $q->where('id', $search);
+            });
+        }
+        $tickets = $tickets->get();
+        return view('vendor.voyager.events.tickets', compact('tickets', 'event', 'user'));
     }
 }
