@@ -40,7 +40,7 @@ class PageController extends Controller
         $products = [];
         $products['all'] = $event->products;
         foreach ($event->dates() as $date) {
-            $products[$date] = $event->products->filter(fn ($product) => in_array($date, $product->dates));
+            $products[$date] = $event->products->filter(fn($product) => in_array($date, $product->dates));
         }
         return view('pages.event_details', compact('event', 'products'));
     }
@@ -282,5 +282,13 @@ class PageController extends Controller
         $token = $toconile->getAccessTokenFromAuthorizationCode(request()->code);
         if (isset($token['error'])) throw new Exception('TOC oniline token genration failed');
         Storage::disk('local')->put('token.json', json_encode((array) $token, JSON_PRETTY_PRINT));
+    }
+    public function interzone_1()
+    {
+        return view('pages.interzone_1');
+    }
+    public function interzone_2()
+    {
+        return view('pages.interzone_2');
     }
 }

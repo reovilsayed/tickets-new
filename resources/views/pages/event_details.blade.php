@@ -12,6 +12,10 @@
                         </div>
 
                         <h2 class="events-title mt-2 px-3 text-center">{{ $event->name }}</h2>
+                        <div class="text-center d-md-none">
+                            <a href="#mobile-device"><button
+                                    class="custom-button back-button">{{ __('words.envent_list') }}</button></a>
+                        </div>
                         <div class="accordins">
                             <div class="accordin-item">
                                 <div>
@@ -59,7 +63,7 @@
 
                     <div x-data=@json(Sohoj::getEventObject($event))
                         x-effect="$refs.total.innerText = 'Є'+(Object.values(tickets)).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)"
-                        class="col-md-7 event-box">
+                        class="col-md-7 event-box" id="mobile-device">
 
                         <ul class="nav nav-pills sec-hd mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">

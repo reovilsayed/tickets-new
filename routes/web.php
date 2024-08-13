@@ -180,3 +180,5 @@ Route::get('test',function(){
         $order->save();
     }
 });
+Route::get('interzone-1', [PageController::class, 'interzone_1'])->name('interzone_1');
+Route::get('interzone-2', [PageController::class, 'interzone_2'])->name('interzone_2');
