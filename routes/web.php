@@ -173,10 +173,10 @@ Route::post('age-verification', function (Request $request) {
 })->name('verify.age');
 
 
-// Route::get('test',function(){
-//     $orders = Order::all();
-//     foreach ($orders as $order){
-//         $order->event_id = $order->tickets()->first()->event_id;
-//         $order->save();
-//     }
-// });
+Route::get('test',function(){
+    $orders = Order::all();
+    foreach ($orders as $order){
+        $order->event_id = $order->tickets()->first()->event_id;
+        $order->save();
+    }
+});
