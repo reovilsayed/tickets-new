@@ -13,6 +13,10 @@ class Order extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'paid_date'=>'datetime'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -96,5 +100,26 @@ class Order extends Model
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
+    }
+
+    public function getStatus(){
+        switch ($this->status){
+            case 0 : return 'Pending';
+            case 1 : return 'Paid';
+            case 2 : return 'Cancelled';
+            case 3 : return 'Refunded';
+            default : return 'Pending';
+        }
+    }
+
+    public function getBsStatusClass(){
+        
+        switch ($this->status){
+            case 0 : return 'secondary';
+            case 1 : return 'success';
+            case 2 : return 'danger';
+            case 3 : return 'warning';
+            default : return 'secondary';
+        }
     }
 }

@@ -148,6 +148,7 @@ return [
             // 'App\\Widgets\\Shops',
             'App\\Widgets\\Products',
             'App\\Widgets\\Orders',
+            'App\\Widgets\\Events',
         ],
 
     ],

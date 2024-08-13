@@ -23,15 +23,26 @@ class Event extends Model
     {
         return $this->hasMany(Product::class)->orderBy('sequence', 'asc');
     }
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function zones(){
+        return $this->hasMany(Zone::class);
+    }
 
 
     public function priceRange()
     {
-        $prices = $this->products->map(fn ($product) => $product->currentPrice());
+        $prices = $this->products->map(fn($product) => $product->currentPrice());
         return ['min' => $prices->min(), 'max' => $prices->max()];
     }
 
- 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
     public function dates()
     {
         $period = CarbonPeriod::create($this->start_at, $this->end_at);

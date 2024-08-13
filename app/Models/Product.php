@@ -162,4 +162,8 @@ class Product extends Model
             $this->dates = $dates;
         }
     }
+
+    public function zones(){
+        return $this->event->zones;
+    }
 }

@@ -4,18 +4,18 @@ namespace App\Actions;
 
 use TCG\Voyager\Actions\AbstractAction;
 
-class DuplicateAction extends AbstractAction
+class AnalyticsAction extends AbstractAction
 {
     public function getTitle()
     {
-        return 'Duplicate';
+        return 'Analytics';
     }
 
 
     public function shouldActionDisplayOnDataType()
-{
-    return $this->dataType->slug == 'products';
-}
+    {
+        return $this->dataType->slug == 'events';
+    }
     public function getIcon()
     {
         return 'voyager-data';
@@ -35,6 +35,6 @@ class DuplicateAction extends AbstractAction
 
     public function getDefaultRoute()
     {
-        return route('voyager.products.duplicate',['product'=>$this->data]);
+        return route('voyager.events.analytics', ['event' => $this->data]);
     }
 }

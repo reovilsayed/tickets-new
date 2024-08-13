@@ -2,6 +2,7 @@
 
 namespace App\Widgets;
 
+use App\Models\Event;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Shop;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use TCG\Voyager\Facades\Voyager;
 
-class Orders extends AbstractWidget
+class Events extends AbstractWidget
 {
     /**
      * The configuration array.
@@ -25,18 +26,18 @@ class Orders extends AbstractWidget
      */
     public function run()
     {
-        $count = Order::count();
-        $string = trans_choice('Orders', $count);
+        $count = Event::count();
+        $string = trans_choice('Events', $count);
 
         return view('voyager::dimmer', array_merge($this->config, [
-            'icon'   => 'voyager-credit-cards',
+            'icon'   => 'voyager-calendar',
             'title'  => "{$count} {$string}",
             'text'   => __("You have $count  $string in your database. Click on button below to view all $string."),
             'button' => [
                 'text' => 'View all '.$string,
-                'link' => route('voyager.orders.index'),
+                'link' => route('voyager.events.index'),
             ],
-            'image' => asset('assets/img/order.jpg'),
+            'image' => asset('assets/img/events.jpg'),
         ]));
     }
 
@@ -47,6 +48,6 @@ class Orders extends AbstractWidget
      */
     public function shouldBeDisplayed()
     {
-        return Auth::user()->can('browse',  new  Order);
+        return Auth::user()->can('browse', new Event);
     }
 }

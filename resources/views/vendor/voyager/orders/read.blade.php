@@ -1,306 +1,375 @@
 @extends('voyager::master')
 
-@section('page_title', __('voyager::generic.view').' '.$dataType->getTranslatedAttribute('display_name_singular'))
-<style>
+@section('page_title', __('voyager::generic.view') . ' ' . $dataType->getTranslatedAttribute('display_name_singular'))
+@section('css')
+    <style>
+        .pill {
+            border-radius: 8px;
+            padding: 4px 10px;
+        }
 
-</style>
+        .pill-success {
+            color: rgb(5, 202, 38);
+            background-color: rgba(172, 255, 47, 0.325);
+        }
+
+        .pill-secondary {
+            color: rgb(59, 59, 59);
+            background-color: rgba(27, 27, 27, 0.325);
+        }
+
+        .pill-danger {
+            color: rgb(160, 0, 0);
+            background-color: rgba(251, 1, 1, 0.325);
+        }
+
+        .pill-warning {
+            color: rgb(160, 56, 0);
+            background-color: rgba(160, 56, 0, 0.343);
+        }
+    </style>
+@endsection
 
 @section('page_header')
 
-@include('voyager::multilingual.language-selector')
+    @include('voyager::multilingual.language-selector')
 @stop
 
 @section('content')
 
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+        <link rel="icon" href="images/favicon.png" type="image/x-icon">
 
-    <title>Haladeals |Email</title>
+        <title>Haladeals |Email</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
 
-    <style type="text/css">
-        body {
-            text-align: center;
-            margin: 0 auto;
+    </head>
 
-            font-family: 'Rubik', sans-serif;
-            background-color: #e2e2e2;
-            display: block;
-        }
+    <body style="margin: 20px auto;">
+        <div class="container">
+            <div class="panel panel-bordered">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h1 style="color:#000;font-weight:700;">
+                                Order #{{ $dataTypeContent->id }}
+                            </h1>
+                            <span class="pill pill-{{ $dataTypeContent->getBsStatusClass() }}">
+                                {{ $dataTypeContent->getStatus() }}
+                            </span>
+                            <br>
+                            <br>
+                            <div style="display: flex;gap:10px;">
+                                @if ($dataTypeContent->payment_status)
+                                    <span class="pill pill-secondary">
+                                        Paid On : {{ $dataTypeContent->date_paid?->format(' d F, Y') ?? 'N/A' }}
+                                    </span>
+                                @endif
+                                <span class="pill pill-secondary">
+                                    Placed On : {{ $dataTypeContent->created_at->format(' d F, Y') }}
+                                </span>
 
-        .main {
-            width: 650px;
-        }
+                                <span class="pill pill-secondary">
+                                    Updated : {{ $dataTypeContent->updated_at->format(' d F, Y') }}
+                                </span>
 
-        ul {
-            margin: 0;
-            padding: 0;
-        }
 
-        li {
-            display: inline-block;
-            text-decoration: unset;
-        }
+                            </div>
+                        </div>
+                        <div class="col-md-4">
 
-        a {
-            text-decoration: none;
-        }
+                            <div>
+                                <span class="text-primary">
+                                    TOC Online ID :
+                                </span>
+                                <p class="">
+                                    {{ $dataTypeContent->invoice_id ?? 'N/A' }}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    TOC Online Invoice :
+                                </span>
+                                <p class="">
+                                    <a href="
+                                    {{ $dataTypeContent->invoice_url }}">View
+                                        Invoice</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
 
-        h5 {
-            margin: 10px;
-            color: #777;
-        }
+                </div>
+            </div>
+            <div class="row">
 
-        .text-center {
-            text-align: center
-        }
+                <div class="col-md-6">
+                    <div class="panel panel-bordered" style="height: 500px">
 
-        .header .header-logo a {
-            display: block;
-            margin: 0;
-            padding: 25px 0 20px;
-            text-align: center;
-        }
 
-        .review-name h5 {
-            margin: 0;
-            color: #232323;
-            font-size: 18px;
-            text-align: center;
-            text-transform: capitalize;
-            font-weight: 500;
-        }
+                        <div class="panel-body ">
+                            <h3 style="color:#000;font-weight:700;">
+                                Order Information
+                            </h3>
+                            <hr>
 
-        .cart-button {
-            text-transform: uppercase;
-            margin: 0 auto;
-            border-radius: 5px;
-            padding: 13px 30px;
-            border: 1px solid #e22454;
-            color: #fff;
-            font-size: 12px;
-            background-color: #e22454;
-            font-weight: 600;
-        }
+                            <div>
+                                <span class="text-primary">
+                                    Name
+                                </span>
+                                <p class="h4">
+                                    {{ $dataTypeContent->billing->name }}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    Vat Number
+                                </span>
+                                <p class="h4">
+                                    {{ $dataTypeContent->billing->vatNumber ?? 'N/A' }}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    Address
+                                </span>
+                                <p class="h4">
+                                    {{ $dataTypeContent->billing->address ?? 'N/A' }}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    Payment Status
+                                </span>
 
-        table.order-detail {
-            border: 1px solid #eff2f7;
-            border-collapse: collapse;
-            text-align: left;
-        }
+                                <p style="margin-top:10px ">
 
-        table.order-detail tr:nth-child(even) {
-            border-top: 1px solid #eff2f7;
-            border-bottom: 1px solid #eff2f7;
-        }
+                                    <span class="pill pill-{{ $dataTypeContent->payment_status ? 'success' : 'danger' }}">
+                                        {{ $dataTypeContent->payment_status ? 'Paid' : 'Not Paid' }}
+                                    </span>
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    Payment Method
+                                </span>
+                                <p class="h4">
+                                    {{ $dataTypeContent->payment_method_title ?? 'N/A' }}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    Transaction ID
+                                </span>
+                                <p class="h4">
+                                    {{ $dataTypeContent->transaction_id ?? 'N/A' }}
+                                </p>
+                            </div>
 
-        table.order-detail tr:nth-child(odd) {
-            border-bottom: 1px solid #eff2f7;
-        }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-bordered" style="height: 500px">
 
-        .order-detail th {
-            font-size: 14px;
-            padding: 15px;
-            background: #eff2f7;
-            font-weight: 500;
-            text-transform: capitalize;
-        }
 
-        .order-detail tr td {
-            padding: 12px;
-        }
+                        <div class="panel-body ">
+                            <h3 style="color:#000;font-weight:700;">
+                                User Information
+                            </h3>
+                            <hr>
 
-        .order-detail tr td h5 {
-            margin: 15px 0 0;
-            font-weight: 400;
-            color: #232323;
-        }
-    </style>
-</head>
+                            <div>
+                                <span class="text-primary">
+                                    Name
+                                </span>
+                                <p class="h4">
+                                    {{ $dataTypeContent->user->name . ' ' . $dataTypeContent->user->l_name }}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    Email
+                                </span>
+                                <p class="h4">
+                                    {{ $dataTypeContent->user->email ?? 'N/A' }}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    Country
+                                </span>
+                                <p class="h4">
+                                    {{ $dataTypeContent->user->getCountry() ?? 'N/A' }}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    Vat Number
+                                </span>
+                                <p class="h4">
+                                    {{ $dataTypeContent->user->vatNumber ?? 'N/A' }}
+                                </p>
+                            </div>
+                            <div>
+                                <span class="text-primary">
+                                    Address
+                                </span>
+                                <p class="h4">
 
-<body style="margin: 20px auto;">
-    <table class="main" align="center" border="0" cellpadding="0" cellspacing="0" style="background-color: white; padding: 0 30px; box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);  -webkit-box-shadow: 0px 0px 14px -4px rgba(0, 0, 0, 0.2705882353);">
-        <tbody>
-            <tr>
-                <td>
-                    <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
-                        <tr class="header" style="display: block;">
-                            <td class="header-logo" style="text-align: center; display: block;" align="top">
-                                <a href="">
-                                    <img style="height:130px;" src="{{Voyager::Image($dataTypeContent->shop->logo) }}" alt="Site Logo" />
-                                </a>
-                            </td>
-                        </tr>
-                        <td class="review-name" style="margin-bottom: 20px; display: block;">
-                            <h5>{{ $dataTypeContent->shop->name }},</h5>
+                                    {{ $dataTypeContent->user->address ?? 'N/A' }}
+                                </p>
+                            </div>
 
-                        </td>
+                        </div>
+                    </div>
+                </div>
 
-                            <td style="display:block;padding-bottom: 20px;color: #787771;margin-left:5px">
-                                    <p style="margin: 0 10px; font-size: 14px; text-align: left; mso-line-height-alt: 16.8px;">
-                                      <span style="font-weight: 700;margin-right:10px"> Name: </span> {{ $dataTypeContent->fullname }}
-                                    </p>
-                                    <p style="margin: 0 10px; margin-top:10px; font-size: 14px; text-align: left; mso-line-height-alt: 16.8px;">
-                                    <span style="font-weight: 700;margin-right:10px"> Email: </span>{{ $dataTypeContent->email }}
-                                    </p>
-                                    <p style="margin: 0 10px; margin-top:10px; font-size: 14px; text-align: left; mso-line-height-alt: 16.8px;">
-                                    <span style="font-weight: 700;margin-right:10px"> Phone: </span>{{ $dataTypeContent->phone }}
-                                    </p>
-                                    <p style="margin: 0 10px; margin-top:10px; font-size: 14px; text-align: left; mso-line-height-alt: 16.8px;">
-                                    <span style="font-weight: 700;margin-right:10px"> Adress: </span> {{ $dataTypeContent->post_code }},{{ $dataTypeContent->city }},{{ $dataTypeContent->address }}
-                                    </p>
-                                </td>
-                                <td style="display:block;padding-bottom: 20px;color: #787771;margin-left:15px">
-                                    <p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;">
-                                        Order No: <span style="color:#c4a07a;"><strong>{{ $dataTypeContent->id }}</strong></span>
-                                    </p>
-                                    <p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px; margin-top:10px">
-                                        Order Date: {{ $dataTypeContent->created_at->format('M d, Y') }}
-                                    </p>
-                        </td>
+            </div>
 
-                        <td style="margin-bottom: 20px; display: block;">
-                            <h4 style="margin: 0px 0px 5px;font-weight: 500;margin-left:10px">Product Info</h4>
-                            <table class="order-detail" border="0" cellpadding="0" cellspacing="0" align="left" style="width: 100%; margin-bottom: 20px;">
-                                <tr align="left">
-                                    <th>Image</th>
-                                    <th>Item</th>
-                                    <th>Qty</th>
-                                    <th>Price</th>
-                                </tr>
-
+            <div class="panel">
+                <div class="panel-body">
+                    @foreach ($dataTypeContent->tickets->groupBy('product_id') as $id => $tickets)
+                        @php
+                            $model = App\Models\Product::find($id);
+                        @endphp
+                        <h4 style="color:#000;font-weight:700;">
+                           Ticket : {{ $model->name }}
+                        </h4>
+                        <small class="pill pill-success">
+                            Event : {{ $model->event->name }}
+                        </small>
+                        <br>
+                        <br>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
                                 <tr>
-                                    <td>
-                                        <img src="{{ Storage::url($dataTypeContent->product->image) }}" alt="" width="100">
-                                    </td>
+                                    <th>
+                                        {{ __('words.ticket_id') }}
+                                    </th>
+                                    <th>
+                                        {{ __('words.paymeys_status') }}
+                                    </th>
+                                    <th>
+                                        {{ __('words.payment_type') }}
+                                    </th>
+                                    <th>
+                                        {{ __('words.status') }}
+                                    </th>
+                                    <th>
+                                        {{ __('words.price') }}
+                                    </th>
 
-                                    <td align="top">
-                                        <h5 style="margin-top: 15px;">{{ $dataTypeContent->product->name }}
-                                        </h5>
-                                    </td>
-                                    <td align="top">
-                                        <h5 style="font-size: 14px; color:#444;margin-top: 15px;">{{ $dataTypeContent->quantity }}
-                                        </h5>
-                                    </td>
-
-                                    <td align="top">
-                                        <h5 style="font-size: 14px; color:#444;margin-top:15px">
-                                            <b>{{ Sohoj::price($dataTypeContent->Product->price) }}</b>
-                                        </h5>
-                                    </td>
                                 </tr>
 
+                                @foreach ($tickets as $ticket)
+                                    <tr>
 
+                                        <td>
+                                            {{ $ticket->ticket }}
+                                        </td>
+                                        <td>
+                                          
+                                    <span class="pill pill-{{ $dataTypeContent->payment_status ? 'success' : 'danger' }}">
+                                        {{ $dataTypeContent->payment_status ? 'Paid' : 'Not Paid' }}
+                                    </span>
+                                        </td>
+                                        <td>
+                                            {{ $dataTypeContent->payment_method_title }}
 
+                                        </td>
+                                        <td>
+                                            {{ $ticket->status() }}
 
+                                        </td>
+                                        <td>
+                                            {{ Sohoj::price($ticket->price) }}
+                                        </td>
 
-                                <tr class="pad-left-right-space ">
-                                    <td class="m-b-5" colspan="2" align="left">
-                                        <h6 style="font-weight: 400;font-size: 14px; margin: 0;">Grand Total :</h6>
-                                    </td>
-
-                                    <td class="m-b-5" colspan="2" align="right">
-                                        <h6 style="font-weight: 500;font-size: 14px; margin: 0;">{{ Sohoj::price($dataTypeContent->total) }}</h6>
-                                    </td>
-                                </tr>
-
+                                    </tr>
+                                @endforeach
                             </table>
-                        </td>
-                        <tr style="display: flex; justify-content:center;margin-bottom:30px;margin-top:20px">
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-body">
 
-                            <td>
-                                <a class="cart-button" style="background-color:black;border:none;" href="{{ route('thankyou',$dataTypeContent) }}">complete
-                                    checkout</a>
+                    <table class="payinfo table">
+                        <tr>
+                            <th style="font-size: 14px">
+                                {{ __('words.subtotal') }}
+                            </th>
+                            <td style="font-size: 14px">
+                                + {{ Sohoj::price($dataTypeContent->subtotal) }}
                             </td>
-
                         </tr>
-
-
-                        <table class="text-center" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #212529; color: white; padding: 40px 30px;">
-                            <tr>
-                                <td>
-                                    <table border="0" cellpadding="0" cellspacing="0" class="footer-social-icon text-center" align="center" style="margin: 8px auto 20px;">
-                                        <!-- <tr>
-                                            <td>
-                                                <img src="images/fb.png" style="font-size: 25px; margin: 0 18px 0 0;width: 22px;filter: invert(1);" alt="">
-                                            </td>
-                                            <td>
-                                                <img src="images/twitter.png" style="font-size: 25px; margin: 0 18px 0 0;width: 22px;filter: invert(1);" alt="">
-                                            </td>
-                                            <td>
-                                                <img src="images/insta.png" style="font-size: 25px; margin: 0 18px 0 0;width: 22px;filter: invert(1);" alt="">
-                                            </td>
-                                            <td>
-                                                <img src="images/pinterest.png" style="font-size: 25px; margin: 0 18px 0 0;width: 22px;filter: invert(1);" alt="">
-                                            </td>
-                                        </tr> -->
-                                    </table>
-                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                        <tr>
-                                            <td>
-                                                <h5 style="font-size: 13px; text-transform: uppercase; margin: 0; color:#ddd; letter-spacing:1px; font-weight: 500;text-align:center">
-                                                    This email was created using the <span style="color: #f58888;">Halaldeals</span>.</h5>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width: 100%">
-                                                <table class="contact-table" style="width: 100%; margin-top: 10px;">
-                                                    <tbody style="display: block; width: 100%;">
-                                                        <tr style="display: block; width: 100%;display: flex; align-items: center; justify-content: center;">
-
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
-
-                        </table>
+                        <tr>
+                            <th style="font-size: 14px">
+                                {{ __('words.tax') }}
+                            </th>
+                            <td style="font-size: 14px">
+                                + {{ Sohoj::price($dataTypeContent->tax) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="font-size: 14px">
+                                {{ __('words.discount') }}
+                            </th>
+                            <td style="font-size: 14px">
+                                - {{ Sohoj::price($dataTypeContent->discount) }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="font-size: 18px">
+                                {{ __('words.total') }}
+                            </th>
+                            <td style="font-size: 18px">
+                                = {{ Sohoj::price($dataTypeContent->total) }}
+                            </td>
+                        </tr>
                     </table>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+            </div>
 
-</body>
+        </div>
 
-</html>
+    </body>
+
+    </html>
 
 @stop
 
 @section('javascript')
-@if ($isModelTranslatable)
-<script>
-    $(document).ready(function() {
-        $('.side-body').multilingual();
-    });
-</script>
-@endif
-<script>
-    var deleteFormAction;
-    $('.delete').on('click', function(e) {
-        var form = $('#delete_form')[0];
+    @if ($isModelTranslatable)
+        <script>
+            $(document).ready(function() {
+                $('.side-body').multilingual();
+            });
+        </script>
+    @endif
+    <script>
+        var deleteFormAction;
+        $('.delete').on('click', function(e) {
+            var form = $('#delete_form')[0];
 
-        if (!deleteFormAction) {
-            // Save form action initial value
-            deleteFormAction = form.action;
-        }
+            if (!deleteFormAction) {
+                // Save form action initial value
+                deleteFormAction = form.action;
+            }
 
-        form.action = deleteFormAction.match(/\/[0-9]+$/) ?
-            deleteFormAction.replace(/([0-9]+$)/, $(this).data('id')) :
-            deleteFormAction + '/' + $(this).data('id');
+            form.action = deleteFormAction.match(/\/[0-9]+$/) ?
+                deleteFormAction.replace(/([0-9]+$)/, $(this).data('id')) :
+                deleteFormAction + '/' + $(this).data('id');
 
-        $('#delete_modal').modal('show');
-    });
-</script>
+            $('#delete_modal').modal('show');
+        });
+    </script>
 @stop

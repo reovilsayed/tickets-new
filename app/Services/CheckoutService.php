@@ -84,7 +84,7 @@ class CheckoutService
             'discount_code' => Sohoj::discount_code(),
             'tax' => Sohoj::round_num(Sohoj::tax()),
             'total' => $total,
-            'status' => 4,
+            'status' => 0,
             'payment_method' => 'easypay.pt',
             'transaction_id' => Str::uuid()
         ]);

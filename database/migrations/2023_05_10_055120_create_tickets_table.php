@@ -21,7 +21,7 @@ return new class extends Migration
             $table->bigInteger('order_id')->nullable();
             $table->bigInteger('user_id')->nullable();
             $table->string('ticket');
-            $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('status')->default(0);
             $table->json('dates');
             $table->bigInteger('price')->nullable();
             $table->timestamps();

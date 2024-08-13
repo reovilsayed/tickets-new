@@ -11,7 +11,9 @@ class Ticket extends Model
 {
     use HasFactory;
     protected $guarded = [];
-
+    protected $casts = [
+        'dates'=>'json'
+    ];
     public function dates(): Attribute
     {
         return Attribute::make(
@@ -45,12 +47,12 @@ class Ticket extends Model
         return 'pending';
     }
 
-    // protected static function booted(): void
-    // {
-    //     static::addGlobalScope('ancient', function (Builder $builder) {
-    //         $builder->whereHas('order', function ($order) {
-    //             $order->where('payment_status', 1);
-    //         });
-    //     });
-    // }
+    protected static function booted(): void
+    {
+        static::addGlobalScope('ancient', function (Builder $builder) {
+            $builder->whereHas('order', function ($order) {
+                $order->where('payment_status', 1);
+            });
+        });
+    }
 }

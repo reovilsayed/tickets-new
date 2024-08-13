@@ -25,14 +25,14 @@ class Products extends AbstractWidget
     public function run()
     {
         $count = Product::count();
-        $string = trans_choice('Products', $count);
+        $string = trans_choice('Tickets', $count);
 
         return view('voyager::dimmer', array_merge($this->config, [
-            'icon'   => 'voyager-bag',
+            'icon'   => 'voyager-ticket',
             'title'  => "{$count} {$string}",
             'text'   => __("You have $count  $string in your database. Click on button below to view all $string."),
             'button' => [
-                'text' => 'View all Products',
+                'text' => 'View all '.$string,
                 'link' => route('voyager.products.index'),
             ],
             'image' => asset('assets/img/product.jpg'),
@@ -45,7 +45,7 @@ class Products extends AbstractWidget
      * @return bool
      */
     public function shouldBeDisplayed()
-    {
-        return Auth::user()->can('browse', Voyager::model('Post'));
+    {;
+        return Auth::user()->can('browse', new  Product);
     }
 }

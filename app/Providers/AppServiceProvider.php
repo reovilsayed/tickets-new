@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Facade\Sohoj;
+use App\FormFields\RelationShipDropDown;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Browsershot\Browsershot;
@@ -35,5 +36,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Voyager::addAction(\App\Actions\ReplyAction::class);
         Voyager::addAction(\App\Actions\DuplicateAction::class);
+        Voyager::addAction(\App\Actions\AnalyticsAction::class);
+        Voyager::addFormField(RelationShipDropDown::class);
     }
 }
