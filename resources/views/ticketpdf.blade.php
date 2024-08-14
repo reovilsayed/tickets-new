@@ -190,6 +190,7 @@
 
 <body>
     @foreach ($tickets as $ticket)
+    
         <div class="container">
             <div class="header">
                 <div>
@@ -198,7 +199,7 @@
                             <td style="width: 25%">
                                 <div class="event-date-and-price">
                                     <p class="date">{{ $ticket->product->start_date->format('M d, Y') }}</p>
-                                    <p class="text-sub">{{__('words.to')}}</p>
+                                    <p class="text-sub">{{ __('words.to') }}</p>
                                     <p class="date">{{ $ticket->product->end_date->format('M d, Y') }}</p>
                                     <p class="country">{{ $ticket->event->city }}</p>
                                     <p class="price">{{ Sohoj::price($ticket->price) }}</p>
@@ -242,9 +243,8 @@
                 <h2>
                     {{ __('words.address') }}
                 </h2>
-                <p class="address">Centro de Congressos de Lisboa
-                    <br>
-                    Rua António Carneiro, 185, Lisboa
+                <p class="address">
+                    {{ $ticket->event->location }}
                 </p>
 
             </div>

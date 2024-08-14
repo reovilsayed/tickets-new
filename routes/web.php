@@ -89,29 +89,29 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/send/email/{order}', function (Order $order, Request $request) {
 
         // try {
-            $ticket = null;
-            $product = null;
-            if ($request->filled('ticket')) {
-                $ticket = Ticket::find($request->ticket);
-            }
-            if ($request->filled('product')) {
-                $product = Product::find($request->product);
-            }
-            if ($product && $ticket) {
+        $ticket = null;
+        $product = null;
+        if ($request->filled('ticket')) {
+            $ticket = Ticket::find($request->ticket);
+        }
+        if ($request->filled('product')) {
+            $product = Product::find($request->product);
+        }
+        if ($product && $ticket) {
+            Mail::to($order->user->email)->send(new TicketDownload($order, $product, $ticket));
+        } else {
+            $products = $order->tickets->groupBy('product_id');
+
+            foreach ($products as $key => $tickets) {
+                $product = Product::find($key);
+
                 Mail::to($order->user->email)->send(new TicketDownload($order, $product, $ticket));
-            } else {
-                $products = $order->tickets->groupBy('product_id');
-
-                foreach ($products as $key => $tickets) {
-                    $product = Product::find($key);
-
-                    Mail::to($order->user->email)->send(new TicketDownload($order, $product, $ticket));
-                }
             }
-            return redirect()->back()->with([
-                'message' => 'Email sent successfully',
-                'alert-type' => 'success',
-            ]);
+        }
+        return redirect()->back()->with([
+            'message' => 'Email sent successfully',
+            'alert-type' => 'success',
+        ]);
         // } catch (Exception $e) {
         //     return redirect()->back()->with([
         //         'message' => 'Email sent failed',
@@ -136,14 +136,13 @@ Route::get('page/{slug}', [PageController::class, 'getPage']);
 
 Route::get('t/{order:security_key}', function (Request $request, Order $order) {
     $tickets = $order->tickets;
-    
+
     if ($request->filled('p')) {
         $tickets = $order->tickets()->where('product_id', $request->p)->get();
     }
     if ($request->filled('t')) {
-        
+
         $tickets = $order->tickets()->where('ticket', $request->t)->get();
-    
     }
     if (!$tickets->count()) abort(403, 'No tickets found');
     return view('ticketpdf', compact('tickets'));
@@ -219,7 +218,6 @@ Route::get('test', function () {
         }
     }
 });
-
 Route::group(['prefix' => 'zone', 'as' => 'zone.'], function () {
     Route::get('/', [EnterzoneContoller::class, 'enterForm'])->name('enter');
     Route::post('/enter', [EnterzoneContoller::class, 'enter'])->name('enter.post');
