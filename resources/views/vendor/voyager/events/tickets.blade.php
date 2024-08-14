@@ -1,6 +1,33 @@
 @extends('voyager::master')
 @section('page_title', $event->title . 'Orders')
+@section('css')
+    <style>
+        .pill {
+            border-radius: 8px;
+            padding: 4px 10px;
+        }
 
+        .pill-success {
+            color: rgb(5, 202, 38);
+            background-color: rgba(172, 255, 47, 0.325);
+        }
+
+        .pill-secondary {
+            color: rgb(59, 59, 59);
+            background-color: rgba(27, 27, 27, 0.325);
+        }
+
+        .pill-danger {
+            color: rgb(160, 0, 0);
+            background-color: rgba(251, 1, 1, 0.325);
+        }
+
+        .pill-warning {
+            color: rgb(160, 56, 0);
+            background-color: rgba(160, 56, 0, 0.343);
+        }
+    </style>
+@endsection
 @section('content')
     <div class="container">
         <div class="row">
@@ -25,26 +52,47 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr class="text-center">
-                                    <th>Ticket Id</th>
+                                    <th>Ticket</th>
                                     <th>Status</th>
                                     <th>Price</th>
-                                    <th>Dates</th>
                                     <th>Created At</th>
+                                    <th>Updated At</th>
+                                    <th>
+                                        Logs
+                                    </th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($tickets as $ticket)
                                     <tr>
-                                        <td scope="row">{{ $ticket->id }}</td>
-                                        <td>{{ $ticket->status() }}</td>
+                                        <td>{{ $ticket->ticket }}</td>
+                                        <td> <span
+                                                class="pill pill-{{ $ticket->getBsStatusClass() }}">{{ $ticket->status() }}</span>
+                                        </td>
                                         <td>{{ Sohoj::price($ticket->price) }}</td>
-                                        <td>{{ optional($ticket->dates)->format('d F, Y') ?? 'N/A' }}</td>
                                         <td>{{ $ticket->created_at->format(' d F, Y') }}</td>
+                                        <td>{{ $ticket->updated_at->format(' d F, Y') }}</td>
+                                        <td>
+                                            <ul>
+                                                @foreach ($ticket->logs as $log)
+                                                    <li>
+                                                        {{ $log['action'] . ' at ' . Carbon\Carbon::parse($log['time'])->format('d M H:i') . ' from ' . $log['zone'] }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </td>
                                         <td class="align-center">
-                                            <a href="" class="btn btn-sm btn-warning pull-right">
-                                                <i class="voyager-eye"></i> View
+                                            <a href="{{ route('download.ticket', ['order' => $ticket->order, 't' => $ticket->ticket]) }}"
+                                                class="btn btn-sm btn-info pull-right">
+                                                <i class="voyager-download"></i> Download
                                             </a>
+
+                                            <a href="{{ route('send.email', ['order' => $ticket->order, 'product' => $ticket->product_id, 'ticket' => $ticket->id]) }}"
+                                                class="btn btn-sm btn-warning pull-right">
+                                                <i class="voyager-mail"></i> Send Email
+                                            </a>
+
                                         </td>
                                     </tr>
                                 @endforeach

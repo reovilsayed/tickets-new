@@ -149,6 +149,7 @@
                     body: JSON.stringify({
                         ticket: result.data,
                         zone: "{{ $zone->id }}",
+                        mode: document.getElementById('mode').value,
                         checksum: "{{ Hash::make(env('SECURITY_KEY')) }}",
                     }),
                     headers: {
@@ -164,17 +165,15 @@
                   
                 </div>
             `;
-                        toastr.success(json.message)
                     } else {
                         statusBox.innerHTML = `
              <div class="box" id="log-error">
                     <img src="{{ asset('assets/red-light.png') }}" alt="">
-                    <h3>
-                        Log Error
-                    </h3>
+                    <h5>
+                        ${json.message}
+                    </h5>
                 </div>
             `;
-                        toastr.error(json.message)
                     }
 
                 });
@@ -219,6 +218,16 @@
             <a href="{{ route('zone.enter') }}" class="add-new-session">
                 Add new session
             </a>
+            <div class="form-group">
+                <select class="form-control text-center w-50 mx-auto" name="mode" id="mode">
+                    <option value="1">
+                        {{ __('words.check_in') }}
+                    </option>
+                    <option value="2">
+                        {{ __('words.check_out') }}
+                    </option>
+                </select>
+            </div>
             <div id="statusBox" style="display: none;" class="status">
 
 

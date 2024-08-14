@@ -15,16 +15,18 @@ class TicketDownload extends Mailable
 
     public $order;
     public $product;
+    public $ticket;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($order, $product)
+    public function __construct($order, $product, $ticket)
     {
         $this->order = $order;
         $this->product = $product;
+        $this->ticket = $ticket;
     }
 
     /**

@@ -54,10 +54,15 @@
                                                 class="btn btn-sm btn-warning pull-right">
                                                 <i class="voyager-eye"></i> View
                                             </a>
-                                            <a href="{{  route('download.ticket', ['order' => $order]) }}"
-                                            class="btn btn-sm btn-info pull-left">
-                                            <i class="voyager-eye"></i> Tickets
-                                        </a>
+                                            <a href="{{ route('download.ticket', ['order' => $order]) }}"
+                                                class="btn btn-sm btn-info pull-left">
+                                                <i class="voyager-eye"></i> Tickets
+                                            </a>
+
+                                            <a style="margin-left: 10px;" href="{{ route('send.email', ['order' => $order]) }}"
+                                                class="btn  btn-warning pull-left">
+                                                <i class="voyager-mail"></i> Send Email
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

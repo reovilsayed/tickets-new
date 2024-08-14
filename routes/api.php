@@ -27,30 +27,39 @@ Route::post('/scan-ticket', function (Request $request) {
         if (Hash::check(env('SECURITY_KEY'), $request->checksum)) {
             $ticket = Ticket::where('ticket', $request->ticket)->first();
             $zone = Zone::find($request->zone);
-            if($ticket->product->zones->contains($zone) == false) {
-                throw new Exception('Invalid zone');
+            if ($ticket->product->zones->contains($zone) == false) {
+                throw new Exception(__('words.invalid_zone'));
             };
             if (!$zone) throw new Exception('Zone does not exist');
             $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => ''];
             if ($ticket) {
                 if ($ticket->status == 0) {
+                    if ($request->mode != 1) {
+                        throw new Exception(__('words.checkout_mode_checkin_error'));
+                    }
                     $ticket->status = 1;
                     $ticket->check_in_zone = $zone->id;
                     $log['action'] = 'Checked in';
-                } elseif ($ticket->status == 1)
+                } elseif ($ticket->status == 1) {
+                    if ($request->mode != 2) {
+                        throw new Exception(__('words.checkin_mode_checkout_error'));
+                    }
                     if ($ticket->product->check_out) {
                         $ticket->status = 2;
                         $ticket->check_out_zone = $zone->id;
                         $log['action'] = 'Checked Out';
                     } else {
-                        throw new Exception('Checkout not allowed');
+                        throw new Exception(__('words.checkout_not_allowd_error'));
                     }
-                elseif ($ticket->status == 2) {
+                } elseif ($ticket->status == 2) {
+                    if ($request->mode != 1) {
+                        throw new Exception(__('words.checkout_mode_checkin_error'));
+                    }
                     $ticket->status = 1;
                     $ticket->check_in_zone = $zone->id;
                     $log['action'] = 'Checked in';
                 } else {
-                    throw new Exception('Ticket is expired');
+                    throw new Exception(__('words.ticket_expired_error'));
                 }
                 $log['zone'] = $zone->name;
                 $data = $ticket->logs;
@@ -62,10 +71,10 @@ Route::post('/scan-ticket', function (Request $request) {
                     'message' => $log['action']
                 ]);
             } else {
-                throw new Exception('Ticket not found');
+                throw new Exception(__('words.invalid_ticket_error'));
             }
         } else {
-            throw new Exception('Authorization failed');
+            throw new Exception(__('words.illegal_attempt_error'));
         }
     } catch (Exception $e) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
