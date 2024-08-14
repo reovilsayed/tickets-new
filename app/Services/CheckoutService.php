@@ -48,7 +48,7 @@ class CheckoutService
                 $order->tickets()->create([
                     'user_id' => auth()->id() ?? null,
                     'owner' => $this->billingObject(),
-                    'event_id' => $item->model->event_id,
+                    'event_id' => $this->event->id,
                     'product_id' => $item->id,
                     'order_id' => $order->id,
                     'ticket' => uniqid(),
@@ -86,7 +86,8 @@ class CheckoutService
             'status' => 0,
             'payment_method' => 'easypay.pt',
             'transaction_id' => Str::uuid(),
-            'security_key' => Str::uuid()
+            'security_key' => Str::uuid(),
+            'event_id'=>$this->event->id,
         ]);
     }
 

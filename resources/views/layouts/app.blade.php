@@ -123,8 +123,8 @@
             </div>
         </div>
     </div>
-    
-    @if (!request()->routeIs('zone.enter'))
+
+    @if (!in_array(url()->current(), [route('zone.enter'), route('zone.scanner')]))
         <footer class="footer">
             <div class="footer-top">
                 <div class="container">
