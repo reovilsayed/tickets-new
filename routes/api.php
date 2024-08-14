@@ -77,6 +77,6 @@ Route::post('/scan-ticket', function (Request $request) {
             throw new Exception(__('words.illegal_attempt_error'));
         }
     } catch (Exception $e) {
-        return response()->json(['status' => 'error', 'message' => __('words.invalid_ticket_error')]);
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
     }
 })->name('api.scan-ticket');
