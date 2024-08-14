@@ -178,7 +178,6 @@
                     }
 
                 });
-            camQrResult.style.color = 'teal';
             qrBox.style.display = 'flex';
             viewfinder.style.display = 'none';
 
