@@ -123,107 +123,110 @@
             </div>
         </div>
     </div>
-    <footer class="footer">
-        <div class="footer-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="footer-column footer-about">
-                            {{-- <h3 class="footer-title">{{ __('words.about') }}</h3> --}}
-                            {{-- <p class="footer-about-text">{{ setting('site.about') }}</p> --}}
+    
+    @if (!request()->routeIs('zone.enter'))
+        <footer class="footer">
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="footer-column footer-about">
+                                {{-- <h3 class="footer-title">{{ __('words.about') }}</h3> --}}
+                                {{-- <p class="footer-about-text">{{ setting('site.about') }}</p> --}}
 
-                            <div class=" mt-3 mb-3 d-flex justify-content-end align-items-center p-0">
-
-
-                                <div class="ec-subscribe-form ">
-                                    <label for="" class="text-white mb-3"
-                                        style="font-size:22px">{{ __('words.subcribe_now') }} :</label>
-                                    <div id="ec_news_signup" class="ec-form footer-email">
+                                <div class=" mt-3 mb-3 d-flex justify-content-end align-items-center p-0">
 
 
-                                        <button id="ec-news-btn" class="butn-dark2 " type="submit" name="subscribe"
-                                            value="">
-                                            <span><a target="_blank"
-                                                    href="https://lp.egoi.page/1eIe6Y8m/signup">{{ __('words.subcribe') }}</a></span>
-                                        </button>
+                                    <div class="ec-subscribe-form ">
+                                        <label for="" class="text-white mb-3"
+                                            style="font-size:22px">{{ __('words.subcribe_now') }} :</label>
+                                        <div id="ec_news_signup" class="ec-form footer-email">
 
 
-                                    </div>
-                                    <!-- Button trigger modal -->
-                                    {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            <button id="ec-news-btn" class="butn-dark2 " type="submit"
+                                                name="subscribe" value="">
+                                                <span><a target="_blank"
+                                                        href="https://lp.egoi.page/1eIe6Y8m/signup">{{ __('words.subcribe') }}</a></span>
+                                            </button>
+
+
+                                        </div>
+                                        <!-- Button trigger modal -->
+                                        {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#staticBackdrop">
                                         popup testing
                                     </button> --}}
+                                    </div>
+
                                 </div>
 
                             </div>
-
                         </div>
-                    </div>
-                    <div class="col-md-3 offset-md-1">
-                        <div class="footer-column footer-explore clearfix">
+                        <div class="col-md-3 offset-md-1">
+                            <div class="footer-column footer-explore clearfix">
 
-                            <h3 class="footer-title">{{ __('words.explore') }}</h3>
-                            <div class="line-footer mb-2"></div>
+                                <h3 class="footer-title">{{ __('words.explore') }}</h3>
+                                <div class="line-footer mb-2"></div>
 
-                            <ul class="footer-explore-list list-unstyled">
-                                {{-- <li><a href="{{ route('homepage') }}"></a></li> --}}
-                                {{-- <li><a href="{{ route('about') }}">About</a></li> --}}
-                                <li><a href="{{ route('contact') }}">{{ __('words.contact') }}</a></li>
-                                <li><a
-                                        href="{{ url('page/terms-and-conditions') }}">{{ __('words.terms_&_conditions') }}</a>
-                                </li>
-                            </ul>
-                            {{-- {!! menu('main', 'menus.bootstrap') !!} --}}
+                                <ul class="footer-explore-list list-unstyled">
+                                    {{-- <li><a href="{{ route('homepage') }}"></a></li> --}}
+                                    {{-- <li><a href="{{ route('about') }}">About</a></li> --}}
+                                    <li><a href="{{ route('contact') }}">{{ __('words.contact') }}</a></li>
+                                    <li><a
+                                            href="{{ url('page/terms-and-conditions') }}">{{ __('words.terms_&_conditions') }}</a>
+                                    </li>
+                                </ul>
+                                {{-- {!! menu('main', 'menus.bootstrap') !!} --}}
 
-                        </div>
-
-                    </div>
-                    <div class="col-md-4">
-                        <div class="footer-column footer-contact">
-                            <h3 class="footer-title line-cont">{{ __('words.contact') }}</h3>
-                            <div class="line-footer mb-2"></div>
-                            <p class="footer-contact-text">{{ setting('site.description') }}</p>
-                            <div class="footer-contact-info">
-                                <p class="footer-contact-phone"><span class="flaticon-call"></span>
-                                    <a href="" class="text-white">{{ setting('site.phone') }}</a>
-                                </p>
-                                <p class="footer-contact-phone"><span class="flaticon-envelope"></span>
-                                    <a href=""class="text-white">{{ setting('site.email') }}</a>
-                                </p>
-                                {{-- <p><a href="#" class="text-white">{{ __('Contact_us') }}</a></p> --}}
                             </div>
-                            <div class="footer-about-social-list">
-                                <a href="{{ setting('social.fb_link') }}"><i
-                                        class="fa-brands fa-facebook fa-lg"></i></a>
-                                <a href="{{ setting('social.inst_link') }}"><i
-                                        class="fa-brands fa-square-instagram fa-lg"></i></a>
-                                <a href="{{ setting('social.twiter_link') }}"><i
-                                        class="fa-brands fa-twitter fa-lg"></i></a>
-                                <a href="{{ setting('social.youtube') }}"><i
-                                        class="fa-brands fa-youtube fa-lg"></i></a>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="footer-column footer-contact">
+                                <h3 class="footer-title line-cont">{{ __('words.contact') }}</h3>
+                                <div class="line-footer mb-2"></div>
+                                <p class="footer-contact-text">{{ setting('site.description') }}</p>
+                                <div class="footer-contact-info">
+                                    <p class="footer-contact-phone"><span class="flaticon-call"></span>
+                                        <a href="" class="text-white">{{ setting('site.phone') }}</a>
+                                    </p>
+                                    <p class="footer-contact-phone"><span class="flaticon-envelope"></span>
+                                        <a href=""class="text-white">{{ setting('site.email') }}</a>
+                                    </p>
+                                    {{-- <p><a href="#" class="text-white">{{ __('Contact_us') }}</a></p> --}}
+                                </div>
+                                <div class="footer-about-social-list">
+                                    <a href="{{ setting('social.fb_link') }}"><i
+                                            class="fa-brands fa-facebook fa-lg"></i></a>
+                                    <a href="{{ setting('social.inst_link') }}"><i
+                                            class="fa-brands fa-square-instagram fa-lg"></i></a>
+                                    <a href="{{ setting('social.twiter_link') }}"><i
+                                            class="fa-brands fa-twitter fa-lg"></i></a>
+                                    <a href="{{ setting('social.youtube') }}"><i
+                                            class="fa-brands fa-youtube fa-lg"></i></a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="footer-bottom-inner">
-                            <img src="{{ asset('assets/easypay.png') }}" alt="" style="width:313px;">
-                            <p class="footer-bottom-copy-right">{{ __('words.copyright') }}<a
-                                    href="{{ url('/') }}"> {{ setting('site.title') }}</a></p>
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="footer-bottom-inner">
+                                <img src="{{ asset('assets/easypay.png') }}" alt="" style="width:313px;">
+                                <p class="footer-bottom-copy-right">{{ __('words.copyright') }}<a
+                                        href="{{ url('/') }}"> {{ setting('site.title') }}</a></p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
-  
+        </footer>
+    @endif
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js"
         integrity="sha512-6sSYJqDreZRZGkJ3b+YfdhB3MzmuP9R7X1QZ6g5aIXhRvR1Y/N/P47jmnkENm7YL3oqsmI6AK+V6AD99uWDnIw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -249,15 +252,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{{ asset('assets/frontend-assets/js/custom.js') }}"></script>
 
-    @if(request()->cookie('age-verification') == null)
-    <script>
-        const ageVerifyModal = document.getElementById('ageVerifyModal');
-        if (ageVerifyModal) {
-            // Assuming you are using Bootstrap for modal functionality
-            let modal = new bootstrap.Modal(ageVerifyModal);
-            modal.show();
-        }
-    </script>
+    @if (request()->cookie('age-verification') == null)
+        <script>
+            const ageVerifyModal = document.getElementById('ageVerifyModal');
+            if (ageVerifyModal) {
+                // Assuming you are using Bootstrap for modal functionality
+                let modal = new bootstrap.Modal(ageVerifyModal);
+                modal.show();
+            }
+        </script>
     @endif
     <script>
         $(document).ready(function() {

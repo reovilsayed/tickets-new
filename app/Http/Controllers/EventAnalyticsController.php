@@ -56,8 +56,9 @@ class EventAnalyticsController extends Controller
                 $q->where('id', $search);
             });
         }
-        $orders = $orders->get();
-        return view('vendor.voyager.events.orders', compact('orders', 'event', 'user'));
+        $ordersByStatus = (clone $orders)->get()->groupBy(fn($order) => $order->getStatus())->map(fn($orders) => $orders->count());
+        $orders = $orders->paginate('10');
+        return view('vendor.voyager.events.orders', compact('orders', 'event', 'user', 'ordersByStatus'));
     }
     public function  customerReportTickets(Event $event, User $user)
     {
@@ -68,8 +69,11 @@ class EventAnalyticsController extends Controller
                 $q->where('id', $search);
             });
         }
-        $tickets = $tickets->get();
-        return view('vendor.voyager.events.tickets', compact('tickets', 'event', 'user'));
+        $ticketsByStatus = (clone $tickets)->get()->groupBy(fn($ticket) => $ticket->status())->map(fn($tickets) => $tickets->count());
+
+        $tickets = $tickets->paginate('10');
+
+        return view('vendor.voyager.events.tickets', compact('tickets', 'event', 'user', 'ticketsByStatus'));
     }
     public function refund(Order $order)
     {
@@ -79,12 +83,12 @@ class EventAnalyticsController extends Controller
             ]);
 
             return back()->with([
-                'message'    =>"Refund successfully",
+                'message'    => "Refund successfully",
                 'alert-type' => 'Success',
             ]);
-        }else{
+        } else {
             return back()->with([
-                'message'    =>"Refund danger",
+                'message'    => "Refund danger",
                 'alert-type' => 'error',
             ]);
         }
