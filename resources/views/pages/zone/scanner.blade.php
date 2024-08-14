@@ -1,53 +1,6 @@
 @extends('layouts.app')
 
 @section('css')
-    <script src="{{ asset('assets/js/qr/qr-scanner.min.js') }}" type="module"></script>
-    <script type="module">
-        import QrScanner from "{{ asset('assets/js/qr/qr-scanner.min.js') }}";
-
-        const video = document.getElementById('qr-video');
-        const camQrResult = document.getElementById('cam-qr-result');
-        const qrBox = document.querySelector('.qr-box');
-        const viewfinder = document.getElementById('viewfinder');
-
-
-        function setResult(result) {
-            let statusBox = document.getElementById('statusBox');
-            statusBox.style.display = 'block';
-            statusBox.innerHtml = `
-             <div class="box" id="log-success">
-                    <img src="{{ asset('assets/green-light.png') }}" alt="">
-                    <h3>
-                        Log Success
-                    </h3>
-                </div>
-            `;
-            console.log(result);
-            camQrResult.textContent = result.data;
-            camQrResult.style.color = 'teal';
-            clearTimeout(statusBox.timeout);
-             statusBox.timeout = setTimeout(() => statusBox.style.display = 'none', 1000);
-        }
-
-        const scanner = new QrScanner(video, result => setResult(result), {
-            highlightScanRegion: true,
-            highlightCodeOutline: true,
-        });
-
-        document.getElementById('qrbox').addEventListener('click', function() {
-            qrBox.style.display = 'none';
-            viewfinder.style.display = 'block';
-            scanner._updateOverlay()
-            scanner.start();
-
-        })
-
-
-        window.addEventListener('unload', () => {
-            scanner.stop();
-        });
-    </script>
-
     <style>
         .scanner-page {
             min-height: 100vh;
@@ -119,8 +72,7 @@
         }
 
         .scanner-inner {
-
-            padding: 50px;
+            padding-top: 20px;
             min-height: 70vh;
             display: flex;
             flex-direction: column;
@@ -177,6 +129,80 @@
         }
     </style>
 @endsection
+@section('js')
+    <script src="{{ asset('assets/js/qr/qr-scanner.min.js') }}" type="module"></script>
+    <script type="module">
+        import QrScanner from "{{ asset('assets/js/qr/qr-scanner.min.js') }}";
+
+        const video = document.getElementById('qr-video');
+        const camQrResult = document.getElementById('cam-qr-result');
+        const qrBox = document.querySelector('.qr-box');
+        const viewfinder = document.getElementById('viewfinder');
+        const statusBox = document.getElementById('statusBox');
+
+        function setResult(result) {
+            scanner.stop();
+            statusBox.style.display = 'block';
+
+            fetch("{{ route('api.scan-ticket') }}", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        ticket: result.data,
+                        zone: "{{$zone->id}}",
+                        checksum: "{{ Hash::make(env('SECURITY_KEY')) }}",
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+                }).then((response) => response.json())
+                .then((json) => {
+
+                    if (json.status == 'success') {
+                        statusBox.innerHTML = `
+             <div class="box" id="log-success">
+                    <img src="{{ asset('assets/green-light.png') }}" alt="">
+                  
+                </div>
+            `;
+                        toastr.success(json.message)
+                    } else {
+                        statusBox.innerHTML = `
+             <div class="box" id="log-error">
+                    <img src="{{ asset('assets/red-light.png') }}" alt="">
+                    <h3>
+                        Log Error
+                    </h3>
+                </div>
+            `;
+                        toastr.error(json.message)
+                    }
+
+                });
+            qrBox.style.display = 'flex';
+            viewfinder.style.display = 'none';
+
+        }
+
+        const scanner = new QrScanner(video, result => setResult(result), {
+            highlightScanRegion: true,
+            highlightCodeOutline: true,
+        });
+
+        document.getElementById('qrbox').addEventListener('click', function() {
+            qrBox.style.display = 'none';
+            viewfinder.style.display = 'block';
+            statusBox.style.display = 'none';
+            scanner._updateOverlay()
+            scanner.start();
+
+        })
+
+
+        window.addEventListener('unload', () => {
+            scanner.stop();
+        });
+    </script>
+@endsection
 
 @section('content')
     <section class="scanner-page">
@@ -194,13 +220,7 @@
                 Add new session
             </a>
             <div id="statusBox" style="display: none;" class="status">
-                <div class="box" id="log-success">
-                    <img src="{{ asset('assets/green-light.png') }}" alt="">
-                    <h3>
-                        Log Success
-                    </h3>
 
-                </div>
 
             </div>
         </div>

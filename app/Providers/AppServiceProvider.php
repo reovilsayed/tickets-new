@@ -37,6 +37,5 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\ReplyAction::class);
         Voyager::addAction(\App\Actions\DuplicateAction::class);
         Voyager::addAction(\App\Actions\AnalyticsAction::class);
-        Voyager::addFormField(RelationShipDropDown::class);
     }
 }

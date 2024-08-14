@@ -24,61 +24,69 @@ class Product extends Model
     public function dates(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->datesArray()
+            get: fn() => $this->datesArray()
+        );
+    }
+
+    public function zones(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => json_encode($value),
+            get: fn($value) => $value ? collect(json_decode($value, true))->map(fn($id) => Zone::find($id)) : collect([])
         );
     }
     public function price(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
     public function salePrice(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
 
     public function tax(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
 
     public function secondaryTax(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
 
     public function secondaryTaxPercentage(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
 
     public function tartiaryTax(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
 
     public function tartiaryTaxPercentage(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
     public function discount()
@@ -161,9 +169,5 @@ class Product extends Model
 
             $this->dates = $dates;
         }
-    }
-
-    public function zones(){
-        return $this->event->zones;
     }
 }

@@ -54,7 +54,7 @@ class CheckoutService
                     'ticket' => uniqid(),
                     'price' => $item->price,
                     'dates' => $item->model->dates,
-                    'security_key'=>  Str::uniqid()
+                    'security_key'=>  Str::uuid()
                 ]);
             }
         }

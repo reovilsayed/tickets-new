@@ -93,21 +93,13 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/customer-report', [EventAnalyticsController::class, 'customerReport'])->name('voyager.events.customer.analytics');
         Route::get('/customer-report/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');
         Route::get('/customer-report/{user}/tickets', [EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
+        Route::get('/event/{event}/user/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders.search');
     });
 });
 Auth::routes(['verify' => true]);
 
 Route::get('page/{slug}', [PageController::class, 'getPage']);
-// Route::get('user-invoice/{$order}', [PageController::class, 'invoiceOrder'])->name('invoiceOrder');
 
-
-// Route::get('download-ticket', function (Request $request) {
-//     $order = Order::find($request->order);
-//     $product = Product::find($request->product);
-//     $tickets = $order->tickets()->where('product_id', $request->product)->get();
-
-//     return view('ticketpdf', compact('tickets'));
-// })->name('download.ticket');
 
 Route::get('t/{order:security_key}', function (Request $request, Order $order) {
     $tickets = $order->tickets;
@@ -176,8 +168,7 @@ Route::post('age-verification', function (Request $request) {
 })->name('verify.age');
 
 
-Route::get('test', function () {
-
+Route::get('test',function(){
     $orders = Order::all();
     foreach ($orders as $order) {
    
@@ -196,4 +187,3 @@ Route::group(['prefix' => 'zone', 'as' => 'zone.'], function () {
     Route::post('/enter', [EnterzoneContoller::class, 'enter'])->name('enter.post');
     Route::get('/scanner', [EnterzoneContoller::class, 'scanner'])->name('scanner');
 });
-Route::get('interzone-2', [PageController::class, 'interzone_2'])->name('interzone_2');

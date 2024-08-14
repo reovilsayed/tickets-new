@@ -14,7 +14,9 @@ class Order extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'paid_date'=>'datetime'
+        'paid_date'=>'datetime',
+        'date_paid'=>'datetime',
+        'date_completed'=>'datetime'
     ];
 
     public function user()

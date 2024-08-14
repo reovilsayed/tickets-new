@@ -12,20 +12,27 @@ class Ticket extends Model
     use HasFactory;
     protected $guarded = [];
     protected $casts = [
-        'dates'=>'json'
+        'dates' => 'json'
     ];
     public function dates(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => json_encode($value),
-            get: fn ($value) => json_decode($value)
+            set: fn($value) => json_encode($value),
+            get: fn($value) => json_decode($value)
         );
     }
     public function owner(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => json_encode($value),
-            get: fn ($value) => json_decode($value)
+            set: fn($value) => json_encode($value),
+            get: fn($value) => json_decode($value)
+        );
+    }
+    public function logs(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => json_encode($value),
+            get: fn($value) => $value ? json_decode($value, true) : []
         );
     }
 
@@ -44,7 +51,16 @@ class Ticket extends Model
     }
     public function status()
     {
-        return 'pending';
+        switch ($this->status) {
+            case 1:
+                return 'Checked In';
+            case 2:
+                return 'Checked Out';
+            case 3:
+                return 'Expired';
+            default:
+                return 'Pending';
+        }
     }
 
     protected static function booted(): void
