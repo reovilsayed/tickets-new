@@ -71,4 +71,16 @@ class Ticket extends Model
             });
         });
     }
+
+    
+    public function getBsStatusClass(){
+        
+        switch ($this->status){
+            case 0 : return 'secondary';
+            case 1 : return 'success';
+            case 2 : return 'success';
+            case 3 : return 'danger';
+            default : return 'secondary';
+        }
+    }
 }

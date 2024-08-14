@@ -16,6 +16,7 @@ class EnterzoneContoller extends Controller
     public function enter(Request $request)
     {
         $zone = Zone::where('security_key', $request->code)->first();
+        if (!$zone) abort(403);
         $event = $zone->event;
         session()->put('enter-zone', [
             'zone' => $zone,
