@@ -9,7 +9,7 @@ class EnterzoneContoller extends Controller
 {
     public function enterForm()
     {
-
+        session()->forget('enter-zone');
         return view('pages.zone.enter');
     }
 
@@ -25,9 +25,13 @@ class EnterzoneContoller extends Controller
         return redirect()->route('zone.scanner');
     }
 
-    public function scanner(){
+    public function scanner()
+    {
+        if (session()->has('enter-zone') == false) {
+            abort(403);
+        }
         $zone = session()->get('enter-zone')['zone'];
         $event = session()->get('enter-zone')['event'];
-        return view('pages.zone.scanner',compact('zone','event'));
+        return view('pages.zone.scanner', compact('zone', 'event'));
     }
 }

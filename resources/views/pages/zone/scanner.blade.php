@@ -148,7 +148,7 @@
                     method: "POST",
                     body: JSON.stringify({
                         ticket: result.data,
-                        zone: "{{$zone->id}}",
+                        zone: "{{ $zone->id }}",
                         checksum: "{{ Hash::make(env('SECURITY_KEY')) }}",
                     }),
                     headers: {
@@ -178,6 +178,7 @@
                     }
 
                 });
+            camQrResult.style.color = 'teal';
             qrBox.style.display = 'flex';
             viewfinder.style.display = 'none';
 
@@ -216,7 +217,7 @@
             <h4 class="door-name">
                 {{ $zone->name }}
             </h4>
-            <a href="" class="add-new-session">
+            <a href="{{ route('zone.enter') }}" class="add-new-session">
                 Add new session
             </a>
             <div id="statusBox" style="display: none;" class="status">
@@ -236,8 +237,6 @@
                 <div id="video-container">
                     <video id="qr-video"></video>
                 </div>
-                <b>Detected QR code: </b>
-                <span id="cam-qr-result">None</span>
             </div>
         </div>
     </section>
