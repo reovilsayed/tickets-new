@@ -53,8 +53,7 @@ class CheckoutService
                     'order_id' => $order->id,
                     'ticket' => uniqid(),
                     'price' => $item->price,
-                    'dates' => $item->model->dates,
-                    'security_key'=>  Str::uuid()
+                    'dates' => $item->model->dates
                 ]);
             }
         }
@@ -86,7 +85,8 @@ class CheckoutService
             'total' => $total,
             'status' => 0,
             'payment_method' => 'easypay.pt',
-            'transaction_id' => Str::uuid()
+            'transaction_id' => Str::uuid(),
+            'security_key' => Str::uuid()
         ]);
     }
 
