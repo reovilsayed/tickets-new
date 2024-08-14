@@ -30,7 +30,7 @@ Route::post('/scan-ticket', function (Request $request) {
             if ($ticket->product->zones->contains($zone) == false) {
                 throw new Exception(__('words.invalid_zone'));
             };
-            if (!$zone) throw new Exception('Zone does not exist');
+            if (!$zone) throw new Exception(__('words.invalid_zone_error'));
             $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => ''];
             if ($ticket) {
                 if ($ticket->status == 0) {
@@ -49,7 +49,7 @@ Route::post('/scan-ticket', function (Request $request) {
                         $ticket->check_out_zone = $zone->id;
                         $log['action'] = 'Checked Out';
                     } else {
-                        throw new Exception(__('words.checkout_not_allowd_error'));
+                        throw new Exception(__('words.checkout_not_allowed_error'));
                     }
                 } elseif ($ticket->status == 2) {
                     if ($request->mode != 1) {
