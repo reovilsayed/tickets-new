@@ -127,6 +127,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/customer-report/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');
         Route::get('/customer-report/{user}/tickets', [EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
     });
+    Route::get('orders/refund/{order}', [EventAnalyticsController::class, 'refund'])->name('order.refund');
 });
 Auth::routes(['verify' => true]);
 

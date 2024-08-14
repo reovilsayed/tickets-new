@@ -71,4 +71,22 @@ class EventAnalyticsController extends Controller
         $tickets = $tickets->get();
         return view('vendor.voyager.events.tickets', compact('tickets', 'event', 'user'));
     }
+    public function refund(Order $order)
+    {
+        if ($order->status == 1) {
+            $order->update([
+                'status' => 3,
+            ]);
+
+            return back()->with([
+                'message'    =>"Refund successfully",
+                'alert-type' => 'Success',
+            ]);
+        }else{
+            return back()->with([
+                'message'    =>"Refund danger",
+                'alert-type' => 'error',
+            ]);
+        }
+    }
 }
