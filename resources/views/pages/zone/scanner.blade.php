@@ -221,10 +221,10 @@
             <div class="form-group">
                 <select class="form-control text-center w-50 mx-auto" name="mode" id="mode">
                     <option value="1">
-                        {{ __('words.check_in') }}
+                        {{ __('words.check_in_mode') }}
                     </option>
                     <option value="2">
-                        {{ __('words.check_out') }}
+                        {{ __('words.check_out_mode') }}
                     </option>
                 </select>
             </div>
