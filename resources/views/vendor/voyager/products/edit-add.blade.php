@@ -146,7 +146,8 @@
                                                 type="checkbox" @if (in_array($id, $dataTypeContent->zones->pluck('id')->toArray())) checked @endif
                                                 value="" id="zone{{ $id }}" />
                                             <label class="form-check-label" for="zone{{ $id }}">
-                                                {{ $name }}</label>
+                                                {{ $name }}
+                                            </label>
                                         </div>
                                     @endforeach
                                 </div>
