@@ -54,7 +54,7 @@
                                                 class="btn btn-sm btn-warning pull-right">
                                                 <i class="voyager-eye"></i> View
                                             </a>
-                                            <a href="{{ {{ route('download.ticket', ['order' => $order]) }} }}"
+                                            <a href="{{  route('download.ticket', ['order' => $order]) }}"
                                             class="btn btn-sm btn-warning pull-right">
                                             <i class="voyager-eye"></i> Tickets
                                         </a>
