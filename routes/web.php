@@ -93,7 +93,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/customer-report', [EventAnalyticsController::class, 'customerReport'])->name('voyager.events.customer.analytics');
         Route::get('/customer-report/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');
         Route::get('/customer-report/{user}/tickets', [EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
-     });
+    });
+    Route::get('orders/refund/{order}', [EventAnalyticsController::class, 'refund'])->name('order.refund');
 });
 Auth::routes(['verify' => true]);
 
@@ -102,10 +103,10 @@ Route::get('page/{slug}', [PageController::class, 'getPage']);
 
 Route::get('t/{order:security_key}', function (Request $request, Order $order) {
     $tickets = $order->tickets;
-    if($request->filled('p')){
-      $tickets = $order->tickets()->where('product_id', $request->p)->get();
+    if ($request->filled('p')) {
+        $tickets = $order->tickets()->where('product_id', $request->p)->get();
     }
-    if(!$tickets->count()) abort(403,'No tickets found');
+    if (!$tickets->count()) abort(403, 'No tickets found');
     return view('ticketpdf', compact('tickets'));
 })->name('download.ticket');
 
@@ -167,17 +168,16 @@ Route::post('age-verification', function (Request $request) {
 })->name('verify.age');
 
 
-Route::get('test',function(){
+Route::get('test', function () {
     $orders = Order::all();
     foreach ($orders as $order) {
-   
-            if ($order->tickets->count()) {
 
-                $order->event_id = $order->tickets()->first()->event_id;
-                $order->security_key = Str::uuid();
-                $order->save();
-            }
-        
+        if ($order->tickets->count()) {
+
+            $order->event_id = $order->tickets()->first()->event_id;
+            $order->security_key = Str::uuid();
+            $order->save();
+        }
     }
 });
 
