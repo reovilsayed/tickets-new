@@ -14,6 +14,7 @@ use App\Http\Controllers\WishlistController;
 use App\Mail\TicketDownload;
 use App\Mail\TicketPlaced;
 use App\Models\Event;
+use App\Models\Extras;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
@@ -86,6 +87,11 @@ Route::group(['prefix' => 'admin'], function () {
         return redirect()->back();
     })->name('voyager.products.duplicate');
 
+    Route::get('/products/{product}/extras', function (Product $product) {
+       
+       
+        return view('vendor.voyager.products.extras', compact('extras'));
+    })->name('voyager.products.extras');
     Route::get('/send/email/{order}', function (Order $order, Request $request) {
 
         // try {
