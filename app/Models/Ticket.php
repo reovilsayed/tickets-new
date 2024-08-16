@@ -63,6 +63,13 @@ class Ticket extends Model
         }
     }
 
+    public function extras(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => json_encode($value),
+            get: fn($value) => json_decode($value, true) ?? []
+        );
+    }
     protected static function booted(): void
     {
         static::addGlobalScope('ancient', function (Builder $builder) {

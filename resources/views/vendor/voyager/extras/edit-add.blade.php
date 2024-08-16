@@ -56,109 +56,95 @@
                             @endphp
 
                             @foreach ($dataTypeRows as $row)
-                                <!-- GET THE DISPLAY OPTIONS -->
-                                @php
-                                    $display_options = $row->details->display ?? null;
-                                    if ($dataTypeContent->{$row->field . '_' . ($edit ? 'edit' : 'add')}) {
-                                        $dataTypeContent->{$row->field} =
-                                            $dataTypeContent->{$row->field . '_' . ($edit ? 'edit' : 'add')};
-                                    }
-                                @endphp
-                                @if (isset($row->details->legend) && isset($row->details->legend->text))
-                                    <legend class="text-{{ $row->details->legend->align ?? 'center' }}"
-                                        style="background-color: {{ $row->details->legend->bgcolor ?? '#f0f0f0' }};padding: 5px;">
-                                        {{ $row->details->legend->text }}</legend>
-                                @endif
-
-                                <div class="form-group @if ($row->type == 'hidden') hidden @endif col-md-{{ $display_options->width ?? 12 }} {{ $errors->has($row->field) ? 'has-error' : '' }}"
-                                    @if (isset($display_options->id)) {{ "id=$display_options->id" }} @endif>
-                                    {{ $row->slugify }}
-                                    <label class="control-label"
+                                @if ($row->field == 'zones')
+                                    @php
+                                        $zones = $dataTypeContent->event->zones;
+                                    @endphp
+                                    <div class="form-group @if ($row->type == 'hidden') hidden @endif col-md-{{ $display_options->width ?? 12 }} {{ $errors->has($row->field) ? 'has-error' : '' }}"
+                                   
+                                        @if (isset($display_options->id)) {{ "id=$display_options->id" }} @endif>
+                                        <label class="control-label"
                                         for="name">{{ $row->getTranslatedAttribute('display_name') }}</label>
-                                    @include('voyager::multilingual.input-hidden-bread-edit-add')
-                                    @if ($add && isset($row->details->view_add))
-                                        @include($row->details->view_add, [
-                                            'row' => $row,
-                                            'dataType' => $dataType,
-                                            'dataTypeContent' => $dataTypeContent,
-                                            'content' => $dataTypeContent->{$row->field},
-                                            'view' => 'add',
-                                            'options' => $row->details,
-                                        ])
-                                    @elseif ($edit && isset($row->details->view_edit))
-                                        @include($row->details->view_edit, [
-                                            'row' => $row,
-                                            'dataType' => $dataType,
-                                            'dataTypeContent' => $dataTypeContent,
-                                            'content' => $dataTypeContent->{$row->field},
-                                            'view' => 'edit',
-                                            'options' => $row->details,
-                                        ])
-                                    @elseif (isset($row->details->view))
-                                        @include($row->details->view, [
-                                            'row' => $row,
-                                            'dataType' => $dataType,
-                                            'dataTypeContent' => $dataTypeContent,
-                                            'content' => $dataTypeContent->{$row->field},
-                                            'action' => $edit ? 'edit' : 'add',
-                                            'view' => $edit ? 'edit' : 'add',
-                                            'options' => $row->details,
-                                        ])
-                                    @elseif ($row->type == 'relationship')
-                                        @include('voyager::formfields.relationship', [
-                                            'options' => $row->details,
-                                        ])
-                                    @else
-                                        {!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}
-                                    @endif
-
-                                    @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
-                                        {!! $after->handle($row, $dataType, $dataTypeContent) !!}
-                                    @endforeach
-                                    @if ($errors->has($row->field))
-                                        @foreach ($errors->get($row->field) as $error)
-                                            <span class="help-block">{{ $error }}</span>
+                                        @foreach ($zones as $zone)
+                                            <div class="form-check">
+                                                <input class="form-check-input" name="zones[]" type="checkbox"
+                                                    value="{{ $zone->id }}" @if(in_array($zone->id,$dataTypeContent->zones)) checked @endif id="zone{{ $zone->id }}"  />
+                                                <label class="form-check-label"  for="zone{{ $zone->id }}">
+                                                    {{ $zone->name }} </label>
+                                            </div>
                                         @endforeach
+                                    </div>
+                                @else
+                                    <!-- GET THE DISPLAY OPTIONS -->
+                                    @php
+                                        $display_options = $row->details->display ?? null;
+                                        if ($dataTypeContent->{$row->field . '_' . ($edit ? 'edit' : 'add')}) {
+                                            $dataTypeContent->{$row->field} =
+                                                $dataTypeContent->{$row->field . '_' . ($edit ? 'edit' : 'add')};
+                                        }
+                                    @endphp
+                                    @if (isset($row->details->legend) && isset($row->details->legend->text))
+                                        <legend class="text-{{ $row->details->legend->align ?? 'center' }}"
+                                            style="background-color: {{ $row->details->legend->bgcolor ?? '#f0f0f0' }};padding: 5px;">
+                                            {{ $row->details->legend->text }}</legend>
                                     @endif
-                                </div>
+
+                                    <div class="form-group @if ($row->type == 'hidden') hidden @endif col-md-{{ $display_options->width ?? 12 }} {{ $errors->has($row->field) ? 'has-error' : '' }}"
+                                        @if (isset($display_options->id)) {{ "id=$display_options->id" }} @endif>
+                                        {{ $row->slugify }}
+                                        <label class="control-label"
+                                            for="name">{{ $row->getTranslatedAttribute('display_name') }}</label>
+                                        @include('voyager::multilingual.input-hidden-bread-edit-add')
+                                        @if ($add && isset($row->details->view_add))
+                                            @include($row->details->view_add, [
+                                                'row' => $row,
+                                                'dataType' => $dataType,
+                                                'dataTypeContent' => $dataTypeContent,
+                                                'content' => $dataTypeContent->{$row->field},
+                                                'view' => 'add',
+                                                'options' => $row->details,
+                                            ])
+                                        @elseif ($edit && isset($row->details->view_edit))
+                                            @include($row->details->view_edit, [
+                                                'row' => $row,
+                                                'dataType' => $dataType,
+                                                'dataTypeContent' => $dataTypeContent,
+                                                'content' => $dataTypeContent->{$row->field},
+                                                'view' => 'edit',
+                                                'options' => $row->details,
+                                            ])
+                                        @elseif (isset($row->details->view))
+                                            @include($row->details->view, [
+                                                'row' => $row,
+                                                'dataType' => $dataType,
+                                                'dataTypeContent' => $dataTypeContent,
+                                                'content' => $dataTypeContent->{$row->field},
+                                                'action' => $edit ? 'edit' : 'add',
+                                                'view' => $edit ? 'edit' : 'add',
+                                                'options' => $row->details,
+                                            ])
+                                        @elseif ($row->type == 'relationship')
+                                            @include('voyager::formfields.relationship', [
+                                                'options' => $row->details,
+                                            ])
+                                        @else
+                                            {!! app('voyager')->formField($row, $dataType, $dataTypeContent) !!}
+                                        @endif
+
+                                        @foreach (app('voyager')->afterFormFields($row, $dataType, $dataTypeContent) as $after)
+                                            {!! $after->handle($row, $dataType, $dataTypeContent) !!}
+                                        @endforeach
+                                        @if ($errors->has($row->field))
+                                            @foreach ($errors->get($row->field) as $error)
+                                                <span class="help-block">{{ $error }}</span>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                @endif
                             @endforeach
-
-
 
                         </div><!-- panel-body -->
 
-                        @if ($edit)
-                            <div class="panel-body">
-                                <div class="form-group">
-                                    @php
-                                        $zones = App\Models\Zone::where('event_id', $dataTypeContent->event_id)->ticketZone()->pluck(
-                                            'name',
-                                            'id',
-                                        );
-                                    @endphp
-                                    <h4>
-                                        Zones
-                                    </h4>
-                                    <hr>
-                                    @foreach ($zones as $id => $name)
-                                        <div class="form-check">
-                                            <input class="form-check-input" name="zones[]" value="{{ $id }}"
-                                                type="checkbox" @if (in_array($id, $dataTypeContent->zones->pluck('id')->toArray())) checked @endif
-                                                value="" id="zone{{ $id }}" />
-                                            <label class="form-check-label" for="zone{{ $id }}">
-                                                {{ $name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @else
-                            <div class="panel-body">
-                                <p class="text-danger text-center">
-                                    You can add zones on edit
-                                </p>
-                            </div>
-                        @endif
                         <div class="panel-footer">
                         @section('submit-buttons')
                             <button type="submit" class="btn btn-primary save">{{ __('voyager::generic.save') }}</button>

@@ -35,6 +35,14 @@ class Product extends Model
             get: fn($value) => $value ? collect(json_decode($value, true))->map(fn($id) => Zone::find($id)) : collect([])
         );
     }
+
+    public function extras(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => json_encode($value),
+            get: fn($value) => json_decode($value, true) ?? []
+        );
+    }
     public function price(): Attribute
     {
         return Attribute::make(

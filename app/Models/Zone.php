@@ -12,4 +12,11 @@ class Zone extends Model
     public function event(){
         return $this->belongsTo(Event::class);
     }
+
+    public function scopeTicketZone($query){
+        return $query->whereType(0);
+    }
+    public function scopeProductZone($query){
+        return $query->whereType(1);
+    }
 }

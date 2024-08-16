@@ -14,6 +14,7 @@ use App\Http\Controllers\WishlistController;
 use App\Mail\TicketDownload;
 use App\Mail\TicketPlaced;
 use App\Models\Event;
+use App\Models\Extra;
 use App\Models\Extras;
 use App\Models\Order;
 use App\Models\Product;
@@ -42,9 +43,6 @@ use Illuminate\Support\Str;
 |
 */
 
-Route::get('/test/{ticket}', function (Ticket $ticket) {
-    return new TicketPlaced($ticket, 'This message is for test purpose');
-});
 
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
@@ -88,10 +86,25 @@ Route::group(['prefix' => 'admin'], function () {
     })->name('voyager.products.duplicate');
 
     Route::get('/products/{product}/extras', function (Product $product) {
-       
-       
-        return view('vendor.voyager.products.extras', compact('extras'));
+
+        $extras = Extra::where('event_id', $product->event_id)->get();
+
+        return view('vendor.voyager.products.extras', compact('extras', 'product'));
     })->name('voyager.products.extras');
+
+    Route::post('/products/{product}/add-extras', function (Product $product, Request $request) {
+
+        $data = [];
+        foreach ($request->extras as $key => $extra) {
+
+            if (isset($extra['checked'])) {
+                $data[$key] = $extra['qty'];
+            }
+        }
+        $product->extras = $data;
+        $product->save();
+        return redirect()->back()->with(['alert-type' => 'success', 'message' => 'Extras updated']);
+    })->name('voyager.products.add-extras');
     Route::get('/send/email/{order}', function (Order $order, Request $request) {
 
         // try {
@@ -162,6 +175,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
         $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
         if ($order) {
             if ($request->status == 'success') {
+                $order->status = 1;
                 $order->payment_status = 1;
                 $order->date_paid = now();
                 $order->save();
@@ -182,6 +196,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 // $response = $toco->sendEmailDocument($order, $response['id']);
                 // Log::info($response);
             } else {
+                $order->status = 2;
                 $order->payment_status = 2;
                 $order->save();
             }
@@ -212,20 +227,33 @@ Route::post('age-verification', function (Request $request) {
 })->name('verify.age');
 
 
-Route::get('test', function () {
-    $orders = Order::all();
-    foreach ($orders as $order) {
+Route::post('extras-used', function (Request $request) {
+    
+    $request->validate([
+        'ticket'=>'required',
+        'withdraw'=>'required',
+        'session'=>'required',
+    ]);
+    if(session()->get('enter-extra-zone')['id'] != $request->session) throw new Exception(__('Unauthorized access'));
+    $ticket = Ticket::where('ticket', $request->ticket)->first();
+    $extras = $ticket->extras;
 
-        if ($order->tickets->count()) {
+    // dd($extras);
+    foreach ($request->withdraw as $key => $qty) {
+        $extras[$key]['used'] += $qty;
+    };
+    $ticket->extras = $extras;
+    $ticket->save();
+    return redirect()->back()->with('success_msg', __('extra_product_withdraw_success_message'));
+})->name('extras-used');
 
-            $order->event_id = $order->tickets()->first()->event_id;
-            $order->security_key = Str::uuid();
-            $order->save();
-        }
-    }
-});
 Route::group(['prefix' => 'zone', 'as' => 'zone.'], function () {
     Route::get('/', [EnterzoneContoller::class, 'enterForm'])->name('enter');
     Route::post('/enter', [EnterzoneContoller::class, 'enter'])->name('enter.post');
     Route::get('/scanner', [EnterzoneContoller::class, 'scanner'])->name('scanner');
+});
+Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.'], function () {
+    Route::get('/', [EnterzoneContoller::class, 'enterExtraForm'])->name('enter');
+    Route::post('/enter', [EnterzoneContoller::class, 'enterExtra'])->name('enter.post');
+    Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
 });

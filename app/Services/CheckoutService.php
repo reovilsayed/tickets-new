@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Event;
+use App\Models\Extra;
 use App\Models\Order;
 use App\Services\Payment\EasyPay;
 use Cart;
@@ -45,7 +46,7 @@ class CheckoutService
             $item->model->quantity -= $item->quantity;
             $item->model->save();
             for ($i = 1; $i <= $item->quantity; $i++) {
-                $order->tickets()->create([
+                $data = [
                     'user_id' => auth()->id() ?? null,
                     'owner' => $this->billingObject(),
                     'event_id' => $this->event->id,
@@ -54,7 +55,13 @@ class CheckoutService
                     'ticket' => uniqid(),
                     'price' => $item->price,
                     'dates' => $item->model->dates
-                ]);
+                ];
+          
+                if ($item->model->extras && count($item->model->extras)) {
+                    $data['hasExtras'] = true;
+                    $data['extras'] = collect($item->model->extras)->map(fn($qty,$key)=>['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray();
+                }
+                $order->tickets()->create($data);
             }
         }
         $payment = EasyPay::createPaymentLink($order);
@@ -87,7 +94,7 @@ class CheckoutService
             'payment_method' => 'easypay.pt',
             'transaction_id' => Str::uuid(),
             'security_key' => Str::uuid(),
-            'event_id'=>$this->event->id,
+            'event_id' => $this->event->id,
         ]);
     }
 

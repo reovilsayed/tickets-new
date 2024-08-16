@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Extra;
 use App\Models\Ticket;
 use App\Models\Zone;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ Route::post('/scan-ticket', function (Request $request) {
                     $ticket->status = 1;
                     $ticket->check_in_zone = $zone->id;
                     $log['action'] = 'Checked in';
-                } elseif ($ticket->status == 1) {
+                } elseif ($ticket->stgatus == 1) {
                     if ($request->mode != 2) {
                         throw new Exception(__('words.checkin_mode_checkout_error'));
                     }
@@ -80,3 +81,26 @@ Route::post('/scan-ticket', function (Request $request) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
     }
 })->name('api.scan-ticket');
+
+Route::post('/extras-scan-ticker', function (Request $request) {
+    try {
+        if (Hash::check(env('SECURITY_KEY'), $request->checksum)) {
+            $ticket = Ticket::where('ticket', $request->ticket)->first();
+            $extras = [];
+   
+            foreach ($ticket->extras as $extra){
+                if(Extra::find($extra['id'])->zone_id != $request->zone){
+                    continue;
+                }
+                array_push($extras, $extra);
+            }
+
+           
+            $zone = Zone::find($request->zone);
+            $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
+            return response()->json($data);
+        }
+    } catch (Exception $e) {
+        return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+    }
+})->name('api.extras-scan-ticket');
