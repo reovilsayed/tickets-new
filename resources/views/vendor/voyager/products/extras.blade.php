@@ -14,7 +14,7 @@
                 <div class="panel panel-bordered">
                     <div class="panel-body">
                         <h3>
-                            Add Extras
+                            Add Product
                         </h3>
                         <hr>
                         <form action="{{ route('voyager.products.add-extras', $product) }}" method="post">

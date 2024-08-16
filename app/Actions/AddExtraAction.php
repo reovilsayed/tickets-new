@@ -8,7 +8,7 @@ class AddExtraAction extends AbstractAction
 {
     public function getTitle()
     {
-        return 'Add Extra';
+        return 'Add Product';
     }
 
 

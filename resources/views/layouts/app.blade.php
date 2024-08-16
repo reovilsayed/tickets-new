@@ -124,7 +124,13 @@
         </div>
     </div>
 
-    @if (!in_array(url()->current(), [route('zone.enter'), route('zone.scanner')]))
+    @if (
+        !in_array(url()->current(), [
+            route('zone.enter'),
+            route('zone.scanner'),
+            route('extraszone.enter'),
+            route('extraszone.scanner'),
+        ]))
         <footer class="footer">
             <div class="footer-top">
                 <div class="container">
