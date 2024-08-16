@@ -20,7 +20,7 @@ class EnterzoneContoller extends Controller
 
     public function enter(Request $request)
     {
-        $zone = Zone::where('security_key', $request->code)->first();
+        $zone = Zone::where('security_key', $request->code)->ticketZone()->first();
         if (!$zone) abort(403);
         $event = $zone->event;
         session()->put('enter-zone', [
@@ -32,7 +32,7 @@ class EnterzoneContoller extends Controller
     }
     public function enterExtra(Request $request)
     {
-        $zone = Zone::where('security_key', $request->code)->first();
+        $zone = Zone::where('security_key', $request->code)->productZone()->first();
         if (!$zone) abort(403);
         $event = $zone->event;
         session()->put('enter-extra-zone', [

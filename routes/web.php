@@ -228,21 +228,29 @@ Route::post('age-verification', function (Request $request) {
 
 
 Route::post('extras-used', function (Request $request) {
-    
+
     $request->validate([
-        'ticket'=>'required',
-        'withdraw'=>'required',
-        'session'=>'required',
+        'ticket' => 'required',
+        'withdraw' => 'required',
+        'session' => 'required',
     ]);
-    if(session()->get('enter-extra-zone')['id'] != $request->session) throw new Exception(__('Unauthorized access'));
+    if (session()->get('enter-extra-zone')['id'] != $request->session) throw new Exception(__('Unauthorized access'));
     $ticket = Ticket::where('ticket', $request->ticket)->first();
     $extras = $ticket->extras;
-
-    // dd($extras);
+    $zone = session()->get('enter-extra-zone')['zone'];
+    $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
+    
     foreach ($request->withdraw as $key => $qty) {
-        $extras[$key]['used'] += $qty;
+        if($qty){
+            $extras[$key]['used'] += $qty;
+            
+            $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $extras[$key]['name'];
+        }
     };
+    $data = $ticket->logs;
+    array_push($data, $log);
     $ticket->extras = $extras;
+    $ticket->logs = $data;
     $ticket->save();
     return redirect()->back()->with('success_msg', __('extra_product_withdraw_success_message'));
 })->name('extras-used');
