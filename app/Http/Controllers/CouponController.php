@@ -13,8 +13,9 @@ class CouponController extends Controller
 {
 	public function add(request $request)
 	{
-		$coupon = Coupon::where('code', $request->coupon_code)->first();
+		 $coupon = Coupon::where('code', $request->coupon_code)->first();
 
+		$discount = $coupon->discount;
 		if (!$coupon) {
 			session()->flash('errors', collect(['Incorrect coupon code']));
 			return back();
@@ -27,13 +28,18 @@ class CouponController extends Controller
 			session()->flash('errors', collect(['Coupon has been expired']));
 			return back();
 		}
-		if (Cart::getSubTotal() > $coupon->minimum_cart) {
+		if (Cart::session(request('event'))->getTotal() < $coupon->minimum_cart) {
 			session()->flash('errors', collect(['Minimum cart required to use this coupon ' . $coupon->minimum_cart]));
 			return back();
 		}
-		Session::put('discount', $coupon->discount);
+		if($coupon->type == 'percentage') {
+			$total = Cart::session(request('event'))->getTotal();
+			 $discount = ($coupon->discount / 100) * $total;
+		}
+		
+		Session::put('discount', $discount);
 		Session::put('discount_code', $coupon->code);
-		$coupon->increment('used');
+		
 
 		return back()->with('success_msg', 'Coupon has been applied successfully');
 	}

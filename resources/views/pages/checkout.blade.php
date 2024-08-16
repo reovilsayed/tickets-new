@@ -131,7 +131,7 @@
                                         </div>
 
                                         <form class="coupon-form" name="ec-cart-coupan-form" method="POST"
-                                            action="{{ route('coupon') }}">
+                                            action="{{ route('coupon',['event'=>$event->slug]) }}">
                                             @csrf
                                             <div class="">
                                                 <input type="text" required
