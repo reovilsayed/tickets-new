@@ -28,10 +28,10 @@ class CouponController extends Controller
 			session()->flash('errors', collect(['Coupon has been expired']));
 			return back();
 		}
-		if (Cart::session(request('event'))->getTotal() < $coupon->minimum_cart) {
-			session()->flash('errors', collect(['Minimum cart required to use this coupon ' . $coupon->minimum_cart]));
-			return back();
-		}
+		// if (Cart::session(request('event'))->getTotal() < $coupon->minimum_cart) {
+		// 	session()->flash('errors', collect(['Minimum cart required to use this coupon ' . $coupon->minimum_cart]));
+		// 	return back();
+		// }
 		if($coupon->type == 'percentage') {
 			$total = Cart::session(request('event'))->getTotal();
 			 $discount = ($coupon->discount / 100) * $total;
