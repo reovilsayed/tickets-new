@@ -69,7 +69,7 @@ Route::post('event/{event:slug}/add-cart', [CartController::class, 'add'])->name
 
 
 //coupon routes
-Route::post('/add-coupon', [CouponController::class, 'add'])->name('coupon');
+Route::post('/event/{event:slug}/add-coupon', [CouponController::class, 'add'])->name('coupon');
 Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon.destroy');
 
 

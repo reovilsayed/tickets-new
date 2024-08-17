@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Coupon extends Model
 {
     use HasFactory;
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'coupons_product');
+    }
 }
