@@ -128,6 +128,7 @@ class CheckoutService
                 'tax' => 0,
                 'total' => 0,
                 'status' => 1,
+                'payment_status' => 1,
                 'payment_method' => 'invite',
                 'transaction_id' => 0,
                 'security_key' => Str::uuid(),

@@ -150,7 +150,9 @@
                         ticket: result.data,
                         zone: "{{ $zone->id }}",
                         mode: document.getElementById('mode').value,
-                        checksum: "{{ Hash::make(env('SECURITY_KEY')) }}",
+                        user:"{{auth()->id()}}",
+                        session: "{{session()->get('enter-zone')['id']}}",
+                        checksum: "{{ Hash::make(env('SECURITY_KEY')) }}"
                     }),
                     headers: {
                         "Content-type": "application/json; charset=UTF-8"

@@ -95,6 +95,11 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         return $this->subscription('basic');
     }
 
+    public function scans(){
+        return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id', 'id', 'id')->withPivot('action')->withTimestamps();
+  
+    }
+
     public function subscriptionStatus()
     {
         if ($this->getSubscription->stripe_status !== 'active' || $this->getSubscription->ends_at !== null) {

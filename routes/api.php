@@ -66,7 +66,9 @@ Route::post('/scan-ticket', function (Request $request) {
                 $data = $ticket->logs;
                 array_push($data, $log);
                 $ticket->logs = $data;
+
                 $ticket->save();
+                $ticket->scanedBy()->attach($request->user, ['action' => $log['action']]);
                 return response()->json([
                     'status' => 'success',
                     'message' => $log['action']
@@ -87,15 +89,15 @@ Route::post('/extras-scan-ticker', function (Request $request) {
         if (Hash::check(env('SECURITY_KEY'), $request->checksum)) {
             $ticket = Ticket::where('ticket', $request->ticket)->first();
             $extras = [];
-   
-            foreach ($ticket->extras as $extra){
-                if(Extra::find($extra['id'])->zone_id != $request->zone){
+
+            foreach ($ticket->extras as $extra) {
+                if (Extra::find($extra['id'])->zone_id != $request->zone) {
                     continue;
                 }
                 array_push($extras, $extra);
             }
 
-           
+
             $zone = Zone::find($request->zone);
             $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
             return response()->json($data);

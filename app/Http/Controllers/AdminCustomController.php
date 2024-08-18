@@ -13,18 +13,21 @@ use Illuminate\Support\Facades\Mail;
 
 class AdminCustomController extends Controller
 {
-    public function duplicateProduct  (Product $product) {
+    public function duplicateProduct(Product $product)
+    {
         $newTicket = $product->replicate();
         $newTicket->save();
         return redirect()->back();
     }
 
-    public function inviteAddProduct(Invite $invite) {
-        $products = $invite->event->products()->where('invite_only',1)->get();
+    public function inviteAddProduct(Invite $invite)
+    {
+        $products = $invite->event->products()->where('invite_only', 1)->get();
         return view('vendor.voyager.invite.add', compact('products', 'invite'));
     }
 
-    public function inviteAddProductStore (Invite $invite, Request $request) {
+    public function inviteAddProductStore(Invite $invite, Request $request)
+    {
 
         $data = [];
         foreach ($request->product as $key => $product) {
@@ -38,14 +41,51 @@ class AdminCustomController extends Controller
         return redirect()->back()->with(['alert-type' => 'success', 'message' => 'Product attached on invite']);
     }
 
-    public function productAddExtras(Product $product) {
+    public function productAddExtras(Product $product)
+    {
 
         $extras = Extra::where('event_id', $product->event_id)->get();
 
         return view('vendor.voyager.products.extras', compact('extras', 'product'));
     }
 
-    public function productAddExtrasStore(Product $product, Request $request) {
+    public function ticketAddExtras(Ticket $ticket, Request $request)
+    {
+
+        $product = $ticket->product;
+        $extras = Extra::where('event_id', $product->event_id)->get();
+        return view('vendor.voyager.ticket.extras', compact('ticket', 'extras', 'product'));
+    }
+
+    public function ticketAddExtrasStore(Ticket $ticket, Request $request)
+    {
+        $data = [];
+        $extras = $ticket->extras;
+
+        foreach ($request->extras as $key => $extra) {
+
+            if (isset($extra['checked'])) {
+                if (isset($extras[$key])) {
+                    $extras[$key]['qty'] = $extra['qty'];
+                } else {
+                    $extras[$key] = [
+                        "id" => $key,
+                        "qty" => $extra['qty'],
+                        "name" => Extra::find($key)->display_name,
+                        "used" => 0
+                    ];
+                }
+            } else {
+                unset($extras[$key]);
+            }
+        }
+        $ticket->extras = $extras;
+        $ticket->save();
+        return redirect()->back()->with(['alert-type' => 'success', 'message' => 'Product added to ticket']);
+    }
+
+    public function productAddExtrasStore(Product $product, Request $request)
+    {
 
         $data = [];
         foreach ($request->extras as $key => $extra) {
@@ -78,7 +118,8 @@ class AdminCustomController extends Controller
         }
     }
 
-    public function sendEmailOrder(Order $order, Request $request) {
+    public function sendEmailOrder(Order $order, Request $request)
+    {
         $ticket = null;
         $product = null;
         if ($request->filled('ticket')) {
@@ -102,6 +143,5 @@ class AdminCustomController extends Controller
             'message' => 'Email sent successfully',
             'alert-type' => 'success',
         ]);
-    
     }
 }

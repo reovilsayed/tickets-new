@@ -70,6 +70,11 @@ class Ticket extends Model
             get: fn($value) => json_decode($value, true) ?? []
         );
     }
+
+    public function scanedBy()
+    {
+        return $this->belongsToMany(User::class, 'ticket_user', 'ticket_id', 'user_id', 'id', 'id')->withPivot('action')->withTimestamps();
+    }
     protected static function booted(): void
     {
         static::addGlobalScope('ancient', function (Builder $builder) {
@@ -79,15 +84,21 @@ class Ticket extends Model
         });
     }
 
-    
-    public function getBsStatusClass(){
-        
-        switch ($this->status){
-            case 0 : return 'secondary';
-            case 1 : return 'success';
-            case 2 : return 'success';
-            case 3 : return 'danger';
-            default : return 'secondary';
+
+    public function getBsStatusClass()
+    {
+
+        switch ($this->status) {
+            case 0:
+                return 'secondary';
+            case 1:
+                return 'success';
+            case 2:
+                return 'success';
+            case 3:
+                return 'danger';
+            default:
+                return 'secondary';
         }
     }
 }

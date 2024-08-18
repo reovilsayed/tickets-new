@@ -56,7 +56,7 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
     $request->validate([
         'security' => 'required'
     ]);
-    if($invite->security_key != $request->security) abort(403);
+    if ($invite->security_key != $request->security) abort(403);
     $is_invite = true;
     $event = $invite->event;
     $products = [];
@@ -64,26 +64,26 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
     foreach ($event->dates() as $date) {
         $products[$date] = $invite->products->filter(fn($product) => in_array($date, $product->dates));
     }
-    return view('pages.event_details', compact('event', 'products', 'is_invite','invite'));
+    return view('pages.event_details', compact('event', 'products', 'is_invite', 'invite'));
 });
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
-     
+
         $total = 0;
-        foreach($request->tickets as $ticket){
+        foreach ($request->tickets as $ticket) {
             $total +=  $ticket;
         }
-        if($total <= 0){
+        if ($total <= 0) {
             throw new Exception(__('words.nothing_to_order'));
         }
-        if($invite->security_key != $request->security) abort(403);
+        if ($invite->security_key != $request->security) abort(403);
         $event = $invite->event;
         DB::beginTransaction();
-        $order = CheckoutService::create($event, $request,isFree:true,invite:$invite);
+        $order = CheckoutService::create($event, $request, isFree: true, invite: $invite);
         DB::commit();
 
 
-    
+
         return redirect()->route('thankyou')->with('success_msg', 'Order create successfull');
     } catch (Exception $e) {
         DB::rollBack();
@@ -125,15 +125,24 @@ Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
     Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicate'])->name('voyager.products.duplicate');
+    Route::get('/users/{user}/staff', function (User $user) {
+        $logs = $user->scans->groupBy('ticket')->map(function ($ticket) {
+            return $ticket->map(fn($data) => ['log' => $data->pivot->action . ' at ' . $data->created_at->format('Y-m-d')]);
+        });
 
+  
+        return view('vendor.voyager.user.staff', compact('user', 'logs'));
+    })->name('voyager.users.staff');
 
     Route::get('/invites/{invite}/add-product', [AdminCustomController::class, 'inviteAddProduct'])->name('voyager.invites.add-product');
 
     Route::post('/invites/{invite}/store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('voyager.invites.store-product');
 
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
-
+    Route::get('/ticket/{ticket:ticket}/extras', [AdminCustomController::class, 'ticketAddExtras'])->name('voyager.ticket.extras');
+    
     Route::post('/products/{product}/add-extras', [AdminCustomController::class, 'productAddExtrasStore'])->name('voyager.products.add-extras');
+    Route::post('/ticket/{ticket:ticket}/add-extras', [AdminCustomController::class, 'ticketAddExtrasStore'])->name('voyager.ticket.add-extras');
     Route::get('/send/email/{order}', [AdminCustomController::class, 'sendEmailOrder'])->name('send.email');
     Route::group(['prefix' => '/events/{event}/analytics'], function () {
         Route::get('/', [EventAnalyticsController::class, 'index'])->name('voyager.events.analytics');
@@ -181,8 +190,8 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 $new_order = Order::where('transaction_id', $request->key)->first();
                 $products = $new_order->tickets->groupBy('product_id');
 
-                $coupon = Coupon::where('code',$order->discount_code)->first();
-                if($coupon){
+                $coupon = Coupon::where('code', $order->discount_code)->first();
+                if ($coupon) {
                     $coupon->increment('used', $new_order->tickets()->count());
                 }
                 foreach ($products as $key => $tickets) {
@@ -254,17 +263,23 @@ Route::post('extras-used', function (Request $request) {
     array_push($data, $log);
     $ticket->extras = $extras;
     $ticket->logs = $data;
+    $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action']]);
     $ticket->save();
     return redirect()->back()->with('success_msg', __('extra_product_withdraw_success_message'));
 })->name('extras-used');
 
-Route::group(['prefix' => 'zone', 'as' => 'zone.'], function () {
+Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['auth', 'role:staffzone']], function () {
     Route::get('/', [EnterzoneContoller::class, 'enterForm'])->name('enter');
     Route::post('/enter', [EnterzoneContoller::class, 'enter'])->name('enter.post');
     Route::get('/scanner', [EnterzoneContoller::class, 'scanner'])->name('scanner');
 });
-Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.'], function () {
+Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['auth', 'role:staffzone']], function () {
     Route::get('/', [EnterzoneContoller::class, 'enterExtraForm'])->name('enter');
     Route::post('/enter', [EnterzoneContoller::class, 'enterExtra'])->name('enter.post');
     Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
+})->middleware(['auth', 'role:staffzone']);
+
+Route::get('test', function () {
+    $ticket = Ticket::first();
+    $ticket->scanedBy()->attach(15, ['action' => 'Checked In']);
 });

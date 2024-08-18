@@ -38,5 +38,6 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\DuplicateAction::class);
         Voyager::addAction(\App\Actions\AnalyticsAction::class);
         Voyager::addAction(\App\Actions\AddExtraAction::class);
+        Voyager::addAction(\App\Actions\StaffReportAction::class);
     }
 }

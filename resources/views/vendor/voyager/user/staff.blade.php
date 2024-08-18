@@ -1,6 +1,9 @@
 @extends('voyager::master')
-@section('page_title', $event->title . 'Orders')
+@section('page_title', $user->name . ' Scans')
 @section('css')
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.min.css"
+         />
+
     <style>
         .pill {
             border-radius: 8px;
@@ -58,7 +61,7 @@
     <div class="container">
         <div class="panel">
             <div class="panel-body">
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-md-12">
                         <form method="get">
                             <div class="form-group">
@@ -74,47 +77,12 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="row">
 
-                    <div class="col-md-3">
-                        <div class="card ">
-                            <h3 class="">
-                                Total Ticket
-                            </h3>
-                            <h1 class="">
-                                {{ $event->tickets->count() }}
-                            </h1>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card">
-                            <h3>
-                                Total Sold
-                            </h3>
-                            <h1>
-                                {{ Sohoj::price($event->tickets()->sum('price')) }}
-                            </h1>
-                        </div>
-                    </div>
-                    @foreach ($ticketsByStatus as $status => $count)
-                        <div class="col-md-3">
-                            <div class="card ">
-                                <h3>
-                                    {{ $status }}
-                                </h3>
-                                <h1>
-                                    {{ $count }}
-                                </h1>
-                            </div>
-                        </div>
-                    @endforeach
-
-                </div>
                 <div class="table-responsive">
 
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="datatable">
                         <thead>
                             <tr class="text-center">
                                 <th>Id</th>
@@ -130,7 +98,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($tickets as $ticket)
+                            @foreach ($logs as $id => $data)
+                                @php
+                                    $ticket = App\Models\Ticket::where('ticket', $id)->first();
+                                @endphp
                                 <tr>
                                     <td>{{ $ticket->id }}</td>
                                     <td>{{ $ticket->ticket }}</td>
@@ -142,9 +113,9 @@
                                     <td>{{ $ticket->updated_at->format(' d F, Y') }}</td>
                                     <td>
                                         <ul>
-                                            @foreach ($ticket->logs as $log)
+                                            @foreach ($data as $log)
                                                 <li>
-                                                    {{ $log['action'] . ' at ' . Carbon\Carbon::parse($log['time'])->format('d M H:i') . ' from ' . $log['zone'] }}
+                                                    {{ $log['log'] }}
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -160,10 +131,6 @@
                                             class="btn btn-sm btn-warning pull-right">
                                             <i class="voyager-mail"></i> Send Mail
                                         </a>
-                                        <a href="{{ route('voyager.ticket.extras', ['ticket' => $ticket]) }}"
-                                            class="btn btn-sm btn-primary pull-right edit">
-                                            <i class="voyager-plus"></i> Add Product
-                                        </a>
 
                                     </td>
                                 </tr>
@@ -173,7 +140,7 @@
 
                 </div>
                 <div class="text-center">
-                    {{ $tickets->links('pagination::bootstrap-4') }}
+                    {{-- {{ $tickets->links('pagination::bootstrap-4') }} --}}
                 </div>
             </div>
         </div>
@@ -186,3 +153,9 @@
 
 
 @endsection
+@push('javascript')
+    <script src="https://cdn.datatables.net/2.1.4/js/dataTables.min.js"></script>
+    <script>
+        new DataTable('#datatable');
+    </script>
+@endpush
