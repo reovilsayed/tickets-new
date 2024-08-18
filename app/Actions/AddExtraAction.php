@@ -8,16 +8,12 @@ class AddExtraAction extends AbstractAction
 {
     public function getTitle()
     {
-<<<<<<< HEAD
         switch ($this->dataType->slug) {
             case 'products':
-                return 'Add Extra';
+                return 'Add Product';
             case 'invites':
                 return 'Add Product';
         }
-=======
-        return 'Add Product';
->>>>>>> b12c83ea804e88344e85628fbf5aefe7d0f996b6
     }
 
 
