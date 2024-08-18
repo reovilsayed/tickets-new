@@ -65,7 +65,7 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
         $products[$date] = $invite->products->filter(fn($product) => in_array($date, $product->dates));
     }
     return view('pages.event_details', compact('event', 'products', 'is_invite', 'invite'));
-});
+})->name('invite.product_details');
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
 
