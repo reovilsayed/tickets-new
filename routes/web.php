@@ -14,6 +14,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\WishlistController;
 use App\Mail\TicketDownload;
 use App\Mail\TicketPlaced;
+use App\Models\Coupon;
 use App\Models\Event;
 use App\Models\Extra;
 use App\Models\Extras;
@@ -112,7 +113,7 @@ Route::post('event/{event:slug}/add-cart', [CartController::class, 'add'])->name
 
 
 //coupon routes
-Route::post('/add-coupon', [CouponController::class, 'add'])->name('coupon');
+Route::post('/event/{event:slug}/add-coupon', [CouponController::class, 'add'])->name('coupon');
 Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon.destroy');
 
 
@@ -171,6 +172,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
         $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
         if ($order) {
             if ($request->status == 'success') {
+
                 $order->status = 1;
                 $order->payment_status = 1;
                 $order->date_paid = now();
@@ -178,6 +180,11 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
 
                 $new_order = Order::where('transaction_id', $request->key)->first();
                 $products = $new_order->tickets->groupBy('product_id');
+
+                $coupon = Coupon::where('code',$order->discount_code)->first();
+                if($coupon){
+                    $coupon->increment('used', $new_order->tickets()->count());
+                }
                 foreach ($products as $key => $tickets) {
                     $product = Product::find($key);
                     Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));

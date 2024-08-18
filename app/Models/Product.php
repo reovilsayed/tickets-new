@@ -178,4 +178,8 @@ class Product extends Model
             $this->dates = $dates;
         }
     }
+    public function coupons()
+    {
+        return $this->belongsToMany(Coupon::class, 'coupons_product');
+    }
 }
