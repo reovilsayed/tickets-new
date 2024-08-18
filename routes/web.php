@@ -3,6 +3,7 @@
 use App\Charts\EventTicketSellChart;
 use App\Charts\OrderSalesByTicketChart;
 use App\Charts\OrderSalesChart;
+use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
@@ -16,10 +17,12 @@ use App\Mail\TicketPlaced;
 use App\Models\Event;
 use App\Models\Extra;
 use App\Models\Extras;
+use App\Models\Invite;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\CheckoutService;
 use App\Services\EventReport;
 use App\Services\TOCOnlineService;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +31,7 @@ use Illuminate\Support\Facades\Route;;
 
 use TCG\Voyager\Facades\Voyager;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
@@ -47,7 +51,47 @@ use Illuminate\Support\Str;
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
 Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
+Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) {
+    $request->validate([
+        'security' => 'required'
+    ]);
+    if($invite->security_key != $request->security) abort(403);
+    $is_invite = true;
+    $event = $invite->event;
+    $products = [];
+    $products['all'] = $invite->products;
+    foreach ($event->dates() as $date) {
+        $products[$date] = $invite->products->filter(fn($product) => in_array($date, $product->dates));
+    }
+    return view('pages.event_details', compact('event', 'products', 'is_invite','invite'));
+});
+Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
+    try {
+     
+        $total = 0;
+        foreach($request->tickets as $ticket){
+            $total +=  $ticket;
+        }
+        if($total <= 0){
+            throw new Exception(__('words.nothing_to_order'));
+        }
+        if($invite->security_key != $request->security) abort(403);
+        $event = $invite->event;
+        DB::beginTransaction();
+        $order = CheckoutService::create($event, $request,isFree:true,invite:$invite);
+        DB::commit();
 
+
+    
+        return redirect()->route('thankyou')->with('success_msg', 'Order create successfull');
+    } catch (Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withErrors($e->getMessage());
+    } catch (Error $e) {
+        DB::rollBack();
+        return redirect()->back()->withErrors($e->getMessage());
+    }
+})->name('invite.checkout');
 Route::get('toconline/callback', [PageController::class, 'toconlineCallback']);
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
@@ -79,65 +123,17 @@ Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
-    Route::get('/products/{product}/duplicate', function (Product $product) {
-        $newTicket = $product->replicate();
-        $newTicket->save();
-        return redirect()->back();
-    })->name('voyager.products.duplicate');
+    Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicate'])->name('voyager.products.duplicate');
 
-    Route::get('/products/{product}/extras', function (Product $product) {
 
-        $extras = Extra::where('event_id', $product->event_id)->get();
+    Route::get('/invites/{invite}/add-product', [AdminCustomController::class, 'inviteAddProduct'])->name('voyager.invites.add-product');
 
-        return view('vendor.voyager.products.extras', compact('extras', 'product'));
-    })->name('voyager.products.extras');
+    Route::post('/invites/{invite}/store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('voyager.invites.store-product');
 
-    Route::post('/products/{product}/add-extras', function (Product $product, Request $request) {
+    Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
 
-        $data = [];
-        foreach ($request->extras as $key => $extra) {
-
-            if (isset($extra['checked'])) {
-                $data[$key] = $extra['qty'];
-            }
-        }
-        $product->extras = $data;
-        $product->save();
-        return redirect()->back()->with(['alert-type' => 'success', 'message' => 'Extras updated']);
-    })->name('voyager.products.add-extras');
-    Route::get('/send/email/{order}', function (Order $order, Request $request) {
-
-        // try {
-        $ticket = null;
-        $product = null;
-        if ($request->filled('ticket')) {
-            $ticket = Ticket::find($request->ticket);
-        }
-        if ($request->filled('product')) {
-            $product = Product::find($request->product);
-        }
-        if ($product && $ticket) {
-            Mail::to($order->user->email)->send(new TicketDownload($order, $product, $ticket));
-        } else {
-            $products = $order->tickets->groupBy('product_id');
-
-            foreach ($products as $key => $tickets) {
-                $product = Product::find($key);
-
-                Mail::to($order->user->email)->send(new TicketDownload($order, $product, $ticket));
-            }
-        }
-        return redirect()->back()->with([
-            'message' => 'Email sent successfully',
-            'alert-type' => 'success',
-        ]);
-        // } catch (Exception $e) {
-        //     return redirect()->back()->with([
-        //         'message' => 'Email sent failed',
-        //         'alert-type' => 'error',
-        //     ]);
-        // }
-    })->name('send.email');
+    Route::post('/products/{product}/add-extras', [AdminCustomController::class, 'productAddExtrasStore'])->name('voyager.products.add-extras');
+    Route::get('/send/email/{order}', [AdminCustomController::class, 'sendEmailOrder'])->name('send.email');
     Route::group(['prefix' => '/events/{event}/analytics'], function () {
         Route::get('/', [EventAnalyticsController::class, 'index'])->name('voyager.events.analytics');
         Route::get('/ticket-participants-report', [EventAnalyticsController::class, 'ticketParticipanReport'])->name('voyager.events.ticketParticipanReport.analytics');
@@ -146,7 +142,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/customer-report/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');
         Route::get('/customer-report/{user}/tickets', [EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
     });
-    Route::get('orders/refund/{order}', [EventAnalyticsController::class, 'refund'])->name('order.refund');
+    Route::get('orders/refund/{order}', [AdminCustomController::class, 'refund'])->name('order.refund');
 });
 Auth::routes(['verify' => true]);
 
@@ -239,11 +235,11 @@ Route::post('extras-used', function (Request $request) {
     $extras = $ticket->extras;
     $zone = session()->get('enter-extra-zone')['zone'];
     $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
-    
+
     foreach ($request->withdraw as $key => $qty) {
-        if($qty){
+        if ($qty) {
             $extras[$key]['used'] += $qty;
-            
+
             $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $extras[$key]['name'];
         }
     };

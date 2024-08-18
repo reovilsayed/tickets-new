@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <form action="{{ route('cart.store', $event) }}" method="post">
+    <form action="{{ route('invite.checkout', $invite) }}" method="post">
         @csrf
         <section class="rooms1 section-padding">
             <div class="container">
@@ -130,17 +130,27 @@
                                                         </div>
                                                         @if ($product->status == 3)
                                                             <div class="t-prize d-flex flex-column align-items-end">
-                                                                <span
-                                                                    class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
-
+                                                                @if (!$is_invite)
+                                                                    <span
+                                                                        class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
+                                                                @endif
                                                                 <a target="__blank"
                                                                     class="btn custom-button d-none d-lg-block"
                                                                     href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
                                                             </div>
                                                         @else
                                                             <div class="t-prize">
-                                                                <span
-                                                                    class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
+                                                                @if (!$is_invite)
+                                                                    <span
+                                                                        class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
+                                                                @endif
+                                                                @php
+                                                                    $quantity = !$is_invite
+                                                                        ? $product->limit_per_order
+                                                                        : $product->pivot->quantity;
+
+                                                                @endphp
+
                                                                 @if ($product->status == 1)
                                                                     <select name="tickets[{{ $product->id }}]"
                                                                         @if ($product->sold_out) disabled @endif
@@ -150,7 +160,7 @@
                                                                         class="ticket-select"
                                                                         x-model="quantities[{{ $product->id }}]">
                                                                         <option value="0">0</option>
-                                                                        @for ($i = 1; $i <= $product->limit_per_order; $i++)
+                                                                        @for ($i = 1; $i <= $quantity; $i++)
                                                                             <option value="{{ $i }}">
                                                                                 {{ $i }}</option>
                                                                         @endfor
@@ -174,18 +184,56 @@
                                 </div>
                             @endforeach
                         </div>
-                        <button class="event-buttton" type="submit">
-                            <span>{{ __('words.confirmed') }}</span>
-                            <span id="totalPrice" x-ref="total"
-                                x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
-                                    class="fa fa-arrow-right"></i></span>
-                        </button>
+                        @if (!$is_invite)
+                            <button class="event-buttton" type="submit">
+                                <span>{{ __('words.confirmed') }}</span>
+                                <span id="totalPrice" x-ref="total"
+                                    x-text="'{{ Sohoj::price(Cart::session($event->slug)->getTotal()) }}'"> <i
+                                        class="fa fa-arrow-right"></i></span>
+                            </button>
+                        @else
+                            <button data-bs-toggle="modal" data-bs-target="#inviteCheckoutModal" class="event-buttton"
+                                type="button">
+                                <span>{{ __('words.confirmed') }}</span>
+                                <span id="totalPrice"> <i class="fa fa-arrow-right"></i></span>
+                            </button>
+                        @endif
 
                     </div>
 
                 </div>
             </div>
         </section>
+        @if ($is_invite)
+            <div class="modal fade" id="inviteCheckoutModal" tabindex="-1" aria-labelledby="inviteCheckoutModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="inviteCheckoutModalLabel">{{ __('words.your_information') }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="security" value="{{ request()->security }}">
+                            <div class="form-group">
+                                <label for="">Name</label>
+                                <input name="name" type="text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Email</label>
+                                <input name="email" type="email" class="form-control">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">{{ __('words.close') }}</button>
+                            <button type="submit" class="btn btn-primary">{{ __('words.claim') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
     </form>
 @endsection
 @section('js')

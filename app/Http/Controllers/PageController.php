@@ -37,12 +37,13 @@ class PageController extends Controller
     }
     public function event_details(Event $event)
     {
+        $is_invite = false;
         $products = [];
         $products['all'] = $event->products;
         foreach ($event->dates() as $date) {
             $products[$date] = $event->products->filter(fn($product) => in_array($date, $product->dates));
         }
-        return view('pages.event_details', compact('event', 'products'));
+        return view('pages.event_details', compact('event', 'products','is_invite'));
     }
 
     public function shops()

@@ -8,14 +8,19 @@ class AddExtraAction extends AbstractAction
 {
     public function getTitle()
     {
-        return 'Add Extra';
+        switch ($this->dataType->slug) {
+            case 'products':
+                return 'Add Extra';
+            case 'invites':
+                return 'Add Product';
+        }
     }
 
 
     public function shouldActionDisplayOnDataType()
-{
-    return $this->dataType->slug == 'products';
-}
+    {
+        return $this->dataType->slug == 'products' || $this->dataType->slug == 'invites';
+    }
     public function getIcon()
     {
         return 'voyager-plus';
@@ -35,6 +40,12 @@ class AddExtraAction extends AbstractAction
 
     public function getDefaultRoute()
     {
-        return route('voyager.products.extras',['product'=>$this->data]);
+
+        switch ($this->dataType->slug) {
+            case 'products':
+                return route('voyager.products.extras', ['product' => $this->data]);
+            case 'invites':
+                return route('voyager.invites.add-product', ['invite' => $this->data]);
+        }
     }
 }

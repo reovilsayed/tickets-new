@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Invite;
 use App\Models\Offer;
 use Illuminate\Http\Request;
 use Cart;
@@ -24,6 +25,17 @@ class CartController extends Controller
 			}
 		}
 		return redirect()->route('checkout',$event);
+	}
+	public function inviteadd(Invite $invite,Request $request){
+	
+		Cart::session($invite->slug)->clear();
+		foreach ($request->tickets as $ticket => $quantity) {
+			if($quantity > 0){
+				$product = Product::find($ticket);
+				Cart::session($invite->slug)->add($product->id, $product->name, 0, $quantity)->associate('App\Models\Product');
+			}
+		}
+		return redirect()->route('invitecheckout',$invite);
 	}
 	public function update(Request $request)
 	{
