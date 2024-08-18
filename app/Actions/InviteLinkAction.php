@@ -4,7 +4,7 @@ namespace App\Actions;
 
 use TCG\Voyager\Actions\AbstractAction;
 
-class StaffReportAction extends AbstractAction
+class InviteLinkAction extends AbstractAction
 {
     public function getTitle()
     {
@@ -14,7 +14,7 @@ class StaffReportAction extends AbstractAction
 
     public function shouldActionDisplayOnDataType()
     {
-        return $this->dataType->slug == 'users';
+        return $this->dataType->slug == 'invites';
     }
     public function getIcon()
     {
@@ -29,13 +29,13 @@ class StaffReportAction extends AbstractAction
     public function getAttributes()
     {
         return [
-            'class' => 'btn btn-sm btn-primary pull-right edit',
+            'class' => 'btn btn-sm btn-primary pull-left edit',
         ];
     }
 
 
     public function getDefaultRoute()
     {
-        return route('voyager.users.staff', ['user' => $this->data]);
+        return route('invite.product_details', ['invite' => $this->data,'security'=>$this->data->security_key]);
     }
 }
