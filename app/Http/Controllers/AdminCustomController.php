@@ -165,7 +165,6 @@ class AdminCustomController extends Controller
                 'code' => uniqid(),
                 'discount' => $request->discount,
                 'expire_at' => $request->expire_at,
-                'quantity' => 1,
                 'limit' => $request->limit,
                 'type' => $request->type,
                 'event_id' => $event->id,
