@@ -37,6 +37,7 @@
         </h3>
 
         @foreach ($users as $user)
+        
             <div class="row">
                 <div class="col-12">
                     <div class="card">

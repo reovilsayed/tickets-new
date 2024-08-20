@@ -42,7 +42,7 @@ class EventAnalyticsController extends Controller
     }
     public function customerReport(Event $event)
     {
-        $users = $event->tickets()->distinct('user_id')->pluck('user_id')->map(fn($user) => User::find($user));
+        $users = $event->tickets()->has('user')->distinct('user_id')->pluck('user_id')->map(fn($user) => User::find($user));
         return view('vendor.voyager.events.ticket-customer-report', compact('users', 'event'));
     }
 
