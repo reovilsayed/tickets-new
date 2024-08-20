@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Mail\TicketDownload;
+use App\Models\Coupon;
+use App\Models\Event;
 use App\Models\Extra;
 use App\Models\Invite;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
+use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+
 
 class AdminCustomController extends Controller
 {
@@ -141,6 +146,37 @@ class AdminCustomController extends Controller
         }
         return redirect()->back()->with([
             'message' => 'Email sent successfully',
+            'alert-type' => 'success',
+        ]);
+    }
+    public function couponGenerate()
+    {
+        $products = Product::all();
+        $events = Event::all();
+        return view('vendor.voyager.coupons.coupon-add', compact('products', 'events'));
+    }
+
+    public function couponCreate(Request $request)
+    {
+        $event = Event::find($request->event_id);
+
+        for ($i = 0; $i < $request->quantity; $i++) {
+            $coupon = Coupon::create([
+                'code' => uniqid(),
+                'discount' => $request->discount,
+                'expire_at' => $request->expire_at,
+                'quantity' => 1,
+                'limit' => $request->limit,
+                'type' => $request->type,
+                'event_id' => $event->id,
+            ]);
+
+
+            $coupon->products()->attach($request->product_id);
+        }
+
+        return redirect()->route('voyager.coupons.index')->with([
+            'message' => 'Coupons Created Successfully',
             'alert-type' => 'success',
         ]);
     }

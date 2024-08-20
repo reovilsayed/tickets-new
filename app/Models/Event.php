@@ -28,7 +28,8 @@ class Event extends Model
         return $this->hasMany(Ticket::class);
     }
 
-    public function zones(){
+    public function zones()
+    {
         return $this->hasMany(Zone::class);
     }
 
@@ -53,4 +54,8 @@ class Event extends Model
 
         return $formattedDates;
     }
+    public function coupons()
+{
+    return $this->hasToMany(Coupon::class);
+}
 }

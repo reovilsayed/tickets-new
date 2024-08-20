@@ -153,6 +153,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/customer-report/{user}/tickets', [EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
     });
     Route::get('orders/refund/{order}', [AdminCustomController::class, 'refund'])->name('order.refund');
+    Route::get('/coupon-generate', [AdminCustomController::class, 'couponGenerate'])->name('voyager.coupon.generate');
+    Route::post('/coupon-create', [AdminCustomController::class, 'couponCreate'])->name('voyager.coupon.create');
 });
 Auth::routes(['verify' => true]);
 
