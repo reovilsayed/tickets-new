@@ -8,13 +8,13 @@ class InviteLinkAction extends AbstractAction
 {
     public function getTitle()
     {
-        return 'Link';
+        return  $this->dataType->slug == 'invites' ? 'Link' : 'Personal Invite';
     }
 
 
     public function shouldActionDisplayOnDataType()
     {
-        return $this->dataType->slug == 'invites';
+        return $this->dataType->slug == 'invites' || $this->dataType->slug == 'products';
     }
     public function getIcon()
     {
@@ -36,6 +36,10 @@ class InviteLinkAction extends AbstractAction
 
     public function getDefaultRoute()
     {
-        return route('invite.product_details', ['invite' => $this->data,'security'=>$this->data->security_key]);
+        if($this->dataType->slug == 'invites'){
+            return route('invite.product_details', ['invite' => $this->data,'security'=>$this->data->security_key]);
+        }else{
+            return route('voyager.products.invite', ['product'=>$this->data]);
+        }
     }
 }

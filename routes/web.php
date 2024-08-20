@@ -82,7 +82,11 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
         $order = CheckoutService::create($event, $request, isFree: true, invite: $invite);
         DB::commit();
 
-
+        $products = $order->tickets->groupBy('product_id');
+        foreach ($products as $key => $tickets) {
+            $product = Product::find($key);
+            Mail::to(request()->email)->send(new TicketDownload($order, $product, null));
+        }
 
         return redirect()->route('thankyou')->with('success_msg', 'Order create successfull');
     } catch (Exception $e) {
@@ -130,17 +134,19 @@ Route::group(['prefix' => 'admin'], function () {
             return $ticket->map(fn($data) => ['log' => $data->pivot->action . ' at ' . $data->created_at->format('Y-m-d')]);
         });
 
-  
+
         return view('vendor.voyager.user.staff', compact('user', 'logs'));
     })->name('voyager.users.staff');
 
+    Route::get('/products/{product}/invite', [AdminCustomController::class, 'personalInviteForm'])->name('voyager.products.invite');
+    Route::post('/products/{product}/invite', [AdminCustomController::class, 'personalInvitePost'])->name('voyager.products.invite.post');
     Route::get('/invites/{invite}/add-product', [AdminCustomController::class, 'inviteAddProduct'])->name('voyager.invites.add-product');
 
     Route::post('/invites/{invite}/store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('voyager.invites.store-product');
 
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
     Route::get('/ticket/{ticket:ticket}/extras', [AdminCustomController::class, 'ticketAddExtras'])->name('voyager.ticket.extras');
-    
+
     Route::post('/products/{product}/add-extras', [AdminCustomController::class, 'productAddExtrasStore'])->name('voyager.products.add-extras');
     Route::post('/ticket/{ticket:ticket}/add-extras', [AdminCustomController::class, 'ticketAddExtrasStore'])->name('voyager.ticket.add-extras');
     Route::get('/send/email/{order}', [AdminCustomController::class, 'sendEmailOrder'])->name('send.email');
@@ -265,7 +271,7 @@ Route::post('extras-used', function (Request $request) {
     array_push($data, $log);
     $ticket->extras = $extras;
     $ticket->logs = $data;
-    $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action']]);
+    $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
     $ticket->save();
     return redirect()->back()->with('success_msg', __('extra_product_withdraw_success_message'));
 })->name('extras-used');
@@ -282,6 +288,6 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
 })->middleware(['auth', 'role:staffzone']);
 
 Route::get('test', function () {
-    $ticket = Ticket::first();
-    $ticket->scanedBy()->attach(15, ['action' => 'Checked In']);
+    $ticket = Ticket::find(278);
+    
 });

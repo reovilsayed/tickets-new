@@ -14,10 +14,10 @@
         @endcan
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
-        @endcan
+        @endcan 
         @can('add', app($dataType->model_name))
             <a href="{{ route('voyager.coupon.generate') }}" class="btn btn-info btn-add-new">
-                <i class="voyager-plus"></i> <span>{{ __('generate_coupon') }}</span>
+                <i class="voyager-plus"></i> <span>Generate Coupon</span>
             </a>
         @endcan
         @can('edit', app($dataType->model_name))

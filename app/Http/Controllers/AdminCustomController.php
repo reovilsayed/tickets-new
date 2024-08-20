@@ -10,6 +10,8 @@ use App\Models\Invite;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
+use Error;
+use Exception;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -158,7 +160,14 @@ class AdminCustomController extends Controller
 
     public function couponCreate(Request $request)
     {
-        $event = Event::find($request->event_id);
+        $request->validate([
+            'discount' => 'required',
+            'expire_at' => 'required',
+            'limit' => 'required',
+            'type' => 'required',
+            'event_id' => 'required|exists:events,id',
+        ]);
+
 
         for ($i = 0; $i < $request->quantity; $i++) {
             $coupon = Coupon::create([
@@ -167,7 +176,7 @@ class AdminCustomController extends Controller
                 'expire_at' => $request->expire_at,
                 'limit' => $request->limit,
                 'type' => $request->type,
-                'event_id' => $event->id,
+                'event_id' => $request->event_id,
             ]);
 
 
@@ -178,5 +187,83 @@ class AdminCustomController extends Controller
             'message' => 'Coupons Created Successfully',
             'alert-type' => 'success',
         ]);
+    }
+
+    public function personalInviteForm(Product $product)
+    {
+        return view('vendor.voyager.products.invite', compact('product'));
+    }
+
+    public function personalInvitePost(Request $request, Product $product)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'qty' => 'required|min:1',
+        ]);
+
+        try {
+
+
+            $order = Order::create([
+                'user_id' =>  null,
+                'billing' => [
+                    'name' => $request->name,
+                    'email' => $request->email,
+                ],
+                'subtotal' => 0,
+                'discount' => 0,
+                'discount_code' => 0,
+                'tax' => 0,
+                'total' => 0,
+                'status' => 1,
+                'payment_status' => 1,
+                'payment_method' => 'invite',
+                'transaction_id' => Str::uuid(),
+                'security_key' => Str::uuid(),
+                'event_id' => $product->event->id,
+            ]);
+
+            if ($product->quantity < $request->qty) throw new Exception($product->name . ' is not available for this quantity');
+            $product->quantity -= $request->qty;
+            $product->save();
+            for ($i = 1; $i <= $request->qty; $i++) {
+                $data = [
+                    'user_id' =>  null,
+                    'owner' => [
+                        'name' => $request->name,
+                        'email' => $request->email,
+                    ],
+                    'event_id' => $product->event->id,
+                    'product_id' => $product->id,
+                    'order_id' => $order->id,
+                    'ticket' => uniqid(),
+                    'price' => $product->price,
+                    'dates' => $product->dates
+                ];
+
+                if ($product->extras && count($product->extras)) {
+                    $data['hasExtras'] = true;
+                    $data['extras'] = collect($product->extras)->map(fn($qty, $key) => ['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray();
+                }
+                $order->tickets()->create($data);
+            }
+
+            Mail::to(request()->email)->send(new TicketDownload($order, $product, null));
+            return redirect()->route('voyager.products.index')->with([
+                'message' => 'Invite sent successfully',
+                'alert-type' => 'success',
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with([
+                'message' => $e->getMessage(),
+                'alert-type' => 'error',
+            ]);
+        } catch (Error $e) {
+            return redirect()->back()->route('voyager.products.index')->with([
+                'message' => $e->getMessage(),
+                'alert-type' => 'error',
+            ]);
+        }
     }
 }

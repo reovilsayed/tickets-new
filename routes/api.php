@@ -42,15 +42,21 @@ Route::post('/scan-ticket', function (Request $request) {
                     $ticket->check_in_zone = $zone->id;
                     $log['action'] = 'Checked in';
                 } elseif ($ticket->stgatus == 1) {
-                    if ($request->mode != 2) {
-                        throw new Exception(__('words.checkin_mode_checkout_error'));
-                    }
-                    if ($ticket->product->check_out) {
-                        $ticket->status = 2;
-                        $ticket->check_out_zone = $zone->id;
-                        $log['action'] = 'Checked Out';
+                    if ($ticket->scanedBy()->where('action', 'Checked In')->where('zone_id', $zone->id)->count() <= 0) {
+                        $ticket->status = 1;
+                        $ticket->check_in_zone = $zone->id;
+                        $log['action'] = 'Checked in';
                     } else {
-                        throw new Exception(__('words.checkout_not_allowed_error'));
+                        if ($request->mode != 2) {
+                            throw new Exception(__('words.checkin_mode_checkout_error'));
+                        }
+                        if ($ticket->product->check_out) {
+                            $ticket->status = 2;
+                            $ticket->check_out_zone = $zone->id;
+                            $log['action'] = 'Checked Out';
+                        } else {
+                            throw new Exception(__('words.checkout_not_allowed_error'));
+                        }
                     }
                 } elseif ($ticket->status == 2) {
                     if ($request->mode != 1) {
@@ -68,7 +74,7 @@ Route::post('/scan-ticket', function (Request $request) {
                 $ticket->logs = $data;
 
                 $ticket->save();
-                $ticket->scanedBy()->attach($request->user, ['action' => $log['action']]);
+                $ticket->scanedBy()->attach($request->user, ['action' => $log['action'], 'zone_id' => $zone->id]);
                 return response()->json([
                     'status' => 'success',
                     'message' => $log['action']

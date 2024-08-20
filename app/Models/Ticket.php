@@ -73,7 +73,7 @@ class Ticket extends Model
 
     public function scanedBy()
     {
-        return $this->belongsToMany(User::class, 'ticket_user', 'ticket_id', 'user_id', 'id', 'id')->withPivot('action')->withTimestamps();
+        return $this->belongsToMany(User::class, 'ticket_user', 'ticket_id', 'user_id', 'id', 'id')->withPivot('action', 'zone_id')->withTimestamps();
     }
     protected static function booted(): void
     {
