@@ -1,7 +1,43 @@
 @extends('voyager::master')
 
 @section('page_title', $event->title . ' Participants')
+@section('css')
+    <style>
+        .card {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            border-radius: 10px;
 
+            border: 2px solid #EF5927 !important;
+            transition: .2s ease-in;
+        }
+
+        .card:hover {
+            box-shadow: 5px 5px #EF5927;
+        }
+
+        .card h3 {
+            text-transform: uppercase;
+            font-weight: bold;
+            margin: 0px;
+            font-size: 30px;
+            color: #EF5927;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .card h1 {
+            font-size: 70px;
+            font-weight: bold;
+            color: #000;
+        }
+        h1{
+            font-size: 40px;
+            font-weight: bold;
+            color: #000; 
+        }
+    </style>
+@endsection
 @section('javascript')
     <script>
         [...document.querySelectorAll("[data-target='#myModal']")].forEach(element => {
@@ -155,13 +191,16 @@
     {{ $ticketSoldChart->script() }}
 @endsection
 @section('content')
-
+<div class="container">
+    <h1>
+        {{ $event->name }} - Analytics
+    </h1>
+    
+    <hr>
+        @include('vendor.voyager.events.partial.buttons')
+    <hr>
     <div class="container">
-        <h3>
-            {{ $event->name }} | Participants
-        </h3>
-        <br>
-        <br>
+      
         <div class="panel panel-body">
             <ul class="nav nav-pills">
                 <li class="active"><a data-toggle="pill" href="#byDate">{{ __('words.report_by_date') }}</a></li>
@@ -359,7 +398,6 @@
 
 
     </div>
-
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog modal-lg">
 
@@ -404,5 +442,7 @@
         </div>
     </div>
 
-    </div>
+</div>
+   
+
 @endsection

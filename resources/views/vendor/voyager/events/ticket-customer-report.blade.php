@@ -38,6 +38,14 @@
     </style>
 @endsection
 @section('content')
+<div class="container">
+    <h1>
+        {{ $event->name }} - Analytics
+    </h1>
+    
+    <hr>
+        @include('vendor.voyager.events.partial.buttons')
+    <hr>
     <div class="container">
         <h3>
             {{ $event->name }} | Customer Report
@@ -71,4 +79,6 @@
             </div>
         @endforeach
     </div>
+</div>
+    
 @endsection

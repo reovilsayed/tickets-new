@@ -16,29 +16,42 @@ class OrderSalesChart
 
     public function build(Event $event): \ArielMejiaDev\LarapexCharts\LineChart
     {
+        $types = ['Total', 'Digital', 'Physical'];
         $allTickets = $event->tickets
             ->groupBy(fn($ticket) => $ticket->created_at->format('d M'))
             ->map(fn($tickets) => $tickets->sum('price'))->toArray();
+        $digitalTickets = $event->digitalTickets
+            ->groupBy(fn($ticket) => $ticket->created_at->format('d M'))
+            ->map(fn($tickets) => $tickets->sum('price'))->toArray();
+
+        $physicalTickets = $event->physicalTickets
+            ->groupBy(fn($ticket) => $ticket->created_at->format('d M'))
+            ->map(fn($tickets) => $tickets->sum('price'))->toArray();
+
+        $data = [];
+        foreach ($allTickets as $date => $ticket) {
+            $data[$date]['Total'] = $ticket;
+        }
+        foreach ($digitalTickets as $date => $ticket) {
+            $data[$date]['Digital'] = $ticket;
+        }
+        foreach ($physicalTickets as $date => $ticket) {
+            $data[$date]['Physical'] = $ticket;
+        }
+        foreach ($data as $date => $ticket) {
+            foreach ($types as $item) {
+                $data[$date][$item] = @$data[$date][$item] ?  $data[$date][$item] : 0;
+            }
+        }
+
 
         $dates = array_keys($allTickets);
-        $allProducts = $event->products->pluck('name');
-        
-        $ticketsByProduct = $event->tickets->groupBy(function($ticket) use($dates){
-            return $ticket->product->name;
-        })->map(function($tickets) use($dates){
-            $dates = array_fill_keys($dates, 0);
-            $data = $tickets->groupBy(function($ticket){
-                return $ticket->created_at->format('d M');
-            })->map(fn($tickets)=>$tickets->sum('price'))->toArray();
-           return array_merge($dates,$data);
 
-        });
-
+      
 
         $chart = $this->chart->lineChart()
-            ->setTitle('Total Sale')
-            ->addData('Total', array_values($allTickets));
-        foreach ($ticketsByProduct as $name => $tickets) {
+            ->setTitle('Total Sale');
+        foreach ($data as $name => $tickets) {
 
             $chart->addData($name, array_values($tickets));
         }

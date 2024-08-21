@@ -159,128 +159,137 @@
 @section('css')
     <style>
         .card {
+            text-align: center;
             padding: 20px;
             width: 100%;
             border-radius: 10px;
-            height: 150px;
-            border: 2px solid #000000 !important;
+
+            border: 2px solid #EF5927 !important;
             transition: .2s ease-in;
         }
 
         .card:hover {
-            box-shadow: 5px 5px #000000;
+            box-shadow: 5px 5px #EF5927;
         }
 
         .card h3 {
+            text-transform: uppercase;
+            font-weight: bold;
             margin: 0px;
             font-size: 30px;
-            color: #000;
-            font-family: Georgia, 'Times New Roman', Times, serif
+            color: #EF5927;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         .card h1 {
-            text-align: right;
-            font-size: 50px;
+            font-size: 70px;
+            font-weight: bold;
             color: #000;
+        }
+        h1{
+            font-size: 40px;
+            font-weight: bold;
+            color: #000; 
         }
     </style>
 @endsection
 @section('content')
-
     <div class="container">
-        <h3>
-            {{ $event->name }} | Financial
-        </h3>
-        <br>
-        <br>
-        <div class="panel">
-            <div class="panel-body">
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <h3>
-                                Total Sale
-                            </h3>
-                            <h1>
-                                {{ Sohoj::price($event->tickets->sum('price')) }}
-                            </h1>
+        <h1>
+            {{ $event->name }} - Analytics
+        </h1>
+
+        <hr>
+        @include('vendor.voyager.events.partial.buttons')
+        <hr>
+        <div class="container">
+
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Total',
+                                'value' => Sohoj::price($event->tickets->sum('price')),
+                            ])
+                           
+                        </div>
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Online Sales',
+                                'value' => Sohoj::price($event->digitalTickets->sum('price')),
+                            ])
+                           
+                        </div>
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Online Sales',
+                                'value' => Sohoj::price($event->physicalTickets->sum('price')),
+                            ])
+                           
+                        </div>
+
+                   
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {!! $lineChart->container() !!}
+
+                        </div>
+                        <div class="col-md-6">
+                            {!! $pieChart->container() !!}
+
                         </div>
                     </div>
-                    
-                    @foreach ($event->tickets->groupBy(function($ticket){
-                        return $ticket->product->name;
-                    })->map(fn($tickets)=> $tickets->sum('price')) as $key => $price )
-                         <div class="col-md-4">
-                            <div class="card">
-                                <h3>
-{{$key}}
-                                </h3>
-                                <h1>
-                                    {{ Sohoj::price($price) }}
-                                </h1>
-                            </div>
-                        </div>
-                    @endforeach
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        {!! $lineChart->container() !!}
+            </div>
+
+
+        </div>
+
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="myModalTitle">
+
+                        </h4>
+                    </div>
+                    <div class="modal-body" id="myModalBody">
 
                     </div>
-                    <div class="col-md-6">
-                        {!! $pieChart->container() !!}
-
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
+
             </div>
         </div>
 
+        <div class="modal fade" id="myModalType" role="dialog">
+            <div class="modal-dialog modal-lg">
 
-    </div>
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="myModalTypeTitle">
 
-    <div class="modal fade" id="myModal" role="dialog">
-        <div class="modal-dialog modal-lg">
+                        </h4>
+                    </div>
+                    <div class="modal-body" id="myModalTypeBody">
 
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" id="myModalTitle">
-
-                    </h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
-                <div class="modal-body" id="myModalBody">
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
             </div>
-
         </div>
     </div>
 
-    <div class="modal fade" id="myModalType" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" id="myModalTypeTitle">
-
-                    </h4>
-                </div>
-                <div class="modal-body" id="myModalTypeBody">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    </div>
 @endsection

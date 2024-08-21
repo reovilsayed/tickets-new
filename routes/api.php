@@ -72,9 +72,9 @@ Route::post('/scan-ticket', function (Request $request) {
                 //Scaning mode is not check in
                 if ($request->mode != 1)   throw new Exception(__('words.checkout_mode_checkin_error'));
                 if ($ticket->product->check_in != true) throw new Exception(__('words.check_in_not_available'));
-                $ticket->status = 2;
+                $ticket->status = 1;
                 $ticket->check_out_zone = $zone->id;
-                $log['action'] = 'Checked Out';
+                $log['action'] = 'Checked in';
                 break;
             default:
                 throw new Exception(__('words.ticket_expired_error'));
