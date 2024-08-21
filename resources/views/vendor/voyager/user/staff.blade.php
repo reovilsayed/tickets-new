@@ -30,54 +30,61 @@
             background-color: rgba(160, 56, 0, 0.343);
         }
 
+    </style>
+    @section('css')
+    <style>
         .card {
+            text-align: center;
             padding: 20px;
             width: 100%;
             border-radius: 10px;
-            height: 150px;
-            border: 2px solid #000000 !important;
+
+            border: 2px solid #EF5927 !important;
             transition: .2s ease-in;
         }
 
         .card:hover {
-            box-shadow: 5px 5px #000000;
+            box-shadow: 5px 5px #EF5927;
         }
 
         .card h3 {
+            text-transform: uppercase;
+            font-weight: bold;
             margin: 0px;
             font-size: 30px;
-            color: #000;
-            font-family: Georgia, 'Times New Roman', Times, serif
+            color: #EF5927;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         .card h1 {
-            text-align: right;
             font-size: 50px;
+            font-weight: bold;
             color: #000;
         }
+        h1{
+            font-size: 40px;
+            font-weight: bold;
+            color: #000; 
+        }
+      
     </style>
+@endsection
 @endsection
 @section('content')
     <div class="container">
         <div class="panel">
             <div class="panel-body">
-                {{-- <div class="row">
-                    <div class="col-md-12">
-                        <form method="get">
-                            <div class="form-group">
-                                <input type="text" name="search" class="form-control" placeholder="Search orders"
-                                    value="{{ request('search') }}">
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Search</button>
-                                <a href="{{ route('voyager.events.customer.analytics.tickets', ['event' => $event, 'user' => $user]) }}"
-                                    class="btn btn-danger">
-                                    Reset
-                                </a>
-                            </div>
-                        </form>
-                    </div>
-                </div> --}}
+                <div class="row">
+
+                    @foreach ($data as $key => $product)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => $key,
+                                'value' => $product,
+                            ])
+                        </div>
+                    @endforeach
+                </div>
 
 
                 <div class="table-responsive">

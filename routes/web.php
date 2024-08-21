@@ -133,9 +133,16 @@ Route::group(['prefix' => 'admin'], function () {
         $logs = $user->scans->groupBy('ticket')->map(function ($ticket) {
             return $ticket->map(fn($data) => ['log' => $data->pivot->action . ' at ' . $data->created_at->format('Y-m-d')]);
         });
-
-
-        return view('vendor.voyager.user.staff', compact('user', 'logs'));
+        
+        $products = $user->scans->groupBy(function($ticket){
+            return $ticket->product->name;
+        })->map(fn($products)=>$products->count())->toArray();
+        $zones = $user->zones->groupBy(function($zone){
+            return $zone->name;
+        })->map(fn($products)=>$products->count())->toArray();
+        $data = array_merge($products,$zones);
+        
+        return view('vendor.voyager.user.staff', compact('user', 'logs','data'));
     })->name('voyager.users.staff');
 
     Route::get('/products/{product}/create-physical', [AdminCustomController::class,'ticketCreatePhysical'])->name('voyager.products.ticketCreatePhysical');
