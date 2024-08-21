@@ -127,19 +127,7 @@
                                             @endforeach
                                         </ul>
                                     </td>
-                                    <td class="align-center" style="display: flex">
-                                        <a style="margin:5px;"
-                                            href="{{ route('download.ticket', ['order' => $ticket->order, 't' => $ticket->ticket]) }}"
-                                            class="btn btn-sm btn-info pull-right">
-                                            <i class="voyager-download"></i> Download
-                                        </a>
-
-                                        <a href="{{ route('send.email', ['order' => $ticket->order, 'product' => $ticket->product_id, 'ticket' => $ticket->id]) }}"
-                                            class="btn btn-sm btn-warning pull-right">
-                                            <i class="voyager-mail"></i> Send Mail
-                                        </a>
-
-                                    </td>
+                                
                                 </tr>
                             @endforeach
                         </tbody>
