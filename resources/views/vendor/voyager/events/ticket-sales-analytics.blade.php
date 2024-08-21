@@ -182,7 +182,7 @@
         }
 
         .card h1 {
-            font-size: 70px;
+            font-size: 50px;
             font-weight: bold;
             color: #000;
         }
@@ -211,6 +211,7 @@
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Total',
                                 'value' => Sohoj::price($event->tickets->sum('price')),
+                                
                             ])
                            
                         </div>

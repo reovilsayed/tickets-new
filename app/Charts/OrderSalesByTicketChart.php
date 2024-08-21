@@ -15,11 +15,14 @@ class OrderSalesByTicketChart
 
     public function build($event): \ArielMejiaDev\LarapexCharts\PieChart
     {
-        $tickets = $event->tickets()->has('order')->get()->groupBy(fn($ticket) => $ticket->product->name)->map(fn($tickets) => $tickets->sum('price'))->toArray();
-
+         $data = [
+            'Total'=>$event->tickets->count(),
+            'Digital'=>$event->digitalTickets->count(),
+            'Physical'=>$event->physicalTickets->count(),
+        ];
         return $this->chart->pieChart()
             ->setTitle('Sales report ')
-            ->addData(array_values($tickets))
-            ->setLabels(array_keys($tickets));
+            ->addData(array_values($data))
+            ->setLabels(array_keys($data));
     }
 }

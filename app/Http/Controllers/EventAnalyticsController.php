@@ -42,7 +42,11 @@ class EventAnalyticsController extends Controller
     }
     public function customerReport(Event $event)
     {
-        $users = $event->tickets()->has('user')->distinct('user_id')->pluck('user_id')->map(fn($user) => User::find($user));
+        $users = $event->tickets()->has('user')->when(request()->filled('q'), function ($query) {
+            return $query->whereHas('user', function ($query) {
+                $query->where('name', 'LIKE', '%' . request()->q . '%')->orWhere('l_name', 'LIKE', '%' . request()->q . '%');
+            });
+        })->distinct('user_id')->pluck('user_id')->map(fn($user) => User::find($user));
         return view('vendor.voyager.events.ticket-customer-report', compact('users', 'event'));
     }
 
@@ -75,5 +79,18 @@ class EventAnalyticsController extends Controller
 
         return view('vendor.voyager.events.tickets', compact('tickets', 'event', 'user', 'ticketsByStatus'));
     }
-    
+
+    public function checkinReport(Event $event, Request $request)
+    {
+        $tickets = $event->tickets()->when(request()->filled('q'), function ($query) {
+            return $query->whereHas('user', function ($query) {
+                $query->where('name', 'LIKE', '%' . request()->q . '%')->orWhere('l_name', 'LIKE', '%' . request()->q . '%');
+            });
+        })->when(request()->filled('ticket'), function ($query) {
+            return $query->where('product_id', request()->ticket);
+        })->when(request()->filled('zone'), function ($query) {
+            return $query->where('check_in_zone', request()->zone)->orWhere('check_out_zone', request()->zone);
+        })->paginate(25);
+        return view('vendor.voyager.events.checkin', compact('event', 'tickets'));
+    }
 }

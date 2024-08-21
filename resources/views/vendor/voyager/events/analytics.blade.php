@@ -28,7 +28,7 @@
         }
 
         .card h1 {
-            font-size: 70px;
+            font-size: 50px;
             font-weight: bold;
             color: #000;
         }
@@ -37,6 +37,7 @@
             font-weight: bold;
             color: #000; 
         }
+      
     </style>
 @endsection
 

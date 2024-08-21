@@ -17,6 +17,7 @@ class OrderSalesChart
     public function build(Event $event): \ArielMejiaDev\LarapexCharts\LineChart
     {
         $types = ['Total', 'Digital', 'Physical'];
+
         $allTickets = $event->tickets
             ->groupBy(fn($ticket) => $ticket->created_at->format('d M'))
             ->map(fn($tickets) => $tickets->sum('price'))->toArray();
@@ -30,31 +31,38 @@ class OrderSalesChart
 
         $data = [];
         foreach ($allTickets as $date => $ticket) {
-            $data[$date]['Total'] = $ticket;
+            $data['Total'][$date] = $ticket;
         }
         foreach ($digitalTickets as $date => $ticket) {
-            $data[$date]['Digital'] = $ticket;
+            $data['Digital'][$date] = $ticket;
         }
         foreach ($physicalTickets as $date => $ticket) {
-            $data[$date]['Physical'] = $ticket;
+            $data['Physical'][$date] = $ticket;
         }
-        foreach ($data as $date => $ticket) {
-            foreach ($types as $item) {
-                $data[$date][$item] = @$data[$date][$item] ?  $data[$date][$item] : 0;
+        $dates = array_keys($allTickets);
+
+        foreach ($data as $name => $ticket) {
+            foreach ($dates as $date) {
+                $data[$name][$date] = @$data[$name][$date] ?  $data[$name][$date] : 0;
             }
         }
 
 
-        $dates = array_keys($allTickets);
 
-      
+
 
         $chart = $this->chart->lineChart()
             ->setTitle('Total Sale');
-        foreach ($data as $name => $tickets) {
 
-            $chart->addData($name, array_values($tickets));
+        foreach ($data as $name => $ticket) {
+            $values = [];
+            foreach ($dates as $date) {
+                array_push($values,$ticket[$date]);
+            }
+          
+            $chart->addData($name,$values);
         }
-        return $chart->setXAxis(array_keys($allTickets));
+
+        return $chart->setXAxis($dates);
     }
 }

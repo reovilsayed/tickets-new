@@ -89,6 +89,13 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function checkIn(){
+        return $this->belongsTo(Zone::class, 'check_in_zone');
+    }
+    public function checkOut(){
+        return $this->belongsTo(Zone::class, 'check_out_zone');
+    }
+
 
     public function getBsStatusClass()
     {

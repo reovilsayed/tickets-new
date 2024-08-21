@@ -187,7 +187,7 @@
         });
     </script>
     <script src="{{ $ticketSoldChart->cdn() }}"></script>
-
+    <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     {{ $ticketSoldChart->script() }}
 @endsection
 @section('content')

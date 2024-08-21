@@ -28,56 +28,60 @@
         }
 
         .card {
+            text-align: center;
             padding: 20px;
             width: 100%;
             border-radius: 10px;
-            height: 150px;
-            border: 2px solid #000000 !important;
+
+            border: 2px solid #EF5927 !important;
             transition: .2s ease-in;
         }
 
         .card:hover {
-            box-shadow: 5px 5px #000000;
+            box-shadow: 5px 5px #EF5927;
         }
 
         .card h3 {
+            text-transform: uppercase;
+            font-weight: bold;
             margin: 0px;
             font-size: 30px;
-            color: #000;
-            font-family: Georgia, 'Times New Roman', Times, serif
+            color: #EF5927;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         .card h1 {
-            text-align: right;
             font-size: 50px;
+            font-weight: bold;
             color: #000;
         }
+        h1{
+            font-size: 40px;
+            font-weight: bold;
+            color: #000; 
+        }
     </style>
+     <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
+@endsection
+@section('javascript')
+<script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
+    <script>
+        var table = $('#dataTable').DataTable()
+    </script>
 @endsection
 @section('content')
+<div class="container">
+    <h1>
+        {{ $event->name }} - Analytics
+    </h1>
+
+    <hr>
+    @include('vendor.voyager.events.partial.buttons')
+    <hr>
     <div class="container">
         <div class="panel">
             <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <form method="get">
-
-                            <div>
-                                <input type="text" name="search" class="form-control" placeholder="Search orders"
-                                    value="{{ request('search') }}">
-                                <div class="col">
-                                    <button type="submit" class="btn btn-primary">Search</button>
-                                    <a href="{{ route('voyager.events.customer.analytics.orders', ['event' => $event, 'user' => $user]) }}"
-                                        class="btn btn-danger">
-                                        Reset
-                                    </a>
-                                </div>
-                            </div>
-
-
-                        </form>
-                    </div>
-                </div>
+               
                 <div class="row">
                     <div class="col-md-3">
                         <div class="card">
@@ -124,7 +128,7 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="dataTable">
                         <thead>
                             <tr class="text-center">
                                 <th>Order Id</th>
@@ -179,5 +183,7 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
+    
+    
 @endsection
