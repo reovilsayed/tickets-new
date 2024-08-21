@@ -16,7 +16,6 @@ class OrderSalesByTicketChart
     public function build($event): \ArielMejiaDev\LarapexCharts\PieChart
     {
          $data = [
-            'Total'=>$event->tickets->count(),
             'Digital'=>$event->digitalTickets->count(),
             'Physical'=>$event->physicalTickets->count(),
         ];
