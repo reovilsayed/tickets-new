@@ -150,8 +150,8 @@
                         ticket: result.data,
                         zone: "{{ $zone->id }}",
                         mode: document.getElementById('mode').value,
-                        user:"{{auth()->id()}}",
-                        session: "{{session()->get('enter-zone')['id']}}",
+                        user: "{{ auth()->id() }}",
+                        session: "{{ session()->get('enter-zone')['id'] }}",
                         checksum: "{{ Hash::make(env('SECURITY_KEY')) }}"
                     }),
                     headers: {
@@ -164,7 +164,9 @@
                         statusBox.innerHTML = `
              <div class="box" id="log-success">
                     <img src="{{ asset('assets/green-light.png') }}" alt="">
-                  
+                  <h6>
+                        ${json.data.name}
+                    </h6>
                 </div>
             `;
                     } else {
@@ -174,6 +176,9 @@
                     <h5>
                         ${json.message}
                     </h5>
+                    <h6>
+                        ${json.data.name}
+                    </h6>
                 </div>
             `;
                     }

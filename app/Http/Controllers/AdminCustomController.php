@@ -301,6 +301,7 @@ class AdminCustomController extends Controller
                     ]),
                     'price' => $product->price,
                     'dates' => json_encode($product->dates),
+                    'created_at' => now(),
 
                 ];
                 $data = array_merge($data, $extras);
@@ -327,7 +328,7 @@ class AdminCustomController extends Controller
     {
         $tickets = $product->physicalTickets()->where('group', $request->group)->get()->map(fn($ticket) => ['id' => $ticket->id, 'ticket' => $ticket->ticket, 'event' => $ticket->event->name, 'product' => $ticket->product->name, 'dates' => implode(', ', $ticket->dates)]);
         $name = strtolower(str_replace(' ', '-', $product->name)) . '-' . strtolower(str_replace(' ', '-', $request->group)) . '-' . 'tickets' . '-' . now()->format('ymdhs');
-        return Excel::download(new TicketExport($tickets), $name.'.xlsx');
+        return Excel::download(new TicketExport($tickets), $name . '.xlsx');
     }
     public function ticketCreatePhysicalDestroy(Product $product, Request $request)
     {

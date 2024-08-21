@@ -23,9 +23,29 @@ class Event extends Model
     {
         return $this->hasMany(Product::class)->orderBy('sequence', 'asc');
     }
+    public function extras()
+    {
+        return $this->hasMany(Extra::class);
+    }
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
+    }
+    public function invites()
+    {
+        return $this->hasMany(Invite::class);
+    }
+    public function digitalTickets()
+    {
+        return $this->hasMany(Ticket::class)->where('type','paid');
+    }
+    public function inviteTickets()
+    {
+        return $this->hasMany(Ticket::class)->where('type','invite');
+    }
+    public function physicalTickets()
+    {
+        return $this->hasMany(Ticket::class)->where('type','physical');
     }
 
     public function zones()
@@ -55,7 +75,7 @@ class Event extends Model
         return $formattedDates;
     }
     public function coupons()
-{
-    return $this->hasToMany(Coupon::class);
-}
+    {
+        return $this->hasToMany(Coupon::class);
+    }
 }

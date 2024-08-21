@@ -8,25 +8,32 @@
             width: 100%;
             border-radius: 10px;
             height: 150px;
-            border: 2px solid #000000 !important;
+            border: 2px solid #EF5927 !important;
             transition: .2s ease-in;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
+        .card>div:last-child{
+            display: flex;
+            flex-direction: column;
+        }
         .card:hover {
-            box-shadow: 5px 5px #000000;
+            box-shadow: 5px 5px #EF5927;
         }
 
         .card h3 {
             margin: 0px;
             font-size: 30px;
-            color: #000;
+            color: #EF5927;
             font-family: Georgia, 'Times New Roman', Times, serif
         }
 
         .card h1 {
             text-align: right;
             font-size: 50px;
-            color: #000;
+            color: #EF5927;
         }
     </style>
 @endsection
@@ -37,22 +44,28 @@
         </h3>
 
         @foreach ($users as $user)
-        
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <h3>
-                            {{ $user->name . ' ' . $user->l_name }}
-                        </h3>
-                        <p>
-                            {{ $user->email }}
-                        </p>
-                        <a href="{{route('voyager.events.customer.analytics.orders',['event'=>$event,'user'=>$user])}}" class="btn btn-dark">
-                            View Orders
-                        </a>
-                        <a href="{{route('voyager.events.customer.analytics.tickets',['event'=>$event,'user'=>$user])}}" class="btn btn-dark">
-                            View Tickets
-                        </a>
+                        <div>
+
+                            <h3>
+                                {{ $user->name . ' ' . $user->l_name }}
+                            </h3>
+                            <p>
+                                {{ $user->email }}
+                            </p>
+                        </div>
+                        <div>
+                            <a href="{{ route('voyager.events.customer.analytics.orders', ['event' => $event, 'user' => $user]) }}"
+                                class="btn btn-custom">
+                                View Orders
+                            </a>
+                            <a href="{{ route('voyager.events.customer.analytics.tickets', ['event' => $event, 'user' => $user]) }}"
+                                class="btn btn-custom">
+                                View Tickets
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
