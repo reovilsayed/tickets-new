@@ -91,7 +91,7 @@ Route::post('/scan-ticket', function (Request $request) {
         return response()->json([
             'status' => 'success',
             'data' => [
-                'name' => $ticket->name,
+                'name' => $ticket->product->name,
             ],
             'message' => $log['action']
         ]);
@@ -99,7 +99,7 @@ Route::post('/scan-ticket', function (Request $request) {
         return response()->json([
             'status' => 'error',
             'data' => [
-                'name' => $ticket->name,
+                'name' => $ticket->product->name,
             ],
             'message' => $e->getMessage()
         ]);
