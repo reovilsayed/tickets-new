@@ -40,5 +40,6 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\AddExtraAction::class);
         Voyager::addAction(\App\Actions\StaffReportAction::class);
         Voyager::addAction(\App\Actions\InviteLinkAction::class);
+        Voyager::addAction(\App\Actions\GeneratePhysicalTicketAction::class);
     }
 }

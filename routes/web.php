@@ -128,7 +128,7 @@ Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
-    Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicate'])->name('voyager.products.duplicate');
+    Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicateProduct'])->name('voyager.products.duplicate');
     Route::get('/users/{user}/staff', function (User $user) {
         $logs = $user->scans->groupBy('ticket')->map(function ($ticket) {
             return $ticket->map(fn($data) => ['log' => $data->pivot->action . ' at ' . $data->created_at->format('Y-m-d')]);
@@ -138,8 +138,12 @@ Route::group(['prefix' => 'admin'], function () {
         return view('vendor.voyager.user.staff', compact('user', 'logs'));
     })->name('voyager.users.staff');
 
+    Route::get('/products/{product}/create-physical', [AdminCustomController::class,'ticketCreatePhysical'])->name('voyager.products.ticketCreatePhysical');
+    Route::post('/products/{product}/create-physical', [AdminCustomController::class,'ticketCreatePhysicalPost'])->name('voyager.products.ticketCreatePhysical.post');
+    Route::get('/products/{product}/download-physical', [AdminCustomController::class,'ticketCreatePhysicalDownload'])->name('voyager.products.ticketCreatePhysical.download');
     Route::get('/products/{product}/invite', [AdminCustomController::class, 'personalInviteForm'])->name('voyager.products.invite');
     Route::post('/products/{product}/invite', [AdminCustomController::class, 'personalInvitePost'])->name('voyager.products.invite.post');
+
     Route::get('/invites/{invite}/add-product', [AdminCustomController::class, 'inviteAddProduct'])->name('voyager.invites.add-product');
 
     Route::post('/invites/{invite}/store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('voyager.invites.store-product');

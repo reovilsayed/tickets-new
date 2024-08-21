@@ -182,4 +182,9 @@ class Product extends Model
     {
         return $this->belongsToMany(Coupon::class, 'coupons_product');
     }
+
+    public function physicalTickets()
+    {
+        return $this->hasMany(Ticket::class, 'product_id')->where('type', 'physical');
+    }
 }

@@ -78,13 +78,14 @@ class Ticket extends Model
     protected static function booted(): void
     {
         static::addGlobalScope('ancient', function (Builder $builder) {
-            $builder->whereHas('order', function ($order) {
+            $builder->where('type', 'physical')->orWhereHas('order', function ($order) {
                 $order->where('payment_status', 1);
             });
         });
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TicketExport;
 use App\Mail\TicketDownload;
 use App\Models\Coupon;
 use App\Models\Event;
@@ -14,9 +15,10 @@ use Error;
 use Exception;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminCustomController extends Controller
 {
@@ -265,5 +267,66 @@ class AdminCustomController extends Controller
                 'alert-type' => 'error',
             ]);
         }
+    }
+
+    public function ticketCreatePhysical(Product $product)
+    {
+        $tickets = $product->physicalTickets->groupBy('group')->map(fn($tickets) => $tickets->count());
+
+        return view('vendor.voyager.products.physical', compact('product', 'tickets'));
+    }
+    public function ticketCreatePhysicalPost(Product $product, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $tickets = [];
+            $extras = [];
+            if ($product->extras && count($product->extras)) {
+                $extras['hasExtras'] = true;
+                $extras['extras'] = json_encode(collect($product->extras)->map(fn($qty, $key) => ['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray());
+            }
+
+            for ($i = 1; $i <= $request->qty; $i++) {
+                $data =  [
+                    'event_id' => $product->event_id,
+                    'product_id' => $product->id,
+                    'group' => $request->name,
+                    'type' => 'physical',
+                    'ticket' =>  now()->format('ymdhis') . uniqid(),
+                    'status' => 0,
+                    'owner' => json_encode([
+                        'name' => '',
+                        'email' => '',
+                        'phone' => '',
+                    ]),
+                    'price' => $product->price,
+                    'dates' => json_encode($product->dates),
+
+                ];
+                $data = array_merge($data, $extras);
+                array_push($tickets, $data);
+            }
+
+            Ticket::insert($tickets);
+
+            DB::commit();
+            return redirect()->back()->with([
+                'message' => 'Physical ticket generation completed successfully',
+                'alert_type' => 'success',
+            ]);
+        } catch (Exception  | Error $e) {
+            DB::rollBack();
+            return redirect()->back()->with([
+                'message' => $e->getMessage(),
+                'alert_type' => 'error',
+            ]);
+        }
+    }
+
+    public function ticketCreatePhysicalDownload(Product $product, Request $request)
+    {
+        $tickets = $product->physicalTickets()->where('group', $request->group)->get()->map(fn($ticket) => ['id' => $ticket->id, 'ticket' => $ticket->ticket, 'event' => $ticket->event->name, 'product' => $ticket->product->name, 'dates' => implode(', ', $ticket->dates)]);
+        $name = strtolower(str_replace(' ', '-', $product->name)) . '-' . strtolower(str_replace(' ', '-', $request->group)) . '-' . 'tickets' . '-' . now()->format('ymdhs');
+        return Excel::download(new TicketExport($tickets), $name.'.xlsx');
     }
 }
