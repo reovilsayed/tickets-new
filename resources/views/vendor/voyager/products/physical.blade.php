@@ -60,8 +60,11 @@
                                 </td>
                                 <td>
                                     <a class="btn btn-primary"
-                                        href="{{ route('voyager.products.ticketCreatePhysical.download', ['product'=>$product,'group' => $group]) }}">
+                                        href="{{ route('voyager.products.ticketCreatePhysical.download', ['product' => $product, 'group' => $group]) }}">
                                         <i class="voyager-download"></i> Excel</a>
+                                    <a class="btn btn-danger" onclick="return confirm('Are you sure ')"
+                                        href="{{ route('voyager.products.ticketCreatePhysical.destroy', ['product' => $product, 'group' => $group]) }}">
+                                        <i class="voyager-trash"></i> Delete</a>
                                 </td>
                             </tr>
                         @endforeach

@@ -141,6 +141,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/products/{product}/create-physical', [AdminCustomController::class,'ticketCreatePhysical'])->name('voyager.products.ticketCreatePhysical');
     Route::post('/products/{product}/create-physical', [AdminCustomController::class,'ticketCreatePhysicalPost'])->name('voyager.products.ticketCreatePhysical.post');
     Route::get('/products/{product}/download-physical', [AdminCustomController::class,'ticketCreatePhysicalDownload'])->name('voyager.products.ticketCreatePhysical.download');
+    Route::get('/products/{product}/destroy-physical', [AdminCustomController::class,'ticketCreatePhysicalDestroy'])->name('voyager.products.ticketCreatePhysical.destroy');
     Route::get('/products/{product}/invite', [AdminCustomController::class, 'personalInviteForm'])->name('voyager.products.invite');
     Route::post('/products/{product}/invite', [AdminCustomController::class, 'personalInvitePost'])->name('voyager.products.invite.post');
 

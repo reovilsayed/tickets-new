@@ -329,4 +329,12 @@ class AdminCustomController extends Controller
         $name = strtolower(str_replace(' ', '-', $product->name)) . '-' . strtolower(str_replace(' ', '-', $request->group)) . '-' . 'tickets' . '-' . now()->format('ymdhs');
         return Excel::download(new TicketExport($tickets), $name.'.xlsx');
     }
+    public function ticketCreatePhysicalDestroy(Product $product, Request $request)
+    {
+        $tickets = $product->physicalTickets()->where('group', $request->group)->delete();
+        return redirect()->back()->with([
+            'message' => 'Physical ticket delete  successfully',
+            'alert_type' => 'success',
+        ]);
+    }
 }
