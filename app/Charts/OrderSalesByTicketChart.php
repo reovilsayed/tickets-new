@@ -16,8 +16,8 @@ class OrderSalesByTicketChart
     public function build($event): \ArielMejiaDev\LarapexCharts\PieChart
     {
          $data = [
-            'Digital'=>$event->digitalTickets->count(),
-            'Physical'=>$event->physicalTickets->count(),
+            'Digital'=>$event->digitalTickets->sum('price'),
+            'Physical'=>$event->physicalTickets->sum('price'),
         ];
         return $this->chart->pieChart()
             ->setTitle('Sales report ')
