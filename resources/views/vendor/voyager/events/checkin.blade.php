@@ -172,7 +172,9 @@
                                     {{ $ticket->user ? $ticket->user->contact_number : 'N/A' }}
                                 </td>
                                 <td>
-                                    {{ $ticket->ticket }}
+                                    <a href="{{ route('download.ticket', ['order' => $ticket->order, 't' => $ticket->ticket]) }}">
+                                        {{ $ticket->ticket }}
+                                    </a>
                                 </td>
                                 <td>
                                     {{ $ticket->product->name }}
