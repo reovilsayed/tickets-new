@@ -51,7 +51,7 @@
             text-transform: uppercase;
             font-weight: bold;
             margin: 0px;
-            font-size: 30px;
+            font-size: 20px;
             color: #EF5927;
             font-family: Arial, Helvetica, sans-serif;
         }
