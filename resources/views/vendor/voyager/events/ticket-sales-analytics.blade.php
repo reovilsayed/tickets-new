@@ -224,7 +224,7 @@
                         </div>
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Online Sales',
+                                'label' => 'Physical Sales',
                                 'value' => Sohoj::price($event->physicalTickets->sum('price')),
                             ])
                            
