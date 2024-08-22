@@ -28,7 +28,7 @@ Route::post('/scan-ticket', function (Request $request) {
         $ticket = Ticket::where('ticket', $request->ticket)->first();
         $zone = Zone::find($request->zone);
 
-        // if (in_array(now()->format('Y-m-d'), $ticket->product->dates) == false) throw new Exception(__('words.to_early_to_scan'));
+        if (in_array(now()->format('Y-m-d'), $ticket->product->dates) == false) throw new Exception(__('words.to_early_to_scan'));
 
         // request checksum and securiy key dose not match
         if (Hash::check(env('SECURITY_KEY'), $request->checksum) == false)  throw new Exception(__('words.illegal_attempt_error'));
