@@ -197,7 +197,7 @@
                     @else
                         <button data-bs-toggle="modal" data-bs-target="#inviteCheckoutModal" class="event-buttton"
                             type="button">
-                            <span>{{ __('words.confirmed') }}</span>
+                            <span>{{ __('words.invite_confirmed') }}</span>
                             <span id="totalPrice"> <i class="fa fa-arrow-right"></i></span>
                         </button>
                     @endif

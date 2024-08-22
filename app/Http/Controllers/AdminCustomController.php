@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\TicketExport;
+use App\Mail\InviteDownload;
 use App\Mail\TicketDownload;
 use App\Models\Coupon;
 use App\Models\Event;
@@ -117,12 +118,12 @@ class AdminCustomController extends Controller
             ]);
 
             return back()->with([
-                'message'    => "Refund successfully",
-                'alert-type' => 'Success',
+                'message'    => "Order amount has been refunded",
+                'alert-type' => 'success',
             ]);
         } else {
             return back()->with([
-                'message'    => "Refund danger",
+                'message'    => "Attempted to refund is failed",
                 'alert-type' => 'error',
             ]);
         }
@@ -138,15 +139,30 @@ class AdminCustomController extends Controller
         if ($request->filled('product')) {
             $product = Product::find($request->product);
         }
-        if ($product && $ticket) {
-            Mail::to($order->user->email)->send(new TicketDownload($order, $product, $ticket));
+        if ($order->payment_method == 'invite') {
+            if ($product && $ticket) {
+                Mail::to($order->billing->email)->send(new InviteDownload($order, $product, $ticket));
+            } else {
+                $products = $order->tickets->groupBy('product_id');
+
+                foreach ($products as $key => $tickets) {
+                    $product = Product::find($key);
+
+                    Mail::to($order->billing->email)->send(new InviteDownload($order, $product, $ticket));
+                }
+            }
+          
         } else {
-            $products = $order->tickets->groupBy('product_id');
-
-            foreach ($products as $key => $tickets) {
-                $product = Product::find($key);
-
+            if ($product && $ticket) {
                 Mail::to($order->user->email)->send(new TicketDownload($order, $product, $ticket));
+            } else {
+                $products = $order->tickets->groupBy('product_id');
+
+                foreach ($products as $key => $tickets) {
+                    $product = Product::find($key);
+
+                    Mail::to($order->user->email)->send(new TicketDownload($order, $product, $ticket));
+                }
             }
         }
         return redirect()->back()->with([
@@ -242,7 +258,8 @@ class AdminCustomController extends Controller
                     'order_id' => $order->id,
                     'ticket' => uniqid(),
                     'price' => 0,
-                    'dates' => $product->dates
+                    'dates' => $product->dates,
+                    'type' => 'invite'
                 ];
 
                 if ($product->extras && count($product->extras)) {
@@ -252,7 +269,7 @@ class AdminCustomController extends Controller
                 $order->tickets()->create($data);
             }
 
-            Mail::to(request()->email)->send(new TicketDownload($order, $product, null));
+            Mail::to(request()->email)->send(new InviteDownload($order, $product, null));
             return redirect()->route('voyager.products.index')->with([
                 'message' => 'Invite sent successfully',
                 'alert-type' => 'success',

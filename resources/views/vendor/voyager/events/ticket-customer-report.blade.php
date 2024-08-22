@@ -81,7 +81,7 @@
             <form action="{{ route('voyager.events.customer.analytics', $event) }}" method="get">
 
                 <div class="search-group">
-                    <input type="text" name="q" placeholder="Search by customer name ..." value="{{ request()->q }}">
+                    <input type="text" name="q" placeholder="Search" value="{{ request()->q }}">
                     <button class="btn btn-custom"><i class="voyager-search"></i></button>
                 </div>
             </form>
@@ -95,8 +95,14 @@
                                     <h3>
                                         {{ $user->name . ' ' . $user->l_name }}
                                     </h3>
-                                    <p>
+                                    <p style="margin: 0px;">
                                         {{ $user->email }}
+                                    </p>
+                                    <p style="margin: 0px;">
+                                        {{ $user->contact_number }}
+                                    </p>
+                                    <p style="margin: 0px;">
+                                        {{ $user->vatNumber }}
                                     </p>
                                 </div>
                                 <div>
@@ -114,13 +120,13 @@
                     </div>
                 @endforeach
             @else
-            <div class="text-center">
+                <div class="text-center">
 
-                <h3 >
-                    Nothing found 
-                </h3>
-                <a class="text-primary" href="{{route('voyager.events.customer.analytics', $event)}}">Go back</a>
-            </div>
+                    <h3>
+                        Nothing found
+                    </h3>
+                    <a class="text-primary" href="{{ route('voyager.events.customer.analytics', $event) }}">Go back</a>
+                </div>
             @endif
         </div>
     </div>

@@ -53,7 +53,7 @@ class CheckoutService
                     'used' => $item->pivot->used + $quantity
                 ];
                 $this->invite->products()->updateExistingPivot($id, $data);
-           
+
                 for ($i = 1; $i <= $quantity; $i++) {
                     $data = [
                         'user_id' => auth()->id() ?? null,
@@ -63,7 +63,8 @@ class CheckoutService
                         'order_id' => $order->id,
                         'ticket' => uniqid(),
                         'price' => 0,
-                        'dates' => $item->dates
+                        'dates' => $item->dates,
+                        'type' => 'invite'
                     ];
 
                     if ($item->extras && count($item->extras)) {
@@ -99,7 +100,7 @@ class CheckoutService
             }
         }
 
-        if(!$this->isFree){
+        if (!$this->isFree) {
             $payment = EasyPay::createPaymentLink($order);
             Log::info('This is order info');
             Log::info($payment);
@@ -108,7 +109,7 @@ class CheckoutService
             $order->payment_id = $payment['id'];
         }
 
-       
+
         $order->save();
 
 
@@ -135,10 +136,10 @@ class CheckoutService
                 'event_id' => $this->event->id,
             ];
         } else {
-            $tax = $this->cart->map(function($product){
+            $tax = $this->cart->map(function ($product) {
                 return  $product->quantity * $product->model->totalTax();
             })->sum();
-           
+
             $total = (Cart::session($this->event->slug)->getSubTotal() + Sohoj::tax()) - Sohoj::discount();
             $data = [
                 'user_id' => auth()->id() ?? null,

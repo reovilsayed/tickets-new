@@ -78,7 +78,7 @@ class Ticket extends Model
     protected static function booted(): void
     {
         static::addGlobalScope('validTicket', function (Builder $builder) {
-            $builder->where('type', 'physical')->orWhereHas('order', function ($order) {
+            $builder->whereIn('type', ['physical', 'invite'])->orWhereHas('order', function ($order) {
                 $order->where('status', 1)->where('payment_status', 1);
             });
         });

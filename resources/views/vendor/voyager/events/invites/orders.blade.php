@@ -94,28 +94,9 @@
                                 </h1>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Toatl Sold',
-                                'value' => Sohoj::price($event->orders()->where('status', 1)->sum('total') / 100),
-                            ])
-                           
-                        </div>
-                        <div class="col-md-3">
-                            @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Total Refund',
-                                'value' => Sohoj::price($event->orders()->where('status', 3)->sum('refund_amount') / 100),
-                            ])
-                          
-                        </div>
-                        @foreach ($ordersByStatus as $status => $count)
-                            <div class="col-md-3">
-                                @include('vendor.voyager.events.partial.card', [
-                                    'label' => $status,
-                                    'value' => $count,
-                                ])
-                            </div>
-                        @endforeach
+                        
+                    
+                    
                     </div>
 
                     <div class="table-responsive">
@@ -147,11 +128,7 @@
                                         <td>{{ optional($order->date_completed)->format('d F, Y') ?? 'N/A' }}</td>
                                         <td>{{ $order->created_at->format(' d F, Y') }}</td>
                                         <td class="align-center" style="display: flex">
-                                            @if ($order->status !== 3 || $order->status == 1)
-                                                <a href="{{ route('order.refund', $order) }}" class="btn btn-dark pull-right"
-                                                    style="margin-right:7px;"><i class="voyager-wallet"
-                                                        style="margin-right:5px;"></i>Refund</a>
-                                            @endif
+                                         
                                             <a style="margin-right: 5px;"href="{{ route('voyager.orders.show', $order) }}"
                                                 class="btn btn-sm btn-warning pull-right">
                                                 <i class="voyager-eye"></i> View
@@ -173,7 +150,7 @@
                         </table>
 
                     </div>
-                  
+                   
                 </div>
             </div>
         </div>

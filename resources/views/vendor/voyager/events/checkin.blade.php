@@ -108,7 +108,7 @@
                 <form action="{{ route('voyager.events.checkinReport.analytics', $event) }}" method="get">
 
                     <div class="search-group">
-                        <input type="text" name="q" placeholder="Search by customer name ..."
+                        <input type="text" name="q" placeholder="Search  customer "
                             value="{{ request()->q }}">
                         <button class="btn btn-custom"><i class="voyager-search"></i></button>
                     </div>

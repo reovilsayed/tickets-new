@@ -93,16 +93,7 @@
                                 </h1>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <h3>
-                                    Total Sold
-                                </h3>
-                                <h1>
-                                    {{ Sohoj::price($tickets->sum('price')) }}
-                                </h1>
-                            </div>
-                        </div>
+                       
                         @foreach ($ticketsByStatus as $status => $count)
                             <div class="col-md-6">
                                 <div class="card ">
@@ -177,9 +168,7 @@
                         </table>
 
                     </div>
-                    <div class="text-center">
-                        {{ $tickets->links('pagination::bootstrap-4') }}
-                    </div>
+                   
                 </div>
             </div>
             <!-- Filter and Search Form -->

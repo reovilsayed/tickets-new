@@ -275,7 +275,7 @@
 
                     <ul class="nav nav-pills">
                         <li class="active"><a data-toggle="pill" href="#paid">{{ __('words.paid_ticket') }}</a></li>
-                        <li><a data-toggle="pill" href="#invite">{{ __('words.invite_ticket') }}</a></li>
+                        {{-- <li><a data-toggle="pill" href="#invite">{{ __('words.invite_ticket') }}</a></li> --}}
                     </ul>
                     <div class="tab-content">
 

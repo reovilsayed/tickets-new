@@ -44,12 +44,59 @@ class EventAnalyticsController extends Controller
     {
         $users = $event->orders()->has('user')->when(request()->filled('q'), function ($query) {
             return $query->whereHas('user', function ($query) {
-                $query->where('name', 'LIKE', '%' . request()->q . '%')->orWhere('l_name', 'LIKE', '%' . request()->q . '%');
+                $query->where('name', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('l_name', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('contact_number', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('vatNumber', 'LIKE', '%' . request()->q . '%');
             });
         })->distinct('user_id')->pluck('user_id')->map(fn($user) => User::find($user));
         return view('vendor.voyager.events.ticket-customer-report', compact('users', 'event'));
     }
 
+    public function invitesReport(Event $event)
+    {
+        $customers = $event->orders()->where('payment_method', 'invite')->select('billing')->when(request()->filled('q'), function ($query) {
+            return $query->where('billing', 'LIKE', '%' . request()->q . '%');
+        })->distinct()->get()->map(fn($order) => ['name' => $order->billing->name, 'email' => $order->billing->email]);
+        return view('vendor.voyager.events.ticket-invites-report', compact('customers', 'event'));
+    }
+
+    public function  inviteReportOrders(Event $event, Request $request)
+    {
+
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+        ]);
+        $orders = Order::where('event_id', $event->id)->where('payment_method', 'invite')->whereJsonContains('billing', ['name' => $request->name, 'email' => $request->email]);
+        if (request()->has('search') && request('search') !== '') {
+            $search = request('search');
+            $orders->where(function ($q) use ($search) {
+                $q->where('id', $search);
+            });
+        }
+
+        $orders = $orders->get();
+        return view('vendor.voyager.events.invites.orders', compact('orders', 'event'));
+    }
+    public function inviteReportTickets(Event $event, Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+        ]);
+        $tickets = Ticket::where('event_id', $event->id)->where('type', 'invite')->whereJsonContains('owner', ['name' => $request->name, 'email' => $request->email]);
+        if (request()->has('search') && request('search') !== '') {
+            $search = request('search');
+            $tickets->where(function ($q) use ($search) {
+                $q->where('id', $search);
+            });
+        }
+        $ticketsByStatus = (clone $tickets)->get()->groupBy(fn($ticket) => $ticket->status())->map(fn($tickets) => $tickets->count());
+        $tickets = $tickets->get();
+
+        return view('vendor.voyager.events.invites.tickets', compact('tickets', 'event', 'ticketsByStatus'));
+    }
     public function  customerReportOrders(Event $event, User $user)
     {
 
@@ -61,8 +108,8 @@ class EventAnalyticsController extends Controller
             });
         }
         $ordersByStatus = (clone $orders)->get()->groupBy(fn($order) => $order->getStatus())->map(fn($orders) => $orders->count());
-        $orders = $orders->paginate('10');
-        return view('vendor.voyager.events.orders', compact('orders', 'event', 'user', 'ordersByStatus'));
+        $orders = $orders->get();
+        return view('vendor.voyager.events.orders', compact('orders', 'event', 'ordersByStatus'));
     }
     public function  customerReportTickets(Event $event, User $user)
     {
@@ -84,12 +131,18 @@ class EventAnalyticsController extends Controller
     {
         $tickets = $event->tickets()->when(request()->filled('q'), function ($query) {
             return $query->whereHas('user', function ($query) {
-                $query->where('name', 'LIKE', '%' . request()->q . '%')->orWhere('l_name', 'LIKE', '%' . request()->q . '%');
+                $query->where('name', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('l_name', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('email', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('contact_number', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('vatNumber', 'LIKE', '%' . request()->q . '%');
+            })->orWhere('ticket', 'LIKE', '%' . request()->q . '%');
+        })->where(function ($query) {
+            $query->when(request()->filled('ticket'), function ($query) {
+                return $query->where('product_id', request()->ticket);
+            })->when(request()->filled('zone'), function ($query) {
+                return $query->where('check_in_zone', request()->zone)->orWhere('check_out_zone', request()->zone);
             });
-        })->when(request()->filled('ticket'), function ($query) {
-            return $query->where('product_id', request()->ticket);
-        })->when(request()->filled('zone'), function ($query) {
-            return $query->where('check_in_zone', request()->zone)->orWhere('check_out_zone', request()->zone);
         })->paginate(25);
         return view('vendor.voyager.events.checkin', compact('event', 'tickets'));
     }
