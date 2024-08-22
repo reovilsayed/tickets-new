@@ -135,6 +135,10 @@ class CheckoutService
                 'event_id' => $this->event->id,
             ];
         } else {
+            $tax = $this->cart->map(function($product){
+                return $product->model->totalTax();
+            })->sum();
+           
             $total = (Cart::session($this->event->slug)->getSubTotal() + Sohoj::tax()) - Sohoj::discount();
             $data = [
                 'user_id' => auth()->id() ?? null,
@@ -142,7 +146,7 @@ class CheckoutService
                 'subtotal' => Cart::session($this->event->slug)->getSubTotal(),
                 'discount' => Sohoj::round_num(Sohoj::discount()),
                 'discount_code' => Sohoj::discount_code(),
-                'tax' => Sohoj::round_num(Sohoj::tax()),
+                'tax' => $tax,
                 'total' => $total,
                 'status' => 0,
                 'payment_method' => 'easypay.pt',
