@@ -104,7 +104,7 @@
                         <div class="col-md-3">
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Total Refund',
-                                'value' => Sohoj::price($orders->orders()->where('status', 3)->sum('refund_amount') / 100),
+                                'value' => Sohoj::price($orders->where('status', 3)->sum('refund_amount') / 100),
                             ])
                           
                         </div>
