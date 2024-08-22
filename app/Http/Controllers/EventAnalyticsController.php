@@ -44,7 +44,10 @@ class EventAnalyticsController extends Controller
     {
         $users = $event->tickets()->has('user')->when(request()->filled('q'), function ($query) {
             return $query->whereHas('user', function ($query) {
-                $query->where('name', 'LIKE', '%' . request()->q . '%')->orWhere('l_name', 'LIKE', '%' . request()->q . '%');
+                $query->where('name', 'LIKE', '%' . request()->q . '%')
+                ->orWhere('l_name', 'LIKE', '%' . request()->q . '%')
+                ->orWhere('contact_number', 'LIKE','%' . request()->q . '%')
+                ->orWhere('vatNumber', 'LIKE','%' . request()->q . '%');
             });
         })->distinct('user_id')->pluck('user_id')->map(fn($user) => User::find($user));
         return view('vendor.voyager.events.ticket-customer-report', compact('users', 'event'));
