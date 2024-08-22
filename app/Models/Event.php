@@ -37,15 +37,15 @@ class Event extends Model
     }
     public function digitalTickets()
     {
-        return $this->hasMany(Ticket::class)->where('type','paid');
+        return $this->hasMany(Ticket::class)->where('type', 'paid');
     }
     public function inviteTickets()
     {
-        return $this->hasMany(Ticket::class)->where('type','invite');
+        return $this->hasMany(Ticket::class)->where('type', 'invite');
     }
     public function physicalTickets()
     {
-        return $this->hasMany(Ticket::class)->where('type','physical');
+        return $this->hasMany(Ticket::class)->where('type', 'physical');
     }
 
     public function zones()
@@ -56,7 +56,7 @@ class Event extends Model
 
     public function priceRange()
     {
-        $prices = $this->products->map(fn($product) => $product->currentPrice());
+        $prices = $this->products()->where('status', 1)->get()->map(fn($product) => $product->currentPrice());
         return ['min' => $prices->min(), 'max' => $prices->max()];
     }
 
