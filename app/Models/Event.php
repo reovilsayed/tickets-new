@@ -56,7 +56,7 @@ class Event extends Model
 
     public function priceRange()
     {
-        $prices = $this->products()->where('status', 1)->get()->map(fn($product) => $product->currentPrice());
+        $prices = $this->products()->where('status', 1)->where('invite_only',0)->get()->map(fn($product) => $product->currentPrice());
         return ['min' => $prices->min(), 'max' => $prices->max()];
     }
 
