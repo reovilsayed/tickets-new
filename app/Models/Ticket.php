@@ -79,7 +79,7 @@ class Ticket extends Model
     {
         static::addGlobalScope('ancient', function (Builder $builder) {
             $builder->where('type', 'physical')->orWhereHas('order', function ($order) {
-                $order->where('payment_status', 1);
+                $order->where('status', 1)->where('payment_status', 1);
             });
         });
     }
@@ -89,10 +89,12 @@ class Ticket extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function checkIn(){
+    public function checkIn()
+    {
         return $this->belongsTo(Zone::class, 'check_in_zone');
     }
-    public function checkOut(){
+    public function checkOut()
+    {
         return $this->belongsTo(Zone::class, 'check_out_zone');
     }
 
