@@ -28,6 +28,8 @@ Route::post('/scan-ticket', function (Request $request) {
         $ticket = Ticket::where('ticket', $request->ticket)->first();
         $zone = Zone::find($request->zone);
 
+        // if (in_array(now()->format('Y-m-d'), $ticket->product->dates) == false) throw new Exception(__('words.to_early_to_scan'));
+
         // request checksum and securiy key dose not match
         if (Hash::check(env('SECURITY_KEY'), $request->checksum) == false)  throw new Exception(__('words.illegal_attempt_error'));
         // ticket is empty
@@ -43,7 +45,9 @@ Route::post('/scan-ticket', function (Request $request) {
                 //Scaning mode is not check in
                 if ($request->mode != 1)   throw new Exception(__('words.checkout_mode_checkin_error'));
                 if ($ticket->product->check_in != true) throw new Exception(__('words.check_in_not_available'));
-
+                if ($ticket->scanedBy()->where('action', 'Checked in')->where('zone_id', $zone->id)->wherePivotBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count() > 0  && $request->mode == 1) {
+                    throw new Exception(__('words.check_in_not_available'));
+                }
                 $ticket->status = 1; // Check in;
                 $ticket->check_in_zone = $zone->id;
                 $log['action'] = 'Checked in';
@@ -52,11 +56,14 @@ Route::post('/scan-ticket', function (Request $request) {
 
                 if ($ticket->product->check_out != true && $request->mode == 2) throw new Exception(__('words.check_in_not_available'));
                 // Check if ticket is already checked in at this zone and mode scaning mode is checkin
-                if ($ticket->scanedBy()->where('action', 'Checked In')->where('zone_id', $zone->id)->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count() > 0  & $request->mode == 1) {
+
+                if ($ticket->scanedBy()->where('action', 'Checked in')->where('zone_id', $zone->id)->wherePivotBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count() > 0  && $request->mode == 1) {
                     throw new Exception(__('words.check_in_not_available'));
                 }
-
-                if ($request->mode == 1) { //Checkin
+                if ($ticket->scanedBy()->where('action', 'Checked Out')->where('zone_id', $zone->id)->wherePivotBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count() > 0  && $request->mode == 2) {
+                    throw new Exception(__('words.check_out_not_available'));
+                }
+                  if ($request->mode == 1) { //Checkin
                     $ticket->status = 1;
                     $ticket->check_in_zone = $zone->id;
                     $log['action'] = 'Checked in';
@@ -72,6 +79,9 @@ Route::post('/scan-ticket', function (Request $request) {
                 //Scaning mode is not check in
                 if ($request->mode != 1)   throw new Exception(__('words.checkout_mode_checkin_error'));
                 if ($ticket->product->check_in != true) throw new Exception(__('words.check_in_not_available'));
+                if ($ticket->scanedBy()->where('action', 'Checked in')->where('zone_id', $zone->id)->wherePivotBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count() > 0  && $request->mode == 1) {
+                    throw new Exception(__('words.check_in_not_available'));
+                }
                 $ticket->status = 1;
                 $ticket->check_out_zone = $zone->id;
                 $log['action'] = 'Checked in';

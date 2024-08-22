@@ -19,7 +19,7 @@ class CheckoutController extends Controller
 
         try {
             DB::beginTransaction();
-            $order =                ::create($event, $request);
+            $order = CheckoutService::create($event, $request);
             DB::commit();
 
 

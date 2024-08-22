@@ -73,7 +73,7 @@
 @section('content')
     <div class="container">
         <h1>
-            Staff Report - {{$user->name.' '.$user->l_name}}
+            Staff Report - {{$user->name.' '.$user->l_name}
         </h1>
         <div class="panel">
             <div class="panel-body">
