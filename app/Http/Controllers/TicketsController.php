@@ -113,6 +113,7 @@ class TicketsController extends Controller
             return redirect()->back()->withSuccess('Tickets Open successfully');
         }
     }
+
     public function mailTicket(Request $request)
     {
 
@@ -121,8 +122,8 @@ class TicketsController extends Controller
         $products = $order->tickets->groupBy('product_id');
         foreach ($products as $key => $tickets) {
             $product = Product::find($key);
-            return new TicketDownload($order, $product);
-            Mail::to('shuvoakonda42p@gmail.com')->send(new TicketDownload($order, $product));
+            return new TicketDownload($order, $product, null);
+            Mail::to('shuvoakonda429@gmail.com')->send(new TicketDownload($order, $product, null));
         }
     }
 }

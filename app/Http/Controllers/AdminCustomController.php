@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\TicketExport;
+use App\Mail\InviteDownload;
 use App\Mail\TicketDownload;
 use App\Models\Coupon;
 use App\Models\Event;
@@ -251,7 +252,7 @@ class AdminCustomController extends Controller
                 $order->tickets()->create($data);
             }
 
-            Mail::to(request()->email)->send(new TicketDownload($order, $product, null));
+            Mail::to(request()->email)->send(new InviteDownload($order, $product, null));
             return redirect()->route('voyager.products.index')->with([
                 'message' => 'Invite sent successfully',
                 'alert-type' => 'success',

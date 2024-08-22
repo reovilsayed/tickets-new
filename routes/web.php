@@ -13,6 +13,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\WishlistController;
 use App\Mail\TicketDownload;
+use App\Mail\InviteDownload;
 use App\Mail\TicketPlaced;
 use App\Models\Coupon;
 use App\Models\Event;
@@ -85,10 +86,10 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
         $products = $order->tickets->groupBy('product_id');
         foreach ($products as $key => $tickets) {
             $product = Product::find($key);
-            Mail::to(request()->email)->send(new TicketDownload($order, $product, null));
+            Mail::to(request()->email)->send(new InviteDownload($order, $product, null));
         }
 
-        return redirect()->route('thankyou')->with('success_msg', 'Order create successfull');
+        return redirect()->back()->with('success_msg', 'ThankYou For Your Claim');
     } catch (Exception $e) {
         DB::rollBack();
         return redirect()->back()->withErrors($e->getMessage());
@@ -133,22 +134,22 @@ Route::group(['prefix' => 'admin'], function () {
         $logs = $user->scans->groupBy('ticket')->map(function ($ticket) {
             return $ticket->map(fn($data) => ['log' => $data->pivot->action . ' at ' . $data->created_at->format('Y-m-d')]);
         });
-        
-        $products = $user->scans->groupBy(function($ticket){
+
+        $products = $user->scans->groupBy(function ($ticket) {
             return $ticket->product->name;
-        })->map(fn($products)=>$products->count())->toArray();
-        $zones = $user->zones->groupBy(function($zone){
+        })->map(fn($products) => $products->count())->toArray();
+        $zones = $user->zones->groupBy(function ($zone) {
             return $zone->name;
-        })->map(fn($products)=>$products->count())->toArray();
-        $data = array_merge($products,$zones);
-        
-        return view('vendor.voyager.user.staff', compact('user', 'logs','data'));
+        })->map(fn($products) => $products->count())->toArray();
+        $data = array_merge($products, $zones);
+
+        return view('vendor.voyager.user.staff', compact('user', 'logs', 'data'));
     })->name('voyager.users.staff');
 
-    Route::get('/products/{product}/create-physical', [AdminCustomController::class,'ticketCreatePhysical'])->name('voyager.products.ticketCreatePhysical');
-    Route::post('/products/{product}/create-physical', [AdminCustomController::class,'ticketCreatePhysicalPost'])->name('voyager.products.ticketCreatePhysical.post');
-    Route::get('/products/{product}/download-physical', [AdminCustomController::class,'ticketCreatePhysicalDownload'])->name('voyager.products.ticketCreatePhysical.download');
-    Route::get('/products/{product}/destroy-physical', [AdminCustomController::class,'ticketCreatePhysicalDestroy'])->name('voyager.products.ticketCreatePhysical.destroy');
+    Route::get('/products/{product}/create-physical', [AdminCustomController::class, 'ticketCreatePhysical'])->name('voyager.products.ticketCreatePhysical');
+    Route::post('/products/{product}/create-physical', [AdminCustomController::class, 'ticketCreatePhysicalPost'])->name('voyager.products.ticketCreatePhysical.post');
+    Route::get('/products/{product}/download-physical', [AdminCustomController::class, 'ticketCreatePhysicalDownload'])->name('voyager.products.ticketCreatePhysical.download');
+    Route::get('/products/{product}/destroy-physical', [AdminCustomController::class, 'ticketCreatePhysicalDestroy'])->name('voyager.products.ticketCreatePhysical.destroy');
     Route::get('/products/{product}/invite', [AdminCustomController::class, 'personalInviteForm'])->name('voyager.products.invite');
     Route::post('/products/{product}/invite', [AdminCustomController::class, 'personalInvitePost'])->name('voyager.products.invite.post');
 
@@ -302,5 +303,4 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
 
 Route::get('test', function () {
     $ticket = Ticket::find(278);
-    
 });
