@@ -136,7 +136,7 @@ class CheckoutService
             ];
         } else {
             $tax = $this->cart->map(function($product){
-                return $product->model->totalTax();
+                return  $product->quantity * $product->model->totalTax();
             })->sum();
            
             $total = (Cart::session($this->event->slug)->getSubTotal() + Sohoj::tax()) - Sohoj::discount();
