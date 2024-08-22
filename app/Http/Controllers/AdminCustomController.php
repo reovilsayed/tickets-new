@@ -113,6 +113,7 @@ class AdminCustomController extends Controller
         if ($order->status == 1) {
             $order->update([
                 'status' => 3,
+                'refund_amount' => $order->total,
             ]);
 
             return back()->with([
@@ -240,7 +241,7 @@ class AdminCustomController extends Controller
                     'product_id' => $product->id,
                     'order_id' => $order->id,
                     'ticket' => uniqid(),
-                    'price' => $product->price,
+                    'price' => 0,
                     'dates' => $product->dates
                 ];
 

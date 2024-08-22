@@ -202,7 +202,7 @@
                                     <p class="text-sub">{{ __('words.to') }}</p>
                                     <p class="date">{{ $ticket->product->end_date->format('M d, Y') }}</p>
                                     <p class="country">{{ $ticket->event->city }}</p>
-                                    <p class="price">{{ Sohoj::price($ticket->price) }}</p>
+                                    <p class="price">{{ Sohoj::price($ticket->product->price) }}</p>
                                     <p class="text-main">
                                         {{ __('words.final_price') }}
                                     </p>

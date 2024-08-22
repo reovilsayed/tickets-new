@@ -42,7 +42,7 @@ class EventAnalyticsController extends Controller
     }
     public function customerReport(Event $event)
     {
-        $users = $event->tickets()->has('user')->when(request()->filled('q'), function ($query) {
+        $users = $event->orders()->has('user')->when(request()->filled('q'), function ($query) {
             return $query->whereHas('user', function ($query) {
                 $query->where('name', 'LIKE', '%' . request()->q . '%')->orWhere('l_name', 'LIKE', '%' . request()->q . '%');
             });
@@ -50,7 +50,7 @@ class EventAnalyticsController extends Controller
         return view('vendor.voyager.events.ticket-customer-report', compact('users', 'event'));
     }
 
-    public function  customerReportOrders(Event $event, User $user,)
+    public function  customerReportOrders(Event $event, User $user)
     {
 
         $orders = Order::where('event_id', $event->id)->where('payment_status', 1)->where('user_id', $user->id);

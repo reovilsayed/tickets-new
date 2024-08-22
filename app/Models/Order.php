@@ -40,6 +40,13 @@ class Order extends Model
             get: fn ($value) => $value / 100
         );
     }
+    public function refundAmount(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value * 100,
+            get: fn ($value) => $value / 100
+        );
+    }
 
     public function tax(): Attribute
     {
