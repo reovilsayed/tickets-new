@@ -11,6 +11,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Services\EventReport;
 use Illuminate\Http\Request;
+use Sohoj;
 
 class EventAnalyticsController extends Controller
 {
@@ -38,7 +39,48 @@ class EventAnalyticsController extends Controller
     ) {
         $lineChart = $orderSalesLineChart->build($event);
         $pieChart = $orderSalesByTicketPiChart->build($event);
-        return view('vendor.voyager.events.ticket-sales-analytics', compact('event', 'lineChart', 'pieChart'));
+
+
+        $report = [
+            'total' => [
+                'total' => [
+                    'total' => Sohoj::price(setMinValue($event->tickets->sum('price'), 0)),
+                    'withoutTax' => Sohoj::price(setMinValue($event->tickets->sum('price') - $event->tickets->sum(fn($ticket) => $ticket->product->totalTax()), 0)),
+                ],
+                'refunded' => [
+                    'total' => Sohoj::price($event->orders->where('payment_status', 1)->where('status', 3)->sum('total')),
+                    'withoutTax' => Sohoj::price(setMinValue($event->orders->where('payment_status', 1)->where('status', 3)->sum('total') - $event->orders->where('payment_status', 1)->where('status', 1)->sum('tax'), 0)),
+
+                ]
+            ],
+            'digital' => [
+                'total' => [
+                    'total' => Sohoj::price($event->orders->where('payment_status', 1)->where('status', 1)->sum('total')),
+                    'withoutTax' => Sohoj::price(setMinValue($event->orders->where('payment_status', 1)->where('status', 1)->sum('total') - $event->orders->where('payment_status', 1)->where('status', 1)->sum('tax'), 0)),
+                ],
+                'refunded' => [
+                    'total' => Sohoj::price($event->orders->where('payment_status', 1)->where('status', 3)->sum('total')),
+                    'withoutTax' => Sohoj::price(setMinValue($event->orders->where('payment_status', 1)->where('status', 3)->sum('total') - $event->orders->where('payment_status', 1)->where('status', 1)->sum('tax'), 0)),
+
+                ]
+            ],
+            'physical' => [
+                'total' => [
+                    'total' => Sohoj::price(setMinValue($event->tickets()->where('type', 'physical')->sum('price'), 0)),
+                    'withoutTax' => Sohoj::price(setMinValue($event->tickets()->where('type', 'physical')->sum('price') - $event->tickets->sum(fn($ticket) => $ticket->product->totalTax()), 0)),
+                ],
+                'refunded' => [
+                    'total' => Sohoj::price(0),
+                    'withoutTax' => Sohoj::price(0),
+
+                ]
+
+            ]
+
+        ];
+
+
+        return view('vendor.voyager.events.ticket-sales-analytics', compact('event', 'lineChart', 'pieChart', 'report'));
     }
     public function customerReport(Event $event)
     {
