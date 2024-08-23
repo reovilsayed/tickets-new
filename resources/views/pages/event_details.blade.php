@@ -65,9 +65,7 @@
                     </div>
                 </div>
 
-                <div x-data=@json(Sohoj::getEventObject($event))
-                    x-effect="$refs.total.innerText = 'Є'+(Object.values(tickets)).reduce((partialSum, a) => partialSum + a, 0).toFixed(2)"
-                    class="col-md-7 event-box" id="mobile-device">
+                <div x-data="eventData" x-effect="calculateTotal()" class="col-md-7 event-box" id="mobile-device">
 
                     <ul class="nav nav-pills sec-hd mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
@@ -159,9 +157,8 @@
                                                                     @if ($product->sold_out) disabled @endif
                                                                     data-price="{{ $product->currentPrice() }}"
                                                                     min="0" max="{{ $product->quantity }}"
-                                                                    x-on:change="tickets[{{ $product->id }}]={{ $product->currentPrice() }}* $el.value;quantities[{{ $product->id }}]= $el.value;"
-                                                                    class="ticket-select"
-                                                                    x-model="quantities[{{ $product->id }}]">
+                                                                    class="ticket-select" x-model="quantities[{{$product->id}}]"
+                                                                    x-on:change="updateTicket({{$product->id}},{{$product->currentPrice()}})">
                                                                     <option value="0">0</option>
                                                                     @for ($i = 1; $i <= $quantity; $i++)
                                                                         <option value="{{ $i }}">
@@ -241,11 +238,19 @@
 @section('js')
     <script defer src="{{ asset('assets/js/alpine.js') }}"></script>
     <script>
-        let data = Alpine.reactive({
-            tickets: {}
-        })
-        Alpine.effect(() => {
-            console.log(data.tickets);
-        })
+        function eventData() {
+            return {
+                tickets: {},
+                quantities: {},
+                updateTicket(id, price) {
+                    this.tickets[id] = price * this.quantities[id];
+                    this.calculateTotal();
+                },
+                calculateTotal() {
+                    let total = Object.values(this.tickets).reduce((sum, value) => sum + value, 0);
+                    this.$refs.total.innerText = 'Є' + total.toFixed(2);
+                }
+            };
+        }
     </script>
 @endsection
