@@ -10,14 +10,14 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable,Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    
+
 
     protected $guarded = [];
     // protected $guarded = [];
@@ -95,16 +95,16 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         return $this->subscription('basic');
     }
 
-    public function scans(){
+    public function scans()
+    {
         return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id', 'id', 'id')->withPivot('action')->withTimestamps();
-  
     }
-    public function zones(){
+    public function zones()
+    {
         return $this->belongsToMany(Zone::class, 'ticket_user', 'user_id', 'zone_id', 'id', 'id')->withPivot('action')->withTimestamps();
-  
     }
 
-  
+
     public function subscriptionStatus()
     {
         if ($this->getSubscription->stripe_status !== 'active' || $this->getSubscription->ends_at !== null) {
@@ -164,7 +164,14 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
                 $query->whereBetween('created_at', [$currentWeekStart, $currentWeekEnd]);
             });
     }
-    public function getCountry(){
+
+    public function fullName()
+    {
+        return $this->name . ' ' . $this->l_name;
+    }
+
+    public function getCountry()
+    {
         $country_array = [
             'AF' => 'Afghanistan',
             'AL' => 'Albania',
@@ -433,5 +440,10 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         ];
 
         return $country_array[$this->country];
+    }
+
+    public function events()
+    {
+        return $this->belongsToMany(Event::class,'tickets');
     }
 }

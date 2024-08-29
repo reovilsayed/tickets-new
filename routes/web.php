@@ -3,6 +3,7 @@
 use App\Charts\EventTicketSellChart;
 use App\Charts\OrderSalesByTicketChart;
 use App\Charts\OrderSalesChart;
+use App\Exports\CustomerExport;
 use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -38,6 +39,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -129,6 +132,18 @@ Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+    Route::get('customer/export', function () {
+        $users =  User::all()->map(fn($user) => [
+            'first_name' => $user->name,
+            'last_name' => $user->l_name,
+            'email' => $user->email,
+            'contactNumber' => $user->contact_number,
+            'vatNumber' => $user->vatNumber,
+            'events' => $user->events->unique()->pluck('name')->implode(', ')
+        ]);
+
+        return Excel::download(new CustomerExport($users), 'customer_' . now()->format('dmyhi') . '.xlsx');
+    })->name('voyager.customer.export');
     Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicateProduct'])->name('voyager.products.duplicate');
     Route::get('/users/{user}/staff', function (User $user) {
         $logs = $user->scans->groupBy('ticket')->map(function ($ticket) {
@@ -303,7 +318,3 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
     Route::post('/enter', [EnterzoneContoller::class, 'enterExtra'])->name('enter.post');
     Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
 })->middleware(['auth', 'role:staffzone']);
-
-Route::get('test', function () {
-    $ticket = Ticket::find(278);
-});
