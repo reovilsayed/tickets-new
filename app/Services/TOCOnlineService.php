@@ -130,7 +130,7 @@ class TOCOnlineService
         $token = $this->getAccessTokenFromRefreshToken();
 
          $body =[
-            'document_type' => 'FT',
+            'document_type' => 'FR',
             'date' => $order->created_at->format('Y-m-d'),
             'finalize' => 0,
             'customer_id' => $order->billing->vatNumber ? null : 452,
