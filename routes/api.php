@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use App\Models\Extra;
 use App\Models\Ticket;
 use App\Models\Zone;
@@ -53,7 +54,7 @@ Route::post('/scan-ticket', function (Request $request) {
                 $log['action'] = 'Checked in';
                 break;
             case 'Checked in':
-              
+
                 if ($ticket->product->check_out != true && $request->mode == 2) throw new Exception(__('words.check_out_not_available'));
                 // Check if ticket is already checked in at this zone and mode scaning mode is checkin
 
@@ -63,7 +64,7 @@ Route::post('/scan-ticket', function (Request $request) {
                 if ($ticket->scanedBy()->where('action', 'Checked Out')->where('zone_id', $zone->id)->wherePivotBetween('created_at', [now()->startOfDay(), now()->endOfDay()])->count() > 0  && $request->mode == 2) {
                     throw new Exception(__('words.check_out_not_available'));
                 }
-                  if ($request->mode == 1) { //Checkin
+                if ($request->mode == 1) { //Checkin
                     $ticket->status = 1;
                     $ticket->check_in_zone = $zone->id;
                     $log['action'] = 'Checked in';
@@ -139,3 +140,8 @@ Route::post('/extras-scan-ticker', function (Request $request) {
         return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
     }
 })->name('api.extras-scan-ticket');
+
+
+Route::get('/tickets', [ApiController::class, 'index']);
+Route::post('/ticket-extras', [ApiController::class, 'ticketExtras']);
+Route::get('/extras', [ApiController::class, 'extras']);
