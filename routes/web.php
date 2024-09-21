@@ -318,3 +318,9 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
     Route::post('/enter', [EnterzoneContoller::class, 'enterExtra'])->name('enter.post');
     Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
 })->middleware(['auth', 'role:staffzone']);
+
+Route::group(['prefix' => 'pos'], function () {
+    Route::get('/', function () {
+        return view('pos');
+    });
+});
