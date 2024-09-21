@@ -1,0 +1,45 @@
+.cart-item {
+    padding: 5px 5px;
+    border-bottom: 1px solid #007bff;
+}
+
+.cart-item-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.cart-item-name {
+    font-size: 20px;
+}
+
+.cart-item-info,
+.cart-item-discount {
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+}
+
+.cart-item-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.control-buttons-group {
+    display: flex;
+    gap: 0.5rem;
+    transform: scale(0.9);
+}
+
+.item-quantity {
+    font-weight: bold;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.2rem;
+}
+
+.cart-item-extras-list {
+    list-style: square;
+}

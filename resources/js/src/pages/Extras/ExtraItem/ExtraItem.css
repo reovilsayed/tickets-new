@@ -1,0 +1,92 @@
+.extra-item-container {
+    cursor: pointer;
+    transition: 0.3s all ease-in-out;
+}
+
+.extra-item-container:hover {
+    scale: 1.1;
+}
+
+.extra-item-card {
+    position: relative;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    font-size: 12px;
+    position: absolute;
+    right: 1px;
+    z-index: 10;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    top: -10px;
+    left: -10px;
+}
+
+.custom-card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    position: relative;
+    cursor: pointer;
+    max-height: auto;
+}
+
+.extra-item-selected {
+    border: 2px solid rgb(35, 151, 253);
+}
+
+.extra-item-badge {
+    background-color: #007bff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.extra-item-unit {
+    background-color: #b7368cd1;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 0 5px 5px 0px;
+    z-index: 3;
+}
+
+.extra-item-img {
+    height: 120px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.extra-item-body {
+    padding: 8px;
+}
+
+.extra-item-name {
+    margin: 0;
+    font-size: 16px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.extra-item-generic {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+}
+
+.extra-item-info-btn {
+    font-size: 10px;
+    position: absolute;
+    right: 5px;
+    bottom: 50px;
+}
