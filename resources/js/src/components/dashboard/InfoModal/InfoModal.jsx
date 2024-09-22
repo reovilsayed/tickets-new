@@ -63,7 +63,7 @@ function InfoModal() {
                             <div className="col-md-6">
                                 <div className="event_img text-center mb-3">
                                     <img
-                                        src={verifyImage(item?.image)}
+                                        src={verifyImage(item?.event_thumbnail)}
                                         alt={item?.name}
                                         className="img-fluid"
                                     />
