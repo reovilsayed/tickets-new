@@ -2,9 +2,27 @@ import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "./NavList.css";
 import { navRoutes } from "../../../router";
+import axios from "axios";
 
 const NavList = () => {
     const { pathname } = useLocation();
+    const handleLogout = async () => {
+        const csrfToken = document
+            .querySelector('meta[name="csrf-token"]')
+            .getAttribute("content");
+
+        await axios.post(
+            `${import.meta.env.VITE_APP_URL}/logout`,
+            {},
+            {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+            }
+        );
+
+        window.location.href = "/";
+    };
     return (
         <div className="nav_inner">
             <ul className="nav_list">
@@ -17,7 +35,7 @@ const NavList = () => {
                         active={pathname === route.path}
                     />
                 ))}
-                <li>
+                <li onClick={handleLogout}>
                     <a className="logout-trigger">
                         <i className="fas fa-sign-out-alt"></i>
                         <span>Logout</span>
