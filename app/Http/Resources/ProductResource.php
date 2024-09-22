@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Extra;
 use Illuminate\Http\Resources\Json\JsonResource;
+use TCG\Voyager\Facades\Voyager;
 
 class ProductResource extends JsonResource
 {
@@ -17,6 +18,7 @@ class ProductResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'event_thumbnail' => Voyager::image($this->event->thumbnail),
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
