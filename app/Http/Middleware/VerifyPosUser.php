@@ -18,6 +18,9 @@ class VerifyPosUser
         if (auth()->user()->role->name == 'pos' || auth()->user()->role->name == 'admin') {
             return $next($request);
         }
-        return redirect()->route('homepage');
+        return redirect()->route('homepage')->with([
+            'message'    => "You do not have authorization to access that page.",
+            'alert-type' => 'error',
+        ]);
     }
 }
