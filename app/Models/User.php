@@ -444,6 +444,11 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
 
     public function events()
     {
-        return $this->belongsToMany(Event::class,'tickets');
+        return $this->belongsToMany(Event::class, 'tickets');
+    }
+
+    public function role()
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
     }
 }
