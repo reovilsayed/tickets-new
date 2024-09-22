@@ -13,6 +13,7 @@
 </head>
 
 <body>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div id="root"></div>
 </body>
 
