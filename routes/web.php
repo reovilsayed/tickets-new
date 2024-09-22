@@ -13,6 +13,7 @@ use App\Http\Controllers\EventAnalyticsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Middleware\VerifyPosUser;
 use App\Mail\TicketDownload;
 use App\Mail\InviteDownload;
 use App\Mail\TicketPlaced;
@@ -319,8 +320,11 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
     Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
 })->middleware(['auth', 'role:staffzone']);
 
-Route::group(['prefix' => 'pos'], function () {
+Route::group(['prefix' => 'pos', 'middleware' => ['auth', VerifyPosUser::class]], function () {
     Route::get('/', function () {
+        return view('pos');
+    });
+    Route::get('/tickets', function () {
         return view('pos');
     });
 });
