@@ -3,14 +3,14 @@
     "file": "assets/Essência-logo-af647146.css",
     "src": "Essência-logo.css"
   },
-  "_Essência-logo-6767ae3f.js": {
+  "_Essência-logo-9695d99f.js": {
     "assets": [
       "assets/Essência-logo-9fa5e606.png"
     ],
     "css": [
       "assets/Essência-logo-af647146.css"
     ],
-    "file": "assets/Essência-logo-6767ae3f.js",
+    "file": "assets/Essência-logo-9695d99f.js",
     "imports": [
       "resources/js/app.js"
     ]
@@ -35,12 +35,12 @@
       "resources/js/src/components/layouts/DashboardLayout.jsx",
       "resources/js/src/pages/Tickets/Tickets.jsx"
     ],
-    "file": "assets/app-1274654e.js",
+    "file": "assets/app-37fc078d.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   },
   "resources/js/src/App.jsx": {
-    "file": "assets/App-2f30d920.js",
+    "file": "assets/App-e4cd5b73.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -55,20 +55,20 @@
     "css": [
       "assets/DashboardLayout-f35bb874.css"
     ],
-    "file": "assets/DashboardLayout-b4099023.js",
+    "file": "assets/DashboardLayout-a33063a1.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-6767ae3f.js",
+      "_Essência-logo-9695d99f.js",
       "_utils-ed3e4056.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/DashboardLayout.jsx"
   },
   "resources/js/src/components/layouts/MainLayout.jsx": {
-    "file": "assets/MainLayout-47843463.js",
+    "file": "assets/MainLayout-18c4719b.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-6767ae3f.js"
+      "_Essência-logo-9695d99f.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/MainLayout.jsx"
@@ -81,7 +81,7 @@
     "css": [
       "assets/Tickets-7b93a0fe.css"
     ],
-    "file": "assets/Tickets-dc7a2097.js",
+    "file": "assets/Tickets-561decd4.js",
     "imports": [
       "resources/js/app.js",
       "_utils-ed3e4056.js"
