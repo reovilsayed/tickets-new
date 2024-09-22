@@ -19,7 +19,7 @@ function Tickets() {
         refetch,
     } = useInfiniteFetch(
         ["tickets", searchQuery],
-        `http://127.0.0.1:8000/api/tickets`,
+        `${import.meta.env.VITE_APP_URL}/api/tickets`,
         { query: searchQuery }
     );
 
