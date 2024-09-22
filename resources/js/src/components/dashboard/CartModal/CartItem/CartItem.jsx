@@ -9,11 +9,10 @@ function CartItem({ item }) {
         updateItemQuantity(item?.id, item?.quantity + quantity);
     const handleRemove = () => removeItem(item?.id);
     return (
-        <div className="cart-item row">
+        <div className="cart-item row w-100">
             <div className="col-md-2 col-3">
                 <img
-                    src={verifyImage(item.image)}
-                    alt={item?.name || "Product"}
+                    src={verifyImage(item?.event_thumbnail)}
                     className="cart-item-image"
                 />
             </div>

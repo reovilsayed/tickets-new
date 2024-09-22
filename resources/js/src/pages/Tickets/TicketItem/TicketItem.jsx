@@ -46,8 +46,7 @@ const TicketItem = ({ ticket }) => {
                     <div className="card-header position-relative">
                         <img
                             className="ticket-item-img"
-                            src={verifyImage(ticket?.image)}
-                            alt={ticket.name}
+                            src={verifyImage(ticket?.event_thumbnail)}
                         />
                         {ticket?.event?.name && (
                             <span className="ticket-item-unit">
