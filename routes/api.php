@@ -143,5 +143,6 @@ Route::post('/extras-scan-ticker', function (Request $request) {
 
 
 Route::get('/tickets', [ApiController::class, 'index']);
+Route::get('/events', [ApiController::class, 'events']);
 Route::post('/ticket-extras', [ApiController::class, 'ticketExtras']);
 Route::get('/extras', [ApiController::class, 'extras']);
