@@ -10,6 +10,8 @@ export const useInfiniteFetch = (key, url, params = {}, options = {}) => {
         const response = await axios.get(
             `${url}?page=${pageParam}&per_page=${5}&query=${
                 params?.query ?? ""
+            }&event_id=${params?.event_id ?? ""}&event_date=${
+                params?.eventDate ?? ""
             }`,
             {
                 headers: {

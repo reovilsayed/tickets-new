@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 
 function Tickets() {
     const searchQuery = useSelector((state) => state.searchQuery.query);
+    const filterEvent = useSelector((state) => state.filter.event);
+    const eventDate = useSelector((state) => state.filter.date);
 
     const {
         data,
@@ -18,9 +20,9 @@ function Tickets() {
         fetchNextPage,
         refetch,
     } = useInfiniteFetch(
-        ["tickets", searchQuery],
+        ["tickets", searchQuery, filterEvent, eventDate],
         `${import.meta.env.VITE_APP_URL}/api/tickets`,
-        { query: searchQuery }
+        { query: searchQuery, event_id: filterEvent?.id, eventDate }
     );
 
     const handleScroll = useCallback(() => {

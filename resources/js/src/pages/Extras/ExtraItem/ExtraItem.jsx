@@ -1,6 +1,6 @@
 import React from "react";
 import "./ExtraItem.css";
-import { formatDate, formatPrice } from "../../../lib/utils";
+import { formatDateRange, formatPrice } from "../../../lib/utils";
 import { useDispatch } from "react-redux";
 import { open } from "../../../lib/features/itemInfoModalSlice";
 
