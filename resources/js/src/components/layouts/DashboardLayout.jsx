@@ -7,6 +7,8 @@ import { changeQuery } from "../../lib/features/searchQuerySlice";
 import CartButton from "./Buttons/CartButton";
 import CartModal from "../dashboard/CartModal/CartModal";
 import LogoImage from "../../public/Essência-logo.png";
+import FilterButton from "./Buttons/FilterButton";
+import FilterModal from "../dashboard/FilterModal/FilterModal";
 
 function DashboardLayout({ children }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +19,6 @@ function DashboardLayout({ children }) {
 
     const handleLogout = (e) => {
         e.preventDefault();
-        // Implement your logout logic here
         console.log("Logout clicked");
     };
 
@@ -31,9 +32,20 @@ function DashboardLayout({ children }) {
 
     const openCart = () => {
         setCartOpen(true);
-        console.log(cartOpen);
     };
     const closeCart = () => setCartOpen(false);
+
+    const [filterModalOpen, setFilterModalOpen] = useState(false);
+
+    const openFilterModal = () => {
+        setFilterModalOpen(true);
+    };
+    const closeFilterModal = () => setFilterModalOpen(false);
+    const toggleFilterModal = () => {
+        setFilterModalOpen((prev) => !prev);
+    };
+    console.log(filterModalOpen);
+    
 
     return (
         <>
@@ -115,6 +127,7 @@ function DashboardLayout({ children }) {
                                     className="form-control fixed row my-2 g-2 shadow-sm left-0 right-0"
                                 />
                                 {children}
+                                <FilterButton onClick={toggleFilterModal} />
                                 <CartButton onClick={openCart} />
                             </div>
                         </div>
@@ -135,6 +148,7 @@ function DashboardLayout({ children }) {
             <div className="menu_overlay" id="menu_overlay"></div>
             <InfoModal />
             <CartModal open={cartOpen} onClose={closeCart} />
+            <FilterModal show={filterModalOpen} onClose={closeFilterModal} />
         </>
     );
 }
