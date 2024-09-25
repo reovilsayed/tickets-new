@@ -1,6 +1,6 @@
 import React from "react";
 import "./TicketItem.css";
-import { formatDate, formatPrice, verifyImage } from "../../../lib/utils";
+import { formatDateRange, formatPrice, verifyImage } from "../../../lib/utils";
 import { useDispatch } from "react-redux";
 import { open } from "../../../lib/features/itemInfoModalSlice";
 import { useCart } from "react-use-cart";
@@ -75,7 +75,7 @@ const TicketItem = ({ ticket }) => {
                         {ticket?.start_date && ticket?.end_date && (
                             <small>
                                 (
-                                {formatDate(ticket.start_date, ticket.end_date)}
+                                {formatDateRange(ticket.start_date, ticket.end_date)}
                                 )
                             </small>
                         )}

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { close } from "../../../lib/features/itemInfoModalSlice";
 import "./InfoModal.css";
-import { formatDate, formatPrice, verifyImage } from "../../../lib/utils";
+import { formatDateRange, formatPrice, verifyImage } from "../../../lib/utils";
 
 function InfoModal() {
     const dispatch = useDispatch();
@@ -89,7 +89,7 @@ function InfoModal() {
                                         <div>
                                             <h5>Event time</h5>
                                             <h6>
-                                                {formatDate(
+                                                {formatDateRange(
                                                     item?.start_date,
                                                     item.end_date
                                                 )}

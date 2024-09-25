@@ -1,6 +1,15 @@
 import defaultImage from "../public/images/no-image.jpg";
 
-export const formatDate = (startDate, endDate) => {
+export const formatDate = (date) => {
+    if (!date) return null;
+
+    const dateObj = new Date(date);
+
+    const options = { day: "numeric", month: "short", year: "numeric" };
+    return dateObj.toLocaleDateString("en-US", options);
+};
+
+export const formatDateRange = (startDate, endDate) => {
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(endDate);
 
