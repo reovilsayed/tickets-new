@@ -43,3 +43,10 @@
 .cart-item-extras-list {
     list-style: square;
 }
+
+.cart-item .accordion-button {
+    padding: 5px 10px;
+}
+.cart-item .accordion-body {
+    padding: 0.5rem;
+}

@@ -1,10 +1,31 @@
-import React, { useEffect, useRef } from "react";
+import React, { useMemo } from "react";
 import "./CartModal.css";
 import { useCart } from "react-use-cart";
 import CartItem from "./CartItem/CartItem";
+import { useDispatch } from "react-redux";
+import { open as paymentModalOpen } from "../../../lib/features/paymentModalSlice";
+import { calculateExtrasFeesForTotalCart } from "../../../lib/utils";
 
 function CartModal({ open, onClose }) {
-    const { items } = useCart();
+    const { items, cartTotal, emptyCart } = useCart();
+    const resetCart = () => {
+        emptyCart();
+        onClose();
+    };
+
+    const dispatch = useDispatch();
+    const openPaymentModal = () => dispatch(paymentModalOpen());
+
+    const cartExtrasFees = useMemo(
+        () => calculateExtrasFeesForTotalCart(items),
+        [items]
+    );
+
+    const grandTotal = useMemo(
+        () => cartTotal + cartExtrasFees,
+        [cartTotal, cartExtrasFees]
+    );
+
     return open ? (
         <>
             <div
@@ -44,24 +65,30 @@ function CartModal({ open, onClose }) {
                             <tbody>
                                 <tr>
                                     <th>Sub Total:</th>
-                                    <td> Tk</td>
+                                    <td>{cartTotal}$</td>
                                 </tr>
                                 <tr>
-                                    <th>Discount:</th>
-                                    <td> Tk</td>
+                                    <th>Extras:</th>
+                                    <td>{cartExtrasFees}$</td>
                                 </tr>
                                 <tr>
                                     <th>Total:</th>
-                                    <td> Tk</td>
+                                    <td>{grandTotal}$</td>
                                 </tr>
                             </tbody>
                         </table>
 
                         <div className="d-flex gap-1 justify-content-end">
-                            <button className="btn btn-danger">
+                            <button
+                                className="btn btn-danger"
+                                onClick={resetCart}
+                            >
                                 <i class="fas fa-redo me-2"></i>Reset
                             </button>
-                            <button className="btn btn-success">
+                            <button
+                                className="btn btn-success"
+                                onClick={openPaymentModal}
+                            >
                                 <i class="fas fa-money-bill-wave me-2"></i>Pay
                                 Now
                             </button>
