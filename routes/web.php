@@ -5,6 +5,7 @@ use App\Charts\OrderSalesByTicketChart;
 use App\Charts\OrderSalesChart;
 use App\Exports\CustomerExport;
 use App\Http\Controllers\AdminCustomController;
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
@@ -328,3 +329,6 @@ Route::group(['prefix' => 'pos', 'middleware' => ['auth', VerifyPosUser::class]]
         return view('pos');
     });
 });
+
+
+Route::post('api/create-order', [ApiController::class, 'createOrder']);
