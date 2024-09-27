@@ -80,7 +80,7 @@ function FilterBar() {
                                 aria-label="Events"
                             >
                                 <option onClick={() => handleDateSelect("")}>
-                                    None
+                                    All
                                 </option>
                                 {selectedEvent?.dates?.map(
                                     (eventDate, index) => (
