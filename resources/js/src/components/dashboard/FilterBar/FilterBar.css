@@ -1,0 +1,12 @@
+.filter-fade-in {
+    opacity: 1;
+}
+
+.filter-select-group {
+    padding: 5px 16px;
+}
+
+.filter-fade-out {
+    transform: translateY(100%);
+    opacity: 0;
+}

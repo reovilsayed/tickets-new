@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import "./FilterModal.css";
+import "./FilterBar.css";
 import { useFetch } from "../../../lib/hooks/useFetch";
 import { formatDate } from "../../../lib/utils";
 import { useDispatch } from "react-redux";
 import { changeDate, changeEvent } from "../../../lib/features/filterSlice";
 
-function FilterModal({ show, onClose }) {
+function FilterBar() {
     const dispatch = useDispatch();
     const { data: filterEvents } = useFetch(["filter-events"], "/api/events");
 
@@ -23,37 +23,24 @@ function FilterModal({ show, onClose }) {
         setSelectedDate(eventDate);
     };
 
-    return show ? (
-        <>
-            <div
-                className="filter-modal-backdrop filter-fade-in"
-                onClick={onClose}
-            ></div>
-            <div
-                className={`filter-modal ${
-                    show ? "filter-fade-in" : "filter-fade-out"
-                }`}
-                tabIndex="-1"
-                id="offcanvasBottom"
-                aria-labelledby="offcanvasBottomLabel"
-                aria-hidden={!show}
-                onClick={(e) => e.stopPropagation()}
-            >
-                <div className="offcanvas-header">
-                    <h5 className="offcanvas-title" id="offcanvasBottomLabel">
-                        Filter
-                    </h5>
-                    <button
-                        type="button"
-                        className="btn-close text-reset"
-                        aria-label="Close"
-                        onClick={onClose}
-                    ></button>
-                </div>
-                <div className="offcanvas-body small overflow-x-hidden max-w-100 filter-select-group">
-                    <div class="form-floating row row-cols-1 row-cols-md-1">
+    return (
+        <div
+            className={`form-control fixed row my-2 gx-2 shadow-sm left-0 right-0 padding-0 d-flex flex-row align-items-center`}
+            tabIndex="-1"
+            id="offcanvasBottom"
+            aria-labelledby="offcanvasBottomLabel"
+            onClick={(e) => e.stopPropagation()}
+        >
+            <div className="d-flex flex-row align-items-center col-md-6">
+                <label for="eventsSelect">Events</label>
+                <div className="filter-select-group w-100">
+                    <div className="form-floating row row-cols-1 row-cols-md-1">
                         <select
-                            class="form-select"
+                            className="form-select p-2"
+                            style={{
+                                fontSize: "0.8rem",
+                                height: "fit-content",
+                            }}
                             id="eventsSelect"
                             aria-label="Events"
                         >
@@ -69,22 +56,26 @@ function FilterModal({ show, onClose }) {
                                 </option>
                             ))}
                         </select>
-                        <label for="eventsSelect">
-                            {selectedEvent ? selectedEvent.name : "Events"}
-                        </label>
                     </div>
                 </div>
-                {selectedEvent !== null && (
+            </div>
+            {selectedEvent !== null && (
+                <div className="d-flex flex-row align-items-center col-md-6">
+                    <label for="eventsSelect">Dates</label>
                     <div
-                        className={`offcanvas-body small overflow-x-hidden max-w-100 filter-select-group ${
+                        className={`filter-select-group w-100 ${
                             selectedEvent !== null
                                 ? "filter-fade-in"
                                 : "filter-fade-out"
                         }`}
                     >
-                        <div class="form-floating row row-cols-1 row-cols-md-1">
+                        <div className="form-floating row row-cols-1 row-cols-md-1">
                             <select
-                                class="form-select"
+                                className="form-select p-2"
+                                style={{
+                                    fontSize: "0.8rem",
+                                    height: "fit-content",
+                                }}
                                 id="eventsSelect"
                                 aria-label="Events"
                             >
@@ -104,17 +95,12 @@ function FilterModal({ show, onClose }) {
                                     )
                                 )}
                             </select>
-                            <label for="eventsSelect">
-                                {selectedDate
-                                    ? formatDate(selectedDate)
-                                    : "Dates"}
-                            </label>
                         </div>
                     </div>
-                )}
-            </div>
-        </>
-    ) : null;
+                </div>
+            )}
+        </div>
+    );
 }
 
-export default FilterModal;
+export default FilterBar;
