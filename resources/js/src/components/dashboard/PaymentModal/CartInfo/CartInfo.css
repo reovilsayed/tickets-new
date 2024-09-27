@@ -1,0 +1,4 @@
+.cart-info-items-container {
+    height: 42%;
+    overflow-y: scroll;
+}
