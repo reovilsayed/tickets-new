@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Sohoj;
+use Illuminate\Support\Str;
 use App\Http\Resources\EventCollection;
 use App\Http\Resources\ProductCollection;
+use App\Mail\TicketDownload;
 use App\Models\Event;
 use App\Models\Extra;
+use App\Models\Order;
 use App\Models\Product;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class ApiController extends Controller
 {
@@ -64,5 +72,73 @@ class ApiController extends Controller
         $extras = Extra::with('event')->where('name', 'like', "%{$query}%")->paginate($perPage);
 
         return response()->json($extras);
+    }
+
+    public function createOrder(Request $request)
+    {
+        $orderData = [
+            'user_id' => auth()->id() ?? null,
+            'subtotal' => $request->get('subTotal'),
+            'discount' => Sohoj::round_num(Sohoj::discount()),
+            'discount_code' => Sohoj::discount_code(),
+            'total' => $request->get('total'),
+            'status' => 1,
+            'payment_status' => 1,
+            'payment_method' => 'pos',
+            'transaction_id' => Str::uuid(),
+            'security_key' => Str::uuid(),
+        ];
+
+        $order = Order::create($orderData);
+        $cart = $request->get('cart');
+        foreach ($cart as $item) {
+            $product = Product::findOrFail($item['id']);
+            if ($product->quantity < $item['quantity']) {
+                throw new Exception($item['name'] . ' is not available for this quantity');
+            }
+            $product->quantity -= $item['quantity'];
+            $product->save();
+
+            for ($i = 0; $i < $item['quantity']; $i++) {
+                $data = [
+                    'owner' => [
+                        'name' => request()->get('biling')['name'] ?? '',
+                        'email' => request()->get('biling')['email'] ?? '',
+                        'vatNumber' => request()->get('biling')['vatNumber'] ?? '',
+                        'address' => request()->get('biling')['address'] ?? '',
+                    ],
+                    'event_id' => $product->event->id,
+                    'product_id' => $product->id,
+                    'order_id' => $order->id,
+                    'ticket' => uniqid(),
+                    'price' => $product->price,
+                    'dates' => $product->dates
+                ];
+
+                $extras = $item['extras'];
+                if ($extras && count($extras)) {
+                    $data['hasExtras'] = true;
+                    foreach ($extras as $extra) {
+                        $newQuantity = $extra['newQuantity'] ?? 0;
+                        $quantity = $extra['quantity'] ?? 0;
+                        $price = $extra['price'] ?? 0;
+                        if ($newQuantity > $quantity) {
+                            $data['price'] = $data['price'] + (($newQuantity - $quantity) * $price);
+                        }
+                    }
+                    $data['extras'] = collect($extras)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQuantity'] ?? $extra['quantity'], 'used' => 0])->toArray();
+                }
+                $order->tickets()->create($data);
+            }
+        }
+        $order->save();
+        $sendTicketsToMail = $request->get('sendToMail');
+        if ($sendTicketsToMail) {
+            foreach ($cart as $ticket) {
+                $product = Product::find($ticket['id']);
+                Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));
+            }
+        }
+        return response()->json($order);
     }
 }
