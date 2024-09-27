@@ -1,0 +1,23 @@
+/* AddExtraModal.css */
+.modal-content {
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.modal-footer {
+    justify-content: space-between;
+}
+
+.add-extra-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1060;
+}
