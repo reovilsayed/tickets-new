@@ -2,13 +2,15 @@
 import React, { useState } from "react";
 import NavList from "./NavList/NavList";
 import InfoModal from "../dashboard/InfoModal/InfoModal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changeQuery } from "../../lib/features/searchQuerySlice";
 import CartButton from "./Buttons/CartButton";
 import CartModal from "../dashboard/CartModal/CartModal";
 import LogoImage from "../../public/Essência-logo.png";
 import FilterButton from "./Buttons/FilterButton";
-import FilterModal from "../dashboard/FilterModal/FilterModal";
+import FilterBar from "../dashboard/FilterBar/FilterBar";
+import AddExtraModal from "../dashboard/AddExtraModal/AddExtraModal";
+import PaymentModal from "../dashboard/PaymentModal/PaymentModal";
 
 function DashboardLayout({ children }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,12 +24,6 @@ function DashboardLayout({ children }) {
         console.log("Logout clicked");
     };
 
-    const dispatch = useDispatch();
-    const handleQueryChange = (event) => {
-        const { value } = event.target;
-        dispatch(changeQuery(value));
-    };
-
     const [cartOpen, setCartOpen] = useState(false);
 
     const openCart = () => {
@@ -35,17 +31,7 @@ function DashboardLayout({ children }) {
     };
     const closeCart = () => setCartOpen(false);
 
-    const [filterModalOpen, setFilterModalOpen] = useState(false);
-
-    const openFilterModal = () => {
-        setFilterModalOpen(true);
-    };
-    const closeFilterModal = () => setFilterModalOpen(false);
-    const toggleFilterModal = () => {
-        setFilterModalOpen((prev) => !prev);
-    };
-    console.log(filterModalOpen);
-    
+    const paymentModalOpen = useSelector((state) => state.paymentModal.open);
 
     return (
         <>
@@ -120,14 +106,14 @@ function DashboardLayout({ children }) {
                                 className="dashboard_content_inner"
                                 style={{ marginBottom: "50px" }}
                             >
-                                <input
+                                {/* <input
                                     type="text"
                                     placeholder="Search..."
                                     onChange={handleQueryChange}
                                     className="form-control fixed row my-2 g-2 shadow-sm left-0 right-0"
-                                />
+                                /> */}
+                                <FilterBar />
                                 {children}
-                                <FilterButton onClick={toggleFilterModal} />
                                 <CartButton onClick={openCart} />
                             </div>
                         </div>
@@ -147,8 +133,9 @@ function DashboardLayout({ children }) {
 
             <div className="menu_overlay" id="menu_overlay"></div>
             <InfoModal />
+            <AddExtraModal />
             <CartModal open={cartOpen} onClose={closeCart} />
-            <FilterModal show={filterModalOpen} onClose={closeFilterModal} />
+            <PaymentModal open={paymentModalOpen} />
         </>
     );
 }
