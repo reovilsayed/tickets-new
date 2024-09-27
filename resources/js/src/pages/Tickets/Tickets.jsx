@@ -10,20 +10,12 @@ function Tickets() {
     const filterEvent = useSelector((state) => state.filter.event);
     const eventDate = useSelector((state) => state.filter.date);
 
-    const {
-        data,
-        isError,
-        isLoading,
-        isSuccess,
-        isFetching,
-        hasNextPage,
-        fetchNextPage,
-        refetch,
-    } = useInfiniteFetch(
-        ["tickets", searchQuery, filterEvent, eventDate],
-        `${import.meta.env.VITE_APP_URL}/api/tickets`,
-        { query: searchQuery, event_id: filterEvent?.id, eventDate }
-    );
+    const { data, isError, isLoading, isFetching, hasNextPage, fetchNextPage } =
+        useInfiniteFetch(
+            ["tickets", searchQuery, filterEvent, eventDate],
+            `${import.meta.env.VITE_APP_URL}/api/tickets`,
+            { query: searchQuery, event_id: filterEvent?.id, eventDate }
+        );
 
     const handleScroll = useCallback(() => {
         const scrollTop = document.documentElement.scrollTop;
@@ -44,7 +36,11 @@ function Tickets() {
 
     return (
         <div className="overflow-y-scroll overflow-x-none pt-3">
-            {isLoading ? (
+            {!filterEvent ? (
+                <h4 className="text-info text-center">
+                    Please Select An Event
+                </h4>
+            ) : isLoading ? (
                 <div
                     style={{
                         width: "100%",

@@ -1,13 +1,10 @@
-// import "../../App.css";
 import React, { useState } from "react";
 import NavList from "./NavList/NavList";
 import InfoModal from "../dashboard/InfoModal/InfoModal";
-import { useDispatch, useSelector } from "react-redux";
-import { changeQuery } from "../../lib/features/searchQuerySlice";
+import { useSelector } from "react-redux";
 import CartButton from "./Buttons/CartButton";
 import CartModal from "../dashboard/CartModal/CartModal";
 import LogoImage from "../../public/Essência-logo.png";
-import FilterButton from "./Buttons/FilterButton";
 import FilterBar from "../dashboard/FilterBar/FilterBar";
 import AddExtraModal from "../dashboard/AddExtraModal/AddExtraModal";
 import PaymentModal from "../dashboard/PaymentModal/PaymentModal";
@@ -97,7 +94,6 @@ function DashboardLayout({ children }) {
                             className={`navigation ${isMenuOpen ? "open" : ""}`}
                             id="navigation"
                         >
-                            {/* You can replace <x-sidenav.navlist /> with actual nav list component */}
                             <NavList />
                         </div>
 
@@ -106,12 +102,6 @@ function DashboardLayout({ children }) {
                                 className="dashboard_content_inner"
                                 style={{ marginBottom: "50px" }}
                             >
-                                {/* <input
-                                    type="text"
-                                    placeholder="Search..."
-                                    onChange={handleQueryChange}
-                                    className="form-control fixed row my-2 g-2 shadow-sm left-0 right-0"
-                                /> */}
                                 <FilterBar />
                                 {children}
                                 <CartButton onClick={openCart} />
@@ -127,7 +117,6 @@ function DashboardLayout({ children }) {
                 id="logout-form"
                 onSubmit={handleLogout}
             >
-                {/* Add CSRF token handling logic */}
                 <button type="submit">Logout</button>
             </form>
 
