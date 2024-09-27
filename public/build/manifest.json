@@ -3,23 +3,23 @@
     "file": "assets/Essência-logo-af647146.css",
     "src": "Essência-logo.css"
   },
-  "_Essência-logo-eeabe6e5.js": {
+  "_Essência-logo-65602040.js": {
     "assets": [
       "assets/Essência-logo-9fa5e606.png"
     ],
     "css": [
       "assets/Essência-logo-af647146.css"
     ],
-    "file": "assets/Essência-logo-eeabe6e5.js",
+    "file": "assets/Essência-logo-65602040.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_index-2c940bde.js": {
+  "_index-becbb646.js": {
     "assets": [
       "assets/no-image-b9e79929.jpg"
     ],
-    "file": "assets/index-2c940bde.js",
+    "file": "assets/index-becbb646.js",
     "imports": [
       "resources/js/app.js"
     ]
@@ -38,12 +38,12 @@
       "resources/js/src/components/layouts/DashboardLayout.jsx",
       "resources/js/src/pages/Tickets/Tickets.jsx"
     ],
-    "file": "assets/app-96864be1.js",
+    "file": "assets/app-8014aa81.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   },
   "resources/js/src/App.jsx": {
-    "file": "assets/App-97bdcc6e.js",
+    "file": "assets/App-2ecdece7.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -58,20 +58,20 @@
     "css": [
       "assets/DashboardLayout-5ca92c5b.css"
     ],
-    "file": "assets/DashboardLayout-2d8e0ff5.js",
+    "file": "assets/DashboardLayout-9509130d.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-eeabe6e5.js",
-      "_index-2c940bde.js"
+      "_Essência-logo-65602040.js",
+      "_index-becbb646.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/DashboardLayout.jsx"
   },
   "resources/js/src/components/layouts/MainLayout.jsx": {
-    "file": "assets/MainLayout-190e7a9b.js",
+    "file": "assets/MainLayout-03a35eb3.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-eeabe6e5.js"
+      "_Essência-logo-65602040.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/MainLayout.jsx"
@@ -84,10 +84,10 @@
     "css": [
       "assets/Tickets-7b93a0fe.css"
     ],
-    "file": "assets/Tickets-6e58e017.js",
+    "file": "assets/Tickets-7b494f1c.js",
     "imports": [
       "resources/js/app.js",
-      "_index-2c940bde.js"
+      "_index-becbb646.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Tickets/Tickets.jsx"
