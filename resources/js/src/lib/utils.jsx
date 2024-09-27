@@ -23,3 +23,28 @@ export const formatDateRange = (startDate, endDate) => {
 export const formatPrice = (price) => parseFloat(price).toFixed(2);
 
 export const verifyImage = (image) => image ?? defaultImage;
+
+export const calculateExtrasFees = (items = []) => {
+    return items.reduce((accumulator, currentValue) => {
+        if (currentValue?.quantity && currentValue?.newQuantity) {
+            if (currentValue?.newQuantity > currentValue?.quantity) {
+                return (
+                    accumulator +
+                    (currentValue?.newQuantity - currentValue?.quantity) *
+                        currentValue?.price
+                );
+            }
+        } else if (currentValue?.newQuantity) {
+            return (
+                accumulator + currentValue?.newQuantity * currentValue?.price
+            );
+        }
+        return accumulator;
+    }, 0);
+};
+
+export const calculateExtrasFeesForTotalCart = (items = []) => {
+    return items.reduce((accumulator, currentValue) => {
+        return accumulator + calculateExtrasFees(currentValue?.extras);
+    }, 0);
+};
