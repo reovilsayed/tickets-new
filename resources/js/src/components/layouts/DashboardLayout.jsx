@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import NavList from "./NavList/NavList";
 import InfoModal from "../dashboard/InfoModal/InfoModal";
 import { useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import LogoImage from "../../public/Essência-logo.png";
 import FilterBar from "../dashboard/FilterBar/FilterBar";
 import AddExtraModal from "../dashboard/AddExtraModal/AddExtraModal";
 import PaymentModal from "../dashboard/PaymentModal/PaymentModal";
+import { useLocation } from "react-router-dom";
 
 function DashboardLayout({ children }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,6 +30,13 @@ function DashboardLayout({ children }) {
     const closeCart = () => setCartOpen(false);
 
     const paymentModalOpen = useSelector((state) => state.paymentModal.open);
+
+    const { pathname } = useLocation();
+
+    const showFilter = useMemo(
+        () => pathname.split("/")[2] === "tickets",
+        [pathname]
+    );
 
     return (
         <>
@@ -102,7 +110,7 @@ function DashboardLayout({ children }) {
                                 className="dashboard_content_inner"
                                 style={{ marginBottom: "50px" }}
                             >
-                                <FilterBar />
+                                {showFilter && <FilterBar />}
                                 {children}
                                 <CartButton onClick={openCart} />
                             </div>
