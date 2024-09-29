@@ -11,6 +11,7 @@ use App\Models\Event;
 use App\Models\Extra;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Ticket;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,12 @@ class ApiController extends Controller
         }
         $products = $products->paginate($perPage);
         return new ProductCollection($products);
+    }
+
+    public function getTicket(Request $request)
+    {
+        $ticket = Ticket::where('ticket', $request->ticket)->get();
+        return response()->json($ticket);
     }
 
     public function ticketExtras(Request $request)
@@ -74,6 +81,17 @@ class ApiController extends Controller
         return response()->json($extras);
     }
 
+    public function eventExtras(Request $request, $event)
+    {
+        $perPage = $request->get('per_page', 10);
+
+        $query = $request->get('query');
+
+        $extras = Extra::with('event')->where('name', 'like', "%{$query}%")->where('event_id', $event)->paginate($perPage);
+
+        return response()->json($extras);
+    }
+
     public function createOrder(Request $request)
     {
         $orderData = [
@@ -93,7 +111,7 @@ class ApiController extends Controller
 
         $extraProducts = $request->get('extras');
         if ($extraProducts && count($extraProducts)) {
-            $orderExtras = collect($extraProducts)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['quantity']])->toArray();
+            $orderExtras = collect($extraProducts)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['quantity'], 'price' => $extra['price']])->toArray();
             $order['extras'] = json_encode($orderExtras);
         }
 
@@ -133,7 +151,7 @@ class ApiController extends Controller
                             $data['price'] = $data['price'] + (($newQuantity - $quantity) * $price);
                         }
                     }
-                    $data['extras'] = collect($extras)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQuantity'] ?? $extra['quantity'], 'used' => 0])->toArray();
+                    $data['extras'] = collect($extras)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQuantity'] ?? $extra['quantity'], 'price' => $extra['price']])->toArray();
                 }
                 $order->tickets()->create($data);
             }
@@ -143,9 +161,42 @@ class ApiController extends Controller
         if ($sendTicketsToMail) {
             foreach ($tickets as $ticket) {
                 $product = Product::find($ticket['id']);
-                Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));
+                Mail::to($order['owner']['email'])->send(new TicketDownload($order, $product, null));
             }
         }
         return response()->json($order);
+    }
+
+    public function updateTicket(Request $request)
+    {
+        $requestTicket = $request->ticket;
+        $ticket = Ticket::findOrFail($requestTicket['id']);
+        $ticket->extras = collect($requestTicket['extras'])->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQty'] ?? $extra['qty'], 'price' => $extra['price']])->toArray();
+        $ticket->save();
+
+        $totalPrice = 0;
+        foreach ($requestTicket['extras'] as $extra) {
+            $quantity = (int)(($extra['newQty'] ?? $extra['qty']) - $extra['qty']);
+            if ($quantity > 0) {
+                $price =  $quantity * $extra['price'];
+                $totalPrice += $price;
+                $extras[] = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $quantity, 'price' => $quantity * $extra['price']];
+            }
+        }
+
+        $orderData = [
+            'user_id' => $ticket['user_id'],
+            'subtotal' => $totalPrice,
+            'discount' => 0,
+            'total' => $totalPrice,
+            'status' => 1,
+            'payment_status' => 1,
+            'payment_method' => 'pos',
+            'transaction_id' => Str::uuid(),
+            'security_key' => Str::uuid(),
+            'extras' => json_encode($extras)
+        ];
+        $order = Order::create($orderData);
+        return response()->json(['ticket' => $ticket, 'order' => $order]);
     }
 }
