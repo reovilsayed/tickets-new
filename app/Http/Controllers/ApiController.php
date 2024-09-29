@@ -45,8 +45,33 @@ class ApiController extends Controller
 
     public function getTicket(Request $request)
     {
-        $ticket = Ticket::where('ticket', $request->ticket)->get();
-        return response()->json($ticket);
+        $ticket = Ticket::where('ticket', $request->ticket)->first();
+        $ticketData = [
+            "id" => $ticket["id"],
+            "owner" => $ticket["owner"],
+            "event_id" => $ticket["event_id"],
+            "product_id" => $ticket["product_id"],
+            "order_id" => $ticket["order_id"],
+            "user_id" => $ticket["user_id"],
+            "ticket" => $ticket["ticket"],
+            "status" => $ticket["status"],
+            "dates" => $ticket["dates"],
+            "price" => $ticket["price"],
+            "created_at" => $ticket["created_at"],
+            "updated_at" => $ticket["updated_at"],
+            "type" => $ticket["type"],
+            "logs" => $ticket["logs"],
+            "check_in_zone" => $ticket["check_in_zone"],
+            "check_out_zone" => $ticket["check_out_zone"],
+            "hasExtras" => $ticket["hasExtras"],
+            "extras" => []
+        ];
+        $extras = $ticket->extras;
+        foreach ($extras as $extra) {
+            $ticketData['extras'][] = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['qty'], 'price' => Extra::find($extra['id'])->price];
+        }
+
+        return response()->json($ticketData);
     }
 
     public function ticketExtras(Request $request)
