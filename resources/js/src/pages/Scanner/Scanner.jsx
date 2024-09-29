@@ -366,9 +366,13 @@ const Scanner = () => {
             ) : (
                 <div id="viewfinder" className="qr-box">
                     <QrReader
+                        style={{ width: 400, height: 300 }}
                         onError={handleError}
                         onScan={handleScan}
-                        facingMode={"rear"}
+                        constraints={{
+                            audio: false,
+                            video: { facingMode: "environment" },
+                        }}
                     />
                 </div>
             )}
