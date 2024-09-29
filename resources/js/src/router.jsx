@@ -19,6 +19,24 @@ export const navRoutes = [
         ),
         element: React.lazy(() => import("./pages/Tickets/Tickets")),
     },
+    {
+        path: "/pos/extras",
+        name: "Extras",
+        icon: "fa fa-beer",
+        layout: React.lazy(() =>
+            import("./components/layouts/DashboardLayout")
+        ),
+        element: React.lazy(() => import("./pages/Extras/Extras")),
+    },
+    {
+        path: "/pos/scanner",
+        name: "Scan",
+        icon: "fa fa-qrcode",
+        layout: React.lazy(() =>
+            import("./components/layouts/DashboardLayout")
+        ),
+        element: React.lazy(() => import("./pages/Scanner/Scanner")),
+    },
 ];
 
 export const router = createBrowserRouter([
