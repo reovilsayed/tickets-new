@@ -51,7 +51,8 @@ const PaymentModal = ({ open }) => {
         setOrderRequestProcessing(true);
         const orderData = {
             biling: formData,
-            cart: items,
+            tickets: items.filter((item) => item.isTicket),
+            extras: items.filter((item) => !item.isTicket),
             discount: formData["discount"],
             subTotal: cartTotal,
             total: cartTotal,
