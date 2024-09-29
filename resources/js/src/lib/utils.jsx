@@ -45,6 +45,7 @@ export const calculateExtrasFees = (items = []) => {
 
 export const calculateExtrasFeesForTotalCart = (items = []) => {
     return items.reduce((accumulator, currentValue) => {
+        if (!currentValue?.isTicket) return accumulator;
         return accumulator + calculateExtrasFees(currentValue?.extras);
     }, 0);
 };

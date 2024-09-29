@@ -22,23 +22,37 @@ function CartInfoItem({ item }) {
                 <td>{item?.name}</td>
                 <td>{item?.price}$</td>
                 <td>{item?.quantity}</td>
-                <td>{item?.itemTotal}$</td>
-                <td>{extrasFees}$</td>
-                <td className="text-end">{item?.itemTotal}$</td>
+                {item?.isTicket && (
+                    <>
+                        <td>{item?.itemTotal}$</td>
+                        <td>{extrasFees}$</td>
+                    </>
+                )}
+                <td className="text-end" colSpan={item?.isTicket ? 1 : 3}>
+                    {item?.itemTotal}$
+                </td>
             </tr>
-            {item?.extras?.map((extra, index) => (
-                <tr key={index}>
-                    <td>{extra?.name}</td>
-                    <td>{extra?.price}$</td>
-                    <td>
-                        {extra?.quantity ?? 0}{" "}
-                        {extra?.newQuantity
-                            ? `+ ${extra?.newQuantity - (extra?.quantity ?? 0)}`
-                            : ""}
-                    </td>
-                    <td colSpan={3} className="text-end">{calculateSingleExtra(extra)}$</td>
-                </tr>
-            ))}
+            {item?.isTicket &&
+                item?.extras?.map((extra, index) => (
+                    <tr key={index}>
+                        <td>{extra?.name}</td>
+                        <td>{extra?.price}$</td>
+                        <td>
+                            {extra?.quantity ?? 0}{" "}
+                            {(extra?.newQuantity ?? 0) -
+                                (extra?.quantity ?? 0) >
+                            0
+                                ? `+ ${
+                                      extra?.newQuantity -
+                                      (extra?.quantity ?? 0)
+                                  }`
+                                : ""}
+                        </td>
+                        <td colSpan={3} className="text-end">
+                            {calculateSingleExtra(extra)}$
+                        </td>
+                    </tr>
+                ))}
         </>
     );
 }
