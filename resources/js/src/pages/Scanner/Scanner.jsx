@@ -10,13 +10,12 @@ const Scanner = () => {
     const [scannedTicket, setScannedTicket] = useState(null);
 
     const handleScan = async (data) => {
-        console.log(data);
-        if (!data) return;
+        if (!data?.text) return;
 
         try {
             const response = await axios.post(
                 `${import.meta.env.VITE_APP_URL}/api/tickets/get`,
-                { ticket: "66f910fd722a5" } // Scan the actual ticket code
+                { ticket: data?.text } // Scan the actual ticket code
             );
             setScannedTicket(response.data[0]); // Set the ticket data
         } catch (error) {
@@ -366,7 +365,11 @@ const Scanner = () => {
                 </div>
             ) : (
                 <div id="viewfinder" className="qr-box">
-                    <QrReader onError={handleError} onScan={handleScan} />
+                    <QrReader
+                        onError={handleError}
+                        onScan={handleScan}
+                        facingMode={"rear"}
+                    />
                 </div>
             )}
         </section>
