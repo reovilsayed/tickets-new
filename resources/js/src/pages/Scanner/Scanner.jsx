@@ -72,7 +72,7 @@ const Scanner = () => {
         };
         var isUniqueItem = true;
 
-        var ticketExtras = scannedTicket.extras.map((item) => {
+        var ticketExtras = scannedTicket?.extras?.map((item) => {
             if (item.id === targetExtra.id) {
                 isUniqueItem = false;
                 return {
@@ -168,6 +168,9 @@ const Scanner = () => {
                                     const quantity = parseInt(
                                         extra?.newQty ?? extra?.qty ?? 0
                                     );
+                                    const price = parseFloat(
+                                        extra?.price ?? 0
+                                    ).toFixed(2);
                                     return (
                                         <span
                                             key={index}
@@ -214,11 +217,11 @@ const Scanner = () => {
                                             </div>
                                             <span className="col-md-3 text-end">
                                                 {"X "}
-                                                {extra?.price}
+                                                {price}
                                                 {"$ ="}
                                             </span>
                                             <span className="col-md-3 text-end">
-                                                {extra?.price * quantity}$
+                                                {price * quantity}$
                                             </span>
                                         </span>
                                     );
