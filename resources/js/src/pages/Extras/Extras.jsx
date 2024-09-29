@@ -19,7 +19,7 @@ function Extras() {
         refetch,
     } = useInfiniteFetch(
         ["extras", searchQuery],
-        `http://127.0.0.1:8000/api/extras`,
+        `${import.meta.env.VITE_APP_URL}/api/extras`,
         {
             query: searchQuery,
         }

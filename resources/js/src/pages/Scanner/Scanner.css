@@ -1,88 +1,28 @@
 .scanner-page {
     min-height: 100vh;
     background-color: #f36a30;
-}
-
-.status {
-    padding: 10px;
-}
-
-.status .box {
     display: flex;
+    flex-direction: row;
+    gap: 60px;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    padding: 20px;
 }
 
-.status .box img {
-    height: 150px;
-    width: 150px;
-}
-
-.status .box h3 {
-    color: #000;
-    font-weight: 700;
-}
-
-.scanner-header {
-    min-height: 30vh;
-}
-
-.scanner-header h4 {
-    margin: 0px;
-}
-
-.scanner-header .event-name {
-    background-color: #fff;
-    padding: 20px 10px;
-    text-align: center;
-    font-weight: bold;
-    color: black;
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-}
-
-.scanner-header .door-name {
-    padding: 20px 10px;
-    text-align: center;
-    font-weight: bold;
-    color: #fff;
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-}
-
-.add-new-session {
-    transition: 0.2s ease-in;
-    padding: 10px;
-    text-align: center;
-    color: black;
-    background-color: #fff;
-    width: 100%;
-    margin-bottom: 2px;
-}
-
-.add-new-session:hover {
-    background-color: #cfc1bb !important;
-}
-
-.scanner-inner {
+/* .scanner-inner {
     padding-top: 20px;
     min-height: 70vh;
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
-}
-
-.qr-image {
-    height: 150px;
-    width: 150px;
-}
-
-.qr-box h3 {
-    font-family: Georgia, "Times New Roman", Times, serif;
-    font-weight: thin;
-    color: #fff;
-    text-transform: lowercase;
-}
+    max-width: 600px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+} */
 
 .qr-box {
     cursor: pointer;
@@ -91,29 +31,94 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding: 20px;
+    background-color: #e25925;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.qr-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .qr-box:hover .qr-image {
     transform: scale(1.1);
 }
 
-#video-container {
-    position: relative;
-    display: flex;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100%;
+.qr-image {
+    height: 80px;
+    width: 80px;
+    transition: transform 0.3s ease;
 }
 
-#qr-video {
-    width: 100%;
-    overflow: hidden;
+.qr-box h3 {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: 300;
+    font-size: 18px;
+    color: #fff;
+    text-transform: lowercase;
+    margin-top: 10px;
 }
 
 #viewfinder {
-    display: none;
+    border-radius: 10px;
+    border: 3px solid black;
+    overflow: hidden;
+    width: 90%;
+    height: auto;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.status {
-    background-color: #fff;
+#viewfinder.qr-box {
+    padding: 0;
+    margin: 0;
+    width: fit-content;
+}
+
+.ticket-info {
+    background-color: #f9f9f9;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-details {
+    text-align: left;
+    padding: 10px;
+    line-height: 1.6;
+}
+
+.ticket-details p {
+    margin: 5px 0;
+}
+
+.extras {
+    margin-top: 20px;
+}
+
+.extras h4 {
+    margin-bottom: 10px;
+}
+
+.extras ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.extras ul li {
+    background-color: #f5f5f5;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+@media (max-width:720px) {
+    .scanner-page {
+        flex-direction: column;
+    }
 }
