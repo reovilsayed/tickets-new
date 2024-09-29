@@ -32,10 +32,9 @@ function CartItem({ item }) {
     const handleOpenAddExtraModal = () => {
         dispatch(open(item));
     };
-    const extrasFees = useMemo(
-        () => calculateExtrasFees(item?.extras) ?? 0,
-        [item]
-    );
+    const extrasFees = useMemo(() => {
+        return item?.isTicket ? calculateExtrasFees(item?.extras) ?? 0 : 0;
+    }, [item]);
     return (
         <div className="cart-item row w-100">
             <div className="col-md-2 col-3">
@@ -65,12 +64,14 @@ function CartItem({ item }) {
                     <span>{(item?.quantity || 1) * (item?.price || 0)}</span>
                     {"$"}
                 </p>
-                <p className="cart-item-info">
-                    <span>Extras</span>
-                    {" = "}
-                    <span>{extrasFees}</span>
-                    {"$"}
-                </p>
+                {item?.isTicket && (
+                    <p className="cart-item-info">
+                        <span>Extras</span>
+                        {" = "}
+                        <span>{extrasFees}</span>
+                        {"$"}
+                    </p>
+                )}
                 <div className="cart-item-controls mt-2 d-flex justify-content-between">
                     <div className="control-buttons-group">
                         <button
@@ -116,7 +117,7 @@ function CartItem({ item }) {
                         </button>
                     </div>
                 </div>
-                {item?.extras?.length ? (
+                {item?.isTicket && item?.extras?.length ? (
                     <Accordion className="py-1 mt-2">
                         <Accordion.Item eventKey="0">
                             <Accordion.Header>Extras</Accordion.Header>

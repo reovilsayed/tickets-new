@@ -19,7 +19,7 @@ const TicketItem = ({ ticket }) => {
             className={`ticket-item-container col-lg-2 col-md-3 col-sm-3 col-6 my-hover-effect g-3 ${
                 active ? "active" : ""
             }`}
-            onClick={() => addItem(ticket)}
+            onClick={() => addItem({ ...ticket, isTicket: true })}
         >
             <div className="ticket-item-card">
                 {active ? (
@@ -75,7 +75,10 @@ const TicketItem = ({ ticket }) => {
                         {ticket?.start_date && ticket?.end_date && (
                             <small>
                                 (
-                                {formatDateRange(ticket.start_date, ticket.end_date)}
+                                {formatDateRange(
+                                    ticket.start_date,
+                                    ticket.end_date
+                                )}
                                 )
                             </small>
                         )}
