@@ -90,8 +90,15 @@ class ApiController extends Controller
         ];
 
         $order = Order::create($orderData);
-        $cart = $request->get('cart');
-        foreach ($cart as $item) {
+
+        $extraProducts = $request->get('extras');
+        if ($extraProducts && count($extraProducts)) {
+            $orderExtras = collect($extraProducts)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['quantity']])->toArray();
+            $order['extras'] = json_encode($orderExtras);
+        }
+
+        $tickets = $request->get('tickets');
+        foreach ($tickets as $item) {
             $product = Product::findOrFail($item['id']);
             if ($product->quantity < $item['quantity']) {
                 throw new Exception($item['name'] . ' is not available for this quantity');
@@ -134,7 +141,7 @@ class ApiController extends Controller
         $order->save();
         $sendTicketsToMail = $request->get('sendToMail');
         if ($sendTicketsToMail) {
-            foreach ($cart as $ticket) {
+            foreach ($tickets as $ticket) {
                 $product = Product::find($ticket['id']);
                 Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));
             }
