@@ -46,6 +46,8 @@ class ApiController extends Controller
     public function getTicket(Request $request)
     {
         $ticket = Ticket::where('ticket', $request->ticket)->first();
+        if (!$ticket)
+            return response()->json(['message' => 'No ticket was found'], status: 404);
         $ticketData = [
             "id" => $ticket["id"],
             "owner" => $ticket["owner"],
