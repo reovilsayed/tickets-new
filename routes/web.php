@@ -321,6 +321,10 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
     Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
 })->middleware(['auth', 'role:staffzone']);
 
+Route::get('/pos', function () {
+    return view('pos');
+})->withoutMiddleware(['auth', VerifyPosUser::class]);
+
 Route::get('/pos/{page}', function () {
     return view('pos');
 })->withoutMiddleware(['auth', VerifyPosUser::class]);
