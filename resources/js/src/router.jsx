@@ -4,7 +4,7 @@ import Loading from "./components/Loading";
 
 export const navRoutes = [
     {
-        path: "/pos",
+        path: "/pos/",
         name: "Dashboard",
         icon: "fas fa-home",
         layout: React.lazy(() => import("./components/layouts/MainLayout")),
