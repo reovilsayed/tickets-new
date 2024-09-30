@@ -1,23 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Scanner.css";
-import QrReader from "react-qr-scanner";
 import axios from "axios";
 import { useFetch } from "../../lib/hooks/useFetch";
 import { Button, Form, InputGroup } from "react-bootstrap";
+import QrScanner from "qr-scanner";
 
 const Scanner = () => {
+    const videoRef = React.useRef(null);
+    const [scanner, setScanner] = useState(null);
+
+    useEffect(() => {
+
+        if (videoRef.current && !scanner) {
+            const qrScanner = new QrScanner(
+                videoRef.current,
+                (result) => {
+                    // console.log(result);
+                    handleScan(result);
+                },
+                { highlightScanRegion: true, highlightCodeOutline: true }
+            );
+            setScanner(qrScanner);
+        }
+        return () => {
+            if (scanner) {
+                scanner.stop(); // Stop the scanner
+                scanner.destroy(); // Destroy scanner instance
+                setScanner(null); // Reset scanner to null
+            }
+        };
+    }, [videoRef.current, scanner]);
+
+    const handleStartScan = () => {
+        if (scanner) {
+            scanner.start();
+            setStartScan(true);
+        } else {
+            console.error("Scanner is not initialized yet");
+        }
+    };
+
     const [startScan, setStartScan] = useState(false);
     const [scannedTicket, setScannedTicket] = useState(null);
 
     const handleScan = async (data) => {
-        if (!data?.text) return;
+        if (!data?.data) return;
 
         try {
             const response = await axios.post(
                 `${import.meta.env.VITE_APP_URL}/api/tickets/get`,
-                { ticket: data?.text } // Scan the actual ticket code
+                { ticket: data?.data }
             );
-            setScannedTicket(response.data[0]); // Set the ticket data
+            setScannedTicket(response.data);
         } catch (error) {
             console.error("Error scanning ticket", error);
         }
@@ -110,6 +144,22 @@ const Scanner = () => {
         );
         if (response.status == 200) {
             setScannedTicket(null);
+            setStartScan(false);
+
+            if (scanner) {
+                scanner.stop(); // Stop the scanner first
+                // scanner.destroy(); // Destroy the existing scanner instance
+                const newScanner = new QrScanner(
+                    videoRef.current,
+                    (result) => {
+                        console.log(result);
+                        handleScan(result);
+                    },
+                    { highlightScanRegion: true, highlightCodeOutline: true }
+                );
+                setScanner(newScanner); // Set the new scanner instance
+                newScanner.start(); // Start the new scanner
+            }
         }
         setChangesProcessing(false);
     };
@@ -157,13 +207,6 @@ const Scanner = () => {
                         <div className="extras">
                             <h4>Extras</h4>
                             <ul>
-                                {/* {scannedTicket?.extras.map((extra) => (
-                                    <li key={extra.id}>
-                                        {extra.name} (Qty: {extra.qty}, Used:{" "}
-                                        {extra.used})
-                                    </li>
-                                ))}
-                            </ul> */}
                                 {scannedTicket?.extras.map((extra, index) => {
                                     const quantity = parseInt(
                                         extra?.newQty ?? extra?.qty ?? 0
@@ -221,7 +264,14 @@ const Scanner = () => {
                                                 {"$ ="}
                                             </span>
                                             <span className="col-md-3 text-end">
-                                                {price * quantity}$
+                                                {price *
+                                                    parseInt(
+                                                        extra?.newQty
+                                                            ? extra?.newQty -
+                                                                  extra?.qty
+                                                            : 0
+                                                    )}
+                                                $
                                             </span>
                                         </span>
                                     );
@@ -357,26 +407,26 @@ const Scanner = () => {
                     </span>
                 </div>
             ) : !startScan ? (
-                <div className="qr-box">
+                <div className="qr-box flex-column" onClick={handleStartScan}>
                     <img
                         className="qr-image"
                         src="/assets/qr-code.png"
                         alt="QR Code"
-                        onClick={() => setStartScan(true)}
                     />
                     <h3>Tap to start scanning</h3>
                 </div>
             ) : (
-                <div id="viewfinder" className="qr-box">
-                    <QrReader
-                        style={{ width: 400, height: 300 }}
-                        onError={handleError}
-                        onScan={handleScan}
-                        constraints={{
-                            audio: false,
-                            video: { facingMode: "environment" },
-                        }}
-                    />
+                ""
+            )}
+            {!scannedTicket && (
+                <div
+                    id="viewfinder"
+                    className="qr-box"
+                    style={!startScan ? { display: "none" } : {}}
+                >
+                    <video ref={videoRef}>
+                        Your browser does not support video playback.
+                    </video>
                 </div>
             )}
         </section>

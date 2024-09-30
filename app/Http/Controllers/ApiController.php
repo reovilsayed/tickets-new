@@ -200,6 +200,7 @@ class ApiController extends Controller
         $ticket->save();
 
         $totalPrice = 0;
+        $extras = [];
         foreach ($requestTicket['extras'] as $extra) {
             $quantity = (int)(($extra['newQty'] ?? $extra['qty']) - $extra['qty']);
             if ($quantity > 0) {

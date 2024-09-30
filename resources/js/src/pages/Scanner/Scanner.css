@@ -25,16 +25,24 @@
 } */
 
 .qr-box {
-    cursor: pointer;
-    gap: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
+    width: fit-content;
+    cursor: pointer;
+    height: auto;
     padding: 20px;
     background-color: #e25925;
     border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.qr-box video {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 .qr-box:hover {
@@ -118,8 +126,16 @@
     border-radius: 5px;
 }
 
-@media (max-width:720px) {
+@media (max-width: 768px) {
     .scanner-page {
         flex-direction: column;
+    }
+    .qr-box {
+        max-width: 100%;
+        padding: 20px;
+    }
+    .qr-box video {
+        height: auto;
+        max-height: 60vh;
     }
 }
