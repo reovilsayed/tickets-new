@@ -4,13 +4,13 @@ import axios from "axios";
 import { useFetch } from "../../lib/hooks/useFetch";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import QrScanner from "qr-scanner";
+import { toast } from "react-toastify";
 
 const Scanner = () => {
     const videoRef = React.useRef(null);
     const [scanner, setScanner] = useState(null);
 
     useEffect(() => {
-
         if (videoRef.current && !scanner) {
             const qrScanner = new QrScanner(
                 videoRef.current,
@@ -53,12 +53,8 @@ const Scanner = () => {
             );
             setScannedTicket(response.data);
         } catch (error) {
-            console.error("Error scanning ticket", error);
+            toast("Error scanning ticket", error);
         }
-    };
-
-    const handleError = (error) => {
-        console.error("QR Scan Error", error);
     };
 
     const handleExtraChange = (targetExtra, quantity) => {
@@ -146,19 +142,18 @@ const Scanner = () => {
             setScannedTicket(null);
             setStartScan(false);
 
+            toast("Ticket updated successfully!!");
             if (scanner) {
-                scanner.stop(); // Stop the scanner first
-                // scanner.destroy(); // Destroy the existing scanner instance
+                scanner.stop();
                 const newScanner = new QrScanner(
                     videoRef.current,
                     (result) => {
-                        console.log(result);
                         handleScan(result);
                     },
                     { highlightScanRegion: true, highlightCodeOutline: true }
                 );
-                setScanner(newScanner); // Set the new scanner instance
-                newScanner.start(); // Start the new scanner
+                setScanner(newScanner);
+                newScanner.start();
             }
         }
         setChangesProcessing(false);

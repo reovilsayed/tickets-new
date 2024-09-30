@@ -7,6 +7,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { store } from "./store.jsx";
 import { CartProvider } from "react-use-cart";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +19,23 @@ const Pos = () => {
                 <Provider store={store}>
                     <CartProvider>
                         <RouterProvider router={router} />
+                        <ToastContainer
+                            position="top-right"
+                            autoClose={5000}
+                            hideProgressBar={false}
+                            newestOnTop
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="colored"
+                            toastStyle={{
+                                backgroundColor: "#e25925",
+                                border: "2px solid black",
+                                color: "black",
+                            }}
+                        />
                     </CartProvider>
                 </Provider>
             </QueryClientProvider>
