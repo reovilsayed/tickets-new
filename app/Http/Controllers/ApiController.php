@@ -35,9 +35,8 @@ class ApiController extends Controller
         }
         // this may be wrong --- for future ref
         if (!empty($event_date)) {
-            $products->where(function ($query) use ($event_date) {
-                $query->whereDate('end_date', '>=', $event_date)->whereDate('start_date', '<', $event_date);
-            });
+            $products->whereDate('start_date', '<=', $event_date)
+                ->whereDate('end_date', '>=', $event_date);
         }
         $products = $products->paginate($perPage);
         return new ProductCollection($products);
