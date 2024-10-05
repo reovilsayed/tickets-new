@@ -18,9 +18,8 @@
         }
 
         * {
-
-            margin: 0px;
-            padding: 0px;
+            margin: 0;
+            padding: 0;
         }
 
         body {
@@ -29,10 +28,9 @@
         }
 
         .container {
-            padding: 20px;
-            width: 100%;
+            padding: 40px;
+            width: 80%;
             margin: 0 auto;
-            /* height: 100vh; */
         }
 
         .header {
@@ -44,22 +42,27 @@
             margin: 20px 0;
         }
 
-        /* .footer {
-            text-align: center;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        } */
-
         table {
-            padding: 30px 0px;
+            padding: 30px 0;
             border: 2px solid var(--primary-color);
-            width: 90%;
-            margin: 20px auto;
+            width: 100%;
+            margin: 0 auto;
+            border-collapse: collapse;
         }
 
         table td {
             padding: 10px;
+            text-align: center;
+        }
+
+        .event-date-and-price,
+        .event-title,
+        .event-qr-code {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
         .event-date-and-price .date {
@@ -78,7 +81,6 @@
         .event-date-and-price .price {
             font-size: 26px;
             font-weight: 100;
-
         }
 
         .event-title {
@@ -86,8 +88,7 @@
             border-left: 2px solid var(--primary-color);
         }
 
-
-        .text-mian {
+        .text-main {
             font-weight: 600;
             font-size: 14px;
         }
@@ -99,7 +100,6 @@
 
         .event-title h1 {
             font-size: 26px;
-            text-align: center width: 80%;
             margin-bottom: 15px;
         }
 
@@ -108,19 +108,12 @@
         }
 
         .logo {
-            position: relative;
-            top: -40px;
             height: 30px;
             width: 60px;
         }
 
         .event-qr-code img {
             margin-bottom: 10px;
-        }
-
-        .content {
-            width: 80%;
-            margin: 40px auto;
         }
 
         h2 {
@@ -140,7 +133,6 @@
         }
 
         .address {
-
             font-size: 20px;
             font-weight: bold;
         }
@@ -149,113 +141,59 @@
             font-size: 14px;
         }
 
-        .print-btn {
-            width: 70px;
-            height: 70px;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #4b41de;
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            transition: box-shadow .2s ease-in;
-        }
-
-        .print-btn:hover {
-            box-shadow: 5px 5px 0px #221e1f;
-        }
-
         @media print {
-
-            /* Hide the print button during print */
-            .print-btn {
-                display: none;
-            }
-
-            /* Example of other print-specific styles */
             .container {
                 height: 100vh;
             }
         }
     </style>
-    <script>
-        // This function triggers the print dialog
-        function autoPrint() {
-            window.print();
-        }
-    </script>
-
 </head>
 
 <body>
     @foreach ($tickets as $ticket)
-    
         <div class="container">
             <div class="header">
                 <div>
                     <table>
                         <tr>
-                            <td style="width: 25%">
+                            <td style="width: 25%;">
                                 <div class="event-date-and-price">
                                     <p class="date">{{ $ticket->product->start_date->format('M d, Y') }}</p>
                                     <p class="text-sub">{{ __('words.to') }}</p>
                                     <p class="date">{{ $ticket->product->end_date->format('M d, Y') }}</p>
                                     <p class="country">{{ $ticket->event->city }}</p>
-                                    <p class="price">{{ Sohoj::price($ticket->product->price) }}</p>
-                                    <p class="text-main">
-                                        {{ __('words.final_price') }}
-                                    </p>
-                                    <p class="text-sub">
-                                        {{ __('words.tax_include') }}
-                                    </p>
+                                    <p class="price">&#8364;{{ $ticket->product->price }}</p>
+                                    <p class="text-main">{{ __('words.final_price') }}</p>
+                                    <p class="text-sub">{{ __('words.tax_include') }}</p>
                                 </div>
                             </td>
-                            <td style="width: 50%">
+                            <td style="width: 50%;">
                                 <div class="event-title">
-                                    <img class="logo" height="30" width="60"
-                                        src="{{ asset('assets/logo-black.png') }}" alt="">
+                                    <img class="logo" src="{{ public_path('assets/logo-black.png') }}" alt="">
                                     <h1>{{ $ticket->event->name }}</h1>
                                     <h5>{{ $ticket->product->name }}</h5>
                                 </div>
                             </td>
-                            <td style="width: 25%">
+                            <td style="width: 25%;">
                                 <div class="event-qr-code">
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ $ticket->ticket }}&color=ef5927"
-                                        alt="" height="120" width="120">
+                                    <img src="{{ $ticket->qr_code }}" alt="QR Code" height="120" width="120">
                                     <p>{{ $ticket->ticket }}</p>
                                 </div>
                             </td>
                         </tr>
                     </table>
-
-
-
                 </div>
             </div>
             <div class="content">
-                <h2>
-                    {{ __('words.term') }}
-                </h2>
+                <h2>{{ __('words.term') }}</h2>
                 {!! $ticket->event->terms !!}
                 <br>
                 <br>
-                <h2>
-                    {{ __('words.address') }}
-                </h2>
-                <p class="address">
-                    {{ $ticket->event->location }}
-                </p>
-
+                <h2>{{ __('words.address') }}</h2>
+                <p class="address">{{ $ticket->event->location }}</p>
             </div>
-
         </div>
     @endforeach
-
-        <form action="{{ route('downloadPdf.ticket',$order) }}" method="POST" class="">
-            @csrf
-            <button class="print-btn"  >{{ __('words.print') }}</button>
-        </form>
 </body>
 
 </html>

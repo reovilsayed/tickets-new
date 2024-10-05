@@ -1,8 +1,5 @@
 <?php
 
-use App\Charts\EventTicketSellChart;
-use App\Charts\OrderSalesByTicketChart;
-use App\Charts\OrderSalesChart;
 use App\Exports\CustomerExport;
 use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\ApiController;
@@ -11,16 +8,13 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\EnterzoneContoller;
 use App\Http\Controllers\EventAnalyticsController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\PdfDownloadController;
 use App\Http\Middleware\VerifyPosUser;
-use App\Mail\TicketDownload;
 use App\Mail\InviteDownload;
-use App\Mail\TicketPlaced;
+use App\Mail\TicketDownload;
 use App\Models\Coupon;
 use App\Models\Event;
-use App\Models\Extra;
 use App\Models\Extras;
 use App\Models\Invite;
 use App\Models\Order;
@@ -28,20 +22,15 @@ use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Services\CheckoutService;
-use App\Services\EventReport;
 use App\Services\TOCOnlineService;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Route;;
-
-use TCG\Voyager\Facades\Voyager;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use LaravelDaily\LaravelCharts\Classes\LaravelChart;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
+use TCG\Voyager\Facades\Voyager;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,17 +41,18 @@ use Maatwebsite\Excel\Facades\Excel;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
-
-
+ */
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
 Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
 Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) {
     $request->validate([
-        'security' => 'required'
+        'security' => 'required',
     ]);
-    if ($invite->security_key != $request->security) abort(403);
+    if ($invite->security_key != $request->security) {
+        abort(403);
+    }
+
     $is_invite = true;
     $event = $invite->event;
     $products = [];
@@ -77,12 +67,15 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
 
         $total = 0;
         foreach ($request->tickets as $ticket) {
-            $total +=  $ticket;
+            $total += $ticket;
         }
         if ($total <= 0) {
             throw new Exception(__('words.nothing_to_order'));
         }
-        if ($invite->security_key != $request->security) abort(403);
+        if ($invite->security_key != $request->security) {
+            abort(403);
+        }
+
         $event = $invite->event;
         DB::beginTransaction();
         $order = CheckoutService::create($event, $request, isFree: true, invite: $invite);
@@ -111,37 +104,25 @@ Route::post('/contact-store', [PageController::class, 'contactStore'])->name('co
 
 Route::get('/thankyou', [PageController::class, 'thankyou'])->name('thankyou');
 
-
-
-
-
-
-
 //cart
 Route::post('event/{event:slug}/add-cart', [CartController::class, 'add'])->name('cart.store');
-
-
 
 //coupon routes
 Route::post('/event/{event:slug}/add-coupon', [CouponController::class, 'add'])->name('coupon');
 Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon.destroy');
 
-
-
-
 // Route::get('/seller', [SellerPagesController::class, 'dashboard'])->middleware('role:vendor')->name('dashboard');
-
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
     Route::get('customer/export', function () {
-        $users =  User::all()->map(fn($user) => [
+        $users = User::all()->map(fn($user) => [
             'first_name' => $user->name,
             'last_name' => $user->l_name,
             'email' => $user->email,
             'contactNumber' => $user->contact_number,
             'vatNumber' => $user->vatNumber,
-            'events' => $user->events->unique()->pluck('name')->implode(', ')
+            'events' => $user->events->unique()->pluck('name')->implode(', '),
         ]);
 
         return Excel::download(new CustomerExport($users), 'customer_' . now()->format('dmyhi') . '.xlsx');
@@ -200,7 +181,6 @@ Auth::routes(['verify' => true]);
 
 Route::get('page/{slug}', [PageController::class, 'getPage']);
 
-
 Route::get('t/{order:security_key}', function (Request $request, Order $order) {
     $tickets = $order->tickets;
 
@@ -211,11 +191,14 @@ Route::get('t/{order:security_key}', function (Request $request, Order $order) {
 
         $tickets = $order->tickets()->where('ticket', $request->t)->get();
     }
-    if (!$tickets->count()) abort(403, 'No tickets found');
-    return view('ticketpdf', compact('tickets'));
+    if (!$tickets->count()) {
+        abort(403, 'No tickets found');
+    }
+
+    return view('ticketpdf', compact('tickets', 'order'));
 })->name('download.ticket');
 
-
+Route::post('t/{order:security_key}', [PdfDownloadController::class, 'download'])->name('downloadPdf.ticket');
 
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
@@ -267,8 +250,6 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
     }
 });
 
-
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
@@ -280,7 +261,6 @@ Route::post('age-verification', function (Request $request) {
     return redirect()->back()->withCookie($cookie);
 })->name('verify.age');
 
-
 Route::post('extras-used', function (Request $request) {
 
     $request->validate([
@@ -288,7 +268,10 @@ Route::post('extras-used', function (Request $request) {
         'withdraw' => 'required',
         'session' => 'required',
     ]);
-    if (session()->get('enter-extra-zone')['id'] != $request->session) throw new Exception(__('Unauthorized access'));
+    if (session()->get('enter-extra-zone')['id'] != $request->session) {
+        throw new Exception(__('Unauthorized access'));
+    }
+
     $ticket = Ticket::where('ticket', $request->ticket)->first();
     $extras = $ticket->extras;
     $zone = session()->get('enter-extra-zone')['zone'];
@@ -328,7 +311,6 @@ Route::get('/pos', function () {
 Route::get('/pos/{page}', function () {
     return view('pos');
 })->withoutMiddleware(['auth', VerifyPosUser::class]);
-
 
 Route::post('api/create-order', [ApiController::class, 'createOrder']);
 Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
