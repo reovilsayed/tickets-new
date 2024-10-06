@@ -45,7 +45,7 @@ return [
          * Times-Roman, Times-Bold, Times-BoldItalic, Times-Italic,
          * Symbol, ZapfDingbats.
          */
-        'font_dir' => storage_path('fonts'), // advised by dompdf (https://github.com/dompdf/dompdf/pull/782)
+        'font_dir' => storage_path('fonts/'), // advised by dompdf (https://github.com/dompdf/dompdf/pull/782)
 
         /**
          * The location of the DOMPDF font cache directory
@@ -55,8 +55,17 @@ return [
          *
          * Note: This directory must exist and be writable by the webserver process.
          */
-        'font_cache' => storage_path('fonts'),
+        'font_cache' => storage_path('fonts/'),
 
+        'font_data' => [
+            'montserrat' => [
+                'R'  => 'Montserrat-Regular.ttf',    // Regular
+                'B'  => 'Montserrat-Bold.ttf',       // Bold
+                'I'  => 'Montserrat-Italic.ttf',     // Italic
+                'BI' => 'Montserrat-BoldItalic.ttf', // Bold Italic
+            ],
+        ],
+        'default_font' => 'montserrat',
         /**
          * The location of a temporary directory.
          *
@@ -178,7 +187,6 @@ return [
          *
          * @var string
          */
-        'default_font' => 'serif',
 
         /**
          * Image DPI setting
@@ -285,7 +293,7 @@ return [
         /**
          * A ratio applied to the fonts height to be more like browsers' line height
          */
-        'font_height_ratio' => 1.1,
+        'font_height_ratio' => 1,
 
         /**
          * Use the HTML5 Lib parser
