@@ -24,7 +24,7 @@ class PdfDownloadController extends Controller
         $pdf = Pdf::loadView('ticket_download', compact('tickets'));
         $pdf->setOption('defaultFont','montserrat');
         $pdf->setOption('isHtml5ParserEnabled',true);
-        return $pdf->stream();
+        return $pdf->download();
     }
 
     private function getQRCodeBase64($data)
