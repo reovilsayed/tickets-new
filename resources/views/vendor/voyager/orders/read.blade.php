@@ -190,7 +190,7 @@
                                     Name
                                 </span>
                                 <p class="h4">
-                                    {{ $dataTypeContent->user->name . ' ' . $dataTypeContent->user->l_name }}
+                                    {{ $dataTypeContent->user ?  $dataTypeContent->user->name . ' ' . $dataTypeContent->user->l_name : $dataTypeContent->billing->name }}
                                 </p>
                             </div>
                             <div>
@@ -198,7 +198,7 @@
                                     Email
                                 </span>
                                 <p class="h4">
-                                    {{ $dataTypeContent->user->email ?? 'N/A' }}
+                                    {{ $dataTypeContent->user ?  $dataTypeContent->user->email ?? 'N/A' : $dataTypeContent->billing->email }}
                                 </p>
                             </div>
                             <div>
@@ -206,7 +206,7 @@
                                     Country
                                 </span>
                                 <p class="h4">
-                                    {{ $dataTypeContent->user->getCountry() ?? 'N/A' }}
+                                    {{ @$dataTypeContent?->user?->getCountry() ?? 'N/A' }}
                                 </p>
                             </div>
                             <div>
@@ -214,7 +214,7 @@
                                     Vat Number
                                 </span>
                                 <p class="h4">
-                                    {{ $dataTypeContent->user->vatNumber ?? 'N/A' }}
+                                    {{ @$dataTypeContent?->user?->vatNumber ?? 'N/A' }}
                                 </p>
                             </div>
                             <div>
@@ -223,7 +223,7 @@
                                 </span>
                                 <p class="h4">
 
-                                    {{ $dataTypeContent->user->address ?? 'N/A' }}
+                                    {{ @$dataTypeContent?->user?->address ?? 'N/A' }}
                                 </p>
                             </div>
 

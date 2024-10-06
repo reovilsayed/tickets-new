@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your tickets</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+
     <style>
+        @font-face {
+            font-family: montserrat;
+            src: url(assets\frontend-old-assets\fonts\montserrat\Montserrat-Regular.ttf);
+        }
+
         :root {
             --primary-color: #ef5927;
             --secondary-color: #ff990a;
@@ -29,7 +31,7 @@
         }
 
         body {
-            font-family: "Montserrat", sans-serif !important;
+            font-family: "montserrat", sans-serif !important;
             margin: 0;
         }
 
@@ -105,12 +107,12 @@
         }
 
         .event-title h1 {
-            font-size: 26px;
+            font-size: 24px;
             margin-bottom: 15px;
         }
 
         .event-title h5 {
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .logo {
@@ -139,7 +141,7 @@
         }
 
         .address {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
         }
 
