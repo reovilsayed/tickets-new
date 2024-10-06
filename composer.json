@@ -9,6 +9,7 @@
         "arielmejiadev/larapex-charts": "*",
         "barryvdh/laravel-dompdf": "^3.0",
         "darryldecode/cart": "^4.2",
+        "dompdf/dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.0",

@@ -55,16 +55,17 @@
             font-weight: bold;
             color: #000;
         }
-        h1{
+
+        h1 {
             font-size: 40px;
             font-weight: bold;
-            color: #000; 
+            color: #000;
         }
     </style>
-      <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
+    <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
 @endsection
 @section('javascript')
-<script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     <script>
         var table = $('#dataTable').DataTable()
     </script>
@@ -77,6 +78,8 @@
 
         <hr>
         @include('vendor.voyager.events.partial.buttons')
+        <a href="{{ route('voyager.events.customer.analytics.tickets.access-ticket', ['event' => $event->id, 'user' => $user->id]) }}"
+            class="btn btn-custom">Give Access</a>
         <hr>
         <div class="container">
             <div class="panel">

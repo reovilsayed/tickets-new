@@ -40,7 +40,6 @@ class EventAnalyticsController extends Controller
         $lineChart = $orderSalesLineChart->build($event);
         $pieChart = $orderSalesByTicketPiChart->build($event);
 
-
         $report = [
             'total' => [
                 'total' => [
@@ -51,7 +50,7 @@ class EventAnalyticsController extends Controller
                     'total' => Sohoj::price($event->orders->where('payment_status', 1)->where('status', 3)->sum('total')),
                     'withoutTax' => Sohoj::price(setMinValue($event->orders->where('payment_status', 1)->where('status', 3)->sum('total') - $event->orders->where('payment_status', 1)->where('status', 1)->sum('tax'), 0)),
 
-                ]
+                ],
             ],
             'digital' => [
                 'total' => [
@@ -62,7 +61,7 @@ class EventAnalyticsController extends Controller
                     'total' => Sohoj::price($event->orders->where('payment_status', 1)->where('status', 3)->sum('total')),
                     'withoutTax' => Sohoj::price(setMinValue($event->orders->where('payment_status', 1)->where('status', 3)->sum('total') - $event->orders->where('payment_status', 1)->where('status', 1)->sum('tax'), 0)),
 
-                ]
+                ],
             ],
             'physical' => [
                 'total' => [
@@ -73,12 +72,11 @@ class EventAnalyticsController extends Controller
                     'total' => Sohoj::price(0),
                     'withoutTax' => Sohoj::price(0),
 
-                ]
+                ],
 
-            ]
+            ],
 
         ];
-
 
         return view('vendor.voyager.events.ticket-sales-analytics', compact('event', 'lineChart', 'pieChart', 'report'));
     }
@@ -103,7 +101,7 @@ class EventAnalyticsController extends Controller
         return view('vendor.voyager.events.ticket-invites-report', compact('customers', 'event'));
     }
 
-    public function  inviteReportOrders(Event $event, Request $request)
+    public function inviteReportOrders(Event $event, Request $request)
     {
 
         $request->validate([
@@ -139,7 +137,7 @@ class EventAnalyticsController extends Controller
 
         return view('vendor.voyager.events.invites.tickets', compact('tickets', 'event', 'ticketsByStatus'));
     }
-    public function  customerReportOrders(Event $event, User $user)
+    public function customerReportOrders(Event $event, User $user)
     {
 
         $orders = Order::where('event_id', $event->id)->where('payment_status', 1)->where('user_id', $user->id);
@@ -153,7 +151,7 @@ class EventAnalyticsController extends Controller
         $orders = $orders->get();
         return view('vendor.voyager.events.orders', compact('orders', 'event', 'ordersByStatus'));
     }
-    public function  customerReportTickets(Event $event, User $user)
+    public function customerReportTickets(Event $event, User $user)
     {
         $tickets = Ticket::where('event_id', $event->id)->where('user_id', $user->id);
         if (request()->has('search') && request('search') !== '') {
@@ -187,5 +185,16 @@ class EventAnalyticsController extends Controller
             });
         })->paginate(25);
         return view('vendor.voyager.events.checkin', compact('event', 'tickets'));
+    }
+
+    public function giveAccessPage(Event $event, User $user)
+    {
+        $tickets = $event->products;
+        return view('vendor.voyager.events.access-event-ticket', compact('user', 'tickets', 'event'));
+    }
+
+    public function giveAccessSubmit(Request $request)
+    {
+        dd($request->all());
     }
 }

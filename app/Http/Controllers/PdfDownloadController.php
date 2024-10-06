@@ -23,6 +23,7 @@ class PdfDownloadController extends Controller
         }
         $pdf = Pdf::loadView('ticket_download', compact('tickets'));
         return $pdf->download('invoice.pdf');
+        
     }
 
     private function getQRCodeBase64($data)

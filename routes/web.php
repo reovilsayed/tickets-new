@@ -172,7 +172,9 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/invite-report/orders', [EventAnalyticsController::class, 'inviteReportOrders'])->name('voyager.events.invites.analytics.orders');
         Route::get('/invite-report/tickets', [EventAnalyticsController::class, 'inviteReportTickets'])->name('voyager.events.invites.analytics.tickets');
         Route::get('/customer-report/{user}/tickets', [EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
+        Route::get('/customer-report/{user}/tickets/access-ticket', [EventAnalyticsController::class, 'giveAccessPage'])->name('voyager.events.customer.analytics.tickets.access-ticket');
     });
+    Route::post('/customer-report/tickets/access-ticket', [EventAnalyticsController::class, 'giveAccessSubmit'])->name('voyager.events.customer.analytics.tickets.access-ticket-submit');
     Route::get('orders/refund/{order}', [AdminCustomController::class, 'refund'])->name('order.refund');
     Route::get('/coupon-generate', [AdminCustomController::class, 'couponGenerate'])->name('voyager.coupon.generate');
     Route::post('/coupon-create', [AdminCustomController::class, 'couponCreate'])->name('voyager.coupon.create');
@@ -180,6 +182,7 @@ Route::group(['prefix' => 'admin'], function () {
 Auth::routes(['verify' => true]);
 
 Route::get('page/{slug}', [PageController::class, 'getPage']);
+
 
 Route::get('t/{order:security_key}', function (Request $request, Order $order) {
     $tickets = $order->tickets;
