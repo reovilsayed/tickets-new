@@ -25,6 +25,7 @@ class PdfDownloadController extends Controller
         $pdf->setOption('defaultFont','montserrat');
         $pdf->setOption('isHtml5ParserEnabled',true);
         return $pdf->download();
+        // return $pdf->stream();
     }
 
     private function getQRCodeBase64($data)

@@ -74,7 +74,7 @@
         }
 
         .event-date-and-price .date {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             margin-bottom: 5px;
         }
@@ -107,7 +107,7 @@
         }
 
         .event-title h1 {
-            font-size: 24px;
+            font-size: 20px;
             margin-bottom: 15px;
         }
 
@@ -118,6 +118,7 @@
         .logo {
             height: 30px;
             width: 60px;
+            margin-bottom: 30px;    
         }
 
         .event-qr-code img {
@@ -141,8 +142,8 @@
         }
 
         .address {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 16px;
+            /* font-weight: bold; */
         }
 
         .event-qr-code>p {
@@ -194,7 +195,7 @@
             </div>
             <div class="content">
                 <h2>{{ __('words.term') }}</h2>
-                {!! $ticket->event->terms !!}
+                <p>{!! $ticket->event->terms !!}</p>
                 <br>
                 <br>
                 <h2>{{ __('words.address') }}</h2>
