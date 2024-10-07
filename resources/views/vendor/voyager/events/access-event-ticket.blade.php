@@ -71,21 +71,21 @@
         }
 
         .quantity-controls button {
-            background-color: #EF5927; 
+            background-color: #EF5927;
             border: none;
             border-radius: 5px;
-            padding: 0px; 
-            color: white; 
+            padding: 0px;
+            color: white;
             font-size: 20px;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
-            width: 40px; 
+            width: 40px;
         }
 
-        
+
         .quantity-controls span {
-            margin: 0 10px; 
+            margin: 0 10px;
             font-size: 18px;
             font-weight: bold;
         }
@@ -112,30 +112,39 @@
         <div class="container">
             <div class="panel">
                 <div class="panel-body">
-                    <form action="{{ route('voyager.events.customer.analytics.tickets.access-ticket-submit') }}" method="Post">
+                    <form action="{{ route('voyager.events.customer.analytics.tickets.access-ticket-submit',[$event,$user]) }}"
+                        method="post">
                         @csrf
+                        <input type="hidden" name="name" value="{{$user->name}} {{$user->l_name}}">
+                        <input type="hidden" name="vatNumber" value="">
+                        <input type="hidden" name="address" value="">
                         <div class="row">
                             @foreach ($tickets as $index => $ticket)
                                 <div class="col-md-4">
                                     <div class="card" style="margin-bottom: 25px !important">
-                                        <h1>{{ $ticket->name }}</h1>    
-                                        <p><strong>Start Date: </strong>{{ date("Y-m-d", strtotime($ticket->start_date)) }}</p>
-                                        <p><strong>End Date: </strong>{{ date("Y-m-d", strtotime($ticket->end_date)) }}</p>
-                                        
+                                        <h1>{{ $ticket->name }}</h1>
+                                        <h5 style="display: inline">{{ $ticket->start_date->format('d M') }} - </h5>
+                                        <h5 style="display: inline">{{ $ticket->end_date->format('d M') }}</h5>
+
                                         <div class="quantity-controls">
-                                            <button type="button" class="decrease" data-index="{{ $index }}">-</button>
-                                            <span class="quantity" id="quantity-{{ $index }}">1</span>
-                                            <button type="button" class="increase" data-index="{{ $index }}">+</button>
+                                            <select  name="tickets[{{ $ticket->id }}]"
+                                                @if ($ticket->sold_out) disabled @endif
+                                                data-price="{{ $ticket->currentPrice() }}"
+                                                min="0" max="{{ $ticket->quantity }}"
+                                                class="ticket-select" >
+                                                <option value="">0</option>
+                                                @for ($i = 1; $i <= 30; $i++)
+                                                    <option value="{{ $i }}">
+                                                        {{ $i }}</option>
+                                                @endfor
+                                            </select>
                                         </div>
-                        
-                                        <input type="hidden" name="tickets[{{ $index }}][id]" value="{{ $ticket->id }}">
-                                        <input type="hidden" name="tickets[{{ $index }}][quantity]" id="hidden-quantity-{{ $index }}" value="1">
-                                        <input type="hidden" name="user_id" value="{{ $user->id }}">
+
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-                        
+
                         <div class="col-12">
                             <button type="submit" class="btn btn-custom">Submit</button>
                         </div>
@@ -156,7 +165,7 @@
                     let quantity = parseInt(quantityDisplay.textContent);
                     quantity++;
                     quantityDisplay.textContent = quantity;
-                    hiddenQuantityInput.value = quantity; 
+                    hiddenQuantityInput.value = quantity;
                 });
             });
 
@@ -169,7 +178,7 @@
                     if (quantity > 1) {
                         quantity--;
                         quantityDisplay.textContent = quantity;
-                        hiddenQuantityInput.value = quantity; 
+                        hiddenQuantityInput.value = quantity;
                     }
                 });
             });
