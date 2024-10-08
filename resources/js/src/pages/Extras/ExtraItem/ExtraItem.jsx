@@ -39,11 +39,11 @@ const ExtraItem = ({ extra }) => {
                         {formatPrice(
                             extra?.sale_price ? extra?.sale_price : extra?.price
                         )}
-                        €
+                        {" €"}
                     </span>
 
                     <div className="card-header position-relative">
-                        <img
+                        {/* <img
                             className="extra-item-img"
                             src={
                                 extra?.image
@@ -52,6 +52,11 @@ const ExtraItem = ({ extra }) => {
                             }
                             alt={extra.display_name}
                         />
+                         */}
+                        <div
+                            className="extra-item-img">
+                                            <i class="fas fa-cocktail fa-2x"></i>
+                                        </div>
                         {extra?.event?.name && (
                             <span className="extra-item-unit">
                                 {extra?.event?.name.length > 15
@@ -70,12 +75,12 @@ const ExtraItem = ({ extra }) => {
                                 ? `${extra.display_name.substring(0, 15)}...`
                                 : extra.display_name}
                         </p>
-                        <button
+                        {/* <button
                             onClick={openInfoModal}
                             className="btn btn-primary btn-sm position-absolute rounded-circle extra-item-info-btn"
                         >
                             <i className="fa fa-info"></i>
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>
