@@ -39,6 +39,7 @@ const ExtraItem = ({ extra }) => {
                         {formatPrice(
                             extra?.sale_price ? extra?.sale_price : extra?.price
                         )}
+                        €
                     </span>
 
                     <div className="card-header position-relative">

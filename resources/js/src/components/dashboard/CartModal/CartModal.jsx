@@ -65,15 +65,24 @@ function CartModal({ open, onClose }) {
                             <tbody>
                                 <tr>
                                     <th>Sub Total:</th>
-                                    <td>{cartTotal}$</td>
+                                    <td>
+                                        {cartTotal}
+                                        {" €"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Extras:</th>
-                                    <td>{cartExtrasFees}$</td>
+                                    <td>
+                                        {cartExtrasFees}
+                                        {" €"}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Total:</th>
-                                    <td>{grandTotal}$</td>
+                                    <td>
+                                        {grandTotal}
+                                        {" €"}
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

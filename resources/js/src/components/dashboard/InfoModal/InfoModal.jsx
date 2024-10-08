@@ -74,6 +74,7 @@ function InfoModal() {
                                             ? item?.sale_price
                                             : item?.price
                                     )}
+                                    €
                                 </h4>
                             </div>
                             <div className="col-md-6">
