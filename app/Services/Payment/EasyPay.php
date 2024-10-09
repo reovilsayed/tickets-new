@@ -67,9 +67,7 @@ class EasyPay
                     "CC",
                     "MBW",
                     "MB",
-                    "DD",
-                    "VI",
-                    "UF"
+                    "DD"
                 ],
                 'capture' => [
                     'descriptive' => (string) $order->id,

@@ -11,7 +11,6 @@ const PaymentModal = ({ open }) => {
         name: "",
         email: "",
         vatNumber: "",
-        address: "",
         discount: 0.0,
     });
     const handleFormData = (event) => {
@@ -73,7 +72,6 @@ const PaymentModal = ({ open }) => {
                 name: "",
                 email: "",
                 vatNumber: "",
-                address: "",
                 discount: 0.0,
             });
             if (printTicket) {
@@ -147,7 +145,12 @@ const PaymentModal = ({ open }) => {
                                     />
                                 </div>
                                 <div className="form-group mb-2">
-                                    <label htmlFor="emailInput">Email</label>
+                                    <label htmlFor="emailInput">
+                                        Email{" "}
+                                        {formData["vatNumber"]
+                                            ? ""
+                                            : "(optional)"}
+                                    </label>
                                     <input
                                         id="emailInput"
                                         className="form-control"
@@ -158,7 +161,9 @@ const PaymentModal = ({ open }) => {
                                     />
                                 </div>
                                 <div className="form-group mb-2">
-                                    <label htmlFor="vatInput">VAT Number</label>
+                                    <label htmlFor="vatInput">
+                                        VAT Number (optional)
+                                    </label>
                                     <input
                                         id="vatInput"
                                         className="form-control"
@@ -168,7 +173,7 @@ const PaymentModal = ({ open }) => {
                                         placeholder="Enter VAT number"
                                     />
                                 </div>
-                                <div className="form-group mb-2">
+                                {/* <div className="form-group mb-2">
                                     <label htmlFor="addressInput">
                                         Address
                                     </label>
@@ -180,7 +185,7 @@ const PaymentModal = ({ open }) => {
                                         onChange={handleFormData}
                                         placeholder="Enter address"
                                     />
-                                </div>
+                                </div> */}
                                 <div className="form-group mb-4">
                                     <label htmlFor="discountInput">
                                         Discount
@@ -196,7 +201,7 @@ const PaymentModal = ({ open }) => {
                                                 : ""
                                         }
                                         onChange={handleFormData}
-                                        placeholder="Enter discount (%)"
+                                        placeholder="Enter discount"
                                     />
                                 </div>
                                 <div class="form-check">
@@ -254,9 +259,11 @@ const PaymentModal = ({ open }) => {
                                 onClick={submitOrder}
                                 disabled={
                                     !formData["name"] ||
-                                    !formData["email"] ||
-                                    !formData["vatNumber"] ||
-                                    !formData["address"] ||
+                                    (formData["vatNumber"]
+                                        ? formData["email"]
+                                            ? false
+                                            : true
+                                        : false) ||
                                     orderRequestProcessing
                                 }
                             >
