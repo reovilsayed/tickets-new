@@ -83,7 +83,6 @@ class EasyPay
                 'language' => 'PT'
             ],
             'communication_channels' => [
-                "SMS",
                 "EMAIL"
             ]
         ];
