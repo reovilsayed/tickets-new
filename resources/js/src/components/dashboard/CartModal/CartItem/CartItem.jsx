@@ -62,14 +62,14 @@ function CartItem({ item }) {
                     <span>{item?.quantity || 1}</span>
                     {" = "}
                     <span>{(item?.quantity || 1) * (item?.price || 0)}</span>
-                    {"$"}
+                    {" €"}
                 </p>
                 {item?.isTicket && (
                     <p className="cart-item-info">
                         <span>Extras</span>
                         {" = "}
                         <span>{extrasFees}</span>
-                        {"$"}
+                        {" €"}
                     </p>
                 )}
                 <div className="cart-item-controls mt-2 d-flex justify-content-between">

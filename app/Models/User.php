@@ -64,10 +64,12 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     {
         return $this->hasOne(Shop::class);
     }
+
     public function verification()
     {
         return $this->hasOne(Verification::class);
     }
+
     public function massages()
     {
         return $this->hasMany(Massage::class, 'reciver_id');
@@ -77,6 +79,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     {
         return $this->belongsToMany(Shop::class, 'shop_user', 'user_id', 'shop_id')->withTimestamps();
     }
+    
     public function follows(Shop $shop)
     {
         return $this->followedShops()->where('shop_id', $shop->id)->exists();
@@ -99,11 +102,11 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     {
         return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id', 'id', 'id')->withPivot('action')->withTimestamps();
     }
+    
     public function zones()
     {
         return $this->belongsToMany(Zone::class, 'ticket_user', 'user_id', 'zone_id', 'id', 'id')->withPivot('action')->withTimestamps();
     }
-
 
     public function subscriptionStatus()
     {

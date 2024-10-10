@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Event;
 use App\Models\Extra;
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\User;
 use App\Services\Payment\EasyPay;
 use Cart;
 use Exception;
@@ -20,17 +22,19 @@ class CheckoutService
     protected $event;
     protected $invite;
     protected $isFree;
-    public function __construct(Event $event, $isFree = false, $invite)
+    protected $user;
+    public function __construct(Event $event, $isFree = false, $invite, User $user = null)
     {
         $this->event = $event;
         $this->isFree = $isFree;
         $this->invite = $invite;
+        $this->user = $user;
         $this->cart = Cart::session($event->slug)->getContent();
     }
 
-    public static function  create(Event $event, Request $request, $isFree = false, $invite = null)
+    public static function  create(Event $event, Request $request, $isFree = false, $invite = null, User $user = null)
     {
-        return (new self($event, $isFree, $invite))->generate($request);
+        return (new self($event, $isFree, $invite, user: $user))->generate($request);
     }
 
 
@@ -42,21 +46,26 @@ class CheckoutService
             'address' => ['nullable'],
         ]);
         $order = $this->createOrder();
+
+
         if ($this->isFree) {
             foreach ($request->tickets as $id => $quantity) {
 
-                if ($this->invite->products()->find($id)->pivot->quantity < $quantity) throw new Exception($this->invite->products()->find($id)->name . ' is not available for this quantity');
-
-                $item = $this->invite->products()->find($id);
-                $data = [
-                    'quantity' =>  $item->pivot->quantity - $quantity,
-                    'used' => $item->pivot->used + $quantity
-                ];
-                $this->invite->products()->updateExistingPivot($id, $data);
+                if ($this->invite) {
+                    if ($this->invite->products()->find($id)->pivot->quantity < $quantity) throw new Exception($this->invite->products()->find($id)->name . ' is not available for this quantity');
+                    $item = $this->invite->products()->find($id);
+                    $data = [
+                        'quantity' =>  $item->pivot->quantity - $quantity,
+                        'used' => $item->pivot->used + $quantity
+                    ];
+                    $this->invite->products()->updateExistingPivot($id, $data);
+                } else {
+                    $item = Product::find($id);
+                }
 
                 for ($i = 1; $i <= $quantity; $i++) {
                     $data = [
-                        'user_id' => auth()->id() ?? null,
+                        'user_id' =>  $this->user ? $this->user->id : auth()->id() ?? null,
                         'owner' => $this->inviteBillingObject(),
                         'event_id' => $this->event->id,
                         'product_id' => $id,
@@ -81,7 +90,7 @@ class CheckoutService
                 $item->model->save();
                 for ($i = 1; $i <= $item->quantity; $i++) {
                     $data = [
-                        'user_id' => auth()->id() ?? null,
+                        'user_id' => $this->user ? $this->user->id : auth()->id() ?? null,
                         'owner' => $this->billingObject(),
                         'event_id' => $this->event->id,
                         'product_id' => $item->id,
@@ -121,7 +130,7 @@ class CheckoutService
     {
         if ($this->isFree) {
             $data = [
-                'user_id' => auth()->id() ?? null,
+                'user_id' => $this->user ? $this->user->id : auth()->id() ?? null,
                 'billing' => $this->inviteBillingObject(),
                 'subtotal' => 0,
                 'discount' => 0,
@@ -142,7 +151,7 @@ class CheckoutService
 
             $total = (Cart::session($this->event->slug)->getSubTotal() + Sohoj::tax()) - Sohoj::discount();
             $data = [
-                'user_id' => auth()->id() ?? null,
+                'user_id' => $this->user ? $this->user->id : auth()->id() ?? null,
                 'billing' => $this->billingObject(),
                 'subtotal' => Cart::session($this->event->slug)->getSubTotal(),
                 'discount' => Sohoj::round_num(Sohoj::discount()),

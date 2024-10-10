@@ -67,9 +67,7 @@ class EasyPay
                     "CC",
                     "MBW",
                     "MB",
-                    "DD",
-                    "VI",
-                    "UF"
+                    "DD"
                 ],
                 'capture' => [
                     'descriptive' => (string) $order->id,
@@ -83,7 +81,6 @@ class EasyPay
                 'language' => 'PT'
             ],
             'communication_channels' => [
-                "SMS",
                 "EMAIL"
             ]
         ];

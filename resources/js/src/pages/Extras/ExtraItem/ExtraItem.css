@@ -64,6 +64,12 @@
     height: 120px;
     width: 100%;
     object-fit: cover;
+    text-align: center;
+}
+
+.extra-item-img i {
+    font-size: 60px;
+    color: #007bff;
 }
 
 .extra-item-body {

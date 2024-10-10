@@ -7,9 +7,13 @@ use App\Charts\OrderSalesByTicketChart;
 use App\Charts\OrderSalesChart;
 use App\Models\Event;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\CheckoutService;
 use App\Services\EventReport;
+use Error;
+use Exception;
 use Illuminate\Http\Request;
 use Sohoj;
 
@@ -189,12 +193,25 @@ class EventAnalyticsController extends Controller
 
     public function giveAccessPage(Event $event, User $user)
     {
-        $tickets = $event->products;
+        $tickets = $event->products()->where('status', 1)->where('invite_only', 0)->get();
+
         return view('vendor.voyager.events.access-event-ticket', compact('user', 'tickets', 'event'));
     }
 
-    public function giveAccessSubmit(Request $request)
+    public function giveAccessSubmit(Request $request, Event $event, User $user)
     {
-        dd($request->all());
+        try {
+
+            $order =  CheckoutService::create(event: $event, user: $user, request: $request, isFree: true);
+            return redirect()->route('voyager.events.customer.analytics.tickets', [$event, $user])->with([
+                'type' => 'success',
+                'message' => 'Ticket added'
+            ]);
+        } catch (Exception | Error $e) {
+            return redirect()->back()->with([
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }

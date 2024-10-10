@@ -3,36 +3,36 @@
     "file": "assets/Essência-logo-af647146.css",
     "src": "Essência-logo.css"
   },
-  "_Essência-logo-30a80dc0.js": {
+  "_Essência-logo-fe800ed1.js": {
     "assets": [
       "assets/Essência-logo-9fa5e606.png"
     ],
     "css": [
       "assets/Essência-logo-af647146.css"
     ],
-    "file": "assets/Essência-logo-30a80dc0.js",
+    "file": "assets/Essência-logo-fe800ed1.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_index-99f97bbb.js": {
-    "file": "assets/index-99f97bbb.js",
+  "_index-7ac75a63.js": {
+    "file": "assets/index-7ac75a63.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_useFetch-3a179d79.js": {
-    "file": "assets/useFetch-3a179d79.js",
+  "_useFetch-54b8e691.js": {
+    "file": "assets/useFetch-54b8e691.js",
     "imports": [
       "resources/js/app.js",
-      "_index-99f97bbb.js"
+      "_index-7ac75a63.js"
     ]
   },
-  "_useInfiniteFetch-d032c3d5.js": {
-    "file": "assets/useInfiniteFetch-d032c3d5.js",
+  "_useInfiniteFetch-b5d0c1f4.js": {
+    "file": "assets/useInfiniteFetch-b5d0c1f4.js",
     "imports": [
       "resources/js/app.js",
-      "_index-99f97bbb.js"
+      "_index-7ac75a63.js"
     ]
   },
   "_utils-8b9f25e8.js": {
@@ -64,12 +64,12 @@
       "resources/js/src/components/layouts/DashboardLayout.jsx",
       "resources/js/src/pages/Scanner/Scanner.jsx"
     ],
-    "file": "assets/app-d97bf9ce.js",
+    "file": "assets/app-6cc9246f.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   },
   "resources/js/src/App.jsx": {
-    "file": "assets/App-17092535.js",
+    "file": "assets/App-10a1601e.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -84,40 +84,40 @@
     "css": [
       "assets/DashboardLayout-5ca92c5b.css"
     ],
-    "file": "assets/DashboardLayout-d660e686.js",
+    "file": "assets/DashboardLayout-5f87795a.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-30a80dc0.js",
+      "_Essência-logo-fe800ed1.js",
       "_utils-8b9f25e8.js",
-      "_useFetch-3a179d79.js",
-      "_index-99f97bbb.js"
+      "_useFetch-54b8e691.js",
+      "_index-7ac75a63.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/DashboardLayout.jsx"
   },
   "resources/js/src/components/layouts/MainLayout.jsx": {
-    "file": "assets/MainLayout-1028ce75.js",
+    "file": "assets/MainLayout-5a9f3e79.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-30a80dc0.js"
+      "_Essência-logo-fe800ed1.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/MainLayout.jsx"
   },
   "resources/js/src/pages/Extras/Extras.css": {
-    "file": "assets/Extras-a652916c.css",
+    "file": "assets/Extras-1d7c3547.css",
     "src": "resources/js/src/pages/Extras/Extras.css"
   },
   "resources/js/src/pages/Extras/Extras.jsx": {
     "css": [
-      "assets/Extras-a652916c.css"
+      "assets/Extras-1d7c3547.css"
     ],
-    "file": "assets/Extras-9c31f0d2.js",
+    "file": "assets/Extras-4d05f253.js",
     "imports": [
       "resources/js/app.js",
-      "_useInfiniteFetch-d032c3d5.js",
+      "_useInfiniteFetch-b5d0c1f4.js",
       "_utils-8b9f25e8.js",
-      "_index-99f97bbb.js"
+      "_index-7ac75a63.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Extras/Extras.jsx"
@@ -133,11 +133,11 @@
     "dynamicImports": [
       "node_modules/qr-scanner/qr-scanner-worker.min.js"
     ],
-    "file": "assets/Scanner-0c8aa29a.js",
+    "file": "assets/Scanner-4fa525a2.js",
     "imports": [
       "resources/js/app.js",
-      "_useFetch-3a179d79.js",
-      "_index-99f97bbb.js"
+      "_useFetch-54b8e691.js",
+      "_index-7ac75a63.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Scanner/Scanner.jsx"
@@ -150,12 +150,12 @@
     "css": [
       "assets/Tickets-7b93a0fe.css"
     ],
-    "file": "assets/Tickets-e8388b61.js",
+    "file": "assets/Tickets-e4c60d56.js",
     "imports": [
       "resources/js/app.js",
-      "_useInfiniteFetch-d032c3d5.js",
+      "_useInfiniteFetch-b5d0c1f4.js",
       "_utils-8b9f25e8.js",
-      "_index-99f97bbb.js"
+      "_index-7ac75a63.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Tickets/Tickets.jsx"

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 
 function Extras() {
     const searchQuery = useSelector((state) => state.searchQuery.query);
+    const filterEvent = useSelector((state) => state.filter.event);
 
     const {
         data,
@@ -18,10 +19,11 @@ function Extras() {
         fetchNextPage,
         refetch,
     } = useInfiniteFetch(
-        ["extras", searchQuery],
+        ["extras-page", searchQuery],
         `${import.meta.env.VITE_APP_URL}/api/extras`,
         {
             query: searchQuery,
+            event_id: filterEvent?.id,
         }
     );
 
@@ -89,9 +91,9 @@ function Extras() {
                                 Something went wrong
                             </div>
                         ) : data?.pages?.length ? (
-                            data.pages.map((page, index) => (
+                            data?.pages?.map((page, index) => (
                                 <Fragment key={index}>
-                                    {page.data.map((extra, index) => (
+                                    {page?.data?.map((extra, index) => (
                                         <ExtraItem key={index} extra={extra} />
                                     ))}
                                 </Fragment>

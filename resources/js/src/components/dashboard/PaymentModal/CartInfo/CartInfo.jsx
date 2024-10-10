@@ -45,19 +45,31 @@ function CartInfo({ discount = 0.0 }) {
                     <tbody>
                         <tr>
                             <td>Subtotal</td>
-                            <td>{cartTotal}$</td>
+                            <td>
+                                {cartTotal}
+                                {" €"}
+                            </td>
                         </tr>
                         <tr>
                             <td>Extras</td>
-                            <td>{totalExtrasFees}$</td>
+                            <td>
+                                {totalExtrasFees}
+                                {" €"}
+                            </td>
                         </tr>
                         <tr>
                             <td>Discount</td>
-                            <td>{discount}$</td>
+                            <td>
+                                {discount}
+                                {" €"}
+                            </td>
                         </tr>
                         <tr>
                             <td>Total</td>
-                            <td>{grandTotal}$</td>
+                            <td>
+                                {grandTotal}
+                                {" €"}
+                            </td>
                         </tr>
                     </tbody>
                 </table>

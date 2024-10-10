@@ -20,23 +20,36 @@ function CartInfoItem({ item }) {
         <>
             <tr className="table-info">
                 <td>{item?.name}</td>
-                <td>{item?.price}$</td>
+                <td>
+                    {item?.price}
+                    {" €"}
+                </td>
                 <td>{item?.quantity}</td>
                 {item?.isTicket && (
                     <>
-                        <td>{item?.itemTotal}$</td>
-                        <td>{extrasFees}$</td>
+                        <td>
+                            {item?.itemTotal}
+                            {" €"}
+                        </td>
+                        <td>
+                            {extrasFees}
+                            {" €"}
+                        </td>
                     </>
                 )}
                 <td className="text-end" colSpan={item?.isTicket ? 1 : 3}>
-                    {item?.itemTotal}$
+                    {item?.itemTotal}
+                    {" €"}
                 </td>
             </tr>
             {item?.isTicket &&
                 item?.extras?.map((extra, index) => (
                     <tr key={index}>
                         <td>{extra?.name}</td>
-                        <td>{extra?.price}$</td>
+                        <td>
+                            {extra?.price}
+                            {" €"}
+                        </td>
                         <td>
                             {extra?.quantity ?? 0}{" "}
                             {(extra?.newQuantity ?? 0) -
@@ -49,7 +62,8 @@ function CartInfoItem({ item }) {
                                 : ""}
                         </td>
                         <td colSpan={3} className="text-end">
-                            {calculateSingleExtra(extra)}$
+                            {calculateSingleExtra(extra)}
+                            {" €"}
                         </td>
                     </tr>
                 ))}

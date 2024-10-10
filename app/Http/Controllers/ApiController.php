@@ -12,6 +12,7 @@ use App\Models\Extra;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
+use App\Services\TOCOnlineService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -101,6 +102,7 @@ class ApiController extends Controller
         $perPage = $request->get('per_page', 10);
 
         $query = $request->get('query');
+        $event_id = $request->get('event_id');
 
         $extras = Extra::with('event')->where('name', 'like', "%{$query}%")->paginate($perPage);
 
@@ -181,6 +183,19 @@ class ApiController extends Controller
                 }
                 $order->tickets()->create($data);
             }
+        }
+        $printInvoice = $request->get('printInvoice');
+        $sendInvoiceToMail = $request->get('sendInvoiceToMail');
+        if ($printInvoice || $sendInvoiceToMail) {
+            $order->invoice_url = 'invoice';
+            /* $toco = new TOCOnlineService;
+            $response = $toco->createCommercialSalesDocument($order);
+            $order->invoice_id = $response['id'];
+            $order->invoice_url = $response['public_link'];
+            $order->invoice_body = json_encode($response);
+            if ($sendInvoiceToMail) {
+                $response = $toco->sendEmailDocument($order, $response['id']);
+            } */
         }
         $order->save();
         $sendTicketsToMail = $request->get('sendToMail');

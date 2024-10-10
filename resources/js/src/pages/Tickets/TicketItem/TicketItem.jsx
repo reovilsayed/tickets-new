@@ -41,6 +41,7 @@ const TicketItem = ({ ticket }) => {
                                 ? ticket?.sale_price
                                 : ticket?.price
                         )}
+                        {" €"}
                     </span>
 
                     <div className="card-header position-relative">
