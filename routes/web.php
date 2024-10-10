@@ -237,7 +237,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 Log::info($response);
             } else {
                 $order->status = 2;
-                $order->payment_status = 2;
+                $order->payment_status = 2; 
                 $order->save();
             }
         }
