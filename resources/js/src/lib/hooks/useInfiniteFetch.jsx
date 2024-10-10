@@ -7,6 +7,12 @@ export const useInfiniteFetch = (key, url, params = {}, options = {}) => {
     const queryClient = useQueryClient();
     const fetchPosts = async ({ pageParam = 1 }) => {
         // Use the 'pageParam' to fetch the appropriate page from the server
+        console.log(`${url}?page=${pageParam}&per_page=${5}&query=${
+                params?.query ?? ""
+            }&event_id=${params?.event_id ?? ""}&event_date=${
+                params?.eventDate ?? ""
+            }`);
+        
         const response = await axios.get(
             `${url}?page=${pageParam}&per_page=${5}&query=${
                 params?.query ?? ""

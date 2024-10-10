@@ -34,7 +34,7 @@ function DashboardLayout({ children }) {
     const { pathname } = useLocation();
 
     const showFilter = useMemo(
-        () => pathname.split("/")[2] === "tickets",
+        () => ["tickets", "extras"].includes(pathname.split("/")[2]),
         [pathname]
     );
 

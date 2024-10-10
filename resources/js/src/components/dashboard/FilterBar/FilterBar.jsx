@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import "./FilterBar.css";
 import { useFetch } from "../../../lib/hooks/useFetch";
 import { formatDate } from "../../../lib/utils";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { changeDate, changeEvent } from "../../../lib/features/filterSlice";
 
 function FilterBar() {
     const dispatch = useDispatch();
     const { data: filterEvents } = useFetch(["filter-events"], "/api/events");
 
-    const [selectedEvent, setSelectedEvent] = useState(null);
+    const filterEvent = useSelector((state) => state.filter.event);
+    const dateOfEvent = useSelector((state) => state.filter.date);
+
+    const [selectedEvent, setSelectedEvent] = useState(filterEvent);
     const handleEventSelect = (event) => {
         dispatch(changeEvent(event));
         dispatch(changeDate(""));
@@ -17,7 +20,7 @@ function FilterBar() {
         setSelectedDate("");
     };
 
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(dateOfEvent);
     const handleDateSelect = (eventDate) => {
         dispatch(changeDate(eventDate));
         setSelectedDate(eventDate);
@@ -51,6 +54,7 @@ function FilterBar() {
                                 <option
                                     key={index}
                                     onClick={() => handleEventSelect(event)}
+                                    selected={filterEvent === event}
                                 >
                                     {event?.name ?? "N/A"}
                                 </option>
@@ -89,6 +93,7 @@ function FilterBar() {
                                             onClick={() =>
                                                 handleDateSelect(eventDate)
                                             }
+                                            selected={dateOfEvent === eventDate}
                                         >
                                             {formatDate(eventDate) ?? "N/A"}
                                         </option>
