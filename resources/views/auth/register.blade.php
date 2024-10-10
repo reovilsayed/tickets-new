@@ -1,5 +1,10 @@
 @extends('layouts.app')
 @section('css')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css"
+        crossorigin="anonymous" />
+
     <style>
         .login-wrapper {
             height: 100vh;
@@ -19,6 +24,61 @@
         #country {
             height: 45px !important;
             color: #656060 !important;
+        }
+
+        .iti__selected-flag {
+            top: 6px;
+            height: 33px !important;
+            border-radius: 4px;
+            transition: .3s;
+        }
+
+        input#phone {
+            padding-left: 64px !important;
+            top: 0px !important;
+        }
+
+        .intl-tel-input .flag-dropdown .selected-flag {
+            padding: 11px 16px 11px 6px;
+        }
+
+        .intl-tel-input {
+            z-index: 99;
+            width: 100%;
+        }
+
+        .iti-flag {
+            box-shadow: none;
+        }
+
+        .intl-tel-input .selected-flag:focus {
+            outline: none;
+        }
+
+        .iti--allow-dropdown .iti__flag-container:hover .iti__selected-flag {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .iti--allow-dropdown input {
+            padding-right: 6px;
+            padding-left: 52px;
+            margin-left: 0;
+        }
+
+        .iti__country-list {
+            border-radius: 4px !important;
+            z-index: 999 !important;
+            box-shadow: 0 0 16px 0 rgb(0 0 0 / 8%) !important;
+            border: 1px solid #ececec !important;
+            width: 400px !important;
+        }
+
+        .iti__country-name {
+            font-size: 20px !important;
+        }
+
+        .iti__dial-code {
+            font-size: 18px !important;
         }
     </style>
 @endsection
@@ -327,35 +387,19 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="input-group ">
-                                    <input type="text" aria-label="country-code" class="form-control input-code" value=""
-                                        placeholder="+351" name="country_code" maxlength="4" required>
-                                    <input id="contact_number" class="inputs-number @error('contact_number') is-invalid @enderror" type="text"
-                                        aria-label="contact-number" class="form-control"
-                                        name="contact_number"value="{{ old('contact_number') }}" required
-                                        autocomplete="contact_number" placeholder="{{ __('words.contact_Number') }}"
-                                        autofocus style="width: 200px;" type="phone" required>
-                                    @error('contact_number')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                                {{-- <div class="">
-                                    <input class="reg-pass" type="text" value="">
-                                    <input id="contact_number" type="text" placeholder="{{ __('words.contact_Number') }}"
-                                        class="reg-pass @error('contact_number') is-invalid @enderror" name="contact_number"
-                                        value="{{ old('contact_number') }}" required autocomplete="contact_number"
-                                        autofocus>
-                                    @error('contact_number')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div> --}}
 
+                            <div class="col-md-6 form-group">
+                                <input id="phone" type="text" placeholder="{{ __('words.contact_Number') }}"
+                                    class="reg-pass @error('contact_number') is-invalid @enderror" name="contact_number"
+                                    >
+                                @error('contact_number')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
+
+
                             <div class="col-md-6 form-group">
                                 <select class="reg-pass  @error('password') is-invalid @enderror" name="country"
                                     id="country">
@@ -409,6 +453,48 @@
 @section('js')
     <script src="{{ asset('assets/frontend-old-assets/js/vendor/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('assets/frontend-old-assets/js/plugins/jquery.sticky-sidebar.js') }}"></script>
-
     <script src="{{ asset('assets/frontend-old-assets/js/main.js') }}"></script>
+
+    <script src="{{ asset('assets/int_number/js/intlTelInput.js') }}"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js'></script>
+    <script>
+        // International telephone format
+        // $("#phone").intlTelInput();
+        // get the country data from the plugin
+        var countryData = window.intlTelInputGlobals.getCountryData(),
+            input = document.querySelector("#phone"),
+            addressDropdown = document.querySelector("#country");
+
+        // init plugin
+        var iti = window.intlTelInput(input, {
+            hiddenInput: "full_phone",
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js" // just for formatting/placeholders etc
+        });
+
+        // populate the country dropdown
+        for (var i = 0; i < countryData.length; i++) {
+            var country = countryData[i];
+            var optionNode = document.createElement("option");
+            optionNode.value = country.iso2;
+            var textNode = document.createTextNode(country.name);
+            optionNode.appendChild(textNode);
+            addressDropdown.appendChild(optionNode);
+        }
+        // set it's initial value
+        addressDropdown.value = iti.getSelectedCountryData().iso2;
+
+        // listen to the telephone input for changes
+        input.addEventListener('countrychange', function(e) {
+            addressDropdown.value = iti.getSelectedCountryData().iso2;
+        });
+
+        // listen to the address dropdown for changes
+        addressDropdown.addEventListener('change', function() {
+            iti.setCountry(this.value);
+        });
+    </script>
+    <script>
+        //Append Value To Phone Field
+        $("#phone").prop('value', '+1 ');
+    </script>
 @endsection
