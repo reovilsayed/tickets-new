@@ -95,12 +95,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $number = $data['country_code']."". $data['contact_number'];
+        // $number = $data['country_code']."". $data['contact_number'];
         $array = [
             'name' => $data['name'],
             'l_name' => $data['l_name'],
             'email' => $data['email'],
-            'contact_number' => $number,
+            'contact_number' => $data['contact_number'],
             'country' => $data['country'],
             'password' => Hash::make($data['password']),
             'role_id' => 2,
