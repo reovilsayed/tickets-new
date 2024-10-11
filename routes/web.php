@@ -307,13 +307,15 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
     Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
 })->middleware(['auth', 'role:staffzone']);
 
-Route::get('/pos', function () {
-    return view('pos');
-})->withoutMiddleware(['auth', VerifyPosUser::class]);
+Route::middleware(['auth', VerifyPosUser::class])->group(function () {
+    Route::get('/pos', function () {
+        return view('pos');
+    });
 
-Route::get('/pos/{page}', function () {
-    return view('pos');
-})->withoutMiddleware(['auth', VerifyPosUser::class]);
+    Route::get('/pos/{page}', function () {
+        return view('pos');
+    });
+});
 
 Route::post('api/create-order', [ApiController::class, 'createOrder']);
 Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
