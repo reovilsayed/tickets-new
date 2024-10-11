@@ -219,7 +219,7 @@ const PaymentModal = ({ open }) => {
                                     <div className="col-md-6">
                                         <label
                                             class="form-check-label"
-                                            for="ticket-check"
+                                            htmlFor="ticket-check"
                                         >
                                             Ticket
                                         </label>
@@ -238,7 +238,7 @@ const PaymentModal = ({ open }) => {
                                             />
                                             <label
                                                 class="form-check-label"
-                                                for="sendToMailCheck"
+                                                htmlFor="sendToMailCheck"
                                             >
                                                 Send to mail
                                             </label>
@@ -258,7 +258,7 @@ const PaymentModal = ({ open }) => {
                                             />
                                             <label
                                                 class="form-check-label"
-                                                for="printTicketCheck"
+                                                htmlFor="printTicketCheck"
                                             >
                                                 Physical QR Code
                                             </label>
@@ -267,7 +267,7 @@ const PaymentModal = ({ open }) => {
                                     <div className="col-md-6">
                                         <label
                                             class="form-check-label"
-                                            for="invoice-check"
+                                            htmlFor="invoice-check"
                                         >
                                             Invoice
                                         </label>
@@ -286,7 +286,7 @@ const PaymentModal = ({ open }) => {
                                             />
                                             <label
                                                 class="form-check-label"
-                                                for="sendInvoiceToMailCheck"
+                                                htmlFor="sendInvoiceToMailCheck"
                                             >
                                                 Send to mail
                                             </label>
@@ -306,7 +306,7 @@ const PaymentModal = ({ open }) => {
                                             />
                                             <label
                                                 class="form-check-label"
-                                                for="printInvoiceCheck"
+                                                htmlFor="printInvoiceCheck"
                                             >
                                                 Print Invoice
                                             </label>
