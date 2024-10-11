@@ -109,7 +109,7 @@ class ApiController extends Controller
         if ($event_id) {
             $extras->where('event_id', $event_id);
         }
-        
+
         $extras = $extras->paginate($perPage);
 
         return response()->json($extras);
@@ -136,7 +136,7 @@ class ApiController extends Controller
             'total' => $request->get('total'),
             'status' => 1,
             'payment_status' => 1,
-            'payment_method' => 'pos',
+            'payment_method' => $request->get('paymentMethod') ?? 'Pos',
             'transaction_id' => Str::uuid(),
             'security_key' => Str::uuid(),
         ];
