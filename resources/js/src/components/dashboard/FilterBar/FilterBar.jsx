@@ -13,29 +13,34 @@ function FilterBar() {
     const dateOfEvent = useSelector((state) => state.filter.date);
 
     const [selectedEvent, setSelectedEvent] = useState(filterEvent);
+    const [selectedDate, setSelectedDate] = useState(dateOfEvent);
+
     const handleEventSelect = (event) => {
-        dispatch(changeEvent(event));
+        const selectedEvent = filterEvents?.data?.find(
+            (e) => e.id === parseInt(event.target.value, 10)
+        );
+        dispatch(changeEvent(selectedEvent));
         dispatch(changeDate(""));
-        setSelectedEvent(event);
+        setSelectedEvent(selectedEvent);
         setSelectedDate("");
     };
 
-    const [selectedDate, setSelectedDate] = useState(dateOfEvent);
-    const handleDateSelect = (eventDate) => {
-        dispatch(changeDate(eventDate));
-        setSelectedDate(eventDate);
+    const handleDateSelect = (event) => {
+        const selectedDate = event.target.value;
+        dispatch(changeDate(selectedDate));
+        setSelectedDate(selectedDate);
     };
 
     return (
         <div
-            className={`form-control fixed row my-2 gx-2 shadow-sm left-0 right-0 padding-0 d-flex flex-row align-items-center`}
+            className="form-control fixed row my-2 gx-2 shadow-sm left-0 right-0 padding-0 d-flex flex-row align-items-center"
             tabIndex="-1"
             id="offcanvasBottom"
             aria-labelledby="offcanvasBottomLabel"
             onClick={(e) => e.stopPropagation()}
         >
             <div className="d-flex flex-row align-items-center col-md-6">
-                <label for="eventsSelect">Events</label>
+                <label htmlFor="eventsSelect">Events</label>
                 <div className="filter-select-group w-100">
                     <div className="form-floating row row-cols-1 row-cols-md-1">
                         <select
@@ -46,16 +51,12 @@ function FilterBar() {
                             }}
                             id="eventsSelect"
                             aria-label="Events"
+                            value={selectedEvent?.id || ""}
+                            onChange={handleEventSelect}
                         >
-                            <option onClick={() => handleEventSelect(null)}>
-                                None
-                            </option>
-                            {filterEvents?.data?.map((event, index) => (
-                                <option
-                                    key={index}
-                                    onClick={() => handleEventSelect(event)}
-                                    selected={filterEvent === event}
-                                >
+                            <option value="">None</option>
+                            {filterEvents?.data?.map((event) => (
+                                <option key={event.id} value={event.id}>
                                     {event?.name ?? "N/A"}
                                 </option>
                             ))}
@@ -63,16 +64,10 @@ function FilterBar() {
                     </div>
                 </div>
             </div>
-            {selectedEvent !== null && (
+            {selectedEvent && (
                 <div className="d-flex flex-row align-items-center col-md-6">
-                    <label for="eventsSelect">Dates</label>
-                    <div
-                        className={`filter-select-group w-100 ${
-                            selectedEvent !== null
-                                ? "filter-fade-in"
-                                : "filter-fade-out"
-                        }`}
-                    >
+                    <label htmlFor="datesSelect">Dates</label>
+                    <div className="filter-select-group w-100 filter-fade-in">
                         <div className="form-floating row row-cols-1 row-cols-md-1">
                             <select
                                 className="form-select p-2"
@@ -80,25 +75,17 @@ function FilterBar() {
                                     fontSize: "0.8rem",
                                     height: "fit-content",
                                 }}
-                                id="eventsSelect"
-                                aria-label="Events"
+                                id="datesSelect"
+                                aria-label="Dates"
+                                value={selectedDate || ""}
+                                onChange={handleDateSelect}
                             >
-                                <option onClick={() => handleDateSelect("")}>
-                                    All
-                                </option>
-                                {selectedEvent?.dates?.map(
-                                    (eventDate, index) => (
-                                        <option
-                                            key={index}
-                                            onClick={() =>
-                                                handleDateSelect(eventDate)
-                                            }
-                                            selected={dateOfEvent === eventDate}
-                                        >
-                                            {formatDate(eventDate) ?? "N/A"}
-                                        </option>
-                                    )
-                                )}
+                                <option value="">All</option>
+                                {selectedEvent?.dates?.map((eventDate, index) => (
+                                    <option key={index} value={eventDate}>
+                                        {formatDate(eventDate) ?? "N/A"}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                     </div>
