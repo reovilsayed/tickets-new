@@ -104,7 +104,13 @@ class ApiController extends Controller
         $query = $request->get('query');
         $event_id = $request->get('event_id');
 
-        $extras = Extra::with('event')->where('name', 'like', "%{$query}%")->paginate($perPage);
+        $extras = Extra::with('event')->where('name', 'like', "%{$query}%");
+
+        if ($event_id) {
+            $extras->where('event_id', $event_id);
+        }
+
+        $extras = $extras->paginate($perPage);
 
         return response()->json($extras);
     }
@@ -130,7 +136,7 @@ class ApiController extends Controller
             'total' => $request->get('total'),
             'status' => 1,
             'payment_status' => 1,
-            'payment_method' => 'pos',
+            'payment_method' => $request->get('paymentMethod') ?? 'Pos',
             'transaction_id' => Str::uuid(),
             'security_key' => Str::uuid(),
         ];

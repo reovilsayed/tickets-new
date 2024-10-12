@@ -19,7 +19,7 @@ function Extras() {
         fetchNextPage,
         refetch,
     } = useInfiniteFetch(
-        ["extras-page", searchQuery],
+        ["extras-page", searchQuery, filterEvent],
         `${import.meta.env.VITE_APP_URL}/api/extras`,
         {
             query: searchQuery,
