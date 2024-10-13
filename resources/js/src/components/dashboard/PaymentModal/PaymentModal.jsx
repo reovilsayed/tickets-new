@@ -5,6 +5,7 @@ import { close } from "../../../lib/features/paymentModalSlice";
 import { useCart } from "react-use-cart";
 import axios from "axios";
 import CartInfo from "./CartInfo/CartInfo";
+import { Dropdown, DropdownButton, InputGroup } from "react-bootstrap";
 
 const PaymentModal = ({ open }) => {
     const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const PaymentModal = ({ open }) => {
         email: "",
         vatNumber: "",
         discount: 0.0,
+        paymentMethod: "Cash",
     });
     const handleFormData = (event) => {
         const { name, value } = event.target;
@@ -55,6 +57,7 @@ const PaymentModal = ({ open }) => {
             tickets: items.filter((item) => item.isTicket),
             extras: items.filter((item) => !item.isTicket),
             discount: formData["discount"],
+            paymentMethod: formData["paymentMethod"],
             subTotal: cartTotal,
             total: cartTotal,
             sendToMail,
@@ -77,6 +80,7 @@ const PaymentModal = ({ open }) => {
                 email: "",
                 vatNumber: "",
                 discount: 0.0,
+                paymentMethod: "Cash",
             });
             if (printInvoice && response?.data?.invoice_url) {
                 window.open(response?.data?.invoice_url, "_blank");
@@ -184,42 +188,54 @@ const PaymentModal = ({ open }) => {
                                         placeholder="Enter VAT number"
                                     />
                                 </div>
-                                {/* <div className="form-group mb-2">
-                                    <label htmlFor="addressInput">
-                                        Address
-                                    </label>
-                                    <textarea
-                                        id="addressInput"
-                                        className="form-control"
-                                        name="address"
-                                        value={formData["address"]}
-                                        onChange={handleFormData}
-                                        placeholder="Enter address"
-                                    />
-                                </div> */}
-                                <div className="form-group mb-4">
-                                    <label htmlFor="discountInput">
-                                        Discount
-                                    </label>
-                                    <input
-                                        id="discountInput"
-                                        type="number"
-                                        className="form-control"
-                                        name="discount"
-                                        value={
-                                            formData["discount"] > 0.0
-                                                ? formData["discount"]
-                                                : ""
-                                        }
-                                        onChange={handleFormData}
-                                        placeholder="Enter discount"
-                                    />
+                                <div className="form-group row mb-4">
+                                    <div className="col-md-4">
+                                        <label htmlFor="discountInput">
+                                            Payment Method
+                                        </label>
+                                        <select
+                                            class="form-select"
+                                            aria-label="Default select example"
+                                            onChange={(event) =>
+                                                setFormData((prev) => {
+                                                    return {
+                                                        ...prev,
+                                                        paymentMethod:
+                                                            event.target.value,
+                                                    };
+                                                })
+                                            }
+                                        >
+                                            <option value="Cash" selected>
+                                                Cash
+                                            </option>
+                                            <option value="Card">Card</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-md-8">
+                                        <label htmlFor="discountInput">
+                                            Discount
+                                        </label>
+                                        <input
+                                            id="discountInput"
+                                            type="number"
+                                            className="form-control"
+                                            name="discount"
+                                            value={
+                                                formData["discount"] > 0.0
+                                                    ? formData["discount"]
+                                                    : ""
+                                            }
+                                            onChange={handleFormData}
+                                            placeholder="Enter discount"
+                                        />
+                                    </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-6">
                                         <label
                                             class="form-check-label"
-                                            for="ticket-check"
+                                            htmlFor="ticket-check"
                                         >
                                             Ticket
                                         </label>
@@ -238,7 +254,7 @@ const PaymentModal = ({ open }) => {
                                             />
                                             <label
                                                 class="form-check-label"
-                                                for="sendToMailCheck"
+                                                htmlFor="sendToMailCheck"
                                             >
                                                 Send to mail
                                             </label>
@@ -258,7 +274,7 @@ const PaymentModal = ({ open }) => {
                                             />
                                             <label
                                                 class="form-check-label"
-                                                for="printTicketCheck"
+                                                htmlFor="printTicketCheck"
                                             >
                                                 Physical QR Code
                                             </label>
@@ -267,7 +283,7 @@ const PaymentModal = ({ open }) => {
                                     <div className="col-md-6">
                                         <label
                                             class="form-check-label"
-                                            for="invoice-check"
+                                            htmlFor="invoice-check"
                                         >
                                             Invoice
                                         </label>
@@ -286,7 +302,7 @@ const PaymentModal = ({ open }) => {
                                             />
                                             <label
                                                 class="form-check-label"
-                                                for="sendInvoiceToMailCheck"
+                                                htmlFor="sendInvoiceToMailCheck"
                                             >
                                                 Send to mail
                                             </label>
@@ -306,7 +322,7 @@ const PaymentModal = ({ open }) => {
                                             />
                                             <label
                                                 class="form-check-label"
-                                                for="printInvoiceCheck"
+                                                htmlFor="printInvoiceCheck"
                                             >
                                                 Print Invoice
                                             </label>

@@ -30,16 +30,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Browsershot::html('Foo')
-            ->setNodeBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/node')
-            ->setNpmBinary('~/nodevenv/home/sohojear/tickets-new/18/bin/npm');
+       
         Schema::defaultStringLength(191);
-        Voyager::addAction(\App\Actions\ReplyAction::class);
+        // Voyager::addAction(\App\Actions\ReplyAction::class);
         Voyager::addAction(\App\Actions\DuplicateAction::class);
         Voyager::addAction(\App\Actions\AnalyticsAction::class);
         Voyager::addAction(\App\Actions\AddExtraAction::class);
         Voyager::addAction(\App\Actions\StaffReportAction::class);
         Voyager::addAction(\App\Actions\InviteLinkAction::class);
         Voyager::addAction(\App\Actions\GeneratePhysicalTicketAction::class);
+        Voyager::addFormField(\App\FormFields\ArrayDateField::class);
     }
 }

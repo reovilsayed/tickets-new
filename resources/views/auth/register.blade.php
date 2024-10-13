@@ -495,6 +495,6 @@
     </script>
     <script>
         //Append Value To Phone Field
-        $("#phone").prop('value', '+1 ');
+        $("#phone").prop('value', '+351');
     </script>
 @endsection
