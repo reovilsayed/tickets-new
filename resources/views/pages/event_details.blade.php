@@ -145,11 +145,16 @@
                                                                 <span
                                                                     class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
                                                             @endif
-                                                            @php
-                                                                $quantity = !$is_invite
-                                                                    ? $product->limit_per_order
-                                                                    : $product->pivot->quantity;
 
+                                                            @php
+                                                                $limit = $product->limit_per_order > $product->quantity
+                                                                        ? $product->quantity
+                                                                        : $product->limit_per_order ;
+
+                                                                
+                                                                $quantity = !$is_invite
+                                                                    ? $limit
+                                                                    : $product->pivot->quantity;
                                                             @endphp
 
                                                             @if ($product->status == 1)
@@ -157,8 +162,9 @@
                                                                     @if ($product->sold_out) disabled @endif
                                                                     data-price="{{ $product->currentPrice() }}"
                                                                     min="0" max="{{ $product->quantity }}"
-                                                                    class="ticket-select" x-model="quantities[{{$product->id}}]"
-                                                                    x-on:change="updateTicket({{$product->id}},{{$product->currentPrice()}})">
+                                                                    class="ticket-select"
+                                                                    x-model="quantities[{{ $product->id }}]"
+                                                                    x-on:change="updateTicket({{ $product->id }},{{ $product->currentPrice() }})">
                                                                     <option value="0">0</option>
                                                                     @for ($i = 1; $i <= $quantity; $i++)
                                                                         <option value="{{ $i }}">

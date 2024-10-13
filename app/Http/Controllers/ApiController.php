@@ -29,7 +29,7 @@ class ApiController extends Controller
         $event_id = $request->get('event_id');
         $event_date = $request->get('event_date');
 
-        $products = Product::with('event')->where('name', 'like', "%{$query}%")->where('status', 5)->where('invite_only', 0);
+        $products = Product::with('event')->where('name', 'like', "%{$query}%")->where('status', 1)->where('type', 'pos')->where('invite_only', 0);
 
         if ($event_id) {
             $products->where('event_id', $event_id);
