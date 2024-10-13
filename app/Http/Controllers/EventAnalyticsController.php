@@ -90,6 +90,7 @@ class EventAnalyticsController extends Controller
             return $query->whereHas('user', function ($query) {
                 $query->where('name', 'LIKE', '%' . request()->q . '%')
                     ->orWhere('l_name', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('email', 'LIKE', '%' . request()->q . '%')
                     ->orWhere('contact_number', 'LIKE', '%' . request()->q . '%')
                     ->orWhere('vatNumber', 'LIKE', '%' . request()->q . '%');
             });
