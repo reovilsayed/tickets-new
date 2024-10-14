@@ -6,6 +6,7 @@ import { useCart } from "react-use-cart";
 import axios from "axios";
 import CartInfo from "./CartInfo/CartInfo";
 import { Dropdown, DropdownButton, InputGroup } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const PaymentModal = ({ open }) => {
     const [formData, setFormData] = useState({
@@ -50,6 +51,8 @@ const PaymentModal = ({ open }) => {
 
     const { items, cartTotal, emptyCart } = useCart();
 
+    const navigate = useNavigate();
+
     const submitOrder = async () => {
         setOrderRequestProcessing(true);
         const orderData = {
@@ -61,6 +64,7 @@ const PaymentModal = ({ open }) => {
             subTotal: cartTotal,
             total: cartTotal,
             sendToMail,
+            physicalQr,
             printInvoice,
             sendInvoiceToMail,
         };
@@ -87,13 +91,11 @@ const PaymentModal = ({ open }) => {
                 setPrintInvoice(false);
             }
             if (physicalQr) {
-                /* if (response?.data?.security_key)
-                    window.open(
-                        `${import.meta.env.VITE_APP_URL}/t/${
-                            response?.data?.security_key
-                        }`,
-                        "_blank"
-                    ); */
+                navigate(
+                    `/pos/physical-qr?tickets=${response?.data?.tickets
+                        ?.map((item) => item?.id)
+                        ?.join(",")}`
+                );
                 setPhysicalQr(false);
             }
             setSendToMail(true);
@@ -102,6 +104,38 @@ const PaymentModal = ({ open }) => {
             handleClose();
         }
         setOrderRequestProcessing(false);
+    };
+
+    const handleSendToMail = () => {
+        setSendToMail((prev) => {
+            if (prev) return false;
+            setPhysicalQr(false);
+            return true;
+        });
+    };
+
+    const handlePhysicalQr = () => {
+        setPhysicalQr((prev) => {
+            if (prev) return false;
+            setSendToMail(false);
+            return true;
+        });
+    };
+
+    const handleSendInvoice = () => {
+        setSendInvoiceToMail((prev) => {
+            if (prev) return false;
+            setPrintInvoice(false);
+            return true;
+        });
+    };
+
+    const handlePrintInvoice = () => {
+        setPrintInvoice((prev) => {
+            if (prev) return false;
+            setSendInvoiceToMail(false);
+            return true;
+        });
     };
 
     return (
@@ -245,11 +279,7 @@ const PaymentModal = ({ open }) => {
                                                 type="checkbox"
                                                 value={sendToMail}
                                                 checked={sendToMail}
-                                                onChange={() =>
-                                                    setSendToMail(
-                                                        (prev) => !prev
-                                                    )
-                                                }
+                                                onChange={handleSendToMail}
                                                 id="sendToMailCheck"
                                             />
                                             <label
@@ -265,11 +295,7 @@ const PaymentModal = ({ open }) => {
                                                 type="checkbox"
                                                 value={physicalQr}
                                                 checked={physicalQr}
-                                                onChange={() =>
-                                                    setPhysicalQr(
-                                                        (prev) => !prev
-                                                    )
-                                                }
+                                                onChange={handlePhysicalQr}
                                                 id="printTicketCheck"
                                             />
                                             <label
@@ -293,11 +319,7 @@ const PaymentModal = ({ open }) => {
                                                 type="checkbox"
                                                 value={sendInvoiceToMail}
                                                 checked={sendInvoiceToMail}
-                                                onChange={() =>
-                                                    setSendInvoiceToMail(
-                                                        (prev) => !prev
-                                                    )
-                                                }
+                                                onChange={handleSendInvoice}
                                                 id="sendInvoiceToMailCheck"
                                             />
                                             <label
@@ -313,11 +335,7 @@ const PaymentModal = ({ open }) => {
                                                 type="checkbox"
                                                 value={printInvoice}
                                                 checked={printInvoice}
-                                                onChange={() =>
-                                                    setPrintInvoice(
-                                                        (prev) => !prev
-                                                    )
-                                                }
+                                                onChange={handlePrintInvoice}
                                                 id="printInvoiceCheck"
                                             />
                                             <label
