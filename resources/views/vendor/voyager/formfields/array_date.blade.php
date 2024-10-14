@@ -6,17 +6,26 @@
 
     @if ($dates)
         @foreach ($dates as $index => $date)
-            <div class="date-input-group" data-index="{{ $index }}">
-                <input type="date" name="{{ $row->field }}[{{ $loop->iteration }}]" value="{{ $date }}"
-                    class="form-control" />
-                <button type="button" class="btn btn-danger remove-date">Remove</button>
+            <div class="row date-input-group" data-index="{{ $index }}">
+                <div class="col-md-10">
+                    <input type="date" name="{{ $row->field }}[{{ $loop->iteration }}]" value="{{ $date }}"
+                        class="form-control" />
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-date">Remove</button>
+                </div>
             </div>
         @endforeach
     @endif
 
-    <div id="date-input-template" class="date-input-group" style="display:none;">
-        <input type="date" name="{{ $row->field }}[]" class="form-control" disabled  />
-        <button type="button" class="btn btn-danger remove-date" >Remove</button>
+    <div id="date-input-template" class="date-input-group row" style="display:none;">
+        <div class="col-md-10">
+
+            <input type="date" name="{{ $row->field }}[]" class="form-control" disabled />
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-danger remove-date">Remove</button>
+        </div>
     </div>
 
     <button type="button" class="btn btn-primary" id="add-date">Add Date</button>

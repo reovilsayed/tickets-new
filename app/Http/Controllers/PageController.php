@@ -39,11 +39,11 @@ class PageController extends Controller
     {
         $is_invite = false;
         $products = [];
-        $products['all'] = $event->products()->where('invite_only',0)->get();
+        $products['all'] = $event->products()->where('type', 'website')->where('invite_only', 0)->get();
         foreach ($event->dates() as $date) {
-            $products[$date] = $event->products()->where('invite_only',0)->get()->filter(fn($product) => in_array($date, $product->dates));
+            $products[$date] = $event->products()->where('type', 'website')->where('invite_only', 0)->get()->filter(fn($product) => in_array($date, $product->dates));
         }
-        return view('pages.event_details', compact('event', 'products','is_invite'));
+        return view('pages.event_details', compact('event', 'products', 'is_invite'));
     }
 
     public function shops()
