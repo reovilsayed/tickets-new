@@ -45,7 +45,7 @@ function CartInfoItem({ item }) {
             {item?.isTicket &&
                 item?.extras?.map((extra, index) => (
                     <tr key={index}>
-                        <td>{extra?.name}</td>
+                        <td>{extra?.display_name}</td>
                         <td>
                             {extra?.price}
                             {" €"}
