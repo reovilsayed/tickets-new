@@ -154,7 +154,7 @@
                                                                 
                                                                 $quantity = !$is_invite
                                                                     ? $limit
-                                                                    : $product->pivot->quantity;
+                                                                    : ($product->pivot->quantity > $product->quantity ? $product->quantity : $product->pivot->quantity) ;
                                                             @endphp
 
                                                             @if ($product->status == 1)
