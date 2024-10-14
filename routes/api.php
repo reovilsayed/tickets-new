@@ -37,18 +37,19 @@ Route::post('/scan-ticket', function (Request $request) {
         //  zone is empty or zone is not in ticket 
         if (!$zone || $ticket->product->zones->contains($zone) == false) throw new Exception(__('words.invalid_zone_error'));
 
-            // Check if the ticket has already been scanned
-            if ( $ticket->product->one_time &&
-                $ticket->scanedBy()->where('action', 'Checked in')
-                ->orWhere('action', 'Checked Out')
-                ->count()  != $ticket->scanedBy()->where('action', 'Checked in')
-                ->orWhere('action', 'Checked Out')
-                ->wherePivotBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-                ->count() > 0
-            ) {
-                throw new Exception(__('words.ticket_already_scanned_error'));
-            }
-        
+        // Check if the ticket has already been scanned
+        if (
+            $ticket->product->one_time &&
+            $ticket->scanedBy()->where('action', 'Checked in')
+            ->orWhere('action', 'Checked Out')
+            ->count()  != $ticket->scanedBy()->where('action', 'Checked in')
+            ->orWhere('action', 'Checked Out')
+            ->wherePivotBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->count() > 0
+        ) {
+            throw new Exception(__('words.ticket_already_scanned_error'));
+        }
+
         $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => ''];
 
 
@@ -154,6 +155,7 @@ Route::post('/extras-scan-ticker', function (Request $request) {
 
 Route::get('/tickets', [ApiController::class, 'index']);
 Route::post('/tickets/get', [ApiController::class, 'getTicket']);
+Route::post('/tickets/update-code', [ApiController::class, 'updateTicketCode']);
 Route::get('/events', [ApiController::class, 'events']);
 Route::post('/ticket-extras', [ApiController::class, 'ticketExtras']);
 Route::get('/extras', [ApiController::class, 'extras']);
