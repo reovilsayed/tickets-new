@@ -86,7 +86,10 @@ const PhysicalQr = () => {
     };
 
     return (
-        <section className="scanner-page">
+        <section
+            className="scanner-page"
+            style={{ display: "flex", flexDirection: "column" }}
+        >
             <h3>
                 {scannedTicket} / {ticketsToScan} tickets scanned
             </h3>
