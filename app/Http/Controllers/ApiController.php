@@ -63,10 +63,11 @@ class ApiController extends Controller
             "updated_at" => $ticket["updated_at"],
             "type" => $ticket["type"],
             "logs" => $ticket["logs"],
+            "active" => $ticket["active"],
             "check_in_zone" => $ticket["check_in_zone"],
             "check_out_zone" => $ticket["check_out_zone"],
             "hasExtras" => $ticket["hasExtras"],
-            "extras" => []
+            "extras" => [],
         ];
         $extras = $ticket->extras;
         foreach ($extras as $extra) {
@@ -254,13 +255,22 @@ class ApiController extends Controller
     public function updateTicketCode(Request $request)
     {
         $requestTicket = $request->ticket;
-        // return dd($requestTicket);
         $ticket = Ticket::where('id', $requestTicket)->where('ticket', null)->first();
         if (!$ticket) {
             return response()->json(['message' => 'Ticket already scanned.']);
         }
         $ticket->ticket = $request->code;
         $ticket = $ticket->save();
+        return response()->json(['ticket' => $ticket]);
+    }
+
+    public function activateTicket(Request $request)
+    {
+        $requestTicket = $request->ticket;
+        $ticket = Ticket::findOrFail($requestTicket);
+        if ($ticket->active == 1) return response()->json(['ticket' => $ticket]);
+        $ticket->active = 1;
+        $ticket->save();
         return response()->json(['ticket' => $ticket]);
     }
 }
