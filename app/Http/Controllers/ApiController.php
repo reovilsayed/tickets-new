@@ -150,6 +150,8 @@ class ApiController extends Controller
         }
 
         $tickets = $request->get('tickets');
+        $physicalQr = $request->get('physicalQr');
+        $hollowTickets = [];
         foreach ($tickets as $item) {
             $product = Product::findOrFail($item['id']);
             if ($product->quantity < $item['quantity']) {
@@ -169,7 +171,7 @@ class ApiController extends Controller
                     'event_id' => $product->event->id,
                     'product_id' => $product->id,
                     'order_id' => $order->id,
-                    'ticket' => uniqid(),
+                    'ticket' => !$physicalQr ? uniqid() : null,
                     'price' => $product->price,
                     'dates' => $product->dates
                 ];
@@ -187,7 +189,7 @@ class ApiController extends Controller
                     }
                     $data['extras'] = collect($extras)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQuantity'] ?? $extra['quantity'], 'price' => $extra['price']])->toArray();
                 }
-                $order->tickets()->create($data);
+                $hollowTickets[] = $order->tickets()->create($data);
             }
         }
         $printInvoice = $request->get('printInvoice');
@@ -211,6 +213,7 @@ class ApiController extends Controller
                 Mail::to($order['owner']['email'])->send(new TicketDownload($order, $product, null));
             }
         }
+        $order['tickets'] = $hollowTickets;
         return response()->json($order);
     }
 
@@ -246,5 +249,18 @@ class ApiController extends Controller
         ];
         $order = Order::create($orderData);
         return response()->json(['ticket' => $ticket, 'order' => $order]);
+    }
+
+    public function updateTicketCode(Request $request)
+    {
+        $requestTicket = $request->ticket;
+        // return dd($requestTicket);
+        $ticket = Ticket::where('id', $requestTicket)->where('ticket', null)->first();
+        if (!$ticket) {
+            return response()->json(['message' => 'Ticket already scanned.']);
+        }
+        $ticket->ticket = $request->code;
+        $ticket = $ticket->save();
+        return response()->json(['ticket' => $ticket]);
     }
 }
