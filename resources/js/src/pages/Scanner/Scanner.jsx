@@ -159,6 +159,25 @@ const Scanner = () => {
         setChangesProcessing(false);
     };
 
+    const activateTicket = async () => {
+        setChangesProcessing(true);
+        const response = await axios.post(
+            `${import.meta.env.VITE_APP_URL}/api/tickets/activate`,
+            { ticket: scannedTicket?.id },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Secret-Key": "pos_password",
+                },
+            }
+        );
+        if (response.status == 200) {
+            setScannedTicket(response?.data?.ticket);
+            toast("Ticket activated successfully!!");
+        }
+        setChangesProcessing(false);
+    };
+
     return (
         <section className="scanner-page">
             {scannedTicket ? (
@@ -195,6 +214,19 @@ const Scanner = () => {
                         <p>
                             <strong>Dates:</strong>{" "}
                             {scannedTicket?.dates.join(", ")}
+                        </p>
+                        <p>
+                            <strong>
+                                {scannedTicket?.active === 0 && "Not "}Active
+                                {scannedTicket?.active === 0 && (
+                                    <span
+                                        className="btn btn-success ms-3 py-1 px-2"
+                                        onClick={activateTicket}
+                                    >
+                                        Activate
+                                    </span>
+                                )}
+                            </strong>
                         </p>
                     </div>
 
