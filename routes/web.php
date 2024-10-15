@@ -1,36 +1,37 @@
 <?php
 
-use App\Exports\CustomerExport;
-use App\Http\Controllers\AdminCustomController;
-use App\Http\Controllers\ApiController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\CouponController;
-use App\Http\Controllers\EnterzoneContoller;
-use App\Http\Controllers\EventAnalyticsController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\PdfDownloadController;
-use App\Http\Middleware\VerifyPosUser;
-use App\Mail\InviteDownload;
-use App\Mail\TicketDownload;
-use App\Models\Coupon;
+use App\Models\User;
 use App\Models\Event;
+use App\Models\Order;
+use App\Models\Coupon;
 use App\Models\Extras;
 use App\Models\Invite;
-use App\Models\Order;
-use App\Models\Product;
 use App\Models\Ticket;
-use App\Models\User;
+use App\Models\Product;
+use App\Mail\InviteDownload;
+use App\Mail\TicketDownload;
+use Illuminate\Http\Request;
+use App\Exports\CustomerExport;
+use TCG\Voyager\Facades\Voyager;
 use App\Services\CheckoutService;
 use App\Services\TOCOnlineService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
-use TCG\Voyager\Facades\Voyager;
+use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\VerifyPosUser;
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\CouponController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\EnterzoneContoller;
+use App\Http\Controllers\MassInviteController;
+use App\Http\Controllers\AdminCustomController;
+use App\Http\Controllers\PdfDownloadController;
+use App\Http\Controllers\EventAnalyticsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -144,6 +145,8 @@ Route::group(['prefix' => 'admin'], function () {
         return view('vendor.voyager.user.staff', compact('user', 'logs', 'data'));
     })->name('voyager.users.staff');
 
+    
+    
     Route::get('/products/{product}/create-physical', [AdminCustomController::class, 'ticketCreatePhysical'])->name('voyager.products.ticketCreatePhysical');
     Route::post('/products/{product}/create-physical', [AdminCustomController::class, 'ticketCreatePhysicalPost'])->name('voyager.products.ticketCreatePhysical.post');
     Route::get('/products/{product}/download-physical', [AdminCustomController::class, 'ticketCreatePhysicalDownload'])->name('voyager.products.ticketCreatePhysical.download');
@@ -154,10 +157,15 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/invites/{invite}/add-product', [AdminCustomController::class, 'inviteAddProduct'])->name('voyager.invites.add-product');
 
     Route::post('/invites/{invite}/store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('voyager.invites.store-product');
+    // mass invite route
+    Route::get('bulk/invites',[MassInviteController::class,'MassInvitePage'])->name('massInvitePage');
+    Route::get('bulk/invites/get-products/{eventId}', [MassInviteController::class, 'getProducts'])->name('ajax.getProduct');
+    Route::post('bulk/invites',[MassInviteController::class,'MassInvite'])->name('MassInvite');
 
+    
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
     Route::get('/ticket/{ticket:ticket}/extras', [AdminCustomController::class, 'ticketAddExtras'])->name('voyager.ticket.extras');
-
+    
     Route::post('/products/{product}/add-extras', [AdminCustomController::class, 'productAddExtrasStore'])->name('voyager.products.add-extras');
     Route::post('/ticket/{ticket:ticket}/add-extras', [AdminCustomController::class, 'ticketAddExtrasStore'])->name('voyager.ticket.add-extras');
     Route::get('/send/email/{order}', [AdminCustomController::class, 'sendEmailOrder'])->name('send.email');
