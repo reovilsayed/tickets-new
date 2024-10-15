@@ -37,6 +37,16 @@ export const navRoutes = [
         ),
         element: React.lazy(() => import("./pages/Scanner/Scanner")),
     },
+    {
+        path: "/pos/physical-qr",
+        name: "PhysicalQr",
+        icon: "fa fa-qrcode",
+        layout: React.lazy(() =>
+            import("./components/layouts/DashboardLayout")
+        ),
+        element: React.lazy(() => import("./pages/PhysicalQr/PhysicalQr")),
+        hidden: true,
+    },
 ];
 
 export const router = createBrowserRouter([

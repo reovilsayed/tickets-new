@@ -29,7 +29,7 @@ class ApiController extends Controller
         $event_id = $request->get('event_id');
         $event_date = $request->get('event_date');
 
-        $products = Product::with('event')->where('name', 'like', "%{$query}%")->where('status', 5)->where('invite_only', 0);
+        $products = Product::with('event')->where('name', 'like', "%{$query}%")->where('status', 1)->where('type', 'pos')->where('invite_only', 0);
 
         if ($event_id) {
             $products->where('event_id', $event_id);
@@ -63,10 +63,11 @@ class ApiController extends Controller
             "updated_at" => $ticket["updated_at"],
             "type" => $ticket["type"],
             "logs" => $ticket["logs"],
+            "active" => $ticket["active"],
             "check_in_zone" => $ticket["check_in_zone"],
             "check_out_zone" => $ticket["check_out_zone"],
             "hasExtras" => $ticket["hasExtras"],
-            "extras" => []
+            "extras" => [],
         ];
         $extras = $ticket->extras;
         foreach ($extras as $extra) {
@@ -150,6 +151,8 @@ class ApiController extends Controller
         }
 
         $tickets = $request->get('tickets');
+        $physicalQr = $request->get('physicalQr');
+        $hollowTickets = [];
         foreach ($tickets as $item) {
             $product = Product::findOrFail($item['id']);
             if ($product->quantity < $item['quantity']) {
@@ -169,7 +172,7 @@ class ApiController extends Controller
                     'event_id' => $product->event->id,
                     'product_id' => $product->id,
                     'order_id' => $order->id,
-                    'ticket' => uniqid(),
+                    'ticket' => !$physicalQr ? uniqid() : null,
                     'price' => $product->price,
                     'dates' => $product->dates
                 ];
@@ -187,7 +190,7 @@ class ApiController extends Controller
                     }
                     $data['extras'] = collect($extras)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQuantity'] ?? $extra['quantity'], 'price' => $extra['price']])->toArray();
                 }
-                $order->tickets()->create($data);
+                $hollowTickets[] = $order->tickets()->create($data);
             }
         }
         $printInvoice = $request->get('printInvoice');
@@ -211,6 +214,7 @@ class ApiController extends Controller
                 Mail::to($order['owner']['email'])->send(new TicketDownload($order, $product, null));
             }
         }
+        $order['tickets'] = $hollowTickets;
         return response()->json($order);
     }
 
@@ -246,5 +250,27 @@ class ApiController extends Controller
         ];
         $order = Order::create($orderData);
         return response()->json(['ticket' => $ticket, 'order' => $order]);
+    }
+
+    public function updateTicketCode(Request $request)
+    {
+        $requestTicket = $request->ticket;
+        $ticket = Ticket::where('id', $requestTicket)->where('ticket', null)->first();
+        if (!$ticket) {
+            return response()->json(['message' => 'Ticket already scanned.']);
+        }
+        $ticket->ticket = $request->code;
+        $ticket = $ticket->save();
+        return response()->json(['ticket' => $ticket]);
+    }
+
+    public function activateTicket(Request $request)
+    {
+        $requestTicket = $request->ticket;
+        $ticket = Ticket::findOrFail($requestTicket);
+        if ($ticket->active == 1) return response()->json(['ticket' => $ticket]);
+        $ticket->active = 1;
+        $ticket->save();
+        return response()->json(['ticket' => $ticket]);
     }
 }

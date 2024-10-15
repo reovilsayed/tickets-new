@@ -73,6 +73,13 @@ function AddExtraModal() {
         }
     }, [open]);
 
+    const handleSelectExtra = (event) => {
+        const selectedValue = extrasList?.data?.find(
+            (e) => e.id === parseInt(event.target.value, 10)
+        );
+        setSelectedExtra(selectedValue);
+    };
+
     return (
         <>
             {open && <div className="add-extra-modal-backdrop fade-in"></div>}
@@ -121,21 +128,14 @@ function AddExtraModal() {
                                             selectedExtra?.display_name ??
                                             "Select an extra"
                                         }
+                                        onChange={handleSelectExtra}
                                     >
-                                        <option
-                                            onClick={() =>
-                                                setSelectedExtra(null)
-                                            }
-                                        >
-                                            None
-                                        </option>
+                                        <option value={null}>None</option>
                                         {extrasList?.data?.map(
                                             (extra, index) => (
                                                 <option
                                                     key={index}
-                                                    onClick={() =>
-                                                        setSelectedExtra(extra)
-                                                    }
+                                                    value={extra?.id}
                                                 >
                                                     {extra?.display_name}
                                                 </option>

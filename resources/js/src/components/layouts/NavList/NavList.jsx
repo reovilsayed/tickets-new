@@ -26,15 +26,19 @@ const NavList = () => {
     return (
         <div className="nav_inner">
             <ul className="nav_list">
-                {navRoutes.map((route, index) => (
-                    <NavItem
-                        key={index}
-                        name={route.name}
-                        to={route.path}
-                        icon={route.icon}
-                        active={pathname === route.path}
-                    />
-                ))}
+                {navRoutes.map((route, index) => {
+                    return !route.hidden ? (
+                        <NavItem
+                            key={index}
+                            name={route.name}
+                            to={route.path}
+                            icon={route.icon}
+                            active={pathname === route.path}
+                        />
+                    ) : (
+                        ""
+                    );
+                })}
                 <li onClick={handleLogout}>
                     <a className="logout-trigger">
                         <i className="fas fa-sign-out-alt"></i>
