@@ -19,9 +19,7 @@
                 <div class="panel panel-bordered">
                     <!-- form start -->
                     <form action="{{ route('MassInvite') }}" method="POST" enctype="multipart/form-data">
-                        <!-- CSRF TOKEN -->
-                        <input type="hidden" name="_token" value="5iUEv9frOzKMGlTtevCzWgRf86YUTurqMa0OJQ7S"
-                            autocomplete="off">
+                        @csrf
 
                         <div class="panel-body">
 
