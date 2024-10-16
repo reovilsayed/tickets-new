@@ -17,7 +17,7 @@ class InviteMail extends Mailable
      * Create a new message instance.
      */
 
-     public $invite;
+    public $invite;
     public function __construct($invite)
     {
         $this->invite = $invite;
@@ -29,7 +29,7 @@ class InviteMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Invite',
+            subject: "__('words.invite_email_subject')",
         );
     }
 

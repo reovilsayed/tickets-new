@@ -343,4 +343,3 @@ Route::post('api/create-order', [ApiController::class, 'createOrder']);
 Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
 
 
-

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Event Tickets</title>
+    <title>{{ __('words.invite_email_subject') }}</title>
     <style>
         body {
             font-family: "Montserrat", sans-serif;
@@ -82,6 +82,7 @@
         .text-orange {
             color: #e86c3d !important;
         }
+
         .text-center {
             text-align: center;
         }
@@ -96,27 +97,30 @@
         <div class="email-ticket-boreder"></div>
         <div class="email-content">
             <div style="text-align: right">
-                <h1>INVITE LINK</h1>
-                <h4 class="text-orange text-center">You have received a link with invitations! To send the invitations,
-                    simply follow these steps:</h4>
+                <h1>{{ __('words.invite_email-title') }}</h1>
+                <h4 class="text-orange text-center">{{ __('words.invite_email-sub_title') }}:</h4>
 
-                    <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>1<sup>o</sup></strong> Click the link . </p>
-                    <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>2<sup>o</sup></strong> Select the invitation and the quantity . </p>
-                    <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>3<sup>o</sup></strong> Click "Send. </p>
-                    <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>4<sup>o</sup></strong> Enter the name and email. </p>
-                <p class="text-orange text-center">You can repeat this process until you've sent all the invitations
-                    available in the linkl</p>
-                <p><strong>Event :</strong> {{$invite->event->name}}</p>
+                <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>1<sup>o</sup></strong>
+                    {{ __('words.invite_email-first_step') }} </p>
+                <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b">
+                    <strong>2<sup>o</sup></strong>{{ __('words.invite_email-second_step') }}
+                </p>
+                <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>3<sup>o</sup></strong>
+                    {{ __('words.invite_email-third_step') }} </p>
+                <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>4<sup>o</sup></strong>
+                    {{ __('words.invite_email-fourth_step') }} </p>
+                <p class="text-orange text-center">{{ __('words.invite_email-para') }}</p>
+                <p><strong> {{ __('words.event') }}:</strong> {{ $invite->event->name }}</p>
 
             </div>
         </div>
         <div class="" style="text-align: center">
             <a href="{{ route('invite.product_details', ['invite' => $invite, 'security' => $invite->security_key]) }}"
-                class="btn-download text-white">Send Invites</a>
+                class="btn-download text-white">{{ __('words.invite_email-send_invite') }}</a>
         </div>
-       <br>
-       <br>
-       <br>
+        <br>
+        <br>
+        <br>
     </div>
 </body>
 
