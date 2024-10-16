@@ -34,6 +34,7 @@ use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\EventAnalyticsController;
 use App\Http\Controllers\ExportController;
+use App\Mail\InviteMail;
 
 /*
 |--------------------------------------------------------------------------
@@ -161,8 +162,10 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/invites/{invite}/store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('voyager.invites.store-product');
     // mass invite route
     Route::get('bulk/invites', [MassInviteController::class, 'MassInvitePage'])->name('massInvitePage');
+    Route::get('bulk/personal-invites', [MassInviteController::class, 'MassPersonalInvitePage'])->name('MassPersonalInvitePage');
     Route::get('bulk/invites/get-products/{eventId}', [MassInviteController::class, 'getProducts'])->name('ajax.getProduct');
     Route::post('bulk/invites',[MassInviteController::class,'MassInvite'])->name('MassInvite');
+    Route::post('bulk/persona-invites',[MassInviteController::class,'PersonalMassInvite'])->name('PersonalMassInvite');
     Route::get('/export-invites', [ExportController::class, 'exportInvites'])->name('Invite_export');
 
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');

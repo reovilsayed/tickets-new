@@ -78,6 +78,13 @@
         .email-content strong {
             color: #e86c3d;
         }
+
+        .text-orange {
+            color: #e86c3d !important;
+        }
+        .text-center {
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -89,21 +96,27 @@
         <div class="email-ticket-boreder"></div>
         <div class="email-content">
             <div style="text-align: right">
-                <h1>{{ __('words.invite_email_title') }}</h1>
-                <h1>Welcome, {{ $invite->person_name }}!</h1>
-                <p>We are absolutely thrilled to have you with us!</p>
-                <p>We've prepared something special just for you, and we can't wait to share all the details.</p>
+                <h1>INVITE LINK</h1>
+                <h4 class="text-orange text-center">You have received a link with invitations! To send the invitations,
+                    simply follow these steps:</h4>
+
+                    <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>1<sup>o</sup></strong> Click the link . </p>
+                    <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>2<sup>o</sup></strong> Select the invitation and the quantity . </p>
+                    <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>3<sup>o</sup></strong> Click "Send. </p>
+                    <p class="text-center" style="margin:0px;padding:0px;color:#5d5b5b"><strong>4<sup>o</sup></strong> Enter the name and email. </p>
+                <p class="text-orange text-center">You can repeat this process until you've sent all the invitations
+                    available in the linkl</p>
+                <p><strong>Event :</strong> {{$invite->event->name}}</p>
 
             </div>
         </div>
         <div class="" style="text-align: center">
             <a href="{{ route('invite.product_details', ['invite' => $invite, 'security' => $invite->security_key]) }}"
-                class="btn-download text-white">Link</a>
+                class="btn-download text-white">Send Invites</a>
         </div>
-        <div class="email-footer">
-            <p>{{ __('words.invite_footer_text') }} </p>
-            <p>{{ __('words.invite_footer_text2') }} </p>
-        </div>
+       <br>
+       <br>
+       <br>
     </div>
 </body>
 
