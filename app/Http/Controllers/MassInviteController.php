@@ -45,112 +45,94 @@ class MassInviteController extends Controller
                 'excel_file' => 'required|file|mimes:xlsx,xls',
                 'product' => 'required|array',
             ]);
-    
+
             $file = $request->file('excel_file');
             $data = Excel::toCollection(null, $file);
-    
+
             $rows = $data[0];
             unset($rows[0]); // Remove header row if present
-    
+
             foreach ($rows as $row) {
                 if (!isset($row[0], $row[1])) {
                     continue; // Skip invalid rows
                 }
-    
-                DB::beginTransaction(); // Start a transaction for each invite creation
-                try {
-                    // Create an order
-                    $order = Order::create([
-                        'user_id' => null,
-                        'billing' => [
-                            'name' => $row[0],
-                            'email' => $row[1],
-                        ],
-                        'subtotal' => 0,
-                        'discount' => 0,
-                        'discount_code' => 0,
-                        'tax' => 0,
-                        'total' => 0,
-                        'status' => 1,
-                        'payment_status' => 1,
-                        'payment_method' => 'invite',
-                        'transaction_id' => Str::uuid(),
-                        'security_key' => Str::uuid(),
-                        'event_id' => $request->event_name,
-                    ]);
-    
-                    $products = collect($request->product)
-                        ->filter(fn($product) => isset($product['checked']))
-                        ->mapWithKeys(fn($product, $key) => [$key => ['quantity' => $product['qty']]]);
-    
-                    // Validate and update product quantities
-                    foreach ($products as $id => $d) {
-                        $product = Product::find($id);
-                        if (!$product || $product->quantity < $d['quantity']) {
-                            throw new Exception($product->name . ' is not available for this quantity');
-                        }
-    
-                        $product->decrement('quantity', $d['quantity']);
-    
-                        // Create tickets for each product
-                        for ($i = 1; $i <= $d['quantity']; $i++) {
-                            $ticketData = [
-                                'user_id' => null,
-                                'owner' => [
-                                    'name' => $request->name,
-                                    'email' => $request->email,
-                                ],
-                                'event_id' => $product->event->id,
-                                'product_id' => $product->id,
-                                'order_id' => $order->id,
-                                'ticket' => uniqid(),
-                                'price' => 0,
-                                'dates' => $product->dates,
-                                'type' => 'invite',
-                            ];
-    
-                            // Add extras if available
-                            if ($product->extras && count($product->extras)) {
-                                $ticketData['hasExtras'] = true;
-                                $ticketData['extras'] = collect($product->extras)
-                                    ->map(fn($qty, $key) => [
-                                        'id' => $key,
-                                        'name' => Extra::find($key)->display_name,
-                                        'qty' => $qty,
-                                        'used' => 0
-                                    ])
-                                    ->toArray();
-                            }
-    
-                            $order->tickets()->create($ticketData);
-                        }
+
+
+                // Create an order
+                $order = Order::create([
+                    'user_id' => null,
+                    'billing' => [
+                        'name' => $row[0],
+                        'email' => $row[1],
+                    ],
+                    'subtotal' => 0,
+                    'discount' => 0,
+                    'discount_code' => 0,
+                    'tax' => 0,
+                    'total' => 0,
+                    'status' => 1,
+                    'payment_status' => 1,
+                    'payment_method' => 'invite',
+                    'transaction_id' => Str::uuid(),
+                    'security_key' => Str::uuid(),
+                    'event_id' => $request->event_name,
+                ]);
+
+                $products = collect($request->product)
+                    ->filter(fn($product) => isset($product['checked']))
+                    ->mapWithKeys(fn($product, $key) => [$key => ['quantity' => $product['qty']]]);
+
+                // Validate and update product quantities
+                foreach ($products as $id => $d) {
+                    $product = Product::find($id);
+                    if (!$product || $product->quantity < $d['quantity']) {
+                        throw new Exception($product->name . ' is not available for this quantity');
                     }
-    
-                    // Send email invite
-                    Mail::to($row[1])->send(new InviteDownload($order, $product, null));
-    
-                    DB::commit();
-    
-                    return redirect()->route('voyager.products.index')->with([
-                        'message' => 'Invite sent successfully',
-                        'alert-type' => 'success',
-                    ]);
-    
-                } catch (\Exception | Error $e) {
-                    DB::rollBack();
-                    // Return with error message but allow processing to continue for other rows
-                    return redirect()->back()->with([
-                        'message' => $e->getMessage(),
-                        'alert-type' => 'error',
-                    ]);
+
+                    $product->decrement('quantity', $d['quantity']);
+
+                    // Create tickets for each product
+                    for ($i = 1; $i <= $d['quantity']; $i++) {
+                        $ticketData = [
+                            'user_id' => null,
+                            'owner' => [
+                                'name' => $request->name,
+                                'email' => $request->email,
+                            ],
+                            'event_id' => $product->event->id,
+                            'product_id' => $product->id,
+                            'order_id' => $order->id,
+                            'ticket' => uniqid(),
+                            'price' => 0,
+                            'dates' => $product->dates,
+                            'type' => 'invite',
+                        ];
+
+                        // Add extras if available
+                        if ($product->extras && count($product->extras)) {
+                            $ticketData['hasExtras'] = true;
+                            $ticketData['extras'] = collect($product->extras)
+                                ->map(fn($qty, $key) => [
+                                    'id' => $key,
+                                    'name' => Extra::find($key)->display_name,
+                                    'qty' => $qty,
+                                    'used' => 0
+                                ])
+                                ->toArray();
+                        }
+
+                        $order->tickets()->create($ticketData);
+                    }
                 }
+
+                // Send email invite
+                Mail::to($row[1])->send(new InviteDownload($order, $product, null));
             }
-    
+
             return redirect()->route('voyager.invites.index')->with([
                 'alert-type' => 'success',
                 'message' => 'Invites created successfully!',
             ]);
-    
         } catch (Exception | Error $e) {
             return back()->with([
                 'message'    => $e->getMessage(),
@@ -158,7 +140,7 @@ class MassInviteController extends Controller
             ]);
         }
     }
-    
+
     public function MassInvite(Request $request)
     {
         try {
@@ -193,19 +175,7 @@ class MassInviteController extends Controller
                     }
                     $invite->attachProducts($data);
 
-                    foreach ($request->product as $key => $product) {
-                        if (isset($product['checked']) && isset($product['qty'])) {
 
-                            $productModel = Product::find($key);
-
-                            if ($productModel) {
-
-                                $productModel->quantity -= (int) $product['qty'];
-
-                                $productModel->save();
-                            }
-                        }
-                    }
                     if ($request->sent_email) {
 
                         Mail::to($row[1])->send(new InviteMail($invite));

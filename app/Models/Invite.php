@@ -29,6 +29,7 @@ class Invite extends Model
 
         try {
             foreach ($data as $id => $d) {
+              
                 $product = Product::find($id);
                 if (!$product) {
                     throw new Exception('Product not found');
@@ -41,6 +42,7 @@ class Invite extends Model
                     $product->increment('quantity', $quantityDifference);
                 } elseif ($quantityDifference < 0) {
                     // Decrease quantity from stock
+       
                     $product->decrement('quantity', abs($quantityDifference));
                     if ($product->quantity < 0) {
                         throw new Exception('Not enough quantity');
