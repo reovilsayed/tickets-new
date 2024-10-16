@@ -46,12 +46,6 @@
                                         role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="sent_email" value="1" id="flexCheckChecked" >
-                                {{-- <label class="form-check-label" for="flexCheckChecked">
-                                    Sent Mail
-                                </label> --}}
-                            </div>
                             
 
                         </div><!-- panel-body -->
