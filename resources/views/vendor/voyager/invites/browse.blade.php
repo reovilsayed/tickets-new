@@ -28,7 +28,7 @@
         <a href="{{ route('massInvitePage') }}" class="btn btn-primary btn-add-new">
             <i class="voyager-list-add"></i> <span>Bulk Link</span>
         </a>
-        <a href="{{ route('PersonalMassInvite') }}" class="btn btn-primary btn-add-new">
+        <a href="{{ route('MassPersonalInvitePage') }}" class="btn btn-primary btn-add-new">
             <i class="voyager-list-add"></i> <span>Bulk Email</span>
         </a>
 
