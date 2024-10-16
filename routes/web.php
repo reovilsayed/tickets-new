@@ -146,8 +146,8 @@ Route::group(['prefix' => 'admin'], function () {
         return view('vendor.voyager.user.staff', compact('user', 'logs', 'data'));
     })->name('voyager.users.staff');
 
-    
-    
+
+
     Route::get('/products/{product}/create-physical', [AdminCustomController::class, 'ticketCreatePhysical'])->name('voyager.products.ticketCreatePhysical');
     Route::post('/products/{product}/create-physical', [AdminCustomController::class, 'ticketCreatePhysicalPost'])->name('voyager.products.ticketCreatePhysical.post');
     Route::get('/products/{product}/download-physical', [AdminCustomController::class, 'ticketCreatePhysicalDownload'])->name('voyager.products.ticketCreatePhysical.download');
@@ -159,13 +159,13 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::post('/invites/{invite}/store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('voyager.invites.store-product');
     // mass invite route
-    Route::get('bulk/invites',[MassInviteController::class,'MassInvitePage'])->name('massInvitePage');
+    Route::get('bulk/invites', [MassInviteController::class, 'MassInvitePage'])->name('massInvitePage');
     Route::get('bulk/invites/get-products/{eventId}', [MassInviteController::class, 'getProducts'])->name('ajax.getProduct');
     Route::post('bulk/invites',[MassInviteController::class,'MassInvite'])->name('MassInvite');
     
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
     Route::get('/ticket/{ticket:ticket}/extras', [AdminCustomController::class, 'ticketAddExtras'])->name('voyager.ticket.extras');
-    
+
     Route::post('/products/{product}/add-extras', [AdminCustomController::class, 'productAddExtrasStore'])->name('voyager.products.add-extras');
     Route::post('/ticket/{ticket:ticket}/add-extras', [AdminCustomController::class, 'ticketAddExtrasStore'])->name('voyager.ticket.add-extras');
     Route::get('/send/email/{order}', [AdminCustomController::class, 'sendEmailOrder'])->name('send.email');
@@ -224,7 +224,16 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 $order->save();
 
                 $new_order = Order::where('transaction_id', $request->key)->first();
+
                 $products = $new_order->tickets->groupBy('product_id');
+
+                foreach ($products as $id => $data) {
+                    $product = Product::find($id);
+                    if ($product) {
+                        $product->quantity =  $product->quantity - count($data);
+                        $product->save();
+                    }
+                }
 
                 $coupon = Coupon::where('code', $order->discount_code)->first();
                 if ($coupon) {
@@ -245,7 +254,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 Log::info($response);
             } else {
                 $order->status = 2;
-                $order->payment_status = 2; 
+                $order->payment_status = 2;
                 $order->save();
             }
         }
@@ -327,3 +336,6 @@ Route::middleware(['auth', VerifyPosUser::class])->group(function () {
 
 Route::post('api/create-order', [ApiController::class, 'createOrder']);
 Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
+
+
+

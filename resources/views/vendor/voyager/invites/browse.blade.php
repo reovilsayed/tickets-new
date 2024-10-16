@@ -23,7 +23,7 @@
             @endif
         @endcan
         <a href="{{ route('massInvitePage') }}" class="btn btn-primary btn-add-new">
-            <i class="voyager-list-add"></i> <span>Bulk Invite</span>
+            <i class="voyager-list-add"></i> <span>Bulk Link</span>
         </a>
 
         @can('delete', app($dataType->model_name))

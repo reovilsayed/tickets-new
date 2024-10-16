@@ -119,7 +119,7 @@
 
                                                 <div class="ticket-info">
                                                     <div class="t-info">
-                                                        <p class="t-title">{{ $product->name }}</p>
+                                                        <p class="t-title">{{ $product->name }} {{$product->status}}</p>
                                                         <p class="t-des">{!! $product->description !!}
                                                         </p>
                                                         @if ($product->status == 2)

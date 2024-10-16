@@ -86,8 +86,7 @@ class CheckoutService
         } else {
             foreach ($this->cart as $item) {
                 if ($item->model->quantity < $item->quantity) throw new Exception($item->model->name . ' is not available for this quantity');
-                $item->model->quantity -= $item->quantity;
-                $item->model->save();
+                
                 for ($i = 1; $i <= $item->quantity; $i++) {
                     $data = [
                         'user_id' => $this->user ? $this->user->id : auth()->id() ?? null,
