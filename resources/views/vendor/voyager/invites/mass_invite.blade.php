@@ -35,15 +35,24 @@
                                 <div id="productList" style="padding-top: 20px"></div>
                             </div>
                             <div class="form-group  col-md-6">
-                                <label class="control-label" for="file">Upload File <strong class="text-danger" style="font-size: 10px; font-weight: 600">(Excel)</strong></label>
-                                <input type="file" name="excel_file" id="" class="form-control @error('excel_file')
+                                <label class="control-label" for="file">Upload File <strong class="text-danger"
+                                        style="font-size: 10px; font-weight: 600">(Excel)</strong></label>
+                                <input type="file" name="excel_file" id=""
+                                    class="form-control @error('excel_file')
                                     is-invalid
                                 @enderror">
                                 @error('excel_file')
-                                    <span class="text-danger" style="font-size: 12px" role="alert"><strong>{{ $message }}</strong></span>
+                                    <span class="text-danger" style="font-size: 12px"
+                                        role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
-
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="sent_email" value="1" id="flexCheckChecked" >
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    Sent Mail
+                                </label>
+                            </div>
+                            
 
                         </div><!-- panel-body -->
 
