@@ -33,6 +33,7 @@ use App\Http\Controllers\MassInviteController;
 use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\EventAnalyticsController;
+use App\Http\Controllers\ExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -162,7 +163,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('bulk/invites', [MassInviteController::class, 'MassInvitePage'])->name('massInvitePage');
     Route::get('bulk/invites/get-products/{eventId}', [MassInviteController::class, 'getProducts'])->name('ajax.getProduct');
     Route::post('bulk/invites',[MassInviteController::class,'MassInvite'])->name('MassInvite');
-    
+    Route::get('/export-invites', [ExportController::class, 'exportInvites'])->name('Invite_export');
+
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
     Route::get('/ticket/{ticket:ticket}/extras', [AdminCustomController::class, 'ticketAddExtras'])->name('voyager.ticket.extras');
 
