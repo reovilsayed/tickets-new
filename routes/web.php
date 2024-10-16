@@ -28,6 +28,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EnterzoneContoller;
+use App\Http\Controllers\MassEmailController;
 use App\Http\Controllers\MassInviteController;
 use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\PdfDownloadController;
@@ -161,7 +162,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('bulk/invites',[MassInviteController::class,'MassInvitePage'])->name('massInvitePage');
     Route::get('bulk/invites/get-products/{eventId}', [MassInviteController::class, 'getProducts'])->name('ajax.getProduct');
     Route::post('bulk/invites',[MassInviteController::class,'MassInvite'])->name('MassInvite');
-
     
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
     Route::get('/ticket/{ticket:ticket}/extras', [AdminCustomController::class, 'ticketAddExtras'])->name('voyager.ticket.extras');

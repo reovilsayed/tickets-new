@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InviteMail;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MassInviteController extends Controller
@@ -26,7 +28,7 @@ class MassInviteController extends Controller
 
     public function MassInvite(Request $request)
     {
-        // dd($request->all());
+ 
         $validate = $request->validate([
             'excel_file' => 'required|file|mimes:xlsx,xls',
         ]);
@@ -69,8 +71,9 @@ class MassInviteController extends Controller
                         }
                     }
                 }
-
-                // Mail::to($row[1])->send(new UserNotificationMail($row[0]));
+                if($request->sent_email){
+                    Mail::to($row[1])->send(new InviteMail($invite));
+                }
             }
         }
 
