@@ -107,10 +107,10 @@
 
                                                 @if ($product->status == 2)
                                                     <span
-                                                        class="d-md-none text-danger sold-sm">{{ __('words.sold') }}</span>
+                                                        class="text-danger sold-sm">{{ __('words.sold') }}</span>
                                                 @elseif($product->status == 4)
                                                     <span
-                                                        class="d-md-none text-danger sold-sm">{{ __('words.soon') }}</span>
+                                                        class="text-danger sold-sm">{{ __('words.soon') }}</span>
                                                 @endif
 
                                                 <p class="t-date">
@@ -124,10 +124,10 @@
                                                         </p>
                                                         @if ($product->status == 2)
                                                             <span
-                                                                class="sold d-none d-lg-block">{{ __('words.sold') }}</span>
+                                                                class="sold d-none">{{ __('words.sold') }}</span>
                                                         @elseif($product->status == 4)
                                                             <span
-                                                                class="sold d-none d-lg-block">{{ __('words.soon') }}</span>
+                                                                class="sold d-none">{{ __('words.soon') }}</span>
                                                         @endif
                                                     </div>
                                                     @if ($product->status == 3)

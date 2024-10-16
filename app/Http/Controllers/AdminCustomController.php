@@ -42,6 +42,11 @@ class AdminCustomController extends Controller
         $data = [];
         foreach ($request->product as $key => $product) {
 
+            if($invite->products->count() == 0){
+                $product = Product::find($key);
+                $product->decrement('quantity', (int)$product['qty']);
+                $product->save();
+            }
             if (isset($product['checked'])) {
                 $data[$key] = ['quantity' => $product['qty']];
             }
