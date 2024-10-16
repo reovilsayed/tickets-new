@@ -213,6 +213,7 @@ Route::post('t/{order:security_key}', [PdfDownloadController::class, 'download']
 
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
+    Log::info($type);
     if ($type == 'generic') {
         $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
         if ($order) {
