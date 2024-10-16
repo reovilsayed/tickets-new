@@ -213,7 +213,7 @@ Route::post('t/{order:security_key}', [PdfDownloadController::class, 'download']
 
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info($request->all());
-    Log::info($type);
+    if ($type == 'generic') {
         $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
         if ($order) {
             if ($request->status == 'success') {
@@ -240,14 +240,6 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 $new_order->invoice_id = $response['id'];
                 $new_order->invoice_url = $response['public_link'];
                 $new_order->invoice_body = json_encode($response);
-                if(isset($request->currency)){
-                    $order->currency = $request->currency;
-                }
-                if(isset($request->method)){
-                    $order->payment_method_title = $request->method;
-                }
-                $order->payment_method_title = $request->method;
-                $order->save();
                 $new_order->save();
                 $response = $toco->sendEmailDocument($order, $response['id']);
                 Log::info($response);
@@ -257,8 +249,16 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 $order->save();
             }
         }
+    }
+    if ($type == 'payment') {
 
-
+        $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
+        if ($order) {
+            $order->currency = $request->currency;
+            $order->payment_method_title = $request->method;
+            $order->save();
+        }
+    }
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
