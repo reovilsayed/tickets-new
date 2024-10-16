@@ -40,20 +40,19 @@ class AdminCustomController extends Controller
     {
 
         $data = [];
-        foreach ($request->product as $key => $product) {
+        try {
+            foreach ($request->product as $key => $product) {
+                if (isset($product['checked'])) {
+                    $data[$key] = ['quantity' => $product['qty']];
+                }
+            }
 
-            if($invite->products->count() == 0){
-                $product = Product::find($key);
-                $product->decrement('quantity', (int)$product['qty']);
-                $product->save();
-            }
-            if (isset($product['checked'])) {
-                $data[$key] = ['quantity' => $product['qty']];
-            }
+            $invite->attachProducts($data);
+
+            return redirect()->back()->with(['alert-type' => 'success', 'message' => 'Product attached on invite']);
+        } catch (Exception | Error $e) {
+            return redirect()->back()->with(['alert-type' => 'error', 'message' => $e->getMessage()]);
         }
-
-        $invite->products()->sync($data);
-        return redirect()->back()->with(['alert-type' => 'success', 'message' => 'Product attached on invite']);
     }
 
     public function productAddExtras(Product $product)
@@ -156,7 +155,6 @@ class AdminCustomController extends Controller
                     Mail::to($order->billing->email)->send(new InviteDownload($order, $product, $ticket));
                 }
             }
-          
         } else {
             if ($product && $ticket) {
                 Mail::to($order->user->email)->send(new TicketDownload($order, $product, $ticket));

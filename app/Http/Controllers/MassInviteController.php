@@ -54,17 +54,17 @@ class MassInviteController extends Controller
                         $data[$key] = ['quantity' => $product['qty']];
                     }
                 }
-                $invite->products()->sync($data);
+                $invite->attachProducts($data);
 
                 foreach ($request->product as $key => $product) {
                     if (isset($product['checked']) && isset($product['qty'])) {
-                    
+
                         $productModel = Product::find($key);
-                        
+
                         if ($productModel) {
-                           
+
                             $productModel->quantity -= (int) $product['qty'];
-                            
+
                             $productModel->save();
                         }
                     }
@@ -75,7 +75,5 @@ class MassInviteController extends Controller
         }
 
         return redirect()->route('voyager.invites.index')->with(['alert-type' => 'success', 'message' => 'Invite created successfully!']);
-
     }
-
 }
