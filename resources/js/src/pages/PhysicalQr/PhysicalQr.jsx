@@ -91,24 +91,41 @@ const PhysicalQr = () => {
             style={{ display: "flex", flexDirection: "column" }}
         >
             <h3>
-                {scannedTicket} / {ticketsToScan} tickets scanned
+                {scannedTicket} / {ticketsToScan} tickets processed
             </h3>
             {!startScan ? (
                 unscannedTickets?.length ? (
-                    <div
-                        className="qr-box flex-column"
-                        onClick={handleStartScan}
-                    >
-                        <img
-                            className="qr-image"
-                            src="/assets/qr-code.png"
-                            alt="QR Code"
-                        />
-                        <h3>
-                            Tap to start scanning
-                            {scannedTicket > 0 ? " next" : ""}
-                        </h3>
+                    <div className="d-flex gap-3">
+                        <div
+                            className="qr-box flex-column"
+                            onClick={handleStartScan}
+                        >
+                            <img
+                                className="qr-image"
+                                src="/assets/qr-code.png"
+                                alt="QR Code"
+                            />
+                            <h3>
+                               start scanning
+                                {scannedTicket > 0 ? " next" : ""}
+                            </h3>
+                        </div>
+                        <div
+                            className="qr-box flex-column"
+                            onClick={handleStartScan}
+                        >
+                            <img
+                                className="qr-image"
+                                src="/assets/qr-code.png"
+                                alt="QR Code"
+                            />
+                            <h3>
+                                Enter manually
+                                {scannedTicket > 0 ? " next" : ""}
+                            </h3>
+                        </div>
                     </div>
+
                 ) : (
                     <a href="/pos/tickets" className="qr-box flex-column">
                         <h3

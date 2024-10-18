@@ -130,6 +130,7 @@ class ApiController extends Controller
     public function createOrder(Request $request)
     {
         $orderData = [
+            'billing' => request()->get('biling'),
             'user_id' => auth()->id() ?? null,
             'subtotal' => $request->get('subTotal'),
             'discount' => Sohoj::round_num(Sohoj::discount()),
@@ -211,7 +212,7 @@ class ApiController extends Controller
         if ($sendTicketsToMail) {
             foreach ($tickets as $ticket) {
                 $product = Product::find($ticket['id']);
-                Mail::to($order['owner']['email'])->send(new TicketDownload($order, $product, null));
+                Mail::to($order['billing']->email)->send(new TicketDownload($order, $product, null));
             }
         }
         $order['tickets'] = $hollowTickets;
