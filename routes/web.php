@@ -164,8 +164,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('bulk/invites', [MassInviteController::class, 'MassInvitePage'])->name('massInvitePage');
     Route::get('bulk/personal-invites', [MassInviteController::class, 'MassPersonalInvitePage'])->name('MassPersonalInvitePage');
     Route::get('bulk/invites/get-products/{eventId}', [MassInviteController::class, 'getProducts'])->name('ajax.getProduct');
-    Route::post('bulk/invites',[MassInviteController::class,'MassInvite'])->name('MassInvite');
-    Route::post('bulk/persona-invites',[MassInviteController::class,'PersonalMassInvite'])->name('PersonalMassInvite');
+    Route::post('bulk/invites', [MassInviteController::class, 'MassInvite'])->name('MassInvite');
+    Route::post('bulk/persona-invites', [MassInviteController::class, 'PersonalMassInvite'])->name('PersonalMassInvite');
     Route::get('/export-invites', [ExportController::class, 'exportInvites'])->name('Invite_export');
 
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
@@ -329,17 +329,20 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
     Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
 })->middleware(['auth', 'role:staffzone']);
 
-Route::middleware(['auth', VerifyPosUser::class])->group(function () {
+Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::get('/pos', function () {
         return view('pos');
     });
+    Route::post('api/create-order', [ApiController::class, 'createOrder']);
+    Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
 
     Route::get('/pos/{page}', function () {
         return view('pos');
     });
 });
 
-Route::post('api/create-order', [ApiController::class, 'createOrder']);
-Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
+Route::get('/test',function(){
 
-
+    $order = Order::find(431);
+    $toc =  (new TOCOnlineService)->createCommercialSalesDocument($order);
+});

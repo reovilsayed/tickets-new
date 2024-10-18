@@ -9,6 +9,11 @@ import { toast } from "react-toastify";
 const Scanner = () => {
     const videoRef = React.useRef(null);
     const [scanner, setScanner] = useState(null);
+    const [startScan, setStartScan] = useState(false);
+    const [scannedTicket, setScannedTicket] = useState(null);
+    const [manualCode, setManualCode] = useState("");
+    const [scanViaQr, setscanViaQr] = useState(false);
+    const [enterManual, setEnterManual] = useState(false);
 
     useEffect(() => {
         if (videoRef.current && !scanner) {
@@ -33,15 +38,20 @@ const Scanner = () => {
 
     const handleStartScan = () => {
         if (scanner) {
+            setStartScan(true); // Start scan
+            setscanViaQr(true); // Start scan
             scanner.start();
-            setStartScan(true);
         } else {
             console.error("Scanner is not initialized yet");
         }
     };
 
-    const [startScan, setStartScan] = useState(false);
-    const [scannedTicket, setScannedTicket] = useState(null);
+    const handleStartManual = () => {
+        setStartScan(true); // Start scan
+        setEnterManual(true); // Start scan
+    };
+
+
 
     const handleScan = async (data) => {
         if (!data?.data) return;
@@ -56,6 +66,34 @@ const Scanner = () => {
             toast("Error scanning ticket", error);
         }
     };
+
+    const handleManualKeyPress = (e) => {
+        if (e.key === "Enter") {
+            handleManualSubmit();
+        }
+    };
+    const handleManualSubmit = async () => {
+        if (!manualCode) return;
+        setEnterManual(false)
+        setStartScan(false)
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_APP_URL}/api/tickets/get`,
+                { ticket: manualCode }
+            );
+            setScannedTicket(response.data);
+           
+
+            setManualCode(""); // Reset the manual input
+        } catch (error) {
+            toast("Error scanning ticket", error);
+        } finally {
+            setIsProcessing(false); // Allow next manual submission after processing
+        }
+    };
+
+
 
     const handleExtraChange = (targetExtra, quantity) => {
         const targetExtraQuantity = parseInt(targetExtra?.qty) ?? 0;
@@ -81,8 +119,7 @@ const Scanner = () => {
         refetch,
     } = useFetch(
         ["scanner-extras", scannedTicket],
-        `${import.meta.env.VITE_APP_URL}/api/event-extras/${
-            scannedTicket?.event_id
+        `${import.meta.env.VITE_APP_URL}/api/event-extras/${scannedTicket?.event_id
         }`
     );
 
@@ -295,7 +332,7 @@ const Scanner = () => {
                                                     parseInt(
                                                         extra?.newQty
                                                             ? extra?.newQty -
-                                                                  extra?.qty
+                                                            extra?.qty
                                                             : 0
                                                     )}
                                                 $
@@ -362,9 +399,9 @@ const Scanner = () => {
                                                                         ) =>
                                                                             prev -
                                                                                 1 >
-                                                                            0
+                                                                                0
                                                                                 ? prev -
-                                                                                  1
+                                                                                1
                                                                                 : prev
                                                                     )
                                                                 }
@@ -434,26 +471,67 @@ const Scanner = () => {
                     </span>
                 </div>
             ) : !startScan ? (
-                <div className="qr-box flex-column" onClick={handleStartScan}>
-                    <img
-                        className="qr-image"
-                        src="/assets/qr-code.png"
-                        alt="QR Code"
-                    />
-                    <h3>Tap to start scanning</h3>
+
+                <div className="d-flex gap-3">
+                    <div
+                        className="qr-box flex-column"
+                        onClick={handleStartScan}
+                    >
+                        <img
+                            className="qr-image"
+                            src="/assets/qr-code.png"
+                            alt="QR Code"
+                        />
+                        <h3>
+                            start scanning
+
+                        </h3>
+                    </div>
+                    <div
+                        className="qr-box flex-column"
+                        onClick={handleStartManual}
+                    >
+                        <img
+                            className="qr-image"
+                            src="/assets/keyboard.svg"
+                            alt="keyboard"
+                        />
+                        <h3>
+                            Enter manually
+
+                        </h3>
+                    </div>
                 </div>
             ) : (
                 ""
             )}
             {!scannedTicket && (
-                <div
-                    id="viewfinder"
-                    className="qr-box"
-                    style={!startScan ? { display: "none" } : {}}
-                >
-                    <video ref={videoRef}>
-                        Your browser does not support video playback.
-                    </video>
+                <div>
+                    <div
+                        id="viewfinder"
+                        className="qr-box"
+                        style={!scanViaQr ? { display: "none" } : {}}
+                    >
+                        <video ref={videoRef}>
+                            Your browser does not support video playback.
+                        </video>
+                    </div>
+                    <div
+                        id="manual-input"
+                        className="form-group"
+                        style={!enterManual ? { display: "none" } : {}}
+                    >
+                        <input
+                            type="text"
+                            name="manual"
+                            className="form-control"
+                            id="manual"
+                            value={manualCode}
+                            onChange={(e) => setManualCode(e.target.value)}
+                            onKeyDown={handleManualKeyPress}
+                            placeholder="Enter ticket code manually"
+                        />
+                    </div>
                 </div>
             )}
         </section>

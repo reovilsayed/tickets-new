@@ -14,8 +14,19 @@ class Coupon extends Model
         return $this->belongsToMany(Product::class, 'coupons_product');
     }
 
-    public function events()
+    public function event()
     {
-        return $this->belongsToMany(Event::class);
+        return $this->belongsTo(Event::class);
+    }
+
+    public function getProducts()
+    {
+        if ($this->products->count()) {
+            return $this->products;
+        } elseif ($this->event) {
+            return $this->event->products->where('status', 1);
+        } else {
+            return collect([]);
+        }
     }
 }

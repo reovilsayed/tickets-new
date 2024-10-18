@@ -96,7 +96,6 @@
                 <p><strong>{{ __('words.ticket_name') }}:</strong> {{ $product->name }} </p>
                 <p><strong>{{ __('words.date') }}:</strong> {{ $product->start_date->format('d M, Y h:i a') }} -
                     {{ $product->end_date->format('d M, Y h:i a') }}</p>
-                <p><strong>{{ __('words.doors_open') }}:</strong> {{ $product->event->start_at->format('h:i a') }}</p>
                 <p><strong>{{ __('words.location') }}:</strong>{{ $product->event->location }}</p>
                 @if ($product->event->website)
                     <p><strong>{{ __('words.website') }}:</strong>{{ $product->event->website }}</p>

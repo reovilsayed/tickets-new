@@ -14,9 +14,9 @@ class Order extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'paid_date'=>'datetime',
-        'date_paid'=>'datetime',
-        'date_completed'=>'datetime'
+        'paid_date' => 'datetime',
+        'date_paid' => 'datetime',
+        'date_completed' => 'datetime'
     ];
 
     public function user()
@@ -25,50 +25,65 @@ class Order extends Model
     }
 
 
+
     public function total(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
-
+    public function extras(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => json_decode($value)
+        );
+    }
+    public function getExtras()
+    {
+        return collect($this->extras)->map(function ($extra) {
+            $data = Extra::find($extra->id);
+            $data->purchase_quantity =  $extra->qty;
+            $data->purchase_price =  $extra->price;
+            return $data;
+        });
+    }
     public function subtotal(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
     public function refundAmount(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
 
     public function tax(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
     public function billing(): Attribute
     {
 
         return Attribute::make(
-            set: fn ($value) => json_encode($value),
-            get: fn ($value) => json_decode($value)
+            set: fn($value) => json_encode($value),
+            get: fn($value) => json_decode($value)
         );
     }
 
     public function discount(): Attribute
     {
         return Attribute::make(
-            set: fn ($value) => $value * 100,
-            get: fn ($value) => $value / 100
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
         );
     }
 
@@ -105,30 +120,42 @@ class Order extends Model
             });
     }
 
-    
+
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
     }
 
-    public function getStatus(){
-        switch ($this->status){
-            case 0 : return 'Pending';
-            case 1 : return 'Paid';
-            case 2 : return 'Cancelled';
-            case 3 : return 'Refunded';
-            default : return 'Pending';
+    public function getStatus()
+    {
+        switch ($this->status) {
+            case 0:
+                return 'Pending';
+            case 1:
+                return 'Paid';
+            case 2:
+                return 'Cancelled';
+            case 3:
+                return 'Refunded';
+            default:
+                return 'Pending';
         }
     }
 
-    public function getBsStatusClass(){
-        
-        switch ($this->status){
-            case 0 : return 'secondary';
-            case 1 : return 'success';
-            case 2 : return 'danger';
-            case 3 : return 'warning';
-            default : return 'secondary';
+    public function getBsStatusClass()
+    {
+
+        switch ($this->status) {
+            case 0:
+                return 'secondary';
+            case 1:
+                return 'success';
+            case 2:
+                return 'danger';
+            case 3:
+                return 'warning';
+            default:
+                return 'secondary';
         }
     }
 }

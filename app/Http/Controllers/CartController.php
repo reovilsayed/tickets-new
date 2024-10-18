@@ -14,31 +14,36 @@ use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
-	public function add(Event $event,Request $request)
+	public function add(Event $event, Request $request)
 	{
 
 		Cart::session($event->slug)->clear();
+		session()->forget('discount');
+		session()->forget('discount_code');
 		foreach ($request->tickets as $ticket => $quantity) {
-			if($quantity > 0){
+			if ($quantity > 0) {
 				$product = Product::find($ticket);
 				Cart::session($event->slug)->add($product->id, $product->name, $product->currentPrice(), $quantity)->associate('App\Models\Product');
 			}
 		}
-		return redirect()->route('checkout',$event);
+		return redirect()->route('checkout', $event);
 	}
-	public function inviteadd(Invite $invite,Request $request){
-	
+	public function inviteadd(Invite $invite, Request $request)
+	{
+
 		Cart::session($invite->slug)->clear();
 		foreach ($request->tickets as $ticket => $quantity) {
-			if($quantity > 0){
+			if ($quantity > 0) {
 				$product = Product::find($ticket);
 				Cart::session($invite->slug)->add($product->id, $product->name, 0, $quantity)->associate('App\Models\Product');
 			}
 		}
-		return redirect()->route('invitecheckout',$invite);
+		return redirect()->route('invitecheckout', $invite);
 	}
 	public function update(Request $request)
 	{
+
+
 		Cart::update($request->product_id, array(
 			'quantity' => array(
 				'relative' => false,

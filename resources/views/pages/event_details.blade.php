@@ -61,6 +61,21 @@
                                     {!! $event->description !!}
                                 </p>
                             </div>
+                         
+                        </div>
+                        <div class="accordin-item">
+                            <div>
+                                <i class="fa-solid fa-file-contract fa-2x"></i>
+                            </div>
+                            <div>
+                                <h5>
+                                    {{ __('words.terms') }}
+                                </h5>
+                                <p>
+                                    {!! $event->terms !!}
+                                </p>
+                            </div>
+                         
                         </div>
                     </div>
                 </div>
@@ -119,6 +134,7 @@
                                                     <div class="t-info">
                                                         <p class="t-title">{{ $product->name }} </p>
                                                         <p class="t-des">{!! $product->description !!}
+                                                       
                                                         </p>
                                                         @if ($product->status == 2 || $product->quantity <= 0)
                                                             <span class="sold d-none">{{ __('words.sold') }}</span>
