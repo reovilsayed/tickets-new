@@ -29,8 +29,15 @@ class ApiController extends Controller
         $event_id = $request->get('event_id');
         $event_date = $request->get('event_date');
 
-        $products = Product::with('event')->where('name', 'like', "%{$query}%")->where('status', 1)->where('type', 'pos')->where('invite_only', 0);
-
+        $products = Product::with('event')
+        ->where('name', 'like', "%{$query}%")
+        ->where('status', 1)
+        ->whereHas('poses', function ($q) {
+            $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
+        })
+        ->where('type', 'pos')
+        ->where('invite_only', 0);
+    
         if ($event_id) {
             $products->where('event_id', $event_id);
         }
@@ -105,7 +112,9 @@ class ApiController extends Controller
         $query = $request->get('query');
         $event_id = $request->get('event_id');
 
-        $extras = Extra::with('event')->where('name', 'like', "%{$query}%");
+        $extras = Extra::with('event')->whereHas('poses', function ($q) {
+            $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
+        })->where('name', 'like', "%{$query}%");
 
         if ($event_id) {
             $extras->where('event_id', $event_id);

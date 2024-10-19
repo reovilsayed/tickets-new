@@ -340,5 +340,11 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::get('/pos/{page}', function () {
         return view('pos');
     });
+    Route::prefix('api')->group(function(){
+        Route::get('/tickets', [ApiController::class, 'index']);
+        Route::get('/events', [ApiController::class, 'events']);
+        Route::get('/extras', [ApiController::class, 'extras']);
+        Route::get('/event-extras/{event}', [ApiController::class, 'eventExtras']);
+    });
 });
 
