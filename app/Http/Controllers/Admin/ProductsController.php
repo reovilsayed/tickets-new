@@ -83,16 +83,15 @@ class ProductsController extends VoyagerBaseController
 
             // If a column has a relationship associated with it, we do not want to show that field
             $this->removeRelationshipField($dataType, 'browse');
-
             if ($search->value != '' && $search->key && $search->filter) {
                 $search_filter = ($search->filter == 'equals') ? '=' : 'LIKE';
-                $search_value = ($search->filter == 'equals') ? $search->value : '%' . $search->value . '%';
+                $search_value = ($search->filter == 'equals') ? $search->value : '%'.$search->value.'%';
 
-                $searchField = $dataType->name . '.' . $search->key;
+                $searchField = $dataType->name.'.'.$search->key;
                 if ($row = $this->findSearchableRelationshipRow($dataType->rows->where('type', 'relationship'), $search->key)) {
                     $query->whereIn(
-                        $searchField,
-                        $row->details->model::where($row->details->label, $search_filter, $search_value)->pluck('id')->toArray()
+                        $row->details->column,
+                        $row->details->model::where($row->details->label, $search_filter, $search_value)->pluck($row->details->key)->toArray()
                     );
                 } else {
                     if ($dataType->browseRows->pluck('field')->contains($search->key)) {
@@ -978,7 +977,7 @@ class ProductsController extends VoyagerBaseController
     protected function findSearchableRelationshipRow($relationshipRows, $searchKey)
     {
         return $relationshipRows->filter(function ($item) use ($searchKey) {
-            if ($item->details->column != $searchKey) {
+            if ($item->field != $searchKey) {
                 return false;
             }
             if ($item->details->type != 'belongsTo') {

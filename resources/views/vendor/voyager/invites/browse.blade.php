@@ -22,8 +22,14 @@
                 </a>
             @endif
         @endcan
+        <a href="{{ route('Invite_export') }}" class="btn btn-success btn-add-new">
+            <i class="voyager-download"></i> <span>Export</span>
+        </a>
         <a href="{{ route('massInvitePage') }}" class="btn btn-primary btn-add-new">
             <i class="voyager-list-add"></i> <span>Bulk Link</span>
+        </a>
+        <a href="{{ route('MassPersonalInvitePage') }}" class="btn btn-primary btn-add-new">
+            <i class="voyager-list-add"></i> <span>Bulk Email</span>
         </a>
 
         @can('delete', app($dataType->model_name))

@@ -28,10 +28,14 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EnterzoneContoller;
+use App\Http\Controllers\MassEmailController;
 use App\Http\Controllers\MassInviteController;
 use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\EventAnalyticsController;
+use App\Http\Controllers\ExportController;
+use App\Http\Middleware\AgeVerification;
+use App\Mail\InviteMail;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,7 +66,7 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
         $products[$date] = $invite->products->filter(fn($product) => in_array($date, $product->dates));
     }
     return view('pages.event_details', compact('event', 'products', 'is_invite', 'invite'));
-})->name('invite.product_details');
+})->name('invite.product_details')->excludedMiddleware(AgeVerification::class);
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
 
@@ -96,7 +100,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
         DB::rollBack();
         return redirect()->back()->withErrors($e->getMessage());
     }
-})->name('invite.checkout');
+})->name('invite.checkout')->excludedMiddleware(AgeVerification::class);
 Route::get('toconline/callback', [PageController::class, 'toconlineCallback']);
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
@@ -159,9 +163,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/invites/{invite}/store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('voyager.invites.store-product');
     // mass invite route
     Route::get('bulk/invites', [MassInviteController::class, 'MassInvitePage'])->name('massInvitePage');
+    Route::get('bulk/personal-invites', [MassInviteController::class, 'MassPersonalInvitePage'])->name('MassPersonalInvitePage');
     Route::get('bulk/invites/get-products/{eventId}', [MassInviteController::class, 'getProducts'])->name('ajax.getProduct');
     Route::post('bulk/invites', [MassInviteController::class, 'MassInvite'])->name('MassInvite');
-
+    Route::post('bulk/persona-invites', [MassInviteController::class, 'PersonalMassInvite'])->name('PersonalMassInvite');
+    Route::get('/export-invites', [ExportController::class, 'exportInvites'])->name('Invite_export');
 
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
     Route::get('/ticket/{ticket:ticket}/extras', [AdminCustomController::class, 'ticketAddExtras'])->name('voyager.ticket.extras');
@@ -324,18 +330,15 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
     Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
 })->middleware(['auth', 'role:staffzone']);
 
-Route::middleware(['auth', VerifyPosUser::class])->group(function () {
+Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::get('/pos', function () {
         return view('pos');
     });
+    Route::post('api/create-order', [ApiController::class, 'createOrder']);
+    Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
 
     Route::get('/pos/{page}', function () {
         return view('pos');
     });
 });
-
-Route::post('api/create-order', [ApiController::class, 'createOrder']);
-Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
-
-
-
+?>

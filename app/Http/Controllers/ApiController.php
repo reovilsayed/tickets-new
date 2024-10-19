@@ -129,11 +129,12 @@ class ApiController extends Controller
 
     public function createOrder(Request $request)
     {
+        // Collect initial order data
         $orderData = [
+            'billing' => request()->get('biling'),
             'user_id' => auth()->id() ?? null,
             'subtotal' => $request->get('subTotal'),
-            'discount' => Sohoj::round_num(Sohoj::discount()),
-            'discount_code' => Sohoj::discount_code(),
+            'discount' => $request->get('discount'),
             'total' => $request->get('total'),
             'status' => 1,
             'payment_status' => 1,
@@ -144,15 +145,41 @@ class ApiController extends Controller
 
         $order = Order::create($orderData);
 
-        $extraProducts = $request->get('extras');
-        if ($extraProducts && count($extraProducts)) {
-            $orderExtras = collect($extraProducts)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['quantity'], 'price' => $extra['price']])->toArray();
+        // Calculate total quantity of extras and tickets
+        $totalItems = 0;
+        $extraProducts = $request->get('extras') ?? [];
+        $tickets = $request->get('tickets') ?? [];
+
+        foreach ($extraProducts as $extra) {
+            $totalItems += $extra['quantity'];
+        }
+        foreach ($tickets as $ticket) {
+            $totalItems += $ticket['quantity'];
+        }
+
+        // Calculate discount per unit
+        $totalDiscount = $orderData['discount'];
+        $discountPerUnit = $totalItems > 0 ? $totalDiscount / $totalItems : 0;
+
+
+        // Adjust extra product prices
+        if (count($extraProducts)) {
+            $orderExtras = collect($extraProducts)->map(function ($extra) use ($discountPerUnit) {
+                $extra['price'] -= $discountPerUnit; // Subtract discount per unit
+                return [
+                    'id' => $extra['id'],
+                    'name' => Extra::find($extra['id'])->display_name,
+                    'qty' => $extra['quantity'],
+                    'price' => max(0, $extra['price']), // Ensure price doesn't go below zero
+                ];
+            })->toArray();
             $order['extras'] = json_encode($orderExtras);
         }
 
-        $tickets = $request->get('tickets');
-        $physicalQr = $request->get('physicalQr');
+        // Handle ticket creation and price adjustment
         $hollowTickets = [];
+        $physicalQr = $request->get('physicalQr');
+
         foreach ($tickets as $item) {
             $product = Product::findOrFail($item['id']);
             if ($product->quantity < $item['quantity']) {
@@ -173,50 +200,55 @@ class ApiController extends Controller
                     'product_id' => $product->id,
                     'order_id' => $order->id,
                     'ticket' => !$physicalQr ? uniqid() : null,
-                    'price' => $product->price,
+                    'price' =>  $product->price - $discountPerUnit, // Apply discount per unit
                     'dates' => $product->dates
                 ];
 
-                $extras = $item['extras'];
-                if ($extras && count($extras)) {
+                $extras = $item['extras'] ?? [];
+                if (count($extras)) {
                     $data['hasExtras'] = true;
                     foreach ($extras as $extra) {
                         $newQuantity = $extra['newQuantity'] ?? 0;
                         $quantity = $extra['quantity'] ?? 0;
                         $price = $extra['price'] ?? 0;
                         if ($newQuantity > $quantity) {
-                            $data['price'] = $data['price'] + (($newQuantity - $quantity) * $price);
+                            $data['price'] += (($newQuantity - $quantity) * $price);
                         }
                     }
-                    $data['extras'] = collect($extras)->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQuantity'] ?? $extra['quantity'], 'price' => $extra['price']])->toArray();
+                    $data['extras'] = collect($extras)->map(fn($extra) => [
+                        'id' => $extra['id'],
+                        'name' => Extra::find($extra['id'])->display_name,
+                        'qty' => $extra['newQuantity'] ?? $extra['quantity'],
+                        'price' => $extra['price']
+                    ])->toArray();
                 }
                 $hollowTickets[] = $order->tickets()->create($data);
             }
         }
+
+        // Handle invoice printing or emailing
         $printInvoice = $request->get('printInvoice');
         $sendInvoiceToMail = $request->get('sendInvoiceToMail');
         if ($printInvoice || $sendInvoiceToMail) {
             $order->invoice_url = 'invoice';
-            /* $toco = new TOCOnlineService;
-            $response = $toco->createCommercialSalesDocument($order);
-            $order->invoice_id = $response['id'];
-            $order->invoice_url = $response['public_link'];
-            $order->invoice_body = json_encode($response);
-            if ($sendInvoiceToMail) {
-                $response = $toco->sendEmailDocument($order, $response['id']);
-            } */
+            // Add invoice creation logic if needed
         }
         $order->save();
+
+        // Send tickets to mail if requested
         $sendTicketsToMail = $request->get('sendToMail');
         if ($sendTicketsToMail) {
             foreach ($tickets as $ticket) {
                 $product = Product::find($ticket['id']);
-                Mail::to($order['owner']['email'])->send(new TicketDownload($order, $product, null));
+                Mail::to($order['billing']->email)->send(new TicketDownload($order, $product, null));
             }
         }
+
+        // Return the order with tickets
         $order['tickets'] = $hollowTickets;
         return response()->json($order);
     }
+
 
     public function updateTicket(Request $request)
     {

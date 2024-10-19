@@ -55,7 +55,7 @@ class CouponController extends Controller
 			session()->flash('errors', collect(['Coupon has been expired']));
 			return back();
 		}
-		// if (Cart::session($event->slug)->getTotal() < $coupon->minimum_cart) {
+	// if (Cart::session($event->slug)->getTotal() < $coupon->minimum_cart) {
 		// 	session()->flash('errors', collect(['Minimum cart required to use this coupon ' . $coupon->minimum_cart]));
 		// 	return back();
 		// }

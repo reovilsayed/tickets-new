@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Facade\Sohoj;
 use App\FormFields\RelationShipDropDown;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Browsershot\Browsershot;
 use TCG\Voyager\Facades\Voyager;
+use TCG\Voyager\Http\Controllers\VoyagerBaseController;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,7 +32,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       
+
+        Paginator::useBootstrapThree();
         Schema::defaultStringLength(191);
         // Voyager::addAction(\App\Actions\ReplyAction::class);
         Voyager::addAction(\App\Actions\DuplicateAction::class);

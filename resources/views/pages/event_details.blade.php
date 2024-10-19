@@ -61,6 +61,21 @@
                                     {!! $event->description !!}
                                 </p>
                             </div>
+                         
+                        </div>
+                        <div class="accordin-item">
+                            <div>
+                                <i class="fa-solid fa-file-contract fa-2x"></i>
+                            </div>
+                            <div>
+                                <h5>
+                                    {{ __('words.terms') }}
+                                </h5>
+                                <p>
+                                    {!! $event->terms !!}
+                                </p>
+                            </div>
+                         
                         </div>
                     </div>
                 </div>
@@ -105,12 +120,10 @@
                                                 'card card-ticket'">
                                             <div class="card-body tick">
 
-                                                @if ($product->status == 2)
-                                                    <span
-                                                        class="text-danger sold-sm">{{ __('words.sold') }}</span>
+                                                @if ($product->status == 2 || $product->quantity <= 0)
+                                                    <span class="text-danger sold-sm">{{ __('words.sold') }}</span>
                                                 @elseif($product->status == 4)
-                                                    <span
-                                                        class="text-danger sold-sm">{{ __('words.soon') }}</span>
+                                                    <span class="text-danger sold-sm">{{ __('words.soon') }}</span>
                                                 @endif
 
                                                 <p class="t-date">
@@ -119,15 +132,14 @@
 
                                                 <div class="ticket-info">
                                                     <div class="t-info">
-                                                        <p class="t-title">{{ $product->name }} {{$product->status}}</p>
+                                                        <p class="t-title">{{ $product->name }} </p>
                                                         <p class="t-des">{!! $product->description !!}
+                                                       
                                                         </p>
-                                                        @if ($product->status == 2)
-                                                            <span
-                                                                class="sold d-none">{{ __('words.sold') }}</span>
+                                                        @if ($product->status == 2 || $product->quantity <= 0)
+                                                            <span class="sold d-none">{{ __('words.sold') }}</span>
                                                         @elseif($product->status == 4)
-                                                            <span
-                                                                class="sold d-none">{{ __('words.soon') }}</span>
+                                                            <span class="sold d-none">{{ __('words.soon') }}</span>
                                                         @endif
                                                     </div>
                                                     @if ($product->status == 3)
@@ -147,17 +159,19 @@
                                                             @endif
 
                                                             @php
-                                                                $limit = $product->limit_per_order > $product->quantity
+                                                                $limit =
+                                                                    $product->limit_per_order > $product->quantity
                                                                         ? $product->quantity
-                                                                        : $product->limit_per_order ;
+                                                                        : $product->limit_per_order;
 
-                                                                
                                                                 $quantity = !$is_invite
                                                                     ? $limit
-                                                                    : ($product->pivot->quantity > $product->quantity ? $product->quantity : $product->pivot->quantity) ;
+                                                                    : ($product->pivot->quantity > $product->quantity
+                                                                        ? $product->quantity
+                                                                        : $product->pivot->quantity);
                                                             @endphp
 
-                                                            @if ($product->status == 1)
+                                                            @if ($product->status == 1 && $product->quantity > 0)
                                                                 <select name="tickets[{{ $product->id }}]"
                                                                     @if ($product->sold_out) disabled @endif
                                                                     data-price="{{ $product->currentPrice() }}"

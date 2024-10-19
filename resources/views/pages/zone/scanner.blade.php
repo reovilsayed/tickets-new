@@ -5,7 +5,6 @@
         .scanner-page {
             min-height: 100vh;
             background-color: #f36a30;
-
         }
 
         .status {
@@ -34,7 +33,6 @@
         }
 
         .scanner-header h4 {
-
             margin: 0px;
         }
 
@@ -48,12 +46,10 @@
         }
 
         .scanner-header .door-name {
-            /* background-color: #fff; */
             padding: 20px 10px !important;
             text-align: center;
             font-weight: bold;
             color: #fff;
-
             font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         }
 
@@ -119,9 +115,7 @@
         }
 
         #viewfinder {
-
             display: none;
-            /* Initially hide the viewfinder */
         }
 
         .status {
@@ -129,64 +123,55 @@
         }
     </style>
 @endsection
+
 @section('js')
     <script src="{{ asset('assets/js/qr/qr-scanner.min.js') }}" type="module"></script>
     <script type="module">
         import QrScanner from "{{ asset('assets/js/qr/qr-scanner.min.js') }}";
 
         const video = document.getElementById('qr-video');
-        const camQrResult = document.getElementById('cam-qr-result');
         const qrBox = document.querySelector('.qr-box');
         const viewfinder = document.getElementById('viewfinder');
         const statusBox = document.getElementById('statusBox');
+        const manualInput = document.getElementById('manual-input');
+        const submitButton = document.getElementById('submit-manual-code');
 
         function setResult(result) {
             scanner.stop();
             statusBox.style.display = 'block';
 
             fetch("{{ route('api.scan-ticket') }}", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        ticket: result.data,
-                        zone: "{{ $zone->id }}",
-                        mode: document.getElementById('mode').value,
-                        user: "{{ auth()->id() }}",
-                        session: "{{ session()->get('enter-zone')['id'] }}",
-                        checksum: "{{ Hash::make(env('SECURITY_KEY')) }}"
-                    }),
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8"
-                    }
-                }).then((response) => response.json())
-                .then((json) => {
-
-                    if (json.status == 'success') {
-                        statusBox.innerHTML = `
-             <div class="box" id="log-success">
-                    <img src="{{ asset('assets/green-light.png') }}" alt="">
-                  <h6>
-                        ${json.data.name}
-                    </h6>
-                </div>
-            `;
-                    } else {
-                        statusBox.innerHTML = `
-             <div class="box" id="log-error">
-                    <img src="{{ asset('assets/red-light.png') }}" alt="">
-                    <h5>
-                        ${json.message}
-                    </h5>
-                    <h6>
-                        ${json.data.name}
-                    </h6>
-                </div>
-            `;
-                    }
-
-                });
+                method: "POST",
+                body: JSON.stringify({
+                    ticket: result.data,
+                    zone: "{{ $zone->id }}",
+                    mode: document.getElementById('mode').value,
+                    user: "{{ auth()->id() }}",
+                    session: "{{ session()->get('enter-zone')['id'] }}",
+                    checksum: "{{ Hash::make(env('SECURITY_KEY')) }}"
+                }),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            }).then((response) => response.json())
+            .then((json) => {
+                if (json.status == 'success') {
+                    statusBox.innerHTML = `
+                        <div class="box" id="log-success">
+                            <img src="{{ asset('assets/green-light.png') }}" alt="">
+                            <h6>${json.data.name}</h6>
+                        </div>`;
+                } else {
+                    statusBox.innerHTML = `
+                        <div class="box" id="log-error">
+                            <img src="{{ asset('assets/red-light.png') }}" alt="">
+                            <h5>${json.message}</h5>
+                            <h6>${json.data.name}</h6>
+                        </div>`;
+                }
+            });
             qrBox.style.display = 'flex';
             viewfinder.style.display = 'none';
-
         }
 
         const scanner = new QrScanner(video, result => setResult(result), {
@@ -200,9 +185,14 @@
             statusBox.style.display = 'none';
             scanner._updateOverlay()
             scanner.start();
+        });
 
-        })
-
+        submitButton.addEventListener('click', () => {
+            const manualCode = manualInput.value.trim();
+            if (manualCode) {
+                setResult({data: manualCode});
+            }
+        });
 
         window.addEventListener('unload', () => {
             scanner.stop();
@@ -212,40 +202,24 @@
 
 @section('content')
     <section class="scanner-page">
-        <br>
-        <br>
-        <br>
+        <br><br><br>
         <div class="scanner-header">
-            <h4 class="event-name">
-                {{ $event->name }}
-            </h4>
-            <h4 class="door-name">
-                {{ $zone->name }}
-            </h4>
-            <a href="{{ route('zone.enter') }}" class="add-new-session">
-                Add new session
-            </a>
+            <h4 class="event-name">{{ $event->name }}</h4>
+            <h4 class="door-name">{{ $zone->name }}</h4>
+            <a href="{{ route('zone.enter') }}" class="add-new-session">Add new session</a>
             <div class="form-group">
                 <select class="form-control text-center w-50 mx-auto" name="mode" id="mode">
-                    <option value="1">
-                        {{ __('words.check_in_mode') }}
-                    </option>
-                    <option value="2">
-                        {{ __('words.check_out_mode') }}
-                    </option>
+                    <option value="1">{{ __('words.check_in_mode') }}</option>
+                    <option value="2">{{ __('words.check_out_mode') }}</option>
                 </select>
             </div>
-            <div id="statusBox" style="display: none;" class="status">
-
-
-            </div>
+            <div id="statusBox" style="display: none;" class="status"></div>
         </div>
+
         <div class="scanner-inner">
             <div class="qr-box" id="qrbox">
                 <img class="qr-image" src="{{ asset('assets/qr-code.png') }}" alt="">
-                <h3>
-                    Tap to read code
-                </h3>
+                <h3>Tap to read code</h3>
             </div>
 
             <div id="viewfinder" class="qr-box">
@@ -253,6 +227,22 @@
                     <video id="qr-video"></video>
                 </div>
             </div>
+
+            <!-- Add manual code input -->
+           <div class="card">
+            <div class="card-body">
+                <p>{{__('words.enter_manually')}}</p>
+                <div class="manual-entry d-flex align-items-center">
+                    <div>
+                        <input type="text" id="manual-input" class="border border-dark rounded p-1 m-0" placeholder="Enter code manually">
+                    </div>
+                    <div>
+                        <button id="submit-manual-code" class="btn btn-primary btn-sm m-0"><i class="fa fa-keyboard"></i> </button>
+                    </div>
+                </div>
+            </div>
+           </div>
+           
         </div>
     </section>
 @endsection
