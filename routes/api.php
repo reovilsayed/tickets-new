@@ -26,7 +26,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/scan-ticket', function (Request $request) {
     try {
-        $ticket = Ticket::where('ticket', $request->ticket)->first();
+  
+        $ticket = Ticket::where('ticket',$request->ticket)->first();
+    
         $zone = Zone::find($request->zone);
 
         if (in_array(now()->format('Y-m-d'), $ticket->product->dates) == false) throw new Exception(__('words.to_early_to_scan'));

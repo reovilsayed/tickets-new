@@ -21,4 +21,9 @@ class Extra extends Model
             get: fn($value) => json_decode($value,true) ?? [],
         );
     }
+
+    public function poses()
+    {
+        return $this->belongsToMany(Pos::class, 'extra_pos', 'extra_id', 'pos_id');
+    }
 }

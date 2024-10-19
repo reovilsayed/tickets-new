@@ -36,6 +36,10 @@ class Product extends Model
         );
     }
 
+    public function poses()
+    {
+        return $this->belongsToMany(Pos::class, 'product_pos', 'product_id', 'pos_id');
+    }
     public function extras(): Attribute
     {
         return Attribute::make(

@@ -34,6 +34,7 @@ use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\EventAnalyticsController;
 use App\Http\Controllers\ExportController;
+use App\Http\Middleware\AgeVerification;
 use App\Mail\InviteMail;
 
 /*
@@ -65,7 +66,7 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
         $products[$date] = $invite->products->filter(fn($product) => in_array($date, $product->dates));
     }
     return view('pages.event_details', compact('event', 'products', 'is_invite', 'invite'));
-})->name('invite.product_details');
+})->name('invite.product_details')->excludedMiddleware(AgeVerification::class);
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
 
@@ -99,7 +100,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
         DB::rollBack();
         return redirect()->back()->withErrors($e->getMessage());
     }
-})->name('invite.checkout');
+})->name('invite.checkout')->excludedMiddleware(AgeVerification::class);
 Route::get('toconline/callback', [PageController::class, 'toconlineCallback']);
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
@@ -341,8 +342,3 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     });
 });
 
-Route::get('/test',function(){
-
-    $order = Order::find(431);
-    $toc =  (new TOCOnlineService)->createCommercialSalesDocument($order);
-});
