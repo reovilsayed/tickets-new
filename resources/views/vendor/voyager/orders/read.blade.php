@@ -190,7 +190,7 @@
                                     Name
                                 </span>
                                 <p class="h4">
-                                    {{ $dataTypeContent->user ?  $dataTypeContent->user->name . ' ' . $dataTypeContent->user->l_name : $dataTypeContent->billing->name }}
+                                    {{ $dataTypeContent->user ? $dataTypeContent->user->name . ' ' . $dataTypeContent->user->l_name : $dataTypeContent->billing->name }}
                                 </p>
                             </div>
                             <div>
@@ -198,7 +198,7 @@
                                     Email
                                 </span>
                                 <p class="h4">
-                                    {{ $dataTypeContent->user ?  $dataTypeContent->user->email ?? 'N/A' : $dataTypeContent->billing->email }}
+                                    {{ $dataTypeContent->user ? $dataTypeContent->user->email ?? 'N/A' : $dataTypeContent->billing->email }}
                                 </p>
                             </div>
                             <div>
@@ -240,7 +240,7 @@
                             $model = App\Models\Product::find($id);
                         @endphp
                         <h4 style="color:#000;font-weight:700;">
-                           Ticket : {{ $model->name }}
+                            Ticket : {{ $model->name }}
                         </h4>
                         <small class="pill pill-success">
                             Event : {{ $model->event->name }}
@@ -275,10 +275,11 @@
                                             {{ $ticket->ticket }}
                                         </td>
                                         <td>
-                                          
-                                    <span class="pill pill-{{ $dataTypeContent->payment_status ? 'success' : 'danger' }}">
-                                        {{ $dataTypeContent->payment_status ? 'Paid' : 'Not Paid' }}
-                                    </span>
+
+                                            <span
+                                                class="pill pill-{{ $dataTypeContent->payment_status ? 'success' : 'danger' }}">
+                                                {{ $dataTypeContent->payment_status ? 'Paid' : 'Not Paid' }}
+                                            </span>
                                         </td>
                                         <td>
                                             {{ $dataTypeContent->payment_method_title }}
@@ -290,6 +291,33 @@
                                         </td>
                                         <td>
                                             {{ Sohoj::price($ticket->price) }}
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+                                @foreach ($dataTypeContent->getExtras() as $extra)
+                                    <tr>
+
+                                        <td>
+                                            {{ $extra->display_name }} * {{ $extra->purchase_quantity }}
+                                        </td>
+                                        <td>
+
+                                            <span
+                                                class="pill pill-{{ $dataTypeContent->payment_status ? 'success' : 'danger' }}">
+                                                {{ $dataTypeContent->payment_status ? 'Paid' : 'Not Paid' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{ $dataTypeContent->payment_method_title }}
+
+                                        </td>
+                                        <td>
+                                            N/A
+
+                                        </td>
+                                        <td>
+                                            {{ Sohoj::price($extra->purchase_price) }}
                                         </td>
 
                                     </tr>

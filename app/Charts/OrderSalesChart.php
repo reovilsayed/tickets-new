@@ -20,14 +20,14 @@ class OrderSalesChart
 
         $allTickets = $event->tickets
             ->groupBy(fn($ticket) => $ticket->created_at->format('d M'))
-            ->map(fn($tickets) => $tickets->sum('price'))->toArray();
+            ->map(fn($tickets) => number_format($tickets->sum('price')/100,2))->toArray();
         $digitalTickets = $event->digitalTickets
             ->groupBy(fn($ticket) => $ticket->created_at->format('d M'))
-            ->map(fn($tickets) => $tickets->sum('price'))->toArray();
+            ->map(fn($tickets) => number_format($tickets->sum('price')/100,2))->toArray();
 
         $physicalTickets = $event->physicalTickets
             ->groupBy(fn($ticket) => $ticket->created_at->format('d M'))
-            ->map(fn($tickets) => $tickets->sum('price'))->toArray();
+            ->map(fn($tickets) => number_format($tickets->sum('price')/100,2))->toArray();
 
         $data = [];
         foreach ($allTickets as $date => $ticket) {
