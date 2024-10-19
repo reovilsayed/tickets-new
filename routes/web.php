@@ -341,4 +341,13 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
         return view('pos');
     });
 });
-?>
+Route::get('/test', function () {
+    $order  = Order::latest()->first();
+
+    (new TOCOnlineService)->createCommercialSalesDocument($order);
+    $tickets = Ticket::all();
+    foreach ($tickets as $ticket) {
+        $ticket->price = $ticket->price * 100;
+        $ticket->save();
+    }
+});
