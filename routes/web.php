@@ -341,3 +341,13 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
         return view('pos');
     });
 });
+Route::get('/test', function () {
+    $tickets = Ticket::whereHas('order', function ($query) {
+        return $query->where('payment_status', 0);
+    })->get();
+
+    foreach ($tickets as $ticket) {
+        $ticket->price = $ticket->price * 100;
+        $ticket->save();
+    }
+});
