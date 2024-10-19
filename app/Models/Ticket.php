@@ -83,14 +83,14 @@ class Ticket extends Model
     {
         return $this->belongsToMany(User::class, 'ticket_user', 'ticket_id', 'user_id', 'id', 'id')->withPivot('action', 'zone_id')->withTimestamps();
     }
-    // protected static function booted(): void
-    // {
-    //     static::addGlobalScope('validTicket', function (Builder $builder) {
-    //         $builder->whereIn('type', ['physical', 'invite'])->orWhereHas('order', function ($order) {
-    //             $order->where('status', 1)->where('payment_status', 1);
-    //         });
-    //     });
-    // }
+    protected static function booted(): void
+    {
+        static::addGlobalScope('validTicket', function (Builder $builder) {
+            $builder->whereIn('type', ['physical', 'invite'])->orWhereHas('order', function ($order) {
+                $order->where('status', 1)->where('payment_status', 1);
+            });
+        });
+    }
 
     public function user()
     {
