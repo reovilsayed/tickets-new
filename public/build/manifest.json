@@ -3,48 +3,48 @@
     "file": "assets/Essência-logo-af647146.css",
     "src": "Essência-logo.css"
   },
-  "_Essência-logo-fbb5f6d9.js": {
+  "_Essência-logo-112c8333.js": {
     "assets": [
       "assets/Essência-logo-9fa5e606.png"
     ],
     "css": [
       "assets/Essência-logo-af647146.css"
     ],
-    "file": "assets/Essência-logo-fbb5f6d9.js",
+    "file": "assets/Essência-logo-112c8333.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_index-798e80ce.js": {
-    "file": "assets/index-798e80ce.js",
+  "_index-3e87c52a.js": {
+    "file": "assets/index-3e87c52a.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_qr-scanner.min-a8df683f.js": {
+  "_qr-scanner.min-ef5300fe.js": {
     "css": [
       "assets/qr-scanner-52832cfc.css"
     ],
     "dynamicImports": [
       "node_modules/qr-scanner/qr-scanner-worker.min.js"
     ],
-    "file": "assets/qr-scanner.min-a8df683f.js",
+    "file": "assets/qr-scanner.min-ef5300fe.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_useFetch-e14b6291.js": {
-    "file": "assets/useFetch-e14b6291.js",
+  "_useFetch-4eb9462d.js": {
+    "file": "assets/useFetch-4eb9462d.js",
     "imports": [
       "resources/js/app.js",
-      "_index-798e80ce.js"
+      "_index-3e87c52a.js"
     ]
   },
-  "_useInfiniteFetch-9a2616bd.js": {
-    "file": "assets/useInfiniteFetch-9a2616bd.js",
+  "_useInfiniteFetch-d1245305.js": {
+    "file": "assets/useInfiniteFetch-d1245305.js",
     "imports": [
       "resources/js/app.js",
-      "_index-798e80ce.js"
+      "_index-3e87c52a.js"
     ]
   },
   "_utils-8b9f25e8.js": {
@@ -82,12 +82,12 @@
       "resources/js/src/components/layouts/DashboardLayout.jsx",
       "resources/js/src/pages/PhysicalQr/PhysicalQr.jsx"
     ],
-    "file": "assets/app-6efd6b9b.js",
+    "file": "assets/app-7fbde288.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   },
   "resources/js/src/App.jsx": {
-    "file": "assets/App-210c5ca1.js",
+    "file": "assets/App-b65b27b6.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -102,22 +102,22 @@
     "css": [
       "assets/DashboardLayout-5ca92c5b.css"
     ],
-    "file": "assets/DashboardLayout-67260c04.js",
+    "file": "assets/DashboardLayout-861994f6.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-fbb5f6d9.js",
+      "_Essência-logo-112c8333.js",
       "_utils-8b9f25e8.js",
-      "_useFetch-e14b6291.js",
-      "_index-798e80ce.js"
+      "_useFetch-4eb9462d.js",
+      "_index-3e87c52a.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/DashboardLayout.jsx"
   },
   "resources/js/src/components/layouts/MainLayout.jsx": {
-    "file": "assets/MainLayout-79ef4262.js",
+    "file": "assets/MainLayout-eb494096.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-fbb5f6d9.js"
+      "_Essência-logo-112c8333.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/MainLayout.jsx"
@@ -130,32 +130,32 @@
     "css": [
       "assets/Extras-1d7c3547.css"
     ],
-    "file": "assets/Extras-b44fe510.js",
+    "file": "assets/Extras-1aa48058.js",
     "imports": [
       "resources/js/app.js",
-      "_useInfiniteFetch-9a2616bd.js",
+      "_useInfiniteFetch-d1245305.js",
       "_utils-8b9f25e8.js",
-      "_index-798e80ce.js"
+      "_index-3e87c52a.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Extras/Extras.jsx"
   },
   "resources/js/src/pages/PhysicalQr/PhysicalQr.jsx": {
-    "file": "assets/PhysicalQr-aaf1b7e4.js",
+    "file": "assets/PhysicalQr-537b7f54.js",
     "imports": [
       "resources/js/app.js",
-      "_qr-scanner.min-a8df683f.js"
+      "_qr-scanner.min-ef5300fe.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/PhysicalQr/PhysicalQr.jsx"
   },
   "resources/js/src/pages/Scanner/Scanner.jsx": {
-    "file": "assets/Scanner-dcf62cf0.js",
+    "file": "assets/Scanner-0fb15e13.js",
     "imports": [
       "resources/js/app.js",
-      "_qr-scanner.min-a8df683f.js",
-      "_useFetch-e14b6291.js",
-      "_index-798e80ce.js"
+      "_qr-scanner.min-ef5300fe.js",
+      "_useFetch-4eb9462d.js",
+      "_index-3e87c52a.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Scanner/Scanner.jsx"
@@ -168,12 +168,12 @@
     "css": [
       "assets/Tickets-7b93a0fe.css"
     ],
-    "file": "assets/Tickets-2a03dfcf.js",
+    "file": "assets/Tickets-8c8c1f2c.js",
     "imports": [
       "resources/js/app.js",
-      "_useInfiniteFetch-9a2616bd.js",
+      "_useInfiniteFetch-d1245305.js",
       "_utils-8b9f25e8.js",
-      "_index-798e80ce.js"
+      "_index-3e87c52a.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Tickets/Tickets.jsx"
