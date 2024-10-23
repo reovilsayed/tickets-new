@@ -118,7 +118,7 @@
         .logo {
             height: 30px;
             width: 60px;
-            margin-bottom: 30px;    
+            margin-bottom: 30px;
         }
 
         .event-qr-code img {
@@ -154,6 +154,14 @@
             .container {
                 height: 100vh;
             }
+        }
+
+        .pagebreak {
+            page-break-after: always;
+        }
+        .avoidpagebreak{
+            
+            page-break-after: avoid;
         }
     </style>
 </head>
@@ -202,6 +210,12 @@
                 <p class="address">{{ $ticket->event->location }}</p>
             </div>
         </div>
+        @if ($loop->last == false)
+            <div class="pagebreak"></div>
+            @else
+            <div class="avoidpagebreak"></div>
+
+        @endif
     @endforeach
 </body>
 

@@ -35,8 +35,8 @@ use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\EventAnalyticsController;
 use App\Http\Controllers\ExportController;
 use App\Http\Middleware\AgeVerification;
-use App\Mail\InviteMail;
 
+use Vemcogroup\SmsApi\SmsApi;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -340,11 +340,17 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::get('/pos/{page}', function () {
         return view('pos');
     });
-    Route::prefix('api')->group(function(){
+    Route::prefix('api')->group(function () {
         Route::get('/tickets', [ApiController::class, 'index']);
         Route::get('/events', [ApiController::class, 'events']);
         Route::get('/extras', [ApiController::class, 'extras']);
         Route::get('/event-extras/{event}', [ApiController::class, 'eventExtras']);
     });
 });
+
+
+Route::get('/my-wallet/{order:security_key}', function (Order $order) {
+
+    return view('pages.digitalWallet', compact('order'));
+})->name('digital-wallet');
 
