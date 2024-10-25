@@ -139,6 +139,8 @@
         const qrBox = document.querySelector('.qr-box');
         const viewfinder = document.getElementById('viewfinder');
         const result = document.getElementById('result');
+        const manualInput = document.getElementById('manual-input');
+        const submitButton = document.getElementById('submit-manual-code');
 
         function setResult(result) {
             scanner.stop();
@@ -189,10 +191,10 @@
                              <table class="table text-light">
                                 <thead>
                                     <tr class="text-center ">
-                                        <th>{{__('words.extra_product_name')}}</th>
-                                        <th>{{__('words.extra_product_quantity')}}</th>
-                                        <th>{{__('words.extra_product_taken')}}</th>
-                                        <th>{{__('words.extra_product_withdraw')}}</th>
+                                        <th>{{ __('words.extra_product_name') }}</th>
+                                        <th>{{ __('words.extra_product_quantity') }}</th>
+                                        <th>{{ __('words.extra_product_taken') }}</th>
+                                        <th>{{ __('words.extra_product_withdraw') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-center">
@@ -201,7 +203,7 @@
                                 <tfoot class="bg-light">
                                      
                                     <td colspan="4">
-                                            <button type="submit" class="btn btn-outline-dark border border-dark" style="float:right">{{__('words.give')}}</button>
+                                            <button type="submit" class="btn btn-outline-dark border border-dark" style="float:right">{{ __('words.give') }}</button>
                                     </td>    
                                     </tfoot>
                             </table>
@@ -215,7 +217,7 @@
 
                 });
             qrBox.style.display = 'flex';
-          
+
             viewfinder.style.display = 'none';
 
         }
@@ -223,6 +225,15 @@
         const scanner = new QrScanner(video, result => setResult(result), {
             highlightScanRegion: true,
             highlightCodeOutline: true,
+        });
+
+        submitButton.addEventListener('click', () => {
+            const manualCode = manualInput.value.trim();
+            if (manualCode) {
+                setResult({
+                    data: manualCode
+                });
+            }
         });
 
         document.getElementById('qrbox').addEventListener('click', function() {
@@ -273,6 +284,21 @@
             <div id="viewfinder" class="qr-box">
                 <div id="video-container">
                     <video id="qr-video"></video>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p>{{ __('words.enter_manually') }}</p>
+                    <div class="manual-entry d-flex align-items-center">
+                        <div>
+                            <input type="text" id="manual-input" class="border border-dark rounded p-1 m-0"
+                                placeholder="Enter code manually">
+                        </div>
+                        <div>
+                            <button id="submit-manual-code" class="btn btn-primary btn-sm m-0"><i
+                                    class="fa fa-keyboard"></i> </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

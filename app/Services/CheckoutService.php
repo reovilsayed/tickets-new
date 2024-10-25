@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Coupon;
 use App\Models\Event;
 use App\Models\Extra;
 use App\Models\Order;
@@ -58,6 +59,7 @@ class CheckoutService
                         'quantity' =>  $item->pivot->quantity - $quantity,
                         'used' => $item->pivot->used + $quantity
                     ];
+
                     $this->invite->products()->updateExistingPivot($id, $data);
                 } else {
                     $item = Product::find($id);
@@ -84,9 +86,26 @@ class CheckoutService
                 }
             }
         } else {
-            foreach ($this->cart as $item) {
+            $coupon = Coupon::where(
+                'code',
+                session()->get('discount_code'),
+            )->first();
+            if ($coupon) {
+                $discountedProduct = $this->cart->filter(
+                    fn($item) => $coupon->getProducts()->contains($item->id),
+                );
+                $discountPerUnit = number_format(
+                    session()->get('discount') / $discountedProduct->sum('quantity'),
+                    4,
+                );
+            } else {
+                $discountedProduct = collect([]);
+                $discountPerUnit = 0;
+            }
+
+            foreach ($this->cart as $key => $item) {
                 if ($item->model->quantity < $item->quantity) throw new Exception($item->model->name . ' is not available for this quantity');
-                
+
                 for ($i = 1; $i <= $item->quantity; $i++) {
                     $data = [
                         'user_id' => $this->user ? $this->user->id : auth()->id() ?? null,
@@ -95,7 +114,7 @@ class CheckoutService
                         'product_id' => $item->id,
                         'order_id' => $order->id,
                         'ticket' => uniqid(),
-                        'price' => $item->price,
+                        'price' => isset($discountedProduct[$key]) ? $item->price - $discountPerUnit : $item->price,
                         'dates' => $item->model->dates
                     ];
 

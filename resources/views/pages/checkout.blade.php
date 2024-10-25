@@ -131,7 +131,7 @@
                                         </div>
 
                                         <form class="coupon-form" name="ec-cart-coupan-form" method="POST"
-                                            action="{{ route('coupon',['event'=>$event->slug]) }}">
+                                            action="{{ route('coupon', ['event' => $event->slug]) }}">
                                             @csrf
                                             <div class="">
                                                 <input type="text" required
@@ -155,8 +155,32 @@
                                             <th>
                                                 {{ __('words.price') }}
                                             </th>
+                                            <th>
+                                                {{ __('words.total') }}
+                                            </th>
                                         </tr>
-                                        @foreach (Cart::session($event->slug)->getContent() as $cart)
+                                        @php
+                                            $coupon = App\Models\Coupon::where(
+                                                'code',
+                                                session()->get('discount_code'),
+                                            )->first();
+                                            $items = Cart::session($event->slug)->getContent();
+                                            if ($coupon) {
+                                                $discountedProduct = $items->filter(
+                                                    fn($item) => $coupon->getProducts()->contains($item->id),
+                                                );
+                                                $discountPerUnit = number_format(
+                                                    session()->get('discount') / $discountedProduct->sum('quantity'),
+                                                    4,
+                                                );
+                                            } else {
+                                                $discountedProduct = collect([]);
+                                                $discountPerUnit = 0;
+                                            }
+
+                                        @endphp
+
+                                        @foreach ($items as $key => $cart)
                                             <tr>
                                                 <th>
                                                     {{ $cart->name }}
@@ -165,7 +189,12 @@
                                                     X {{ $cart->quantity }}
                                                 </td>
                                                 <td>
-                                                    {{ Sohoj::price($cart->price) }}
+                                                    {{ Sohoj::price($cart->price) }} 
+                                                </td>
+                                                <td>
+                                                    {{ Sohoj::price($cart->quantity * $cart->price) }} @if (isset($discountedProduct[$key]))
+                                                        <small class="text-danger"> - {{ Sohoj::price($discountPerUnit * $cart->quantity) }}</small>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -197,7 +226,9 @@
 
                                                 </th>
                                                 <th>
-                                                    <span class="h6 uppercase"> {{ __('words.discount') }}:</span> <a class="text-danger" href="{{route('coupon.destroy')}}"> {{ __('words.remove_coupon') }}</a>
+                                                    <span class="h6 uppercase"> {{ __('words.discount') }}:</span> <a
+                                                        class="text-danger" href="{{ route('coupon.destroy') }}">
+                                                        {{ __('words.remove_coupon') }}</a>
                                                 </th>
                                                 <th>
                                                     <span class="h6">

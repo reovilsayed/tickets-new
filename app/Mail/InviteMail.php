@@ -29,7 +29,7 @@ class InviteMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "__('words.invite_email_subject')",
+            subject: __('words.invite_email_subject'),
         );
     }
 

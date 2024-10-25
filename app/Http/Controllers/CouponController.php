@@ -17,7 +17,7 @@ class CouponController extends Controller
 
 		$coupon = Coupon::where('code', $request->coupon_code)->first();
 
-		if(!$coupon) return redirect()->back()->withErrors(['Invalid coupon']);
+		if (!$coupon) return redirect()->back()->withErrors(['Invalid coupon']);
 		$discount = $coupon->discount;
 		if (!$coupon) {
 			session()->flash('errors', collect(['Incorrect coupon code']));
@@ -31,12 +31,12 @@ class CouponController extends Controller
 
 		// Example: Check if any product in the cart matches the coupon's associated products
 		$products = $coupon->products;
-		
+
 		$cartItems = Cart::session($event->slug)->getContent();
 		$productMatch = false;
 
 		foreach ($cartItems as $item) {
-			
+
 			if ($products->contains('id', $item->id)) {
 				$productMatch = true;
 				break;
@@ -59,8 +59,13 @@ class CouponController extends Controller
 		// 	session()->flash('errors', collect(['Minimum cart required to use this coupon ' . $coupon->minimum_cart]));
 		// 	return back();
 		// }
-		if($coupon->type == 'percentage') {
-			$total = Cart::session($event->slug)->getTotal();
+		if ($coupon->type == 'percentage') {
+			$total = Cart::session($event->slug)->getContent()->filter(
+				function ($item) use ($coupon) {
+					return $coupon->getProducts()->contains($item->id);
+				}
+			)->map(fn($cart) => $cart->quantity * $cart->price)->sum();
+
 			$discount = ($coupon->discount / 100) * $total;
 		}
 

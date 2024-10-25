@@ -34,8 +34,9 @@ use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\EventAnalyticsController;
 use App\Http\Controllers\ExportController;
-use App\Mail\InviteMail;
+use App\Http\Middleware\AgeVerification;
 
+use Vemcogroup\SmsApi\SmsApi;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -65,7 +66,7 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
         $products[$date] = $invite->products->filter(fn($product) => in_array($date, $product->dates));
     }
     return view('pages.event_details', compact('event', 'products', 'is_invite', 'invite'));
-})->name('invite.product_details');
+})->name('invite.product_details')->excludedMiddleware(AgeVerification::class);
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
 
@@ -99,7 +100,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
         DB::rollBack();
         return redirect()->back()->withErrors($e->getMessage());
     }
-})->name('invite.checkout');
+})->name('invite.checkout')->excludedMiddleware(AgeVerification::class);
 Route::get('toconline/callback', [PageController::class, 'toconlineCallback']);
 
 Route::get('/about', [PageController::class, 'about'])->name('about');
@@ -164,8 +165,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('bulk/invites', [MassInviteController::class, 'MassInvitePage'])->name('massInvitePage');
     Route::get('bulk/personal-invites', [MassInviteController::class, 'MassPersonalInvitePage'])->name('MassPersonalInvitePage');
     Route::get('bulk/invites/get-products/{eventId}', [MassInviteController::class, 'getProducts'])->name('ajax.getProduct');
-    Route::post('bulk/invites',[MassInviteController::class,'MassInvite'])->name('MassInvite');
-    Route::post('bulk/persona-invites',[MassInviteController::class,'PersonalMassInvite'])->name('PersonalMassInvite');
+    Route::post('bulk/invites', [MassInviteController::class, 'MassInvite'])->name('MassInvite');
+    Route::post('bulk/persona-invites', [MassInviteController::class, 'PersonalMassInvite'])->name('PersonalMassInvite');
     Route::get('/export-invites', [ExportController::class, 'exportInvites'])->name('Invite_export');
 
     Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
@@ -329,17 +330,27 @@ Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['
     Route::get('/scanner', [EnterzoneContoller::class, 'scannerExtra'])->name('scanner');
 })->middleware(['auth', 'role:staffzone']);
 
-Route::middleware(['auth', VerifyPosUser::class])->group(function () {
+Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::get('/pos', function () {
         return view('pos');
     });
+    Route::post('api/create-order', [ApiController::class, 'createOrder']);
+    Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
 
     Route::get('/pos/{page}', function () {
         return view('pos');
     });
+    Route::prefix('api')->group(function () {
+        Route::get('/tickets', [ApiController::class, 'index']);
+        Route::get('/events', [ApiController::class, 'events']);
+        Route::get('/extras', [ApiController::class, 'extras']);
+        Route::get('/event-extras/{event}', [ApiController::class, 'eventExtras']);
+    });
 });
 
-Route::post('api/create-order', [ApiController::class, 'createOrder']);
-Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
 
+Route::get('/my-wallet/{order:security_key}', function (Order $order) {
+
+    return view('pages.digitalWallet', compact('order'));
+})->name('digital-wallet');
 

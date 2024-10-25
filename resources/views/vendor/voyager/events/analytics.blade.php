@@ -32,12 +32,12 @@
             font-weight: bold;
             color: #000;
         }
-        h1{
+
+        h1 {
             font-size: 40px;
             font-weight: bold;
-            color: #000; 
+            color: #000;
         }
-      
     </style>
 @endsection
 
@@ -46,9 +46,9 @@
         <h1>
             {{ $event->name }} - Analytics
         </h1>
-        
+
         <hr>
-            @include('vendor.voyager.events.partial.buttons')
+        @include('vendor.voyager.events.partial.buttons')
         <hr>
         <div class="container">
             <div class="row">
@@ -76,7 +76,7 @@
                         'value' => $event->tickets->count(),
                     ])
                 </div>
-              
+
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Tickets',
@@ -94,21 +94,21 @@
                         'label' => 'Customer',
                         'value' => $event->tickets()->distinct('user_id')->pluck('user_id')->count(),
                     ])
-    
+
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Product',
                         'value' => $event->extras->count(),
                     ])
-    
+
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Sales',
-                        'value' => Sohoj::price($event->tickets()->sum('price')),
+                        'value' => Sohoj::price($event->tickets()->sum('price') / 100),
                     ])
-    
+
                 </div>
             </div>
         </div>

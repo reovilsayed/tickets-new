@@ -71,6 +71,14 @@ class Ticket extends Model
         );
     }
 
+    public function price(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => $value * 100,
+            get: fn($value) => $value / 100
+        );
+    }
+
     public function scanedBy()
     {
         return $this->belongsToMany(User::class, 'ticket_user', 'ticket_id', 'user_id', 'id', 'id')->withPivot('action', 'zone_id')->withTimestamps();

@@ -10,6 +10,7 @@ class PdfDownloadController extends Controller
 {
     public function download(Request $request, Order $order)
     {
+        
         $tickets = $order->tickets;
 
         if ($request->filled('p')) {

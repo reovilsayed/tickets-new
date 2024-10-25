@@ -26,7 +26,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/scan-ticket', function (Request $request) {
     try {
-        $ticket = Ticket::where('ticket', $request->ticket)->first();
+  
+        $ticket = Ticket::where('ticket',$request->ticket)->first();
+    
         $zone = Zone::find($request->zone);
 
         if (in_array(now()->format('Y-m-d'), $ticket->product->dates) == false) throw new Exception(__('words.to_early_to_scan'));
@@ -153,11 +155,8 @@ Route::post('/extras-scan-ticker', function (Request $request) {
 })->name('api.extras-scan-ticket');
 
 
-Route::get('/tickets', [ApiController::class, 'index']);
+
 Route::post('/tickets/get', [ApiController::class, 'getTicket']);
 Route::post('/tickets/update-code', [ApiController::class, 'updateTicketCode']);
 Route::post('/tickets/activate', [ApiController::class, 'activateTicket']);
-Route::get('/events', [ApiController::class, 'events']);
 Route::post('/ticket-extras', [ApiController::class, 'ticketExtras']);
-Route::get('/extras', [ApiController::class, 'extras']);
-Route::get('/event-extras/{event}', [ApiController::class, 'eventExtras']);

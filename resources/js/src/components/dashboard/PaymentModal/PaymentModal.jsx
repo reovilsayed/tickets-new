@@ -24,6 +24,7 @@ const PaymentModal = ({ open }) => {
     };
 
     const [sendToMail, setSendToMail] = useState(true);
+    const [sendToPhone, setSendToPhone] = useState(false);
     const [physicalQr, setPhysicalQr] = useState(false);
     const [sendInvoiceToMail, setSendInvoiceToMail] = useState(false);
     const [printInvoice, setPrintInvoice] = useState(false);
@@ -64,6 +65,7 @@ const PaymentModal = ({ open }) => {
             subTotal: cartTotal,
             total: cartTotal,
             sendToMail,
+            sendToPhone,
             physicalQr,
             printInvoice,
             sendInvoiceToMail,
@@ -82,6 +84,7 @@ const PaymentModal = ({ open }) => {
             setFormData({
                 name: "",
                 email: "",
+                phone: "",
                 vatNumber: "",
                 discount: 0.0,
                 paymentMethod: "Cash",
@@ -99,6 +102,7 @@ const PaymentModal = ({ open }) => {
                 setPhysicalQr(false);
             }
             setSendToMail(true);
+            setSendToPhone(false);
             setSendInvoiceToMail(false);
             emptyCart("");
             handleClose();
@@ -109,6 +113,15 @@ const PaymentModal = ({ open }) => {
     const handleSendToMail = () => {
         setSendToMail((prev) => {
             if (prev) return false;
+            setSendToPhone(false);
+            setPhysicalQr(false);
+            return true;
+        });
+    };
+    const handleSendToPhone = () => {
+        setSendToPhone((prev) => {
+            if (prev) return false;
+            setSendToMail(false);
             setPhysicalQr(false);
             return true;
         });
@@ -144,9 +157,8 @@ const PaymentModal = ({ open }) => {
                 <div className="payment-modal-backdrop payment-modal-fade-in"></div>
             )}
             <div
-                className={`modal payment-modal ${
-                    open ? "payment-modal-fade-in" : "payment-modal-fade-out"
-                }`}
+                className={`modal payment-modal ${open ? "payment-modal-fade-in" : "payment-modal-fade-out"
+                    }`}
                 id="paymentModal"
                 tabIndex="-1"
                 aria-labelledby="paymentModalLabel"
@@ -195,8 +207,8 @@ const PaymentModal = ({ open }) => {
                                     <label htmlFor="emailInput">
                                         Email{" "}
                                         {formData["vatNumber"] ||
-                                        sendToMail ||
-                                        sendInvoiceToMail
+                                            sendToMail ||
+                                            sendInvoiceToMail
                                             ? ""
                                             : "(optional)"}
                                     </label>
@@ -209,6 +221,19 @@ const PaymentModal = ({ open }) => {
                                         placeholder="Enter email"
                                     />
                                 </div>
+                                {sendToPhone ? <div className="form-group mb-2">
+                                    <label htmlFor="emailInput">
+                                        Phone
+                                    </label>
+                                    <input
+                                        id="emailInput"
+                                        className="form-control"
+                                        name="phone"
+                                        value={formData["phone"]}
+                                        onChange={handleFormData}
+                                        placeholder="Enter phone"
+                                    />
+                                </div> : ''}
                                 <div className="form-group mb-2">
                                     <label htmlFor="vatInput">
                                         VAT Number (optional)
@@ -273,6 +298,7 @@ const PaymentModal = ({ open }) => {
                                         >
                                             Ticket
                                         </label>
+
                                         <div class="form-check">
                                             <input
                                                 class="form-check-input"
@@ -287,6 +313,22 @@ const PaymentModal = ({ open }) => {
                                                 htmlFor="sendToMailCheck"
                                             >
                                                 Send to mail
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value={sendToPhone}
+                                                checked={sendToPhone}
+                                                onChange={handleSendToPhone}
+                                                id="sendToPhoneCheck"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                htmlFor="sendToPhoneCheck"
+                                            >
+                                                Send to phone
                                             </label>
                                         </div>
                                         <div class="form-check">
@@ -367,9 +409,10 @@ const PaymentModal = ({ open }) => {
                                 disabled={
                                     !formData["name"] ||
                                     (formData["vatNumber"] ||
-                                    sendToMail ||
-                                    sendInvoiceToMail
-                                        ? formData["email"]
+                                        sendToMail ||
+                                        sendToPhone ||
+                                        sendInvoiceToMail
+                                        ? formData["email"] || formData["phone"]
                                             ? false
                                             : true
                                         : false) ||

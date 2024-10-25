@@ -126,17 +126,50 @@ class TOCOnlineService
     // this method need to call when a order is created
     public function createCommercialSalesDocument(Order $order)
     {
-      
+
         $token = $this->getAccessTokenFromRefreshToken();
 
-         $body =[
+        $lines = [];
+        $tickets  = $order->tickets->map(function ($ticket) {
+            $name = $ticket->product->name;
+            return [
+                'item_type' => 'Service',
+                'item_code' => 'Serv001',
+                'description' => $name . ' for ' . $ticket?->event?->name,
+                'quantity' => 1,
+                'unit_price' => $ticket->product->price,
+                'tax_id' => 1,
+                'tax_country_region' => 'PT',
+                'tax_code' => 'NOR',
+                'tax_percentage' => $ticket->product->tax,
+                'settlement_expression' => number_format((($ticket->product->price - $ticket->price) / $ticket->product->price) * 100, 2)
+            ];
+        })->toArray();
+        $extras = $order->getExtras()->map(function ($extra) {
+            $unitPrice = ($extra->purchase_price / $extra->purchase_quantity);
+            return [
+                'item_type' => 'Service',
+                'item_code' => 'Serv001',
+                'description' => $extra->display_name,
+                'quantity' => $extra->purchase_quantity,
+                'unit_price' => $unitPrice,
+                'tax_id' => 1,
+                'tax_country_region' => 'PT',
+                'tax_code' => 'NOR',
+                'tax_percentage' => $extra->tax,
+                'settlement_expression' => number_format((($extra->price - $unitPrice) / $extra->price) * 100, 2)
+            ];
+        })->toArray();
+        $lines = array_merge($tickets, $extras);
+
+        $body = [
             'document_type' => 'FR',
             'date' => $order->created_at->format('Y-m-d'),
             'finalize' => 0,
-            'customer_id' => $order->billing->vatNumber ? null : 452,
-            'customer_tax_registration_number' => $order->billing->vatNumber ? $order->billing->vatNumber : null,
-            'customer_business_name' => $order->billing->vatNumber ? $order->billing->name : null,
-            'customer_address_detail' => $order->billing->vatNumber ? $order->billing->address : null,
+            'customer_id' => @$order->billing?->vatNumber ? null : 452,
+            'customer_tax_registration_number' => @$order->billing?->vatNumber ? $order->billing->vatNumber : null,
+            'customer_business_name' => @$order->billing?->vatNumber ? $order->billing->name : null,
+            'customer_address_detail' => @$order->billing?->vatNumber ? $order->billing->address : null,
             'customer_postcode' => '',
             'customer_city' => '',
             'customer_country' => 'PT',
@@ -149,21 +182,9 @@ class TOCOnlineService
             'notes' => '',
             'external_reference' => $order->id,
 
-            'lines' => $order->tickets->map(function ($ticket) {
-                $name = $ticket->product->name;
-                return [
-                    'item_type' => 'Service',
-                    'item_code' => 'Serv001',
-                    'description' => $name . ' for ' . $ticket?->event?->name,
-                    'quantity' => 1,
-                    'unit_price' => $ticket->price,
-                    'tax_id' => 1,
-                    'tax_country_region' => 'PT',
-                    'tax_code' => 'NOR',
-                    'tax_percentage' => $ticket->product->tax,
-                ];
-            })->toArray(),
+            'lines' => $lines,
         ];
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/vnd.api+json',
             'Accept' => 'application/json',
@@ -189,7 +210,7 @@ class TOCOnlineService
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'Authorization' => 'Bearer '. $token
+            'Authorization' => 'Bearer ' . $token
         ])->patch('https://api15.toconline.pt/api/email/document', [
             'data' => [
                 'type' => 'email/document',
