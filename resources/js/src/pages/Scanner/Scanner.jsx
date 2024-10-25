@@ -48,7 +48,7 @@ const Scanner = () => {
             console.error("Scanner is not initialized yet");
         }
     };
-    
+
     const handleScan = async (data) => {
         if (!data?.data) return;
 
@@ -477,20 +477,6 @@ const Scanner = () => {
                         />
                         <h3>
                             start scanning
-
-                        </h3>
-                    </div>
-                    <div
-                        className="qr-box flex-column"
-                        onClick={handleStartManual}
-                    >
-                        <img
-                            className="qr-image"
-                            src="/assets/keyboard.svg"
-                            alt="keyboard"
-                        />
-                        <h3>
-                            Enter manually
 
                         </h3>
                     </div>
