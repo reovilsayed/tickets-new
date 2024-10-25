@@ -48,56 +48,7 @@ const Scanner = () => {
             console.error("Scanner is not initialized yet");
         }
     };
-
-    const [startScan, setStartScan] = useState(false);
-    const [scannedTicket, setScannedTicket] = useState({
-        id: 635,
-        owner: {
-            name: "Carissa",
-            email: "",
-            vatNumber: "",
-            address: "",
-        },
-        event_id: 63,
-        event_name: "Essência do Vinho - Lisboa",
-        even: {
-            id: 63,
-            thumbnail: "events/August2024/jVJ3G4ywG5O0LBTJwe5x.png",
-            name: "Essência do Vinho - Lisboa",
-            slug: "essencia-do-vinho-lisboa",
-            organizer: "Essência Company",
-            country: "Portugal",
-            city: "Lisboa",
-            location: "Centro de Congressos de Lisboa (Junqueira)",
-            description:
-                "<p>O Encontro da Revista de Vinhos surge em 2022 com um novo nome e passa a integrar o circuito da principal experi&ecirc;ncia do vinho em Portugal, que j&aacute; conta eventos no Porto e na Madeira.</p>\r\n<p>Consulte a programa&ccedil;&atilde;o da 25a edi&ccedil;&atilde;o em essenciadovinho.com e prepare a sua visita. Grandes nomes, novos valores, convidados internacionais, provas comentadas, conversas com sommeliers, a reuni&atilde;o de produtores de matriz alternativa no &ldquo;Mundo Natural&rdquo;...</p>\r\n<p>Para ser um grande sucesso s&oacute; falta mesmo a sua visita, de 9 a 11 de novembro no Centro de Congressos de Lisboa, na Junqueira.</p>\r\n<p>Estamos juntos!</p>",
-            start_at: "2024-11-09T21:00:00.000000Z",
-            end_at: "2024-11-12T00:00:00.000000Z",
-            status: 1,
-            featured: 1,
-            terms: "<ul>\r\n<li>O bilhete de acesso &eacute; individual e corresponde a uma entrada.&nbsp;</li>\r\n<li>O bilhete de acesso comprado confere um copo oficial do evento.</li>\r\n<li>N&atilde;o se efetuam trocas e/ou devolu&ccedil;&otilde;es de bilhetes.</li>\r\n<li>N&atilde;o &eacute; permitida a entrada de pessoas acompanhadas de animais excepto nos casos previstos por lei.</li>\r\n<li>N&atilde;o &eacute; permitida a entrada de pessoas munidas de objetos perigosos.</li>\r\n<li>N&atilde;o &eacute; permitido o consumo de bebidas alco&oacute;licas por menores de 18 anos e a todos os que apresentarem sinais de embriaguez ou de aparente anomalia ps&iacute;quica.&nbsp;</li>\r\n<li>Na sua qualidade de organizadora do evento, a Ess&ecirc;ncia Company reserva-se o direito de recusar a entrada e/ou expulsar qualquer pessoa que apresente comportamento indevido e inapropriado, prejudicando o bom funcionamento do evento e/ou causando um risco &agrave; seguran&ccedil;a de outros participantes. Aqui se inclui, mas n&atilde;o se limita a, comportamento agressivo, uso de drogas ilegais ou porte de objetos perigosos.&nbsp;</li>\r\n<li>A organiza&ccedil;&atilde;o reserva-se no direito de alterar o programa sem aviso pr&eacute;vio.</li>\r\n<li>Exist&ecirc;ncia do livro de reclama&ccedil;&otilde;es &ndash; O Decreto-lei n&ordm; 156/2005, de 15 de Setembro, alterado pelos Decretos-Lei n&ordm; 371/2007 de 06 de Novembro n&ordm; 118/2009 de 19 de Maio</li>\r\n<li>Exist&ecirc;ncia de tabela de pre&ccedil;os.</li>\r\n</ul>",
-            created_at: "2024-08-06T13:57:35.000000Z",
-            updated_at: "2024-10-10T18:56:43.000000Z",
-        },
-        product_id: 784,
-        product_name: "Prova Comentada 05 - Stag´s Leap",
-        order_id: 291,
-        user_id: null,
-        ticket: "66f80ba226150",
-        status: 0,
-        dates: ["2024-11-09"],
-        price: 35,
-        created_at: "2024-10-14T07:38:59.000000Z",
-        updated_at: "2024-10-14T08:15:09.000000Z",
-        type: "paid",
-        logs: [],
-        active: 1,
-        check_in_zone: null,
-        check_out_zone: null,
-        hasExtras: 0,
-        extras: [],
-    });
-
+    
     const handleScan = async (data) => {
         if (!data?.data) return;
 
