@@ -113,7 +113,7 @@ const PaymentModal = ({ open }) => {
     const handleSendToMail = () => {
         setSendToMail((prev) => {
             if (prev) return false;
-            setSendToPhone(false);
+       
             setPhysicalQr(false);
             return true;
         });
@@ -121,7 +121,7 @@ const PaymentModal = ({ open }) => {
     const handleSendToPhone = () => {
         setSendToPhone((prev) => {
             if (prev) return false;
-            setSendToMail(false);
+           
             setPhysicalQr(false);
             return true;
         });

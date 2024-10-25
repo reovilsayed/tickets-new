@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\OrderIsPaid;
+use App\Listeners\SendEmailToCustomer;
 use App\Listeners\SendMessageToCustomer;
 use App\Models\Invite;
 use App\Models\Order;
@@ -25,7 +26,8 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
         ],
         OrderIsPaid::class => [
-            SendMessageToCustomer::class
+            SendMessageToCustomer::class,
+            SendEmailToCustomer::class
         ]
     ];
 

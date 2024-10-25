@@ -154,12 +154,12 @@ class ApiController extends Controller
                 'subtotal' => $request->get('subTotal'),
                 'discount' => $request->get('discount'),
                 'total' => $request->get('total'),
-                'status' => 1,
-                'payment_status' => 1,
+
                 'payment_method' => $request->get('paymentMethod') ?? 'Pos',
                 'transaction_id' => Str::uuid(),
                 'security_key' => Str::uuid(),
-                'send_message' => $request->get('sendToPhone')
+                'send_message' => $request->get('sendToPhone') ? true : false,
+                'send_email' => $request->get('sendToMail') ? true : false
             ];
 
 
@@ -250,32 +250,32 @@ class ApiController extends Controller
             // Handle invoice printing or emailing
             $printInvoice = $request->get('printInvoice');
             $sendInvoiceToMail = $request->get('sendInvoiceToMail');
-            $toco = new TOCOnlineService;
-            $response = $toco->createCommercialSalesDocument($order);
+            if(env('APP_ENV') != 'local'){
 
-            $order->invoice_id = $response['id'];
-            $order->invoice_url = $response['public_link'];
-            $order->invoice_body = json_encode($response);
-
-            if ($sendInvoiceToMail) {
-                $toco->sendEmailDocument($order, $response['id']);
+                $toco = new TOCOnlineService;
+                $response = $toco->createCommercialSalesDocument($order);
+                
+                $order->invoice_id = $response['id'];
+                $order->invoice_url = $response['public_link'];
+                $order->invoice_body = json_encode($response);
+                
+                if ($sendInvoiceToMail) {
+                    $toco->sendEmailDocument($order, $response['id']);
+                }
             }
 
             $order->save();
 
-            // Send tickets to mail if requested
-            $sendTicketsToMail = $request->get('sendToMail');
-            if ($sendTicketsToMail) {
-                foreach ($tickets as $ticket) {
-                    $product = Product::find($ticket['id']);
-                    Mail::to($order['billing']->email)->send(new TicketDownload($order, $product, null));
-                }
-            }
+            $order->update([
+                'status' => 1,
+                'payment_status' => 1,
+            ]);
 
             $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
 
             // Return the order with tickets
             $order['tickets'] = $hollowTickets;
+         
             DB::commit();
             if ($printInvoice == false) {
 

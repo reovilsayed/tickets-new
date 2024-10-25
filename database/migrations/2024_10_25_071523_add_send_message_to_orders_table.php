@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->boolean('send_message')->default(false);
+            $table->boolean('send_email')->default(true);
+            
         });
     }
 
@@ -23,6 +25,7 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('send_message');
+            $table->dropColumn('send_email');
         });
     }
 };

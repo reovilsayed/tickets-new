@@ -28,6 +28,9 @@
                                 <div class="form-group">
                                     <label for="name">Email</label>
                                     <input type="text" class="form-control" id="email" name="email">
+                                    <small>
+                                        Email is required if you want to send message
+                                    </small>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -51,9 +54,17 @@
 
                                 <div class="send_message">
                                     <input class="form-check-input" type="checkbox" name="send_message" value="1"
-                                        id="flexCheckChecked">
+                                        id="send_message">
                                     <label class="form-check-label" for="send_message">
                                         Send message
+                                    </label>
+                                </div>
+
+                                <div class="send_message">
+                                    <input class="form-check-input" checked type="checkbox" name="send_email" value="1"
+                                        id="send_email">
+                                    <label class="form-check-label" for="send_email">
+                                        Send email
                                     </label>
                                 </div>
                             </div>

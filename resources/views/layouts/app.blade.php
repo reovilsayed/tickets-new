@@ -31,6 +31,9 @@
     <link rel="stylesheet" href="{{ asset('assets/frontend-assets/css/style.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="{{ asset('assets/custom.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.min.css"
+    crossorigin="anonymous" />
+
     <style>
         div#ec_news_signup {
             display: -webkit-box;
@@ -58,6 +61,17 @@
             padding-right: 10px;
             letter-spacing: 0.5px;
         }
+        
+        .invalid-feedback {
+            font-size: 12px;
+        }
+
+        #country {
+            height: 45px !important;
+            color: #656060 !important;
+        }
+
+        
     </style>
     @yield('css')
 </head>
@@ -293,7 +307,52 @@
             window.location = newUrl;
         }
     </script>
+
+    
     @yield('js')
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js'></script>
+    <script>
+        $(document).ready(function() {
+       
+           
+            var countryData = window.intlTelInputGlobals.getCountryData();
+          
+    
+                input = document.querySelector("#intl-phone"),
+                addressDropdown = document.querySelector("#country");
+
+            // init plugin
+            var iti = window.intlTelInput(input, {
+                separateDialCode: true,
+                hiddenInput: $("#intl-phone").attr('name'),
+                preferredCountries:["pt",'es'],
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js" // just for formatting/placeholders etc
+            });
+
+            // populate the country dropdown
+            for (var i = 0; i < countryData.length; i++) {
+                var country = countryData[i];
+                var optionNode = document.createElement("option");
+                optionNode.value = country.iso2;
+                var textNode = document.createTextNode(country.name);
+                optionNode.appendChild(textNode);
+                addressDropdown.appendChild(optionNode);
+            }
+            // set it's initial value
+            addressDropdown.value = iti.getSelectedCountryData().iso2;
+
+            // listen to the telephone input for changes
+            input.addEventListener('countrychange', function(e) {
+                addressDropdown.value = iti.getSelectedCountryData().iso2;
+            });
+
+            // listen to the address dropdown for changes
+            addressDropdown.addEventListener('change', function() {
+                iti.setCountry(this.value);
+            });
+          
+        });
+    </script>
     <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="8fc255b6-8403-4435-9842-852bd91ab47f"
         data-blockingmode="auto" type="text/javascript"></script>
 </body>

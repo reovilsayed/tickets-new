@@ -218,11 +218,14 @@ class AdminCustomController extends Controller
 
     public function personalInvitePost(Request $request, Product $product)
     {
+
         $request->validate([
             'name' => 'required',
-            'email' => 'required',
-            'phone' => 'required_if:send_message,1',
+            'email' => 'required_without_all:phone|required_if:send_email,1|nullable',
+            'phone' => 'required_without_all:email|required_if:send_message,1|nullable',
             'qty' => 'required|min:1',
+            'send_email' => 'boolean',
+            'send_message' => 'boolean',
         ]);
 
         try {
@@ -240,12 +243,12 @@ class AdminCustomController extends Controller
                 'discount_code' => 0,
                 'tax' => 0,
                 'total' => 0,
-                'status' => 1,
-                'payment_status' => 1,
+
                 'payment_method' => 'invite',
                 'transaction_id' => Str::uuid(),
                 'security_key' => Str::uuid(),
-                'send_message'=> $request->send_message,
+                'send_message' => $request->send_message ? true : false,
+                'send_email' => $request->send_email ? true : false,
                 'event_id' => $product->event->id,
             ]);
 
@@ -275,6 +278,10 @@ class AdminCustomController extends Controller
                 }
                 $order->tickets()->create($data);
             }
+            $order->update([
+                'status' => 1,
+                'payment_status' => 1
+            ]);
 
             Mail::to(request()->email)->send(new InviteDownload($order, $product, null));
             return redirect()->route('voyager.products.index')->with([

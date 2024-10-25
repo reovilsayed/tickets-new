@@ -85,13 +85,10 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
         $event = $invite->event;
         DB::beginTransaction();
         $order = CheckoutService::create($event, $request, isFree: true, invite: $invite);
+      
         DB::commit();
 
-        $products = $order->tickets->groupBy('product_id');
-        foreach ($products as $key => $tickets) {
-            $product = Product::find($key);
-            Mail::to(request()->email)->send(new InviteDownload($order, $product, null));
-        }
+      
 
         return redirect()->back()->with('success_msg', 'ThankYou For Your Claim');
     } catch (Exception $e) {
@@ -194,7 +191,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/coupon-generate', [AdminCustomController::class, 'couponGenerate'])->name('voyager.coupon.generate');
     Route::post('/coupon-create', [AdminCustomController::class, 'couponCreate'])->name('voyager.coupon.create');
 });
-Auth::routes(['verify' => true]);
+
+    Auth::routes(['verify' => true]);
 
 Route::get('page/{slug}', [PageController::class, 'getPage']);
 
@@ -246,10 +244,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 if ($coupon) {
                     $coupon->increment('used', $new_order->tickets()->count());
                 }
-                foreach ($products as $key => $tickets) {
-                    $product = Product::find($key);
-                    Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));
-                }
+              
                 $toco = new TOCOnlineService;
                 $response = $toco->createCommercialSalesDocument($order);
                 Log::info($response);
@@ -356,9 +351,18 @@ Route::get('/my-wallet/{order:security_key}', function (Order $order) {
 })->name('digital-wallet');
 
 
-Route::get('/payment-confirm',function(){
+Route::get('/payment-confirm', function () {
     $order = Order::latest()->first();
     $order->payment_status = true;
-    $order->save();
+    $order->status = 1;
+    $products = $order->tickets->groupBy('product_id');
 
+    foreach ($products as $id => $data) {
+        $product = Product::find($id);
+        if ($product) {
+            $product->quantity =  $product->quantity - count($data);
+            $product->save();
+        }
+    }
+    $order->save();
 });

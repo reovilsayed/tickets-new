@@ -254,9 +254,15 @@
                                
                                     <form method="post" action="{{ route('checkout.store', $event) }}">
                                         <div class="form-check">
+                                            <input class="form-check-input" checked  name="send_email" type="checkbox" value="1" id="send_email">
+                                            <label class="form-check-label" for="send_email">
+                                             {{__('words.send_email')}}
+                                            </label>
+                                          </div>
+                                        <div class="form-check">
                                             <input class="form-check-input"  name="send_message" type="checkbox" value="1" id="send_message">
                                             <label class="form-check-label" for="send_message">
-                                             {{__('words.send_a_message')}}
+                                             {{__('words.send_message')}}
                                             </label>
                                           </div>
                                         @csrf
@@ -288,11 +294,12 @@
                                                                 id="name" placeholder="{{ __('words.enter_name') }}"
                                                                 value="{{ auth()->user()->name . ' ' . auth()->user()->l_name }}">
                                                         </div>
-                                                        <div class="mb-3">
-                                                            <label for="contact_number"
+                                                         <label for="intl-phone"
                                                                 class="form-label">{{ __('words.contact_number') }}</label>
-                                                            <input type="tel" name="contact_number" class="form-control"
-                                                                id="contact_number" placeholder="{{ __('words.contact_number') }}"
+                                                        <div class="mb-3">
+                                                           
+                                                            <input type="tel"  name="contact_number" class="form-control"
+                                                                id="intl-phone" placeholder="{{ __('words.contact_number') }}"
                                                                 value="{{  auth()->user()->contact_number }}">
                                                         </div>
                                                         <div class="mb-3">

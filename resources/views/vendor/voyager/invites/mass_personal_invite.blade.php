@@ -34,7 +34,9 @@
 
                                 <div id="productList" style="padding-top: 20px"></div>
                             </div>
-                            <div class="form-group  col-md-6">
+                            <div class="col-md-6">
+                                
+                            <div class="form-group ">
                                 <label class="control-label" for="file">Upload File <strong class="text-danger"
                                         style="font-size: 10px; font-weight: 600">(Excel)</strong></label>
                                 <input type="file" name="excel_file" id=""
@@ -50,9 +52,18 @@
                                 <input class="form-check-input" name="send_message" type="checkbox" value="1"
                                     id="send_message">
                                 <label class="form-check-label" for="send_message">
-                                    {{ __('words.send_a_message') }}
+                                    {{ __('words.send_message') }}
                                 </label>
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="send_email" type="checkbox" value="1"
+                                    id="send_email">
+                                <label class="form-check-label" for="send_email">
+                                    {{ __('words.send_email') }}
+                                </label>
+                            </div>
+                        
+                        </div>
 
 
                         </div><!-- panel-body -->

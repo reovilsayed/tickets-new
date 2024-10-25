@@ -13,7 +13,8 @@ class OrderObserver
     public function created(Order $order): void
     {
         // Check if payment_status is set to 1 on creation
-        if ($order->payment_status === 1) {
+        if ($order->payment_status == 1) {
+         
             event(new OrderIsPaid($order));
         }
     }
