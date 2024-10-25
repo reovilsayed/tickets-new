@@ -5,6 +5,9 @@ import { useFetch } from "../../lib/hooks/useFetch";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import QrScanner from "qr-scanner";
 import { toast } from "react-toastify";
+import { useCart } from "react-use-cart";
+import { useDispatch } from "react-redux";
+import { setCartOpen } from "../../lib/features/paymentModalSlice";
 
 const Scanner = () => {
     const videoRef = React.useRef(null);
@@ -45,13 +48,6 @@ const Scanner = () => {
             console.error("Scanner is not initialized yet");
         }
     };
-
-    const handleStartManual = () => {
-        setStartScan(true); // Start scan
-        setEnterManual(true); // Start scan
-    };
-
-
 
     const handleScan = async (data) => {
         if (!data?.data) return;
@@ -163,7 +159,23 @@ const Scanner = () => {
 
     const [changesProcessing, setChangesProcessing] = useState(false);
 
+    const { addItem } = useCart();
+    const dispatch = useDispatch();
+
     const submitChanges = async () => {
+        var newAddedExtras = scannedTicket?.extras?.map((item) => {
+            if (item?.newQty > 0)
+                return { ...item, qty: item?.newQty - (item?.qty ?? 0) };
+        });
+
+        if (newAddedExtras?.length) {
+            newAddedExtras.forEach((item) => {
+                addItem(item, item?.qty);
+            });
+            dispatch(setCartOpen(true));
+        }
+
+        return;
         setChangesProcessing(true);
         const response = await axios.post(
             `${import.meta.env.VITE_APP_URL}/api/update-ticket`,
@@ -224,25 +236,21 @@ const Scanner = () => {
                         <p>
                             <strong>Owner:</strong> {scannedTicket?.owner.name}
                         </p>
+                        {scannedTicket?.owner.email && (
+                            <p>
+                                <strong>Email:</strong>{" "}
+                                {scannedTicket?.owner.email}
+                            </p>
+                        )}
                         <p>
-                            <strong>Email:</strong> {scannedTicket?.owner.email}
+                            <strong>Event:</strong> {scannedTicket?.event_name}
                         </p>
                         <p>
-                            <strong>VAT Number:</strong>{" "}
-                            {scannedTicket?.owner.vatNumber}
+                            <strong>Ticket:</strong>{" "}
+                            {scannedTicket?.product_name}
                         </p>
                         <p>
-                            <strong>Address:</strong>{" "}
-                            {scannedTicket?.owner.address}
-                        </p>
-                        <p>
-                            <strong>Event ID:</strong> {scannedTicket?.event_id}
-                        </p>
-                        <p>
-                            <strong>Ticket ID:</strong> {scannedTicket?.ticket}
-                        </p>
-                        <p>
-                            <strong>Price:</strong> ${scannedTicket?.price}
+                            <strong>Price:</strong> €{scannedTicket?.price}
                         </p>
                         <p>
                             <strong>Status:</strong>{" "}
@@ -267,7 +275,7 @@ const Scanner = () => {
                         </p>
                     </div>
 
-                    {scannedTicket?.hasExtras ? (
+                    {scannedTicket?.extras?.length > 0 ? (
                         <div className="extras">
                             <h4>Extras</h4>
                             <ul>
@@ -284,7 +292,7 @@ const Scanner = () => {
                                             className="d-flex justify-content-between align-items-center"
                                         >
                                             <span className="col-md-3 text-start">
-                                                {extra?.name}
+                                                {extra?.display_name}
                                             </span>
                                             <div className="update-quantity d-flex align-items-center justify-content-center col-md-3">
                                                 <button
@@ -325,7 +333,7 @@ const Scanner = () => {
                                             <span className="col-md-3 text-end">
                                                 {"X "}
                                                 {price}
-                                                {"$ ="}
+                                                {"€ ="}
                                             </span>
                                             <span className="col-md-3 text-end">
                                                 {price *
@@ -335,120 +343,105 @@ const Scanner = () => {
                                                             extra?.qty
                                                             : 0
                                                     )}
-                                                $
+                                                €
                                             </span>
                                         </span>
                                     );
                                 })}
-                                {showNewExtraFields && (
-                                    <div className="modal-body row">
-                                        <div className="col-md-12">
-                                            <div className="form-group">
-                                                <label htmlFor="extraSelect">
-                                                    Select Extra
-                                                </label>
-                                                <select
-                                                    id="extraSelect"
-                                                    className="form-control mt-2"
-                                                    defaultValue={
-                                                        selectedNewExtra?.display_name ??
-                                                        "Select an extra"
-                                                    }
-                                                >
-                                                    <option
-                                                        onClick={() =>
-                                                            setSelectedNewExtra(
-                                                                null
-                                                            )
-                                                        }
-                                                    >
-                                                        None
-                                                    </option>
-                                                    {extrasList?.data?.map(
-                                                        (extra, index) => (
-                                                            <option
-                                                                key={index}
-                                                                onClick={() =>
-                                                                    setSelectedNewExtra(
-                                                                        extra
-                                                                    )
-                                                                }
-                                                            >
-                                                                {
-                                                                    extra?.display_name
-                                                                }
-                                                            </option>
-                                                        )
-                                                    )}
-                                                </select>
-                                            </div>
-
-                                            {selectedNewExtra ? (
-                                                <>
-                                                    <div className="form-group mt-3 d-flex flex-column justify-content-center align-items-center">
-                                                        <label htmlFor="quantity">
-                                                            Quantity
-                                                        </label>
-                                                        <InputGroup className="w-50">
-                                                            <Button
-                                                                variant="outline-secondary"
-                                                                onClick={() =>
-                                                                    setSelectedNewExtraQuantity(
-                                                                        (
-                                                                            prev
-                                                                        ) =>
-                                                                            prev -
-                                                                                1 >
-                                                                                0
-                                                                                ? prev -
-                                                                                1
-                                                                                : prev
-                                                                    )
-                                                                }
-                                                            >
-                                                                -
-                                                            </Button>
-                                                            <Form.Control
-                                                                aria-label="Example text with two button addons"
-                                                                className="text-center"
-                                                                readOnly
-                                                                value={
-                                                                    selectedNewExtraQuantity
-                                                                }
-                                                            />
-                                                            <Button
-                                                                variant="outline-danger"
-                                                                onClick={() =>
-                                                                    setSelectedNewExtraQuantity(
-                                                                        (
-                                                                            prev
-                                                                        ) =>
-                                                                            prev +
-                                                                            1
-                                                                    )
-                                                                }
-                                                            >
-                                                                +
-                                                            </Button>
-                                                        </InputGroup>
-                                                    </div>
-                                                    <label htmlFor="price">
-                                                        Price
-                                                        <br />
-                                                        {selectedNewExtra?.price *
-                                                            selectedNewExtraQuantity}
-                                                        $
-                                                    </label>
-                                                </>
-                                            ) : (
-                                                ""
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
                             </ul>
                         </div>
                     ) : null}
+                    {showNewExtraFields && (
+                        <div className="modal-body row">
+                            <div className="col-md-12">
+                                <div className="form-group">
+                                    <label htmlFor="extraSelect">
+                                        Select Extra
+                                    </label>
+                                    <select
+                                        id="extraSelect"
+                                        className="form-control mt-2"
+                                        value={
+                                            selectedNewExtra?.display_name || ""
+                                        }
+                                        onChange={(e) => {
+                                            const selectedOption =
+                                                extrasList?.data?.find(
+                                                    (extra) =>
+                                                        extra.display_name ===
+                                                        e.target.value
+                                                );
+                                            setSelectedNewExtra(
+                                                selectedOption || null
+                                            );
+                                        }}
+                                    >
+                                        <option value="">None</option>
+                                        {extrasList?.data?.map(
+                                            (extra, index) => (
+                                                <option
+                                                    key={index}
+                                                    value={extra?.display_name}
+                                                >
+                                                    {extra?.display_name}
+                                                </option>
+                                            )
+                                        )}
+                                    </select>
+                                </div>
+
+                                {selectedNewExtra && (
+                                    <>
+                                        <div className="form-group mt-3 d-flex flex-column justify-content-center align-items-center">
+                                            <label htmlFor="quantity">
+                                                Quantity
+                                            </label>
+                                            <InputGroup className="w-50">
+                                                <Button
+                                                    variant="outline-secondary"
+                                                    onClick={() =>
+                                                        setSelectedNewExtraQuantity(
+                                                            (prev) =>
+                                                                prev - 1 > 0
+                                                                    ? prev - 1
+                                                                    : prev
+                                                        )
+                                                    }
+                                                >
+                                                    -
+                                                </Button>
+                                                <Form.Control
+                                                    aria-label="Example text with two button addons"
+                                                    className="text-center"
+                                                    readOnly
+                                                    value={
+                                                        selectedNewExtraQuantity
+                                                    }
+                                                />
+                                                <Button
+                                                    variant="outline-danger"
+                                                    onClick={() =>
+                                                        setSelectedNewExtraQuantity(
+                                                            (prev) => prev + 1
+                                                        )
+                                                    }
+                                                >
+                                                    +
+                                                </Button>
+                                            </InputGroup>
+                                        </div>
+                                        <label htmlFor="price">
+                                            Price
+                                            <br />
+                                            {selectedNewExtra?.price *
+                                                selectedNewExtraQuantity}
+                                            €
+                                        </label>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    )}
                     <span className="d-flex justify-content-center align-items-center mt-2">
                         <button
                             type="button"
@@ -484,20 +477,6 @@ const Scanner = () => {
                         />
                         <h3>
                             start scanning
-
-                        </h3>
-                    </div>
-                    <div
-                        className="qr-box flex-column"
-                        onClick={handleStartManual}
-                    >
-                        <img
-                            className="qr-image"
-                            src="/assets/keyboard.svg"
-                            alt="keyboard"
-                        />
-                        <h3>
-                            Enter manually
 
                         </h3>
                     </div>

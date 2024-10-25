@@ -1,13 +1,14 @@
 import React, { useMemo, useState } from "react";
 import NavList from "./NavList/NavList";
 import InfoModal from "../dashboard/InfoModal/InfoModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CartButton from "./Buttons/CartButton";
 import CartModal from "../dashboard/CartModal/CartModal";
 import LogoImage from "../../public/Essência-logo.png";
 import FilterBar from "../dashboard/FilterBar/FilterBar";
 import AddExtraModal from "../dashboard/AddExtraModal/AddExtraModal";
 import PaymentModal from "../dashboard/PaymentModal/PaymentModal";
+import { setCartOpen } from "../../lib/features/paymentModalSlice";
 import { useLocation } from "react-router-dom";
 
 function DashboardLayout({ children }) {
@@ -22,12 +23,16 @@ function DashboardLayout({ children }) {
         console.log("Logout clicked");
     };
 
-    const [cartOpen, setCartOpen] = useState(false);
+    const dispatch = useDispatch();
+
+    const cartOpen = useSelector((state) => state.paymentModal.cartOpen);
+    // const [cartOpen, setCartOpen] = useState(cartModalOpen);
 
     const openCart = () => {
-        setCartOpen(true);
+        dispatch(setCartOpen(true));
     };
-    const closeCart = () => setCartOpen(false);
+    const closeCart = () => dispatch(setCartOpen(false));
+    // useEffect(() => dispatch(setCartOpen(cartOpen)), [cartOpen]);
 
     const paymentModalOpen = useSelector((state) => state.paymentModal.open);
 
