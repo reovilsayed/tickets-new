@@ -33,7 +33,7 @@ class CheckoutService
         $this->cart = Cart::session($event->slug)->getContent();
     }
 
-    public static function  create(Event $event, Request $request, $isFree = false, $invite = null, User $user = null)
+    public static function create(Event $event, Request $request, $isFree = false, $invite = null, User $user = null)
     {
         return (new self($event, $isFree, $invite, user: $user))->generate($request);
     }
@@ -46,6 +46,7 @@ class CheckoutService
             'vatNumber' => ['nullable'],
             'address' => ['nullable'],
         ]);
+
         $order = $this->createOrder();
 
 
@@ -146,6 +147,12 @@ class CheckoutService
 
     protected function createOrder()
     {
+        request()->validate([
+            'contact_number' => 'required',
+            'name' => 'required',
+            'vatNumber' => 'nullable',
+            'address' => 'nullable',
+        ]);
         if ($this->isFree) {
             $data = [
                 'user_id' => $this->user ? $this->user->id : auth()->id() ?? null,
@@ -161,6 +168,8 @@ class CheckoutService
                 'transaction_id' => 0,
                 'security_key' => Str::uuid(),
                 'event_id' => $this->event->id,
+                'send_message' => request()->send_message
+
             ];
         } else {
             $tax = $this->cart->map(function ($product) {
@@ -181,8 +190,12 @@ class CheckoutService
                 'transaction_id' => Str::uuid(),
                 'security_key' => Str::uuid(),
                 'event_id' => $this->event->id,
+                'send_message' => request()->send_message
             ];
         }
+
+        
+
         return Order::create($data);
     }
 
@@ -193,13 +206,15 @@ class CheckoutService
             'name' => request()->name,
             'vatNumber' => request()->vatNumber ?? '',
             'address' => request()->address,
+            'phone' => request()->contact_number,
         ];
     }
     protected function inviteBillingObject()
     {
         return [
             'name' => request()->name,
-            'email' => request()->email
+            'email' => request()->email,
+            'phone' => request()->contact_number
         ];
     }
 }

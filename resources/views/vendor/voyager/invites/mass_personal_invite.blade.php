@@ -46,7 +46,14 @@
                                         role="alert"><strong>{{ $message }}</strong></span>
                                 @enderror
                             </div>
-                            
+                            <div class="form-check">
+                                <input class="form-check-input" name="send_message" type="checkbox" value="1"
+                                    id="send_message">
+                                <label class="form-check-label" for="send_message">
+                                    {{ __('words.send_a_message') }}
+                                </label>
+                            </div>
+
 
                         </div><!-- panel-body -->
 

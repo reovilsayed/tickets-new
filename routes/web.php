@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\OrderIsPaid;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Order;
@@ -354,3 +355,10 @@ Route::get('/my-wallet/{order:security_key}', function (Order $order) {
     return view('pages.digitalWallet', compact('order'));
 })->name('digital-wallet');
 
+
+Route::get('/payment-confirm',function(){
+    $order = Order::latest()->first();
+    $order->payment_status = true;
+    $order->save();
+
+});

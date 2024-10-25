@@ -221,6 +221,7 @@ class AdminCustomController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required',
+            'phone' => 'required_if:send_message,1',
             'qty' => 'required|min:1',
         ]);
 
@@ -232,6 +233,7 @@ class AdminCustomController extends Controller
                 'billing' => [
                     'name' => $request->name,
                     'email' => $request->email,
+                    'phone' => $request->phone,
                 ],
                 'subtotal' => 0,
                 'discount' => 0,
@@ -243,6 +245,7 @@ class AdminCustomController extends Controller
                 'payment_method' => 'invite',
                 'transaction_id' => Str::uuid(),
                 'security_key' => Str::uuid(),
+                'send_message'=> $request->send_message,
                 'event_id' => $product->event->id,
             ]);
 
@@ -255,6 +258,7 @@ class AdminCustomController extends Controller
                     'owner' => [
                         'name' => $request->name,
                         'email' => $request->email,
+                        'phone' => $request->phone,
                     ],
                     'event_id' => $product->event->id,
                     'product_id' => $product->id,
@@ -262,7 +266,7 @@ class AdminCustomController extends Controller
                     'ticket' => uniqid(),
                     'price' => 0,
                     'dates' => $product->dates,
-                    'type' => 'invite'
+                    'type' => 'invite',
                 ];
 
                 if ($product->extras && count($product->extras)) {

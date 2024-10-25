@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\OrderIsPaid;
+use App\Listeners\SendMessageToCustomer;
 use App\Models\Invite;
+use App\Models\Order;
 use App\Observers\InviteObserver;
+use App\Observers\OrderObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -20,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        OrderIsPaid::class => [
+            SendMessageToCustomer::class
+        ]
     ];
 
     /**
@@ -30,6 +37,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         Invite::observe(InviteObserver::class);
+        Order::observe(OrderObserver::class);
     }
 
     /**

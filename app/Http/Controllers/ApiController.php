@@ -270,8 +270,7 @@ class ApiController extends Controller
 
             $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
             if ($request->get('sendToPhone')) {
-                $message = 'Hello! Here is your page with your tickets and invoice! Please click here on the link: ' . route('digital-wallet', $order) . ' !!';
-                SmsApi::send($phone,  $message);
+            
             }
             // Return the order with tickets
             $order['tickets'] = $hollowTickets;

@@ -64,6 +64,7 @@ class MassInviteController extends Controller
                     'billing' => [
                         'name' => $row[0],
                         'email' => $row[1],
+                        'phone' => @$row[2],
                     ],
                     'subtotal' => 0,
                     'discount' => 0,
@@ -75,6 +76,7 @@ class MassInviteController extends Controller
                     'payment_method' => 'invite',
                     'transaction_id' => Str::uuid(),
                     'security_key' => Str::uuid(),
+                    'send_message' => $request->send_message,
                     'event_id' => $request->event_name,
                 ]);
 
@@ -96,8 +98,9 @@ class MassInviteController extends Controller
                         $ticketData = [
                             'user_id' => null,
                             'owner' => [
-                                'name' => $request->name,
-                                'email' => $request->email,
+                                'name' => $row[0],
+                                'email' => $row[1],
+                                'phone' => $row[2],
                             ],
                             'event_id' => $product->event->id,
                             'product_id' => $product->id,
