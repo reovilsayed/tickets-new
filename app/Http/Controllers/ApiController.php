@@ -156,6 +156,7 @@ class ApiController extends Controller
                 'payment_method' => $request->get('paymentMethod') ?? 'Pos',
                 'transaction_id' => Str::uuid(),
                 'security_key' => Str::uuid(),
+                'send_message' => $request->get('sendToPhone')
             ];
 
 
@@ -269,9 +270,7 @@ class ApiController extends Controller
             }
 
             $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
-            if ($request->get('sendToPhone')) {
-            
-            }
+
             // Return the order with tickets
             $order['tickets'] = $hollowTickets;
             DB::commit();
