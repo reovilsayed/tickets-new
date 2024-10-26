@@ -38,7 +38,7 @@ class ApiController extends Controller
             ->whereHas('poses', function ($q) {
                 $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
             })
-            ->whereIn('type', ['pos','both'])
+            ->whereIn('type', ['pos', 'both'])
             ->where('invite_only', 0);
 
         if ($event_id) {
@@ -250,33 +250,35 @@ class ApiController extends Controller
             // Handle invoice printing or emailing
             $printInvoice = $request->get('printInvoice');
             $sendInvoiceToMail = $request->get('sendInvoiceToMail');
-            if(env('APP_ENV') != 'local'){
+            // if(env('APP_ENV') != 'local'){
 
-                $toco = new TOCOnlineService;
-                $response = $toco->createCommercialSalesDocument($order);
-                
-                $order->invoice_id = $response['id'];
-                $order->invoice_url = $response['public_link'];
-                $order->invoice_body = json_encode($response);
-                
-                if ($sendInvoiceToMail) {
-                    $toco->sendEmailDocument($order, $response['id']);
-                }
-            }
 
-            $order->save();
-
-            $order->update([
-                'status' => 1,
-                'payment_status' => 1,
-            ]);
 
             $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
 
             // Return the order with tickets
-            $order['tickets'] = $hollowTickets;
-         
+        
             DB::commit();
+            $order->update([
+                'status' => 1,
+                'payment_status' => 1,
+            ]);
+            $toco = new TOCOnlineService;
+            $response = $toco->createCommercialSalesDocument($order);
+
+            $order->invoice_id = $response['id'];
+            $order->invoice_url = $response['public_link'];
+            $order->invoice_body = json_encode($response);
+
+            if ($sendInvoiceToMail) {
+                $toco->sendEmailDocument($order, $response['id']);
+            }
+            // }
+
+            $order->save();
+
+            $order['tickets'] = $hollowTickets;
+
             if ($printInvoice == false) {
 
                 $order = $order->invoice_url = null;

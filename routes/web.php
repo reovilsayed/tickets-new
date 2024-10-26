@@ -36,7 +36,7 @@ use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\EventAnalyticsController;
 use App\Http\Controllers\ExportController;
 use App\Http\Middleware\AgeVerification;
-
+use Illuminate\Support\Facades\Storage;
 use Vemcogroup\SmsApi\SmsApi;
 /*
 |--------------------------------------------------------------------------
@@ -366,3 +366,4 @@ Route::get('/payment-confirm', function () {
     }
     $order->save();
 });
+
