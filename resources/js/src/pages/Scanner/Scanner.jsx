@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useCart } from "react-use-cart";
 import { useDispatch } from "react-redux";
 import { setCartOpen } from "../../lib/features/paymentModalSlice";
+import ScannerPaymentModal from "../../components/dashboard/PaymentModal/ScannerPaymentModal";
 
 const Scanner = () => {
     const videoRef = React.useRef(null);
@@ -70,8 +71,8 @@ const Scanner = () => {
     };
     const handleManualSubmit = async () => {
         if (!manualCode) return;
-        setEnterManual(false)
-        setStartScan(false)
+        setEnterManual(false);
+        setStartScan(false);
 
         try {
             const response = await axios.post(
@@ -79,7 +80,6 @@ const Scanner = () => {
                 { ticket: manualCode }
             );
             setScannedTicket(response.data);
-           
 
             setManualCode(""); // Reset the manual input
         } catch (error) {
@@ -88,8 +88,6 @@ const Scanner = () => {
             setIsProcessing(false); // Allow next manual submission after processing
         }
     };
-
-
 
     const handleExtraChange = (targetExtra, quantity) => {
         const targetExtraQuantity = parseInt(targetExtra?.qty) ?? 0;
@@ -115,7 +113,8 @@ const Scanner = () => {
         refetch,
     } = useFetch(
         ["scanner-extras", scannedTicket],
-        `${import.meta.env.VITE_APP_URL}/api/event-extras/${scannedTicket?.event_id
+        `${import.meta.env.VITE_APP_URL}/api/event-extras/${
+            scannedTicket?.event_id
         }`
     );
 
@@ -141,7 +140,8 @@ const Scanner = () => {
                 return {
                     ...item,
                     newQty:
-                        targetExtra.newQty + (item?.newQty ?? item?.qty ?? 0),
+                        parseInt(targetExtra.newQty) +
+                        parseInt(item?.newQty ?? item?.qty ?? 0),
                 };
             }
             return item;
@@ -159,23 +159,7 @@ const Scanner = () => {
 
     const [changesProcessing, setChangesProcessing] = useState(false);
 
-    const { addItem } = useCart();
-    const dispatch = useDispatch();
-
     const submitChanges = async () => {
-        var newAddedExtras = scannedTicket?.extras?.map((item) => {
-            if (item?.newQty > 0)
-                return { ...item, qty: item?.newQty - (item?.qty ?? 0) };
-        });
-
-        if (newAddedExtras?.length) {
-            newAddedExtras.forEach((item) => {
-                addItem(item, item?.qty);
-            });
-            dispatch(setCartOpen(true));
-        }
-
-        return;
         setChangesProcessing(true);
         const response = await axios.post(
             `${import.meta.env.VITE_APP_URL}/api/update-ticket`,
@@ -226,6 +210,8 @@ const Scanner = () => {
         }
         setChangesProcessing(false);
     };
+
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
 
     return (
         <section className="scanner-page">
@@ -280,9 +266,10 @@ const Scanner = () => {
                             <h4>Extras</h4>
                             <ul>
                                 {scannedTicket?.extras.map((extra, index) => {
-                                    const quantity = parseInt(
-                                        extra?.newQty ?? extra?.qty ?? 0
-                                    );
+                                    if (!extra?.newQty) return "";
+                                    const quantity =
+                                        parseInt(extra?.newQty ?? 0) -
+                                        parseInt(extra?.qty ?? 0);
                                     const price = parseFloat(
                                         extra?.price ?? 0
                                     ).toFixed(2);
@@ -292,9 +279,10 @@ const Scanner = () => {
                                             className="d-flex justify-content-between align-items-center"
                                         >
                                             <span className="col-md-3 text-start">
-                                                {extra?.display_name}
+                                                {extra?.display_name ??
+                                                    extra?.name}
                                             </span>
-                                            <div className="update-quantity d-flex align-items-center justify-content-center col-md-3">
+                                            {/* <div className="update-quantity d-flex align-items-center justify-content-center col-md-3">
                                                 <button
                                                     className="btn btn-outline-danger btn-sm"
                                                     onClick={() =>
@@ -329,9 +317,10 @@ const Scanner = () => {
                                                 >
                                                     +
                                                 </button>
-                                            </div>
+                                            </div> */}
                                             <span className="col-md-3 text-end">
-                                                {"X "}
+                                                {quantity}
+                                                {" X "}
                                                 {price}
                                                 {"€ ="}
                                             </span>
@@ -340,7 +329,7 @@ const Scanner = () => {
                                                     parseInt(
                                                         extra?.newQty
                                                             ? extra?.newQty -
-                                                            extra?.qty
+                                                                  extra?.qty
                                                             : 0
                                                     )}
                                                 €
@@ -455,7 +444,7 @@ const Scanner = () => {
                         <button
                             type="button"
                             class="btn btn-success text-light w-100 py-1"
-                            onClick={submitChanges}
+                            onClick={() => setShowPaymentModal(true)}
                         >
                             {changesProcessing
                                 ? "Processing..."
@@ -464,8 +453,7 @@ const Scanner = () => {
                     </span>
                 </div>
             ) : !startScan ? (
-
-                <div className="d-flex gap-3">
+                <div className="d-flex flex-column align-items-center gap-3">
                     <div
                         className="qr-box flex-column"
                         onClick={handleStartScan}
@@ -475,11 +463,16 @@ const Scanner = () => {
                             src="/assets/qr-code.png"
                             alt="QR Code"
                         />
-                        <h3>
-                            start scanning
-
-                        </h3>
+                        <h3>start scanning</h3>
                     </div>
+                    <h3>or</h3>
+                    <input
+                        className="qr-box flex-column"
+                        type="text"
+                        onChange={(event) => setManualCode(event.target.value)}
+                        onKeyDown={handleManualKeyPress}
+                        placeholder="Manually enter ticket code"
+                    />
                 </div>
             ) : (
                 ""
@@ -513,6 +506,12 @@ const Scanner = () => {
                     </div>
                 </div>
             )}
+            <ScannerPaymentModal
+                open={showPaymentModal}
+                onClose={() => setShowPaymentModal(false)}
+                ticket={scannedTicket}
+                handleSubmit={submitChanges}
+            />
         </section>
     );
 };

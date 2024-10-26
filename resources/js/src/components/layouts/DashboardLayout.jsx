@@ -43,6 +43,11 @@ function DashboardLayout({ children }) {
         [pathname]
     );
 
+    const showCart = useMemo(
+        () => ["tickets", "extras"].includes(pathname.split("/")[2]),
+        [pathname]
+    );
+
     return (
         <>
             <div className="dashboard_header">
@@ -117,7 +122,7 @@ function DashboardLayout({ children }) {
                             >
                                 {showFilter && <FilterBar />}
                                 {children}
-                                <CartButton onClick={openCart} />
+                                {showCart && <CartButton onClick={openCart} />}
                             </div>
                         </div>
                     </div>
