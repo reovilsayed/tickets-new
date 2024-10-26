@@ -38,7 +38,7 @@ class ApiController extends Controller
             ->whereHas('poses', function ($q) {
                 $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
             })
-            ->where('type', 'pos')
+            ->whereIn('type', ['pos','both'])
             ->where('invite_only', 0);
 
         if ($event_id) {
