@@ -86,7 +86,7 @@ class AdminCustomController extends Controller
                         "id" => $key,
                         "qty" => $extra['qty'],
                         "name" => Extra::find($key)->display_name,
-                        "used" => 0
+                        "used" => 0,
                     ];
                 }
             } else {
@@ -122,12 +122,12 @@ class AdminCustomController extends Controller
             ]);
 
             return back()->with([
-                'message'    => "Order amount has been refunded",
+                'message' => "Order amount has been refunded",
                 'alert-type' => 'success',
             ]);
         } else {
             return back()->with([
-                'message'    => "Attempted to refund is failed",
+                'message' => "Attempted to refund is failed",
                 'alert-type' => 'error',
             ]);
         }
@@ -190,7 +190,6 @@ class AdminCustomController extends Controller
             'event_id' => 'required|exists:events,id',
         ]);
 
-
         for ($i = 0; $i < $request->quantity; $i++) {
             $coupon = Coupon::create([
                 'code' => uniqid(),
@@ -200,7 +199,6 @@ class AdminCustomController extends Controller
                 'type' => $request->type,
                 'event_id' => $request->event_id,
             ]);
-
 
             $coupon->products()->attach($request->product_id);
         }
@@ -226,9 +224,8 @@ class AdminCustomController extends Controller
 
         try {
 
-
             $order = Order::create([
-                'user_id' =>  null,
+                'user_id' => null,
                 'billing' => [
                     'name' => $request->name,
                     'email' => $request->email,
@@ -246,12 +243,15 @@ class AdminCustomController extends Controller
                 'event_id' => $product->event->id,
             ]);
 
-            if ($product->quantity < $request->qty) throw new Exception($product->name . ' is not available for this quantity');
+            if ($product->quantity < $request->qty) {
+                throw new Exception($product->name . ' is not available for this quantity');
+            }
+
             $product->quantity -= $request->qty;
             $product->save();
             for ($i = 1; $i <= $request->qty; $i++) {
                 $data = [
-                    'user_id' =>  null,
+                    'user_id' => null,
                     'owner' => [
                         'name' => $request->name,
                         'email' => $request->email,
@@ -262,7 +262,7 @@ class AdminCustomController extends Controller
                     'ticket' => uniqid(),
                     'price' => 0,
                     'dates' => $product->dates,
-                    'type' => 'invite'
+                    'type' => 'invite',
                 ];
 
                 if ($product->extras && count($product->extras)) {
@@ -308,12 +308,12 @@ class AdminCustomController extends Controller
             }
 
             for ($i = 1; $i <= $request->qty; $i++) {
-                $data =  [
+                $data = [
                     'event_id' => $product->event_id,
                     'product_id' => $product->id,
                     'group' => $request->name,
                     'type' => 'physical',
-                    'ticket' =>  now()->format('ymdhis') . uniqid(),
+                    'ticket' => now()->format('ymdhis') . uniqid(),
                     'status' => 0,
                     'owner' => json_encode([
                         'name' => '',
@@ -336,7 +336,7 @@ class AdminCustomController extends Controller
                 'message' => 'Physical ticket generation completed successfully',
                 'alert_type' => 'success',
             ]);
-        } catch (Exception  | Error $e) {
+        } catch (Exception | Error $e) {
             DB::rollBack();
             return redirect()->back()->with([
                 'message' => $e->getMessage(),
@@ -347,9 +347,19 @@ class AdminCustomController extends Controller
 
     public function ticketCreatePhysicalDownload(Product $product, Request $request)
     {
-        $tickets = $product->physicalTickets()->where('group', $request->group)->get()->map(fn($ticket) => ['id' => $ticket->id, 'ticket' => $ticket->ticket, 'event' => $ticket->event->name, 'product' => $ticket->product->name, 'dates' => implode(', ', $ticket->dates)]);
-        $name = strtolower(str_replace(' ', '-', $product->name)) . '-' . strtolower(str_replace(' ', '-', $request->group)) . '-' . 'tickets' . '-' . now()->format('ymdhs');
+        $productName = preg_replace('/[\/\\\\]/', '-', strtolower(str_replace(' ', '-', $product->name)));
+        $groupName = preg_replace('/[\/\\\\]/', '-', strtolower(str_replace(' ', '-', $request->group)));
+        $name = $productName . '-' . $groupName . '-tickets-' . now()->format('ymdhs');
+        $tickets = $product->physicalTickets()->where('group', $request->group)->get()->map(fn($ticket) => [
+            'id' => $ticket->id,
+            'ticket' => $ticket->ticket,
+            'event' => $ticket->event->name,
+            'product' => $ticket->product->name,
+            'dates' => implode(', ', $ticket->dates),
+        ]);
+
         return Excel::download(new TicketExport($tickets), $name . '.xlsx');
+
     }
     public function ticketCreatePhysicalDestroy(Product $product, Request $request)
     {

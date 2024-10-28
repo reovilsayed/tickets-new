@@ -341,4 +341,3 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
         return view('pos');
     });
 });
-

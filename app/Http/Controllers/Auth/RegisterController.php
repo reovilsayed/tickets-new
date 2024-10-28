@@ -95,6 +95,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        dd($data);
         // $number = $data['country_code']."". $data['contact_number'];
         $array = [
             'name' => $data['name'],
@@ -104,7 +105,6 @@ class RegisterController extends Controller
             'country' => $data['country'],
             'password' => Hash::make($data['password']),
             'role_id' => 2,
-
         ];
         $user = User::create($array);
         $verify_token = Str::random(20);
