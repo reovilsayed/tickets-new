@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./PaymentModal.css";
-import { useDispatch } from "react-redux";
-import { close } from "../../../lib/features/paymentModalSlice";
 import { useCart } from "react-use-cart";
 import axios from "axios";
-import CartInfo from "./CartInfo/CartInfo";
-import { Dropdown, DropdownButton, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import ScannedCartInfo from "./CartInfo/ScannedCartInfo";
 
-const PaymentModal = ({ open }) => {
+const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
+    const cartTotal = useMemo(() => {
+        var total = 0.0;
+        ticket?.extras?.map((item) => {
+            if (item?.newQty > 0)
+                total += (item?.newQty - item.qty) * item.price;
+        });
+        return total;
+    }, [ticket?.extras]);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -23,16 +28,16 @@ const PaymentModal = ({ open }) => {
         });
     };
 
-    const [sendToPhone, setSendToPhone] = useState(true);
+    /* const [sendToPhone, setSendToPhone] = useState(true);
     const [sendToMail, setSendToMail] = useState(false);
     const [physicalQr, setPhysicalQr] = useState(false);
     const [sendInvoiceToMail, setSendInvoiceToMail] = useState(false);
-    const [printInvoice, setPrintInvoice] = useState(false);
+    const [printInvoice, setPrintInvoice] = useState(false); */
 
     const [orderRequestProcessing, setOrderRequestProcessing] = useState(false);
 
     useEffect(() => {
-        const modalElement = document.getElementById("paymentModal");
+        const modalElement = document.getElementById("scannerPaymentModal");
 
         if (open) {
             modalElement.classList.add("show", "fade-in");
@@ -47,28 +52,26 @@ const PaymentModal = ({ open }) => {
         }
     }, [open]);
 
-    const dispatch = useDispatch();
-    const handleClose = () => dispatch(close());
-
-    const { items, cartTotal, emptyCart } = useCart();
-
-    const navigate = useNavigate();
+    const handleClose = () => onClose();
 
     const submitOrder = async () => {
         setOrderRequestProcessing(true);
         const orderData = {
             biling: formData,
-            tickets: items.filter((item) => item.isTicket),
-            extras: items.filter((item) => !item.isTicket),
+            tickets: [],
+            extras: ticket?.extras?.map((item) => {
+                if (item.newQty > 0)
+                    return { ...item, quantity: item.newQty - item.qty };
+            }),
             discount: formData["discount"],
             paymentMethod: formData["paymentMethod"],
             subTotal: cartTotal,
             total: cartTotal,
-            sendToMail,
+            /* sendToMail,
             sendToPhone,
             physicalQr,
             printInvoice,
-            sendInvoiceToMail,
+            sendInvoiceToMail, */
         };
         const response = await axios.post(
             `${import.meta.env.VITE_APP_URL}/api/create-order`,
@@ -81,6 +84,7 @@ const PaymentModal = ({ open }) => {
             }
         );
         if (response.status == 200) {
+            handleSubmit();
             setFormData({
                 name: "",
                 email: "",
@@ -89,7 +93,7 @@ const PaymentModal = ({ open }) => {
                 discount: 0.0,
                 paymentMethod: "Cash",
             });
-            if (printInvoice && response?.data?.invoice_url) {
+            /* if (printInvoice && response?.data?.invoice_url) {
                 window.open(response?.data?.invoice_url, "_blank");
                 setPrintInvoice(false);
             }
@@ -100,17 +104,16 @@ const PaymentModal = ({ open }) => {
                         ?.join(",")}`
                 );
                 setPhysicalQr(false);
-            }
-            setSendToMail(true);
+            } */
+            /* setSendToMail(true);
             setSendToPhone(false);
-            setSendInvoiceToMail(false);
-            emptyCart("");
+            setSendInvoiceToMail(false); */
             handleClose();
         }
         setOrderRequestProcessing(false);
     };
 
-    const handleSendToMail = () => {
+    /* const handleSendToMail = () => {
         setSendToMail((prev) => {
             if (prev) return false;
 
@@ -149,7 +152,7 @@ const PaymentModal = ({ open }) => {
             setSendInvoiceToMail(false);
             return true;
         });
-    };
+    }; */
 
     return (
         <>
@@ -160,7 +163,7 @@ const PaymentModal = ({ open }) => {
                 className={`modal payment-modal ${
                     open ? "payment-modal-fade-in" : "payment-modal-fade-out"
                 }`}
-                id="paymentModal"
+                id="scannerPaymentModal"
                 tabIndex="-1"
                 aria-labelledby="paymentModalLabel"
                 aria-hidden={!open}
@@ -207,11 +210,11 @@ const PaymentModal = ({ open }) => {
                                 <div className="form-group mb-2">
                                     <label htmlFor="emailInput">
                                         Email{" "}
-                                        {formData["vatNumber"] ||
+                                        {/* {formData["vatNumber"] ||
                                         sendToMail ||
                                         sendInvoiceToMail
                                             ? ""
-                                            : "(optional)"}
+                                            : "(optional)"} */}
                                     </label>
                                     <input
                                         id="emailInput"
@@ -222,23 +225,17 @@ const PaymentModal = ({ open }) => {
                                         placeholder="Enter email"
                                     />
                                 </div>
-                                {sendToPhone ? (
-                                    <div className="form-group mb-2">
-                                        <label htmlFor="emailInput">
-                                            Phone
-                                        </label>
-                                        <input
-                                            id="emailInput"
-                                            className="form-control"
-                                            name="phone"
-                                            value={formData["phone"]}
-                                            onChange={handleFormData}
-                                            placeholder="Enter phone"
-                                        />
-                                    </div>
-                                ) : (
-                                    ""
-                                )}
+                                <div className="form-group mb-2">
+                                    <label htmlFor="emailInput">Phone</label>
+                                    <input
+                                        id="emailInput"
+                                        className="form-control"
+                                        name="phone"
+                                        value={formData["phone"]}
+                                        onChange={handleFormData}
+                                        placeholder="Enter phone"
+                                    />
+                                </div>
                                 <div className="form-group mb-2">
                                     <label htmlFor="vatInput">
                                         VAT Number (optional)
@@ -295,112 +292,13 @@ const PaymentModal = ({ open }) => {
                                         />
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <label
-                                            class="form-check-label"
-                                            htmlFor="ticket-check"
-                                        >
-                                            Ticket
-                                        </label>
-
-                                        <div class="form-check">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value={sendToPhone}
-                                                checked={sendToPhone}
-                                                onChange={handleSendToPhone}
-                                                id="sendToPhoneCheck"
-                                            />
-                                            <label
-                                                class="form-check-label"
-                                                htmlFor="sendToPhoneCheck"
-                                            >
-                                                Send to phone
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value={sendToMail}
-                                                checked={sendToMail}
-                                                onChange={handleSendToMail}
-                                                id="sendToMailCheck"
-                                            />
-                                            <label
-                                                class="form-check-label"
-                                                htmlFor="sendToMailCheck"
-                                            >
-                                                Send to mail
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value={physicalQr}
-                                                checked={physicalQr}
-                                                onChange={handlePhysicalQr}
-                                                id="printTicketCheck"
-                                            />
-                                            <label
-                                                class="form-check-label"
-                                                htmlFor="printTicketCheck"
-                                            >
-                                                Physical QR Code
-                                            </label>
-                                        </div>
-                                    </div>
-                                    {physicalQr && (
-                                        <div className="col-md-6">
-                                            <label
-                                                class="form-check-label"
-                                                htmlFor="invoice-check"
-                                            >
-                                                Invoice
-                                            </label>
-                                            <div class="form-check">
-                                                <input
-                                                    class="form-check-input"
-                                                    type="checkbox"
-                                                    value={sendInvoiceToMail}
-                                                    checked={sendInvoiceToMail}
-                                                    onChange={handleSendInvoice}
-                                                    id="sendInvoiceToMailCheck"
-                                                />
-                                                <label
-                                                    class="form-check-label"
-                                                    htmlFor="sendInvoiceToMailCheck"
-                                                >
-                                                    Send to mail
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input
-                                                    class="form-check-input"
-                                                    type="checkbox"
-                                                    value={printInvoice}
-                                                    checked={printInvoice}
-                                                    onChange={
-                                                        handlePrintInvoice
-                                                    }
-                                                    id="printInvoiceCheck"
-                                                />
-                                                <label
-                                                    class="form-check-label"
-                                                    htmlFor="printInvoiceCheck"
-                                                >
-                                                    Print Invoice
-                                                </label>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
                             </div>
                             <div className="col-md-6">
-                                <CartInfo discount={formData["discount"]} />
+                                <ScannedCartInfo
+                                    items={ticket?.extras}
+                                    cartTotal={cartTotal}
+                                    discount={formData["discount"]}
+                                />
                             </div>
                         </div>
                         <div className="modal-footer">
@@ -417,11 +315,11 @@ const PaymentModal = ({ open }) => {
                                 onClick={submitOrder}
                                 disabled={
                                     !formData["name"] ||
-                                    (formData["vatNumber"] ||
-                                    sendToMail ||
+                                    (formData["vatNumber"]
+                                        ? /* sendToMail ||
                                     sendToPhone ||
-                                    sendInvoiceToMail
-                                        ? formData["email"] || formData["phone"]
+                                    sendInvoiceToMail */
+                                          formData["email"] || formData["phone"]
                                             ? false
                                             : true
                                         : false) ||
@@ -440,4 +338,4 @@ const PaymentModal = ({ open }) => {
     );
 };
 
-export default PaymentModal;
+export default ScannerPaymentModal;

@@ -33,7 +33,7 @@ class CheckoutService
         $this->cart = Cart::session($event->slug)->getContent();
     }
 
-    public static function  create(Event $event, Request $request, $isFree = false, $invite = null, User $user = null)
+    public static function create(Event $event, Request $request, $isFree = false, $invite = null, User $user = null)
     {
         return (new self($event, $isFree, $invite, user: $user))->generate($request);
     }
@@ -46,6 +46,7 @@ class CheckoutService
             'vatNumber' => ['nullable'],
             'address' => ['nullable'],
         ]);
+
         $order = $this->createOrder();
 
 
@@ -83,6 +84,12 @@ class CheckoutService
                         $data['extras'] = collect($item->extras)->map(fn($qty, $key) => ['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray();
                     }
                     $order->tickets()->create($data);
+                    $order->update(
+                        [
+                            'status' => 1,
+                            'payment_status' => 1,
+                        ]
+                    );
                 }
             }
         } else {
@@ -146,21 +153,29 @@ class CheckoutService
 
     protected function createOrder()
     {
+        request()->validate([
+            'contact_number' => 'required_if:send_message,1',
+            'name' => 'required',
+            'vatNumber' => 'nullable',
+            'address' => 'nullable',
+        ]);
         if ($this->isFree) {
             $data = [
-                'user_id' => $this->user ? $this->user->id : auth()->id() ?? null,
+                'user_id' => $this->user ? $this->user->id : null,
                 'billing' => $this->inviteBillingObject(),
                 'subtotal' => 0,
                 'discount' => 0,
                 'discount_code' => null,
                 'tax' => 0,
                 'total' => 0,
-                'status' => 1,
-                'payment_status' => 1,
+
                 'payment_method' => 'invite',
                 'transaction_id' => 0,
                 'security_key' => Str::uuid(),
                 'event_id' => $this->event->id,
+                'send_message' => request()->send_message ? true : false,
+                'send_email' => request()->send_email ? true : false
+
             ];
         } else {
             $tax = $this->cart->map(function ($product) {
@@ -181,8 +196,13 @@ class CheckoutService
                 'transaction_id' => Str::uuid(),
                 'security_key' => Str::uuid(),
                 'event_id' => $this->event->id,
+                'send_message' => request()->send_message,
+                'send_email' => request()->send_email
             ];
         }
+
+
+
         return Order::create($data);
     }
 
@@ -193,13 +213,15 @@ class CheckoutService
             'name' => request()->name,
             'vatNumber' => request()->vatNumber ?? '',
             'address' => request()->address,
+            'phone' => request()->contact_number,
         ];
     }
     protected function inviteBillingObject()
     {
         return [
             'name' => request()->name,
-            'email' => request()->email
+            'email' => request()->email,
+            'phone' => request()->contact_number
         ];
     }
 }

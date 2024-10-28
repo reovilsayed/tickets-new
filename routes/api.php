@@ -155,11 +155,8 @@ Route::post('/extras-scan-ticker', function (Request $request) {
 })->name('api.extras-scan-ticket');
 
 
-Route::get('/tickets', [ApiController::class, 'index']);
+
 Route::post('/tickets/get', [ApiController::class, 'getTicket']);
 Route::post('/tickets/update-code', [ApiController::class, 'updateTicketCode']);
 Route::post('/tickets/activate', [ApiController::class, 'activateTicket']);
-Route::get('/events', [ApiController::class, 'events']);
 Route::post('/ticket-extras', [ApiController::class, 'ticketExtras']);
-Route::get('/extras', [ApiController::class, 'extras']);
-Route::get('/event-extras/{event}', [ApiController::class, 'eventExtras']);

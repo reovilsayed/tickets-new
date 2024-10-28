@@ -243,6 +243,22 @@
                             <label for="">Email</label>
                             <input name="email" type="email" class="form-control">
                         </div>
+                        <label for="">Phone</label>
+                        <div class="form-group">
+                            <input name="contact_number"  type="tel" id="intl-phone" class="form-control">
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" checked  name="send_email" type="checkbox" value="1" id="send_email">
+                            <label class="form-check-label" for="send_email">
+                             {{__('words.send_email')}}
+                            </label>
+                          </div>
+                        <div class="form-check">
+                            <input class="form-check-input"  name="send_message" type="checkbox" value="1" id="send_message">
+                            <label class="form-check-label" for="send_message">
+                             {{__('words.send_message')}}
+                            </label>
+                          </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"

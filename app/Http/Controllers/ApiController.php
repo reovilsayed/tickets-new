@@ -13,11 +13,14 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
 use App\Services\TOCOnlineService;
+use Error;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+
+use Vemcogroup\SmsApi\SmsApi;
 
 class ApiController extends Controller
 {
@@ -29,7 +32,14 @@ class ApiController extends Controller
         $event_id = $request->get('event_id');
         $event_date = $request->get('event_date');
 
-        $products = Product::with('event')->where('name', 'like', "%{$query}%")->where('status', 1)->where('type', 'pos')->where('invite_only', 0);
+        $products = Product::with('event')
+            ->where('name', 'like', "%{$query}%")
+            ->where('status', 1)
+            ->whereHas('poses', function ($q) {
+                $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
+            })
+            ->whereIn('type', ['pos', 'both'])
+            ->where('invite_only', 0);
 
         if ($event_id) {
             $products->where('event_id', $event_id);
@@ -45,14 +55,17 @@ class ApiController extends Controller
 
     public function getTicket(Request $request)
     {
-        $ticket = Ticket::where('ticket', $request->ticket)->first();
+        $ticket = Ticket::where('ticket', $request->ticket)->with(['event', 'product'])->first();
         if (!$ticket)
             return response()->json(['message' => 'No ticket was found'], status: 404);
         $ticketData = [
             "id" => $ticket["id"],
             "owner" => $ticket["owner"],
             "event_id" => $ticket["event_id"],
+            "event_name" => $ticket->event["name"],
+            "even" => $ticket["event"],
             "product_id" => $ticket["product_id"],
+            "product_name" => $ticket->product["name"],
             "order_id" => $ticket["order_id"],
             "user_id" => $ticket["user_id"],
             "ticket" => $ticket["ticket"],
@@ -105,7 +118,9 @@ class ApiController extends Controller
         $query = $request->get('query');
         $event_id = $request->get('event_id');
 
-        $extras = Extra::with('event')->where('name', 'like', "%{$query}%");
+        $extras = Extra::with('event')->whereHas('poses', function ($q) {
+            $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
+        })->where('name', 'like', "%{$query}%");
 
         if ($event_id) {
             $extras->where('event_id', $event_id);
@@ -130,123 +145,150 @@ class ApiController extends Controller
     public function createOrder(Request $request)
     {
         // Collect initial order data
-        $orderData = [
-            'billing' => request()->get('biling'),
-            'user_id' => auth()->id() ?? null,
-            'subtotal' => $request->get('subTotal'),
-            'discount' => $request->get('discount'),
-            'total' => $request->get('total'),
-            'status' => 1,
-            'payment_status' => 1,
-            'payment_method' => $request->get('paymentMethod') ?? 'Pos',
-            'transaction_id' => Str::uuid(),
-            'security_key' => Str::uuid(),
-        ];
+        try {
 
-        $order = Order::create($orderData);
+            DB::beginTransaction();
+            $orderData = [
+                'billing' => request()->get('biling'),
+                'user_id' => auth()->id() ?? null,
+                'subtotal' => $request->get('subTotal'),
+                'discount' => $request->get('discount'),
+                'total' => $request->get('total'),
 
-        // Calculate total quantity of extras and tickets
-        $totalItems = 0;
-        $extraProducts = $request->get('extras') ?? [];
-        $tickets = $request->get('tickets') ?? [];
-
-        foreach ($extraProducts as $extra) {
-            $totalItems += $extra['quantity'];
-        }
-        foreach ($tickets as $ticket) {
-            $totalItems += $ticket['quantity'];
-        }
-
-        // Calculate discount per unit
-        $totalDiscount = $orderData['discount'];
-        $discountPerUnit = $totalItems > 0 ? $totalDiscount / $totalItems : 0;
+                'payment_method' => $request->get('paymentMethod') ?? 'Pos',
+                'transaction_id' => Str::uuid(),
+                'security_key' => Str::uuid(),
+                'send_message' => $request->get('sendToPhone') ? true : false,
+                'send_email' => $request->get('sendToMail') ? true : false
+            ];
 
 
-        // Adjust extra product prices
-        if (count($extraProducts)) {
-            $orderExtras = collect($extraProducts)->map(function ($extra) use ($discountPerUnit) {
-                $extra['price'] -= $discountPerUnit; // Subtract discount per unit
-                return [
-                    'id' => $extra['id'],
-                    'name' => Extra::find($extra['id'])->display_name,
-                    'qty' => $extra['quantity'],
-                    'price' => max(0, $extra['price']), // Ensure price doesn't go below zero
-                ];
-            })->toArray();
-            $order['extras'] = json_encode($orderExtras);
-        }
+            $order = Order::create($orderData);
 
-        // Handle ticket creation and price adjustment
-        $hollowTickets = [];
-        $physicalQr = $request->get('physicalQr');
 
-        foreach ($tickets as $item) {
-            $product = Product::findOrFail($item['id']);
-            if ($product->quantity < $item['quantity']) {
-                throw new Exception($item['name'] . ' is not available for this quantity');
+            // Calculate total quantity of extras and tickets
+            $totalItems = 0;
+            $extraProducts = $request->get('extras') ?? [];
+            $tickets = $request->get('tickets') ?? [];
+
+            foreach ($extraProducts as $extra) {
+                $totalItems += $extra['quantity'];
             }
-            $product->quantity -= $item['quantity'];
-            $product->save();
+            foreach ($tickets as $ticket) {
+                $totalItems += $ticket['quantity'];
+            }
 
-            for ($i = 0; $i < $item['quantity']; $i++) {
-                $data = [
-                    'owner' => [
-                        'name' => request()->get('biling')['name'] ?? '',
-                        'email' => request()->get('biling')['email'] ?? '',
-                        'vatNumber' => request()->get('biling')['vatNumber'] ?? '',
-                        'address' => request()->get('biling')['address'] ?? '',
-                    ],
-                    'event_id' => $product->event->id,
-                    'product_id' => $product->id,
-                    'order_id' => $order->id,
-                    'ticket' => !$physicalQr ? uniqid() : null,
-                    'price' =>  $product->price - $discountPerUnit, // Apply discount per unit
-                    'dates' => $product->dates
-                ];
+            // Calculate discount per unit
+            $totalDiscount = $orderData['discount'];
+            $discountPerUnit = $totalItems > 0 ? $totalDiscount / $totalItems : 0;
 
-                $extras = $item['extras'] ?? [];
-                if (count($extras)) {
-                    $data['hasExtras'] = true;
-                    foreach ($extras as $extra) {
-                        $newQuantity = $extra['newQuantity'] ?? 0;
-                        $quantity = $extra['quantity'] ?? 0;
-                        $price = $extra['price'] ?? 0;
-                        if ($newQuantity > $quantity) {
-                            $data['price'] += (($newQuantity - $quantity) * $price);
-                        }
-                    }
-                    $data['extras'] = collect($extras)->map(fn($extra) => [
+
+            // Adjust extra product prices
+            if (count($extraProducts)) {
+                $orderExtras = collect($extraProducts)->map(function ($extra) use ($discountPerUnit) {
+                    $extra['price'] -= $discountPerUnit; // Subtract discount per unit
+                    return [
                         'id' => $extra['id'],
                         'name' => Extra::find($extra['id'])->display_name,
-                        'qty' => $extra['newQuantity'] ?? $extra['quantity'],
-                        'price' => $extra['price']
-                    ])->toArray();
+                        'qty' => $extra['quantity'],
+                        'price' => max(0, $extra['price']), // Ensure price doesn't go below zero
+                    ];
+                })->toArray();
+                $order['extras'] = json_encode($orderExtras);
+            }
+
+            // Handle ticket creation and price adjustment
+            $hollowTickets = [];
+            $physicalQr = $request->get('physicalQr');
+
+            foreach ($tickets as $item) {
+                $product = Product::findOrFail($item['id']);
+                if ($product->quantity < $item['quantity']) {
+                    throw new Exception($item['name'] . ' is not available for this quantity');
                 }
-                $hollowTickets[] = $order->tickets()->create($data);
+                $product->quantity -= $item['quantity'];
+                $product->save();
+
+                for ($i = 0; $i < $item['quantity']; $i++) {
+                    $data = [
+                        'owner' => [
+                            'name' => request()->get('biling')['name'] ?? '',
+                            'email' => request()->get('biling')['email'] ?? '',
+                            'vatNumber' => request()->get('biling')['vatNumber'] ?? '',
+                            'address' => request()->get('biling')['address'] ?? '',
+                        ],
+                        'event_id' => $product->event->id,
+                        'product_id' => $product->id,
+                        'order_id' => $order->id,
+                        'ticket' => !$physicalQr ? uniqid() : null,
+                        'price' =>  $product->price - $discountPerUnit, // Apply discount per unit
+                        'dates' => $product->dates
+                    ];
+
+                    $extras = $item['extras'] ?? [];
+                    if (count($extras)) {
+                        $data['hasExtras'] = true;
+                        foreach ($extras as $extra) {
+                            $newQuantity = $extra['newQuantity'] ?? 0;
+                            $quantity = $extra['quantity'] ?? 0;
+                            $price = $extra['price'] ?? 0;
+                            if ($newQuantity > $quantity) {
+                                $data['price'] += (($newQuantity - $quantity) * $price);
+                            }
+                        }
+                        $data['extras'] = collect($extras)->map(fn($extra) => [
+                            'id' => $extra['id'],
+                            'name' => Extra::find($extra['id'])->display_name,
+                            'qty' => $extra['newQuantity'] ?? $extra['quantity'],
+                            'price' => $extra['price']
+                        ])->toArray();
+                    }
+                    $hollowTickets[] = $order->tickets()->create($data);
+                }
             }
-        }
 
-        // Handle invoice printing or emailing
-        $printInvoice = $request->get('printInvoice');
-        $sendInvoiceToMail = $request->get('sendInvoiceToMail');
-        if ($printInvoice || $sendInvoiceToMail) {
-            $order->invoice_url = 'invoice';
-            // Add invoice creation logic if needed
-        }
-        $order->save();
+            // Handle invoice printing or emailing
+            $printInvoice = $request->get('printInvoice');
+            $sendInvoiceToMail = $request->get('sendInvoiceToMail');
+            // if(env('APP_ENV') != 'local'){
 
-        // Send tickets to mail if requested
-        $sendTicketsToMail = $request->get('sendToMail');
-        if ($sendTicketsToMail) {
-            foreach ($tickets as $ticket) {
-                $product = Product::find($ticket['id']);
-                Mail::to($order['billing']->email)->send(new TicketDownload($order, $product, null));
+
+
+            $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
+
+            // Return the order with tickets
+        
+            DB::commit();
+            $order->update([
+                'status' => 1,
+                'payment_status' => 1,
+            ]);
+            $toco = new TOCOnlineService;
+            $response = $toco->createCommercialSalesDocument($order);
+
+            $order->invoice_id = $response['id'];
+            $order->invoice_url = $response['public_link'];
+            $order->invoice_body = json_encode($response);
+
+            if ($sendInvoiceToMail) {
+                $toco->sendEmailDocument($order, $response['id']);
             }
-        }
+            // }
 
-        // Return the order with tickets
-        $order['tickets'] = $hollowTickets;
-        return response()->json($order);
+            $order->save();
+
+            $order['tickets'] = $hollowTickets;
+
+            if ($printInvoice == false) {
+
+                $order = $order->invoice_url = null;
+                // Add invoice creation logic if needed
+            }
+            return response()->json($order);
+        } catch (Exception | Error $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
+        }
     }
 
 

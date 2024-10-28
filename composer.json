@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.1",
@@ -20,7 +23,8 @@
         "maatwebsite/excel": "^3.1",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-pdf": "^1.5",
-        "tcg/voyager": "^1.6"
+        "tcg/voyager": "^1.6",
+        "kazi-rayhan/laravel-smsapi": "dev-master"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -71,6 +75,12 @@
             "pestphp/pest-plugin": true
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Kazi-Rayhan/laravel-smsapi"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true
 }
