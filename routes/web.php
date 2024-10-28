@@ -173,7 +173,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/products/{product}/add-extras', [AdminCustomController::class, 'productAddExtrasStore'])->name('voyager.products.add-extras');
     Route::post('/ticket/{ticket:ticket}/add-extras', [AdminCustomController::class, 'ticketAddExtrasStore'])->name('voyager.ticket.add-extras');
     Route::get('/send/email/{order}', [AdminCustomController::class, 'sendEmailOrder'])->name('send.email');
-    Route::group(['prefix' => '/events/{event}/analytics'], function () {
+    Route::group(['prefix' => '/events/{event}/analytics','middleware' => ['auth', 'voyager']], function () {
         Route::get('/', [EventAnalyticsController::class, 'index'])->name('voyager.events.analytics');
         Route::get('/ticket-participants-report', [EventAnalyticsController::class, 'ticketParticipanReport'])->name('voyager.events.ticketParticipanReport.analytics');
         Route::get('/sales-report', [EventAnalyticsController::class, 'salesReport'])->name('voyager.events.salesReport.analytics');

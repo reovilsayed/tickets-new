@@ -120,7 +120,6 @@
                 <div class=" ">
                     <form action="{{ route('ticket.reply', $ticket) }}" method="POST" enctype='multipart/form-data'>
                         @csrf
-
                         <div class="col-12" style="margin-bottom: 10px;">
                             <label for="massage">Massage</label>
                             <textarea id="massage" class="form-control @error('massage') is-invalid @enderror" name="massage" id="massage">{{ old('massage') }} </textarea>
