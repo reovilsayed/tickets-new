@@ -95,7 +95,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        dd($data);
         // $number = $data['country_code']."". $data['contact_number'];
         $array = [
             'name' => $data['name'],
