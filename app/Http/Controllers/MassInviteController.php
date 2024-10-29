@@ -11,10 +11,9 @@ use App\Models\Order;
 use App\Models\Product;
 use Error;
 use Exception;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 class MassInviteController extends Controller
@@ -56,7 +55,6 @@ class MassInviteController extends Controller
                 if (!isset($row[0], $row[1])) {
                     continue; // Skip invalid rows
                 }
-
 
                 // Create an order
                 $order = Order::create([
@@ -119,7 +117,7 @@ class MassInviteController extends Controller
                                     'id' => $key,
                                     'name' => Extra::find($key)->display_name,
                                     'qty' => $qty,
-                                    'used' => 0
+                                    'used' => 0,
                                 ])
                                 ->toArray();
                         }
@@ -128,7 +126,7 @@ class MassInviteController extends Controller
                     }
                     $order->update([
                         'status' => 1,
-                        'payment_status' => 1
+                        'payment_status' => 1,
                     ]);
                 }
 
@@ -142,7 +140,7 @@ class MassInviteController extends Controller
             ]);
         } catch (Exception | Error $e) {
             return back()->with([
-                'message'    => $e->getMessage(),
+                'message' => $e->getMessage(),
                 'alert-type' => 'error',
             ]);
         }
@@ -150,6 +148,7 @@ class MassInviteController extends Controller
 
     public function MassInvite(Request $request)
     {
+
         try {
 
             $validate = $request->validate([
@@ -182,10 +181,19 @@ class MassInviteController extends Controller
                     }
                     $invite->attachProducts($data);
 
-
                     if ($request->sent_email) {
 
                         Mail::to($row[1])->send(new InviteMail($invite));
+                    }
+                    if ($request->sent_sms) {
+                        $phone = $row[2];
+                        if (!$phone) {
+                            return redirect()->back()->with(['alert-type' => 'error', 'message' => "This file does't contain phone number!"]);
+                        }
+                        $event_name = $invite->event->name;
+                        $url = route('invite.product_details', ['invite' => $invite, 'security' => $invite->security_key]);
+                        $message = "Hello! You've been invited to the event '{$event_name}'. You can view your tickets and invoice here: {$url}. Looking forward to seeing you there!";
+                        SmsApi::send($phone, $message);
                     }
                 }
             }
@@ -193,7 +201,7 @@ class MassInviteController extends Controller
             return redirect()->route('voyager.invites.index')->with(['alert-type' => 'success', 'message' => 'Invite created successfully!']);
         } catch (Exception | Error $e) {
             return back()->with([
-                'message'    => $e->getMessage(),
+                'message' => $e->getMessage(),
                 'alert-type' => 'error',
             ]);
         }

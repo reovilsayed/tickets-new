@@ -280,10 +280,10 @@ class AdminCustomController extends Controller
             }
             $order->update([
                 'status' => 1,
-                'payment_status' => 1
+                'payment_status' => 1,
             ]);
 
-            Mail::to(request()->email)->send(new InviteDownload($order, $product, null));
+            // Mail::to(request()->email)->send(new InviteDownload($order, $product, null));
             return redirect()->route('voyager.products.index')->with([
                 'message' => 'Invite sent successfully',
                 'alert-type' => 'success',
