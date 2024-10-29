@@ -251,10 +251,14 @@
         </div>
     @endforeach
 
+
+    @if(@$order)
         <form action="{{ route('downloadPdf.ticket',$order) }}" method="POST" class="">
             @csrf
             <button class="print-btn"  >{{ __('words.print') }}</button>
         </form>
+
+        @endif
 </body>
 
 </html>

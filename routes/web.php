@@ -1,43 +1,25 @@
 <?php
 
-use App\Events\OrderIsPaid;
-use App\Models\User;
-use App\Models\Event;
 use App\Models\Order;
 use App\Models\Coupon;
-use App\Models\Extras;
 use App\Models\Invite;
 use App\Models\Ticket;
 use App\Models\Product;
-use App\Mail\InviteDownload;
-use App\Mail\TicketDownload;
 use Illuminate\Http\Request;
-use App\Exports\CustomerExport;
-use TCG\Voyager\Facades\Voyager;
 use App\Services\CheckoutService;
 use App\Services\TOCOnlineService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\VerifyPosUser;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EnterzoneContoller;
-use App\Http\Controllers\MassEmailController;
-use App\Http\Controllers\MassInviteController;
-use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\PdfDownloadController;
-use App\Http\Controllers\EventAnalyticsController;
-use App\Http\Controllers\ExportController;
 use App\Http\Middleware\AgeVerification;
-use Illuminate\Support\Facades\Storage;
-use Vemcogroup\SmsApi\SmsApi;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -114,86 +96,9 @@ Route::post('event/{event:slug}/add-cart', [CartController::class, 'add'])->name
 Route::post('/event/{event:slug}/add-coupon', [CouponController::class, 'add'])->name('coupon');
 Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon.destroy');
 
-// Route::get('/seller', [SellerPagesController::class, 'dashboard'])->middleware('role:vendor')->name('dashboard');
-
-Route::group(['prefix' => 'admin'], function () {
-    Voyager::routes();
-    Route::get('customer/export', function () {
-        $users = User::all()->map(fn($user) => [
-            'first_name' => $user->name,
-            'last_name' => $user->l_name,
-            'email' => $user->email,
-            'contactNumber' => $user->contact_number,
-            'vatNumber' => $user->vatNumber,
-            'events' => $user->events->unique()->pluck('name')->implode(', '),
-        ]);
-
-        return Excel::download(new CustomerExport($users), 'customer_' . now()->format('dmyhi') . '.xlsx');
-    })->name('voyager.customer.export');
-    Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicateProduct'])->name('voyager.products.duplicate');
-    Route::get('/users/{user}/staff', function (User $user) {
-        $logs = $user->scans->groupBy('ticket')->map(function ($ticket) {
-            return $ticket->map(fn($data) => ['log' => $data->pivot->action . ' at ' . $data->created_at->format('Y-m-d')]);
-        });
-
-        $products = $user->scans->groupBy(function ($ticket) {
-            return $ticket->product->name;
-        })->map(fn($products) => $products->count())->toArray();
-        $zones = $user->zones->groupBy(function ($zone) {
-            return $zone->name;
-        })->map(fn($products) => $products->count())->toArray();
-        $data = array_merge($products, $zones);
-
-        return view('vendor.voyager.user.staff', compact('user', 'logs', 'data'));
-    })->name('voyager.users.staff');
 
 
-
-    Route::get('/products/{product}/create-physical', [AdminCustomController::class, 'ticketCreatePhysical'])->name('voyager.products.ticketCreatePhysical');
-    Route::post('/products/{product}/create-physical', [AdminCustomController::class, 'ticketCreatePhysicalPost'])->name('voyager.products.ticketCreatePhysical.post');
-    Route::get('/products/{product}/download-physical', [AdminCustomController::class, 'ticketCreatePhysicalDownload'])->name('voyager.products.ticketCreatePhysical.download');
-    Route::get('/products/{product}/destroy-physical', [AdminCustomController::class, 'ticketCreatePhysicalDestroy'])->name('voyager.products.ticketCreatePhysical.destroy');
-    Route::get('/products/{product}/invite', [AdminCustomController::class, 'personalInviteForm'])->name('voyager.products.invite');
-    Route::post('/products/{product}/invite', [AdminCustomController::class, 'personalInvitePost'])->name('voyager.products.invite.post');
-
-    Route::get('/invites/{invite}/add-product', [AdminCustomController::class, 'inviteAddProduct'])->name('voyager.invites.add-product');
-
-    Route::post('/invites/{invite}/store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('voyager.invites.store-product');
-    // mass invite route
-    Route::get('bulk/invites', [MassInviteController::class, 'MassInvitePage'])->name('massInvitePage');
-    Route::get('bulk/personal-invites', [MassInviteController::class, 'MassPersonalInvitePage'])->name('MassPersonalInvitePage');
-    Route::get('bulk/invites/get-products/{eventId}', [MassInviteController::class, 'getProducts'])->name('ajax.getProduct');
-    Route::post('bulk/invites', [MassInviteController::class, 'MassInvite'])->name('MassInvite');
-    Route::post('bulk/persona-invites', [MassInviteController::class, 'PersonalMassInvite'])->name('PersonalMassInvite');
-    Route::get('/export-invites', [ExportController::class, 'exportInvites'])->name('Invite_export');
-
-    Route::get('/products/{product}/extras', [AdminCustomController::class, 'productAddExtras'])->name('voyager.products.extras');
-    Route::get('/ticket/{ticket:ticket}/extras', [AdminCustomController::class, 'ticketAddExtras'])->name('voyager.ticket.extras');
-
-    Route::post('/products/{product}/add-extras', [AdminCustomController::class, 'productAddExtrasStore'])->name('voyager.products.add-extras');
-    Route::post('/ticket/{ticket:ticket}/add-extras', [AdminCustomController::class, 'ticketAddExtrasStore'])->name('voyager.ticket.add-extras');
-    Route::get('/send/email/{order}', [AdminCustomController::class, 'sendEmailOrder'])->name('send.email');
-    Route::group(['prefix' => '/events/{event}/analytics','middleware' => ['auth', 'voyager']], function () {
-        Route::get('/', [EventAnalyticsController::class, 'index'])->name('voyager.events.analytics');
-        Route::get('/ticket-participants-report', [EventAnalyticsController::class, 'ticketParticipanReport'])->name('voyager.events.ticketParticipanReport.analytics');
-        Route::get('/sales-report', [EventAnalyticsController::class, 'salesReport'])->name('voyager.events.salesReport.analytics');
-        Route::get('/checkin', [EventAnalyticsController::class, 'checkinReport'])->name('voyager.events.checkinReport.analytics');
-        Route::get('/customer-report', [EventAnalyticsController::class, 'customerReport'])->name('voyager.events.customer.analytics');
-        Route::get('/invites-report', [EventAnalyticsController::class, 'invitesReport'])->name('voyager.events.invites.analytics');
-        Route::get('/customer-report/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');
-        Route::get('/invite-report/orders', [EventAnalyticsController::class, 'inviteReportOrders'])->name('voyager.events.invites.analytics.orders');
-        Route::get('/invite-report/tickets', [EventAnalyticsController::class, 'inviteReportTickets'])->name('voyager.events.invites.analytics.tickets');
-        Route::get('/customer-report/{user}/tickets', [EventAnalyticsController::class, 'customerReportTickets'])->name('voyager.events.customer.analytics.tickets');
-        Route::get('/customer-report/{user}/tickets/access-ticket', [EventAnalyticsController::class, 'giveAccessPage'])->name('voyager.events.customer.analytics.tickets.access-ticket');
-        Route::post('/customer-report/{user}/tickets/access-ticket', [EventAnalyticsController::class, 'giveAccessSubmit'])->name('voyager.events.customer.analytics.tickets.access-ticket-submit');
-    });
-    Route::get('orders/refund/{order}', [AdminCustomController::class, 'refund'])->name('order.refund');
-    Route::get('/coupon-generate', [AdminCustomController::class, 'couponGenerate'])->name('voyager.coupon.generate');
-    Route::post('/coupon-create', [AdminCustomController::class, 'couponCreate'])->name('voyager.coupon.create');
-});
-
-    Auth::routes(['verify' => true]);
-
+Auth::routes(['verify' => true]);
 Route::get('page/{slug}', [PageController::class, 'getPage']);
 
 
