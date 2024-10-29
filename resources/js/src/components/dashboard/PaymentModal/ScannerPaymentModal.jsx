@@ -4,6 +4,7 @@ import { useCart } from "react-use-cart";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ScannedCartInfo from "./CartInfo/ScannedCartInfo";
+import PhoneNumberInput from "./PhoneNumberInput";
 
 const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
     const cartTotal = useMemo(() => {
@@ -15,9 +16,10 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
         return total;
     }, [ticket?.extras]);
     const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        vatNumber: "",
+        name: ticket?.order_id?.billing?.name,
+        email: ticket?.order_id?.billing?.email,
+        phone: ticket?.order_id?.billing?.phone,
+        vatNumber: ticket?.order_id?.billing?.vatNumber,
         discount: 0.0,
         paymentMethod: "Cash",
     });
@@ -225,17 +227,10 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
                                         placeholder="Enter email"
                                     />
                                 </div>
-                                <div className="form-group mb-2">
-                                    <label htmlFor="emailInput">Phone</label>
-                                    <input
-                                        id="emailInput"
-                                        className="form-control"
-                                        name="phone"
-                                        value={formData["phone"]}
-                                        onChange={handleFormData}
-                                        placeholder="Enter phone"
-                                    />
-                                </div>
+                                <PhoneNumberInput value={formData["phone"]}   onChange={value => setFormData((prev) => {
+                                            return { ...prev, phone: '+'+value };
+                                        })} />
+                                 
                                 <div className="form-group mb-2">
                                     <label htmlFor="vatInput">
                                         VAT Number (optional)

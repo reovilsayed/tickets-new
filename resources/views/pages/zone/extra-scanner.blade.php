@@ -161,9 +161,10 @@
                     if (json.status == 'success') {
 
                         let rows = '';
-                        for (const key in json.extras) {
-                            if (Object.prototype.hasOwnProperty.call(json.extras, key)) {
-                                const element = json.extras[key];
+          
+                        for (const key in json.ticket.extras) {
+                            if (Object.prototype.hasOwnProperty.call(json.ticket.extras, key)) {
+                                const element = json.ticket.extras[key];
                                 rows += `
                                  <tr>
                                         <td>
@@ -173,7 +174,7 @@
                                           ${element.qty}
                                         </td>
                                         <td>
-                                           ${element.used}
+                                           ${element.qty - element.used ?? 0}
                                         </td>
                                     <td>
                                         <input class="form-control text-center" name="withdraw[${element.id}]" min="0" max="${element.qty - element.used}" type="number">
@@ -193,7 +194,7 @@
                                     <tr class="text-center ">
                                         <th>{{ __('words.extra_product_name') }}</th>
                                         <th>{{ __('words.extra_product_quantity') }}</th>
-                                        <th>{{ __('words.extra_product_taken') }}</th>
+                                        <th>{{ __('words.extra_product_availvable') }}</th>
                                         <th>{{ __('words.extra_product_withdraw') }}</th>
                                     </tr>
                                 </thead>

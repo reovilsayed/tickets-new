@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Vemcogroup\SmsApi\SmsApi;
 
 class MassInviteController extends Controller
 {
@@ -192,7 +193,7 @@ class MassInviteController extends Controller
                         }
                         $event_name = $invite->event->name;
                         $url = route('invite.product_details', ['invite' => $invite, 'security' => $invite->security_key]);
-                        $message = "Hello! You've been invited to the event '{$event_name}'. You can view your tickets and invoice here: {$url}. Looking forward to seeing you there!";
+                        $message = "Hello! You've been invited to the event $event_name . You can view your tickets and invoice here: [%goto:".$url."]. Looking forward to seeing you there!";
                         SmsApi::send($phone, $message);
                     }
                 }

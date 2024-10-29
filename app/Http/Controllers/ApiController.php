@@ -66,7 +66,7 @@ class ApiController extends Controller
             "even" => $ticket["event"],
             "product_id" => $ticket["product_id"],
             "product_name" => $ticket->product["name"],
-            "order_id" => $ticket["order_id"],
+            "order_id" => $ticket?->order,
             "user_id" => $ticket["user_id"],
             "ticket" => $ticket["ticket"],
             "status" => $ticket["status"],
@@ -106,7 +106,7 @@ class ApiController extends Controller
 
     public function events(Request $request)
     {
-        $events = Event::all();
+        $events = Event::where('status', 1)->get();
 
         return new EventCollection($events);
     }
@@ -257,7 +257,7 @@ class ApiController extends Controller
             $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
 
             // Return the order with tickets
-        
+
             DB::commit();
             $order->update([
                 'status' => 1,

@@ -59,6 +59,7 @@ const Scanner = () => {
                 { ticket: data?.data }
             );
             setScannedTicket(response.data);
+
         } catch (error) {
             toast("Error scanning ticket", error);
         }
@@ -266,10 +267,10 @@ const Scanner = () => {
                             <h4>Extras</h4>
                             <ul>
                                 {scannedTicket?.extras.map((extra, index) => {
-                                    if (!extra?.newQty) return "";
-                                    const quantity =
+                                    // if (!extra?.newQty) return "";
+                                    const quantity =parseInt(extra?.newQty ?? 0) ?
                                         parseInt(extra?.newQty ?? 0) -
-                                        parseInt(extra?.qty ?? 0);
+                                        parseInt(extra?.qty ?? 0) : parseInt(extra?.qty ?? 0);
                                     const price = parseFloat(
                                         extra?.price ?? 0
                                     ).toFixed(2);

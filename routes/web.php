@@ -20,6 +20,8 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EnterzoneContoller;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Middleware\AgeVerification;
+use Vemcogroup\SmsApi\SmsApi;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -272,3 +274,9 @@ Route::get('/payment-confirm', function () {
     $order->save();
 });
 
+
+// Route::get('send',function(){
+//     $order = Order::where('payment_status',1)->first();
+//     $message = 'Acesso e fatura para o evento: [%goto:' . route('digital-wallet', $order) . '%] !!';
+//     SmsApi::send('+351915240193',  $message);
+// });

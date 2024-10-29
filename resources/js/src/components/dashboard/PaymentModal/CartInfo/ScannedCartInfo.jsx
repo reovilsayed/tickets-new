@@ -28,8 +28,8 @@ function ScannedCartInfo({ items = [], cartTotal = 0.0, discount = 0.0 }) {
                         </thead>
                         <tbody>
                             {items?.map((item, index) => (
-                                <ScannedCartInfoItem key={index} item={item} />
-                            ))}
+                                item.newQty ? <ScannedCartInfoItem key={index} item={item}  /> : ''
+                             ))}
                         </tbody>
                     </table>
                 </div>

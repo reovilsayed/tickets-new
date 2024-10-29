@@ -64,6 +64,7 @@ class TOCOnlineService
                 'scope' => 'commercial'
             ]);
 
+        
         if ($response->successful()) {
             return $response->json()['access_token'];
         }

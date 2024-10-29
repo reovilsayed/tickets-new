@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 function ScannedCartInfoItem({ item }) {
     const quantity = useMemo(
-        () => (item?.newQty ?? 0) - (item?.qty ?? 0),
+        () =>  (item?.newQty ?? 0) - (item?.qty ?? 0),
         [item?.newQty, item?.qty]
     );
     return (

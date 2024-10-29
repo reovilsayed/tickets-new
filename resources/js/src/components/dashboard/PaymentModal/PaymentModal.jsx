@@ -7,6 +7,7 @@ import axios from "axios";
 import CartInfo from "./CartInfo/CartInfo";
 import { Dropdown, DropdownButton, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import PhoneNumberInput from "./PhoneNumberInput";
 
 const PaymentModal = ({ open }) => {
     const [formData, setFormData] = useState({
@@ -223,19 +224,11 @@ const PaymentModal = ({ open }) => {
                                     />
                                 </div>
                                 {sendToPhone ? (
-                                    <div className="form-group mb-2">
-                                        <label htmlFor="emailInput">
-                                            Phone
-                                        </label>
-                                        <input
-                                            id="emailInput"
-                                            className="form-control"
-                                            name="phone"
-                                            value={formData["phone"]}
-                                            onChange={handleFormData}
-                                            placeholder="Enter phone"
-                                        />
-                                    </div>
+                                          <PhoneNumberInput value={formData["phone"]}   onChange={value => setFormData((prev) => {
+                                            return { ...prev, phone: '+'+value };
+                                        })} />
+                                 
+
                                 ) : (
                                     ""
                                 )}

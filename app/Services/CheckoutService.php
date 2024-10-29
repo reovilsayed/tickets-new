@@ -84,14 +84,16 @@ class CheckoutService
                         $data['extras'] = collect($item->extras)->map(fn($qty, $key) => ['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray();
                     }
                     $order->tickets()->create($data);
-                    $order->update(
-                        [
-                            'status' => 1,
-                            'payment_status' => 1,
-                        ]
-                    );
+                    
                 }
+                
             }
+            $order->update(
+                [
+                    'status' => 1,
+                    'payment_status' => 1,
+                ]
+            );
         } else {
             $coupon = Coupon::where(
                 'code',
