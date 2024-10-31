@@ -28,8 +28,12 @@
         * {
             margin: 0;
             padding: 0;
+          
         }
-
+        p,li{
+            font-size: 10px !important;
+        }
+        
         body {
             font-family: "montserrat", sans-serif !important;
             margin: 0;
@@ -163,6 +167,8 @@
             
             page-break-after: avoid;
         }
+       
+       
     </style>
 </head>
 
@@ -175,13 +181,13 @@
                         <tr>
                             <td style="width: 25%;">
                                 <div class="event-date-and-price">
-                                    <p class="date">{{ $ticket->product->start_date->format('M d, Y') }}</p>
-                                    <p class="text-sub">{{ __('words.to') }}</p>
-                                    <p class="date">{{ $ticket->product->end_date->format('M d, Y') }}</p>
-                                    <p class="country">{{ $ticket->event->city }}</p>
-                                    <p class="price">&#8364;{{ $ticket->product->price }}</p>
-                                    <p class="text-main">{{ __('words.final_price') }}</p>
-                                    <p class="text-sub">{{ __('words.tax_include') }}</p>
+                                    <p class="date"  style="font-size: 16px !important;">{{ $ticket->product->start_date->format('M d, Y') }}</p>
+                                    <p class="text-sub"  style="font-size: 10px !important;">{{ __('words.to') }}</p>
+                                    <p class="date"  style="font-size: 16px !important;">{{ $ticket->product->end_date->format('M d, Y') }}</p>
+                                    <p class="country" style="font-size: 16px !important;">{{ $ticket->event->city }}</p>
+                                    <p class="price" style="font-size: 28px !important;">&#8364;{{ $ticket->product->price }}</p>
+                                    <p class="text-main" style="font-size: 14px !important;">{{ __('words.final_price') }}</p>
+                                    <p class="text-sub" style="font-size: 10px !important;">{{ __('words.tax_include') }}</p>
                                 </div>
                             </td>
                             <td style="width: 50%;">
@@ -202,12 +208,18 @@
                 </div>
             </div>
             <div class="content">
-                <h2>{{ __('words.term') }}</h2>
+                <h2 style="font-size: 18px">
+                    {{ __('words.description') }}
+                </h2>
+                <p>{!! $ticket->event->description !!}</p>
+
+<br>
+                <h2 style="font-size: 18px !important;">{{ __('words.term') }}</h2>
                 <p>{!! $ticket->event->terms !!}</p>
+        
                 <br>
-                <br>
-                <h2>{{ __('words.address') }}</h2>
-                <p class="address">{{ $ticket->event->location }}</p>
+                <h2 style="font-size: 18px !important;">{{ __('words.address') }}</h2>
+                <p class="address" style="font-size: 18px !important;">{{ $ticket->event->location }}</p>
             </div>
         </div>
         @if ($loop->last == false)

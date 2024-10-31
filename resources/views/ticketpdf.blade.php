@@ -234,6 +234,12 @@
             </div>
             <div class="content">
                 <h2>
+                    {{ __('words.description') }}
+                </h2>
+                {!! $ticket->event->description !!}
+                <br>
+                <br>
+                <h2>
                     {{ __('words.term') }}
                 </h2>
                 {!! $ticket->event->terms !!}
