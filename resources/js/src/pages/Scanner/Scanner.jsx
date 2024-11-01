@@ -18,6 +18,7 @@ const Scanner = () => {
     const [manualCode, setManualCode] = useState("");
     const [scanViaQr, setscanViaQr] = useState(false);
     const [enterManual, setEnterManual] = useState(false);
+    const [withdraw,setWithdraw] = useState(false);
 
     useEffect(() => {
         if (videoRef.current && !scanner) {
@@ -136,6 +137,7 @@ const Scanner = () => {
         var isUniqueItem = true;
 
         var ticketExtras = scannedTicket?.extras?.map((item) => {
+            console.log(item)
             if (item.id === targetExtra.id) {
                 isUniqueItem = false;
                 return {
@@ -161,10 +163,12 @@ const Scanner = () => {
     const [changesProcessing, setChangesProcessing] = useState(false);
 
     const submitChanges = async () => {
+       
+        
         setChangesProcessing(true);
         const response = await axios.post(
             `${import.meta.env.VITE_APP_URL}/api/update-ticket`,
-            { ticket: scannedTicket },
+            { ticket: scannedTicket,can_withdraw:withdraw },
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -269,8 +273,7 @@ const Scanner = () => {
                                 {scannedTicket?.extras.map((extra, index) => {
                                     // if (!extra?.newQty) return "";
                                     const quantity =parseInt(extra?.newQty ?? 0) ?
-                                        parseInt(extra?.newQty ?? 0) -
-                                        parseInt(extra?.qty ?? 0) : parseInt(extra?.qty ?? 0);
+                                        parseInt(extra?.newQty ?? 0): parseInt(extra?.qty ?? 0);
                                     const price = parseFloat(
                                         extra?.price ?? 0
                                     ).toFixed(2);
@@ -283,42 +286,7 @@ const Scanner = () => {
                                                 {extra?.display_name ??
                                                     extra?.name}
                                             </span>
-                                            {/* <div className="update-quantity d-flex align-items-center justify-content-center col-md-3">
-                                                <button
-                                                    className="btn btn-outline-danger btn-sm"
-                                                    onClick={() =>
-                                                        handleExtraChange(
-                                                            extra,
-                                                            quantity - 1
-                                                        )
-                                                    }
-                                                >
-                                                    -
-                                                </button>
-                                                <input
-                                                    type="number"
-                                                    value={quantity}
-                                                    onChange={(e) =>
-                                                        handleExtraChange(
-                                                            extra,
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="form-control text-center mx-2 border-0"
-                                                    style={{ width: "40px" }}
-                                                />
-                                                <button
-                                                    className="btn btn-outline-dark btn-sm"
-                                                    onClick={() =>
-                                                        handleExtraChange(
-                                                            extra,
-                                                            quantity + 1
-                                                        )
-                                                    }
-                                                >
-                                                    +
-                                                </button>
-                                            </div> */}
+                                           
                                             <span className="col-md-3 text-end">
                                                 {quantity}
                                                 {" X "}
@@ -512,6 +480,8 @@ const Scanner = () => {
                 onClose={() => setShowPaymentModal(false)}
                 ticket={scannedTicket}
                 handleSubmit={submitChanges}
+                withdraw={withdraw}
+                setWithdraw={setWithdraw}
             />
         </section>
     );

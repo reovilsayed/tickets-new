@@ -263,17 +263,20 @@ class ApiController extends Controller
                 'status' => 1,
                 'payment_status' => 1,
             ]);
-            $toco = new TOCOnlineService;
-            $response = $toco->createCommercialSalesDocument($order);
 
-            $order->invoice_id = $response['id'];
-            $order->invoice_url = $response['public_link'];
-            $order->invoice_body = json_encode($response);
+            try {
+                $toco = new TOCOnlineService;
+                $response = $toco->createCommercialSalesDocument($order);
 
-            if ($sendInvoiceToMail) {
-                $toco->sendEmailDocument($order, $response['id']);
+                $order->invoice_id = $response['id'];
+                $order->invoice_url = $response['public_link'];
+                $order->invoice_body = json_encode($response);
+
+                if ($sendInvoiceToMail) {
+                    $toco->sendEmailDocument($order, $response['id']);
+                }
+            } catch (Exception | Error $e) {
             }
-            // }
 
             $order->save();
 
@@ -294,36 +297,47 @@ class ApiController extends Controller
 
     public function updateTicket(Request $request)
     {
+
         $requestTicket = $request->ticket;
         $ticket = Ticket::findOrFail($requestTicket['id']);
-        $ticket->extras = collect($requestTicket['extras'])->map(fn($extra) => ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQty'] ?? $extra['qty'], 'price' => $extra['price']])->toArray();
+        $ticket->extras = collect($requestTicket['extras'])->map(function ($extra) use ($request) {
+            $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQty'] ?? $extra['qty'], 'price' => $extra['price']];
+            if ($request->can_withdraw && $extra['newQty']) {
+                $data['used'] = $extra['newQty'] - $extra['qty'];
+            }else{
+                $data['used'] = $extra['used'] ?? 0;
+            }
+            return $data;
+        })->toArray();
         $ticket->save();
 
-        $totalPrice = 0;
-        $extras = [];
-        foreach ($requestTicket['extras'] as $extra) {
-            $quantity = (int)(($extra['newQty'] ?? $extra['qty']) - $extra['qty']);
-            if ($quantity > 0) {
-                $price =  $quantity * $extra['price'];
-                $totalPrice += $price;
-                $extras[] = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $quantity, 'price' => $quantity * $extra['price']];
-            }
-        }
+        // $totalPrice = 0;
+        // $extras = [];
+        // foreach ($requestTicket['extras'] as $extra) {
+        //     $quantity = (int)(($extra['newQty'] ?? $extra['qty']) - $extra['qty']);
+        //     if ($quantity > 0) {
+        //         $price =  $quantity * $extra['price'];
+        //         $totalPrice += $price;
+        //         $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $quantity,  'price' => $quantity * $extra['price']];
 
-        $orderData = [
-            'user_id' => $ticket['user_id'],
-            'subtotal' => $totalPrice,
-            'discount' => 0,
-            'total' => $totalPrice,
-            'status' => 1,
-            'payment_status' => 1,
-            'payment_method' => 'pos',
-            'transaction_id' => Str::uuid(),
-            'security_key' => Str::uuid(),
-            'extras' => json_encode($extras)
-        ];
-        $order = Order::create($orderData);
-        return response()->json(['ticket' => $ticket, 'order' => $order]);
+        //         $extras[] = $data;
+        //     }
+        // }
+
+        // $orderData = [
+        //     'user_id' => $ticket['user_id'],
+        //     'subtotal' => $totalPrice,
+        //     'discount' => 0,
+        //     'total' => $totalPrice,
+        //     'status' => 1,
+        //     'payment_status' => 1,
+        //     'payment_method' => 'pos',
+        //     'transaction_id' => Str::uuid(),
+        //     'security_key' => Str::uuid(),
+        //     'extras' => json_encode($extras)
+        // ];
+        // $order = Order::create($orderData);
+        return response()->json(['ticket' => $ticket]);
     }
 
     public function updateTicketCode(Request $request)

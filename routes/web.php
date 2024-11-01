@@ -69,10 +69,10 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
         $event = $invite->event;
         DB::beginTransaction();
         $order = CheckoutService::create($event, $request, isFree: true, invite: $invite);
-      
+
         DB::commit();
 
-      
+
 
         return redirect()->back()->with('success_msg', 'ThankYou For Your Claim');
     } catch (Exception $e) {
@@ -151,7 +151,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 if ($coupon) {
                     $coupon->increment('used', $new_order->tickets()->count());
                 }
-              
+
                 $toco = new TOCOnlineService;
                 $response = $toco->createCommercialSalesDocument($order);
                 Log::info($response);
@@ -252,10 +252,13 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
 });
 
 
-Route::get('/my-wallet/{order:security_key}', function (Order $order) {
+Route::get('/my-wallet/{order:security_key}', function (Order $order, Request $request) {
+    $events = $order->tickets->groupBy(fn($ticket) => $ticket->event_id);
+    $selectedEventId = $request->query('event_id', $events->keys()->first());
 
-    return view('pages.digitalWallet', compact('order'));
+    return view('pages.digitalWalletNew', compact('order', 'events', 'selectedEventId'));
 })->name('digital-wallet');
+
 
 
 Route::get('/payment-confirm', function () {

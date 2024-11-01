@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ScannedCartInfo from "./CartInfo/ScannedCartInfo";
 import PhoneNumberInput from "./PhoneNumberInput";
 
-const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
+const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, setWithdraw }) => {
     const cartTotal = useMemo(() => {
         var total = 0.0;
         ticket?.extras?.map((item) => {
@@ -16,13 +16,26 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
         return total;
     }, [ticket?.extras]);
     const [formData, setFormData] = useState({
-        name: ticket?.order_id?.billing?.name,
-        email: ticket?.order_id?.billing?.email,
-        phone: ticket?.order_id?.billing?.phone,
-        vatNumber: ticket?.order_id?.billing?.vatNumber,
+        name: "",
+        email: "",
+        phone: "",
+        vatNumber: "",
         discount: 0.0,
         paymentMethod: "Cash",
     });
+
+    useEffect(() => {
+        if (ticket?.order_id?.billing) {
+            setFormData({
+                name: ticket.order_id.billing.name || "",
+                email: ticket.order_id.billing.email || "",
+                phone: ticket.order_id.billing.phone || "",
+                vatNumber: ticket.order_id.billing.vatNumber || "",
+                discount: 0.0,
+                paymentMethod: "Cash",
+            });
+        }
+    }, [ticket]);
     const handleFormData = (event) => {
         const { name, value } = event.target;
         setFormData((prev) => {
@@ -30,11 +43,7 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
         });
     };
 
-    /* const [sendToPhone, setSendToPhone] = useState(true);
-    const [sendToMail, setSendToMail] = useState(false);
-    const [physicalQr, setPhysicalQr] = useState(false);
-    const [sendInvoiceToMail, setSendInvoiceToMail] = useState(false);
-    const [printInvoice, setPrintInvoice] = useState(false); */
+
 
     const [orderRequestProcessing, setOrderRequestProcessing] = useState(false);
 
@@ -57,6 +66,7 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
     const handleClose = () => onClose();
 
     const submitOrder = async () => {
+    
         setOrderRequestProcessing(true);
         const orderData = {
             biling: formData,
@@ -69,11 +79,7 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
             paymentMethod: formData["paymentMethod"],
             subTotal: cartTotal,
             total: cartTotal,
-            /* sendToMail,
-            sendToPhone,
-            physicalQr,
-            printInvoice,
-            sendInvoiceToMail, */
+
         };
         const response = await axios.post(
             `${import.meta.env.VITE_APP_URL}/api/create-order`,
@@ -95,66 +101,13 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
                 discount: 0.0,
                 paymentMethod: "Cash",
             });
-            /* if (printInvoice && response?.data?.invoice_url) {
-                window.open(response?.data?.invoice_url, "_blank");
-                setPrintInvoice(false);
-            }
-            if (physicalQr) {
-                navigate(
-                    `/pos/physical-qr?tickets=${response?.data?.tickets
-                        ?.map((item) => item?.id)
-                        ?.join(",")}`
-                );
-                setPhysicalQr(false);
-            } */
-            /* setSendToMail(true);
-            setSendToPhone(false);
-            setSendInvoiceToMail(false); */
+
             handleClose();
         }
         setOrderRequestProcessing(false);
     };
 
-    /* const handleSendToMail = () => {
-        setSendToMail((prev) => {
-            if (prev) return false;
 
-            setPhysicalQr(false);
-            return true;
-        });
-    };
-    const handleSendToPhone = () => {
-        setSendToPhone((prev) => {
-            if (prev) return false;
-
-            setPhysicalQr(false);
-            return true;
-        });
-    };
-
-    const handlePhysicalQr = () => {
-        setPhysicalQr((prev) => {
-            if (prev) return false;
-            setSendToMail(false);
-            return true;
-        });
-    };
-
-    const handleSendInvoice = () => {
-        setSendInvoiceToMail((prev) => {
-            if (prev) return false;
-            setPrintInvoice(false);
-            return true;
-        });
-    };
-
-    const handlePrintInvoice = () => {
-        setPrintInvoice((prev) => {
-            if (prev) return false;
-            setSendInvoiceToMail(false);
-            return true;
-        });
-    }; */
 
     return (
         <>
@@ -162,9 +115,8 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
                 <div className="payment-modal-backdrop payment-modal-fade-in"></div>
             )}
             <div
-                className={`modal payment-modal ${
-                    open ? "payment-modal-fade-in" : "payment-modal-fade-out"
-                }`}
+                className={`modal payment-modal ${open ? "payment-modal-fade-in" : "payment-modal-fade-out"
+                    }`}
                 id="scannerPaymentModal"
                 tabIndex="-1"
                 aria-labelledby="paymentModalLabel"
@@ -227,10 +179,10 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
                                         placeholder="Enter email"
                                     />
                                 </div>
-                                <PhoneNumberInput value={formData["phone"]}   onChange={value => setFormData((prev) => {
-                                            return { ...prev, phone: '+'+value };
-                                        })} />
-                                 
+                                <PhoneNumberInput value={formData["phone"]} onChange={value => setFormData((prev) => {
+                                    return { ...prev, phone: '+' + value };
+                                })} />
+
                                 <div className="form-group mb-2">
                                     <label htmlFor="vatInput">
                                         VAT Number (optional)
@@ -287,6 +239,12 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
                                         />
                                     </div>
                                 </div>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={withdraw} onChange={()=>setWithdraw(!withdraw)} />
+                                    <label className="form-check-label" for="flexCheckDefault">
+                                        Withdraw
+                                    </label>
+                                </div>
                             </div>
                             <div className="col-md-6">
                                 <ScannedCartInfo
@@ -314,7 +272,7 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit }) => {
                                         ? /* sendToMail ||
                                     sendToPhone ||
                                     sendInvoiceToMail */
-                                          formData["email"] || formData["phone"]
+                                        formData["email"] || formData["phone"]
                                             ? false
                                             : true
                                         : false) ||

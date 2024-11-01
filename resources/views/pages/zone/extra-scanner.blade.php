@@ -170,14 +170,12 @@
                                         <td>
                                            ${element.name}
                                         </td>
-                                        <td>
-                                          ${element.qty}
-                                        </td>
+                                  
                                         <td>
                                            ${element.qty - element.used ?? 0}
                                         </td>
                                     <td>
-                                        <input class="form-control text-center" name="withdraw[${element.id}]" min="0" max="${element.qty - element.used}" type="number">
+                                        <input class="form-control text-center" name="withdraw[${element.id}]" min="1" max="${element.qty - element.used}" type="number">
                                     </td>
                                     </tr>
                                 `
@@ -193,7 +191,7 @@
                                 <thead>
                                     <tr class="text-center ">
                                         <th>{{ __('words.extra_product_name') }}</th>
-                                        <th>{{ __('words.extra_product_quantity') }}</th>
+                                      
                                         <th>{{ __('words.extra_product_availvable') }}</th>
                                         <th>{{ __('words.extra_product_withdraw') }}</th>
                                     </tr>
