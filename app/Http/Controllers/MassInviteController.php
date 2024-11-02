@@ -207,4 +207,5 @@ class MassInviteController extends Controller
             ]);
         }
     }
+        
 }

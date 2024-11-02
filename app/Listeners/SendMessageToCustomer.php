@@ -15,7 +15,7 @@ class SendMessageToCustomer
      */
     public function __construct()
     {
-        //
+        // 
     }
 
     /**
