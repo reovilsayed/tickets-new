@@ -163,7 +163,8 @@ class MassInviteController extends Controller
             unset($rows[0]);
 
             foreach ($rows as $row) {
-                if (isset($row[0]) && isset($row[1])) {
+                if (isset($row[0]) && isset($row[1])) 
+                {
 
                     $invite = Invite::create([
                         'event_id' => $request->event_name,
@@ -193,7 +194,7 @@ class MassInviteController extends Controller
                         }
                         $event_name = $invite->event->name;
                         $url = route('invite.product_details', ['invite' => $invite, 'security' => $invite->security_key]);
-                        $message = "Convite para para o evento $event_name . Aceda aqui: [%goto:".$url." ];
+                        $message = "Convite para para o evento $event_name . Aceda aqui: [%goto:".$url." ]";
                         SmsApi::send($phone, $message);
                     }
                 }
