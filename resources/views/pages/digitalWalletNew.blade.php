@@ -260,11 +260,11 @@
                                     <ul style="list-style: none" class="mt-2">
                                         <li>
                                             <span class="text-primary">{{ __('words.name') }} : </span>
-                                            {{ $order->billing->name }}
+                                            {{ @$order->billing?->name ?? 'N/A' }}
                                         </li>
                                         <li>
                                             <span class="text-primary"> {{ __('words.vat_number') }} :</span>
-                                            {{ $order->billing->vatNumber }}
+                                            {{ @$order->billing?->vatNumber ?? 'N/A' }}
                                         </li>
                                         <li>
                                             <span class="text-primary"> {{ __('words.address') }} :</span>
