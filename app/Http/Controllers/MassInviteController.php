@@ -193,7 +193,7 @@ class MassInviteController extends Controller
                         }
                         $event_name = $invite->event->name;
                         $url = route('invite.product_details', ['invite' => $invite, 'security' => $invite->security_key]);
-                        $message = "Hello! You've been invited to the event $event_name . You can view your tickets and invoice here: [%goto:".$url."]. Looking forward to seeing you there!";
+                        $message = "Convite para para o evento $event_name . Aceda aqui: [%goto:".$url." ];
                         SmsApi::send($phone, $message);
                     }
                 }
