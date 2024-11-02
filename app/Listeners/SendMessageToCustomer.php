@@ -26,7 +26,7 @@ class SendMessageToCustomer
 
 
         if ($event->order->send_message) {
-            $message = 'Hello! Here is your page with your tickets and invoice! Please click here on the link: [%goto:' . route('digital-wallet', $event->order) . '] !!';
+            $message = 'Hello! Here is your page with your tickets and invoice! Please click here on the link: [%goto:' . route('digital-wallet', $event->order) . ' ] !!';
             SmsApi::send($event->order->billing->phone,  $message);
             Log::info($message);
         }
