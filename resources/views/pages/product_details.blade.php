@@ -39,12 +39,10 @@
                 </div>
                 <div class="col-md-8 text-white">
                     {!! $product->description !!}
-
                 </div>
                 <div class="col-md-3 offset-md-1" id="card-info">
-                   
+        
                     @php
-
                         use Carbon\Carbon;
                         $expiredDate = $product->expired_at;
                         $today = Carbon::today();

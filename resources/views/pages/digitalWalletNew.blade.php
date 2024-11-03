@@ -125,10 +125,12 @@
                             <a class="cus-btn" href="{{ route('digital-wallet', $order) }}"><i
                                     class="fa-solid fa-qrcode"></i>
                                 {{ __('words.tickets') }}</a>
-                            <a class="cus-btn"
-                                href="{{ route('digital-wallet', ['order' => $order, 'tab' => 'invoice']) }}"><i
-                                    class="fa-solid fa-file-invoice"></i>
-                                {{ __('words.invoice') }}</a>
+                            @if ($order->payment_method != 'invite')
+                                <a class="cus-btn"
+                                    href="{{ route('digital-wallet', ['order' => $order, 'tab' => 'invoice']) }}"><i
+                                        class="fa-solid fa-file-invoice"></i>
+                                    {{ __('words.invoice') }}</a>
+                            @endif
                             <a class="cus-btn"
                                 href="{{ route('digital-wallet', ['order' => $order, 'tab' => 'info']) }}"><i
                                     class="fa-solid fa-circle-info"></i>
@@ -211,26 +213,10 @@
                                     </h3>
                             @endif
                         </div>
-                    @elseif(request()->tab == 'invoice')
+                    @elseif(request()->tab == 'invoice' && $order->payment_method != 'invite')
                         <div class="cus-card-body p-2">
 
-                            <div class="fw-light fs-6 d-flex gap-2 flex-wrap justify-content-start">
-                                @if ($order->payment_status)
-                                    <div class="badge bg-primary p-2">
-                                        {{ __('words.paid_on') }} : {{ $order->date_paid?->format(' d F') ?? 'N/A' }}
-                                    </div>
-                                @endif
-                                <div class="badge bg-primary p-2">
-                                    {{ __('words.placed_on') }} : {{ $order->created_at->format(' d F') }}
-                                </div>
 
-                                <div class="badge bg-primary p-2">
-                                    {{ __('words.updated') }} : {{ $order->updated_at->format(' d F') }}
-                                </div>
-                            </div>
-                            <h2 class="fw-light text-end mt-3" style="color: #f3510b">
-                                {{ __('words.invoice') }} #{{ $order->id }}
-                            </h2>
                             <div class="card">
                                 <div class="card-body">
                                     <p class="fw-light fs-6 mb-0">
@@ -252,221 +238,10 @@
                                 </div>
                             </div>
 
-                            <div class="card">
-                                <div class="card-body">
-                                    <p class="fw-light fs-6 mb-0">
-                                        {{ __('words.billing_information') }} :
-                                    </p>
-                                    <ul style="list-style: none" class="mt-2">
-                                        <li>
-                                            <span class="text-primary">{{ __('words.name') }} : </span>
-                                            {{ @$order->billing?->name ?? 'N/A' }}
-                                        </li>
-                                        <li>
-                                            <span class="text-primary"> {{ __('words.vat_number') }} :</span>
-                                            {{ @$order->billing?->vatNumber ?? 'N/A' }}
-                                        </li>
-                                        <li>
-                                            <span class="text-primary"> {{ __('words.address') }} :</span>
-                                            {{ $order->billing->address ?? 'N/A' }}
-                                        </li>
-                                        <li>
-                                            <span class="text-primary"> {{ __('words.payment_status') }} :</span>
-                                            {{ $order->payment_status ? 'Paid' : 'Not Paid' }}
-                                        </li>
-                                        <li>
-                                            <span class="text-primary"> {{ __('words.payment_method') }} :</span>
-                                            {{ $order->payment_method_title }}
-                                        </li>
-                                        <li>
-                                            <span class="text-primary"> {{ __('words.trnx_id') }} :</span>
-                                            {{ $order->transaction_id ?? 'N/A' }}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-                                    @foreach ($order->tickets->groupBy('product_id') as $id => $tickets)
-                                        @php
-                                            $model = App\Models\Product::find($id);
-                                        @endphp
-                                        <h4 style="color:#000;font-weight:700;">
-                                            Ticket : {{ $model->name }}
-                                        </h4>
-                                        <small class="pill pill-success">
-                                            Event : {{ $model->event->name }}
-                                        </small>
-                                        <br>
-                                        <br>
-                                        <div class="table-responsive">
-                                            <table class="table table-hover">
-                                                <tr>
-                                                    <th>
-                                                        {{ __('words.ticket_id') }}
-                                                    </th>
-                                                    <th>
-                                                        {{ __('words.paymeys_status') }}
-                                                    </th>
-                                                    <th>
-                                                        {{ __('words.payment_type') }}
-                                                    </th>
-                                                    <th>
-                                                        {{ __('words.status') }}
-                                                    </th>
-                                                    <th>
-                                                        {{ __('words.price') }}
-                                                    </th>
 
-                                                </tr>
-
-                                                @foreach ($tickets as $ticket)
-                                                    <tr>
-
-                                                        <td>
-                                                            {{ $ticket->ticket }}
-                                                        </td>
-                                                        <td>
-
-                                                            <span
-                                                                class="pill pill-{{ $order->payment_status ? 'success' : 'danger' }}">
-                                                                {{ $order->payment_status ? 'Paid' : 'Not Paid' }}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            {{ $order->payment_method_title }}
-
-                                                        </td>
-                                                        <td>
-                                                            {{ $ticket->status() }}
-
-                                                        </td>
-                                                        <td>
-                                                            {{ Sohoj::price($ticket->price) }}
-                                                        </td>
-
-                                                    </tr>
-                                                @endforeach
-                                                @foreach ($order->getExtras() as $extra)
-                                                    <tr>
-
-                                                        <td>
-                                                            {{ $extra->display_name }} *
-                                                            {{ $extra->purchase_quantity }}
-                                                        </td>
-                                                        <td>
-
-                                                            <span
-                                                                class="pill pill-{{ $order->payment_status ? 'success' : 'danger' }}">
-                                                                {{ $order->payment_status ? 'Paid' : 'Not Paid' }}
-                                                            </span>
-                                                        </td>
-                                                        <td>
-                                                            {{ $order->payment_method_title }}
-
-                                                        </td>
-                                                        <td>
-                                                            N/A
-
-                                                        </td>
-                                                        <td>
-                                                            {{ Sohoj::price($extra->purchase_price) }}
-                                                        </td>
-
-                                                    </tr>
-                                                @endforeach
-                                            </table>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-
-                                    <table class="payinfo table">
-                                        <tr>
-                                            <th style="font-size: 14px">
-                                                {{ __('words.subtotal') }}
-                                            </th>
-                                            <td style="font-size: 14px">
-                                                + {{ Sohoj::price($order->subtotal) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th style="font-size: 14px">
-                                                {{ __('words.tax') }}
-                                            </th>
-                                            <td style="font-size: 14px">
-                                                + {{ Sohoj::price($order->tax) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th style="font-size: 14px">
-                                                {{ __('words.discount') }}
-                                            </th>
-                                            <td style="font-size: 14px">
-                                                - {{ Sohoj::price($order->discount) }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th style="font-size: 18px">
-                                                {{ __('words.total') }}
-                                            </th>
-                                            <td style="font-size: 18px">
-                                                = {{ Sohoj::price($order->total) }}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
 
                         </div>
-                    @else
-                        <div class="cus-card-body p-2">
-                            @foreach ($tickets->groupBy('product_id') as $id => $tickets)
-                                @php
-                                    $product = App\Models\Product::find($id);
-                                @endphp
 
-                                <div class="card mb-3  shadow-sm " style="border:1px solid #f3510b;">
-
-
-
-
-                                    <div class="card-body">
-                                        <a style="text-decoration:none;color: #f3510b;" class="float-end"
-                                            data-bs-toggle="collapse" href="#seeDetails{{ $product->id }}"
-                                            role="button" aria-expanded="false" aria-controls="collapseExample">
-                                            <i class="fa fa-chevron-down"></i>
-                                        </a>
-                                        <p class="fw-normal mb-1 fs-4">
-                                            {{ $product->name }} &nbsp;<span style="font-size: 14px"
-                                                class=" badge bg-secondary px-2 py-1 ">X
-                                                {{ $tickets->count() }}</span>
-                                        </p>
-                                        <p class=" text-secondary" style="font-size: 14px">
-                                            <i class="far fa-calendar"></i> &nbsp;
-                                            {{ $product->start_date->format(' d F H:i') }}
-                                        </p>
-                                        <p>
-
-                                            <a style="color:  #f3510b;text-decoration:none"
-                                                href="{{ route('download.ticket', ['order' => $order, 'p' => $product->id]) }}">{{ __('words.view_tickets') }}</a>
-                                        </p>
-
-                                        <div class="collapse" id="seeDetails{{ $product->id }}">
-
-                                            {!! $product->description !!}
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            @endforeach
-
-                        </div>
-                    @endif
                 </div>
             @endif
         @endforeach

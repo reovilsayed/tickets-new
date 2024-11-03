@@ -84,7 +84,7 @@ class ApiController extends Controller
         ];
         $extras = $ticket->extras;
         foreach ($extras as $extra) {
-            $ticketData['extras'][] = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['qty'], 'price' => Extra::find($extra['id'])->price];
+            $ticketData['extras'][] = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['qty'], 'used' => @$extra['used'] ?? 0, 'price' => Extra::find($extra['id'])->price];
         }
 
         return response()->json($ticketData);
@@ -301,10 +301,11 @@ class ApiController extends Controller
         $requestTicket = $request->ticket;
         $ticket = Ticket::findOrFail($requestTicket['id']);
         $ticket->extras = collect($requestTicket['extras'])->map(function ($extra) use ($request) {
-            $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQty'] ?? $extra['qty'], 'price' => $extra['price']];
+            $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQty'] ?? $extra['qty'], 'price' => $extra['price'], 'used' => $extra['used']];
             if ($request->can_withdraw && $extra['newQty']) {
-                $data['used'] = $extra['newQty'] - $extra['qty'];
-            }else{
+                $data['used'] = $data['used'] + $extra['newQty'] - $extra['qty'];
+            } else {
+
                 $data['used'] = $extra['used'] ?? 0;
             }
             return $data;

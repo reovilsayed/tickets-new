@@ -9,6 +9,7 @@ import { useCart } from "react-use-cart";
 import { useDispatch } from "react-redux";
 import { setCartOpen } from "../../lib/features/paymentModalSlice";
 import ScannerPaymentModal from "../../components/dashboard/PaymentModal/ScannerPaymentModal";
+import Extra from "./Extra";
 
 const Scanner = () => {
     const videoRef = React.useRef(null);
@@ -18,7 +19,7 @@ const Scanner = () => {
     const [manualCode, setManualCode] = useState("");
     const [scanViaQr, setscanViaQr] = useState(false);
     const [enterManual, setEnterManual] = useState(false);
-    const [withdraw,setWithdraw] = useState(false);
+    const [withdraw, setWithdraw] = useState(false);
 
     useEffect(() => {
         if (videoRef.current && !scanner) {
@@ -92,10 +93,10 @@ const Scanner = () => {
     };
 
     const handleExtraChange = (targetExtra, quantity) => {
-        const targetExtraQuantity = parseInt(targetExtra?.qty) ?? 0;
+        const targetExtraUsed = parseInt(targetExtra?.used) ?? 0;
         quantity = parseInt(quantity);
-        if (quantity < targetExtraQuantity) return;
-        targetExtra = { ...targetExtra, newQty: quantity };
+        if (quantity > targetExtra.qty - targetExtra?.used) return;
+        targetExtra = { ...targetExtra, used: quantity + targetExtraUsed };
 
         var ticketExtras = scannedTicket.extras.map((item) => {
             if (item.id === targetExtra.id) {
@@ -103,9 +104,12 @@ const Scanner = () => {
             }
             return item;
         });
-        setScannedTicket((prev) => {
-            return { ...prev, extras: [...ticketExtras] };
-        });
+        let ticket = scannedTicket;
+        ticket.extras = ticketExtras;
+        setScannedTicket(ticket);
+        console.log(scannedTicket);
+
+        submitChanges()
     };
     const {
         data: extrasList,
@@ -115,14 +119,14 @@ const Scanner = () => {
         refetch,
     } = useFetch(
         ["scanner-extras", scannedTicket],
-        `${import.meta.env.VITE_APP_URL}/api/event-extras/${
-            scannedTicket?.event_id
+        `${import.meta.env.VITE_APP_URL}/api/event-extras/${scannedTicket?.event_id
         }`
     );
 
     const [showNewExtraFields, setShowNewExtraFields] = useState(false);
     const [selectedNewExtra, setSelectedNewExtra] = useState(null);
     const [selectedNewExtraQuantity, setSelectedNewExtraQuantity] = useState(1);
+
 
     const handleAddExtra = () => {
         if (!showNewExtraFields) {
@@ -162,13 +166,17 @@ const Scanner = () => {
 
     const [changesProcessing, setChangesProcessing] = useState(false);
 
+    const withdrawSubmit = async () => {
+
+    }
     const submitChanges = async () => {
-       
-        
+
+
         setChangesProcessing(true);
+
         const response = await axios.post(
             `${import.meta.env.VITE_APP_URL}/api/update-ticket`,
-            { ticket: scannedTicket,can_withdraw:withdraw },
+            { ticket: scannedTicket, can_withdraw: withdraw },
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -179,6 +187,7 @@ const Scanner = () => {
         if (response.status == 200) {
             setScannedTicket(null);
             setStartScan(false);
+            setWithdraw(false);
 
             toast("Ticket updated successfully!!");
             if (scanner) {
@@ -266,47 +275,14 @@ const Scanner = () => {
                         </p>
                     </div>
 
+
+
                     {scannedTicket?.extras?.length > 0 ? (
                         <div className="extras">
                             <h4>Extras</h4>
-                            <ul>
-                                {scannedTicket?.extras.map((extra, index) => {
-                                    // if (!extra?.newQty) return "";
-                                    const quantity =parseInt(extra?.newQty ?? 0) ?
-                                        parseInt(extra?.newQty ?? 0): parseInt(extra?.qty ?? 0);
-                                    const price = parseFloat(
-                                        extra?.price ?? 0
-                                    ).toFixed(2);
-                                    return (
-                                        <span
-                                            key={index}
-                                            className="d-flex justify-content-between align-items-center"
-                                        >
-                                            <span className="col-md-3 text-start">
-                                                {extra?.display_name ??
-                                                    extra?.name}
-                                            </span>
-                                           
-                                            <span className="col-md-3 text-end">
-                                                {quantity}
-                                                {" X "}
-                                                {price}
-                                                {"€ ="}
-                                            </span>
-                                            <span className="col-md-3 text-end">
-                                                {price *
-                                                    parseInt(
-                                                        extra?.newQty
-                                                            ? extra?.newQty -
-                                                                  extra?.qty
-                                                            : 0
-                                                    )}
-                                                €
-                                            </span>
-                                        </span>
-                                    );
-                                })}
-                            </ul>
+                            {scannedTicket?.extras.map((extra, index) => <Extra extra={extra} index={index} handleExtraChange={handleExtraChange} />)}
+
+
                         </div>
                     ) : null}
                     {showNewExtraFields && (
