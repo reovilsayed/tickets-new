@@ -241,10 +241,12 @@
 
 
                         </div>
+                    @endif
 
                 </div>
             @endif
         @endforeach
+
 
     </main>
     </div>
