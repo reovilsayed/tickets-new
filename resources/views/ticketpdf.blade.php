@@ -236,7 +236,7 @@
                 <h2>
                     {{ __('words.description') }}
                 </h2>
-                {!! $ticket->event->description !!}
+                {!! $ticket->product->description !!}
                 <br>
                 <br>
                 <h2>

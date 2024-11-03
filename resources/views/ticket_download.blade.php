@@ -211,7 +211,7 @@
                 <h2 style="font-size: 18px">
                     {{ __('words.description') }}
                 </h2>
-                <p>{!! $ticket->event->description !!}</p>
+                <p>{!! $ticket->product->description !!}</p>
 
 <br>
                 <h2 style="font-size: 18px !important;">{{ __('words.term') }}</h2>
