@@ -244,9 +244,9 @@
                     @endif
 
                 </div>
-            @endif
-        @endforeach
-
+                @endif
+            @endforeach
+        
 
     </main>
     </div>

@@ -11,7 +11,7 @@
             <div class="row ">
                 <div class="col-md-5 event-details">
 
-                    <div class="event_img">
+                    <div class="event_img d-none d-md-block">
                         <img src=" {{ Voyager::image($event->thumbnail) }}" alt="">
                     </div>
 
@@ -49,7 +49,7 @@
 
                             </div>
                         </div>
-                        <div class="accordin-item">
+                        <div class="accordin-item d-none d-md-block">
                             <div>
                                 <i class="fa fa-info-circle fa-2x"></i>
                             </div>
@@ -82,7 +82,7 @@
 
                 <div x-data="eventData" x-effect="calculateTotal()" class="col-md-7 event-box" id="mobile-device">
 
-                    <ul class="nav nav-pills sec-hd mb-3" id="pills-tab" role="tablist">
+                    <ul class="nav nav-pills sec-hd mb-3 sticky-sm-top" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
                                 data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-home"
