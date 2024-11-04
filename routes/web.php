@@ -260,7 +260,7 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
     $events = Event::where('status', 1)->latest()->get();
 
     if ($request->filled('event_id')) {
-        $event = Event::where('event_id', $request->event_id)->first();
+        $event = Event::where('id', $request->event_id)->first();
     } else {
         $event = @$events[0] ?? null;
     }
