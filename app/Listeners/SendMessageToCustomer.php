@@ -26,7 +26,7 @@ class SendMessageToCustomer
 
 
         if ($event->order->send_message) {
-            $message = 'Acesso e fatura para o evento Aceda aqui: [%goto:' . route('digital-wallet', $event->order) . '%] !!';
+            $message = 'Acesso e fatura para o evento Aceda aqui: [%goto:' . route('digital-wallet', $event->order->user) . '%] !!';
             SmsApi::send($event->order->billing->phone,  $message);
             Log::info($message);
         }
