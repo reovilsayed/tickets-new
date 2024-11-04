@@ -267,7 +267,7 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 
     $orders = $user->orders()->where('payment_method', '!=', 'invite')->orWhere('event_id', '==', $event->id)->get();
 
-   
+
 
     $tickets = $user->tickets()->where('event_id', $event->id)->where('order_id', '!=', null)->get();
 
@@ -296,7 +296,16 @@ Route::get('/payment-confirm', function () {
     $order->save();
 });
 
-
+Route::get('test', function () {
+    $users = User::all();
+    foreach ($users as $user) {
+        $user->update(
+            [
+                'uniqid' => uniqid()
+            ]
+        );
+    }
+});
 // Route::get('send',function(){
 //     $order = Order::where('payment_status',1)->first();
 //     $message = 'Acesso e fatura para o evento: [%goto:' . route('digital-wallet', $order) . '%] !!';

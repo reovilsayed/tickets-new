@@ -164,7 +164,7 @@ class ApiController extends Controller
                     'password' => Hash::make('password2176565'),
                     'country' => 'PT',
                     'vatNumber' => $billing['vatNumber'] ?? null,
-                    'uniqid' => uniqid(true)
+                    'uniqid' => uniqid()
                 ]);
             }
         } elseif ($email) {
@@ -182,7 +182,7 @@ class ApiController extends Controller
                     'country' => 'PT',
                     'role_id' => 2,
                     'vatNumber' => $billing['vatNumber'] ?? null,
-                    'uniqid' => uniqid(true)
+                    'uniqid' => uniqid()
                 ]);
             }
         } else {
@@ -196,7 +196,7 @@ class ApiController extends Controller
                 'country' => 'PT',
                 'role_id' => 2,
                 'vatNumber' => $billing['vatNumber'] ?? null,
-                'uniqid' => uniqid(true)
+                'uniqid' => uniqid()
             ]);
         }
 
