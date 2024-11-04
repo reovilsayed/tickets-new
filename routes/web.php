@@ -296,16 +296,16 @@ Route::get('/payment-confirm', function () {
     $order->save();
 });
 
-Route::get('test', function () {
-    $users = User::all();
-    foreach ($users as $user) {
-        $user->update(
-            [
-                'uniqid' => uniqid()
-            ]
-        );
-    }
-});
+// Route::get('test', function () {
+//     $users = User::all();
+//     foreach ($users as $user) {
+//         $user->update(
+//             [
+//                 'uniqid' => uniqid()
+//             ]
+//         );
+//     }
+// });
 // Route::get('send',function(){
 //     $order = Order::where('payment_status',1)->first();
 //     $message = 'Acesso e fatura para o evento: [%goto:' . route('digital-wallet', $order) . '%] !!';
