@@ -265,8 +265,9 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
         $event = @$events[0] ?? null;
     }
 
+ 
 
-    $orders = $user->orders()->where('payment_method', '!=', 'invite')->orWhere('event_id', '==', $event->id)->get();
+    $orders = $user->orders()->where('event_id', $event->id)->where('payment_method', '!=', 'invite')->get();
 
 
 

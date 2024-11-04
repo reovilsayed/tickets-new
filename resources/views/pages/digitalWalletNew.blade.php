@@ -100,9 +100,9 @@
 
 
         <select id="eventFilter" class="form-select mt-2 mx-auto  mb-3" style="max-width: 500px">
-            @foreach ($events as $event)
-                <option value="{{ $event->id }}" {{ request()->event_id == $event->id ? 'selected' : '' }}>
-                    {{ $event->name }}
+            @foreach ($events as $data)
+                <option value="{{ $data->id }}" {{ request()->event_id == $data->id ? 'selected' : '' }}>
+                    {{ $data->name }}
                 </option>
             @endforeach
         </select>
