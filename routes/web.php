@@ -20,6 +20,8 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EnterzoneContoller;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Middleware\AgeVerification;
+use App\Models\Event;
+use App\Models\User;
 use Vemcogroup\SmsApi\SmsApi;
 
 /*
@@ -252,11 +254,28 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
 });
 
 
-Route::get('/my-wallet/{order:security_key}', function (Order $order, Request $request) {
-    $events = $order->tickets->groupBy(fn($ticket) => $ticket->event_id);
-    $selectedEventId = $request->query('event_id', $events->keys()->first());
+Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 
-    return view('pages.digitalWalletNew', compact('order', 'events', 'selectedEventId'));
+    $events = Event::where('status', 1)->latest()->get();
+
+    if ($request->filled('event_id')) {
+        $event = Event::where('event_id', $request->event_id)->first();
+    } else {
+        $event = @$events[0] ?? null;
+    }
+
+
+    $orders = $user->orders()->where('payment_method', '!=', 'invite')->orWhere('event_id', '==', $event->id)->get();
+
+   
+
+    $tickets = $user->tickets()->where('event_id', $event->id)->where('order_id', '!=', null)->get();
+
+
+
+
+
+    return view('pages.digitalWalletNew', compact('user', 'orders', 'events', 'event', 'tickets'));
 })->name('digital-wallet');
 
 

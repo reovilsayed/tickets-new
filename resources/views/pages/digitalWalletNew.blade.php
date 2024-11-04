@@ -100,153 +100,190 @@
 
 
         <select id="eventFilter" class="form-select mt-2 mx-auto  mb-3" style="max-width: 500px">
-            @foreach ($events as $id => $tickets)
-                <option value="{{ $id }}" {{ $id == $selectedEventId ? 'selected' : '' }}>
-                    {{ App\Models\Event::find($id)->name }}
+            @foreach ($events as $event)
+                <option value="{{ $event->id }}" {{ request()->event_id == $event->id ? 'selected' : '' }}>
+                    {{ $event->name }}
                 </option>
             @endforeach
         </select>
 
-        @foreach ($events as $id => $tickets)
-            @if ($id == $selectedEventId)
 
-                @php
-                    $model = App\Models\Event::find($id);
-                @endphp
-                <div class="cus-card">
-                    <div class="cus-card-header">
-                        <div class="event-thumbnail">
-                            <img src="{{ Storage::url($model->thumbnail) }}" alt="">
-                        </div>
-                        <h3 class="my-2 text-center text-light fw-light">
-                            {{ $model->name }}
-                        </h3>
-                        <div class="cus-btn-bar">
-                            <a class="cus-btn" href="{{ route('digital-wallet', $order) }}"><i
-                                    class="fa-solid fa-qrcode"></i>
-                                {{ __('words.tickets') }}</a>
-                            @if ($order->payment_method != 'invite')
-                                <a class="cus-btn"
-                                    href="{{ route('digital-wallet', ['order' => $order, 'tab' => 'invoice']) }}"><i
-                                        class="fa-solid fa-file-invoice"></i>
-                                    {{ __('words.invoice') }}</a>
-                            @endif
-                            <a class="cus-btn"
-                                href="{{ route('digital-wallet', ['order' => $order, 'tab' => 'info']) }}"><i
-                                    class="fa-solid fa-circle-info"></i>
-                                {{ __('words.information') }}</a>
-                            <a class="cus-btn"
-                                href="{{ route('digital-wallet', ['order' => $order, 'tab' => 'products']) }}"><i
-                                    class="fa-solid fa-box"></i>
-                                {{ __('words.products') }}</a>
+
+
+        <div class="cus-card">
+            <div class="cus-card-header">
+                <div class="event-thumbnail">
+                    <img src="{{ Storage::url($event->thumbnail) }}" alt="">
+                </div>
+                <h3 class="my-2 text-center text-light fw-light">
+                    {{ $event->name }}
+                </h3>
+                <div class="cus-btn-bar">
+                    <a class="cus-btn" href="{{ route('digital-wallet', $user) }}"><i class="fa-solid fa-qrcode"></i>
+                        {{ __('words.tickets') }}</a>
+
+                    <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'invoice']) }}"><i
+                            class="fa-solid fa-file-invoice"></i>
+                        {{ __('words.invoice') }}</a>
+
+                    <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'info']) }}"><i
+                            class="fa-solid fa-circle-info"></i>
+                        {{ __('words.information') }}</a>
+                    <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'products']) }}"><i
+                            class="fa-solid fa-box"></i>
+                        {{ __('words.products') }}</a>
+                </div>
+            </div>
+
+            @if (request()->tab == 'info')
+                <div class="cus-card-body p-2">
+
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <p class="p-0 m-0 fs-6">
+                                {{ $event->start_at->diffForHumans() }}
+                            </p>
+                            <p class="fs-4 fw-bold">
+                                {{ $event->start_at->format('d M - H:i') }}
+                            </p>
                         </div>
                     </div>
-                    @if (request()->tab == 'info')
-                        <div class="cus-card-body p-2">
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <p class="p-0 m-0 fs-6">
+                                {{ __('words.location') }}
+                            </p>
+                            <p class="p-0 m-0 fs-4">
+                                {{ $event->location }}
+                            </p>
 
-                            <div class="card mb-2">
-                                <div class="card-body">
-                                    <p class="p-0 m-0 fs-6">
-                                        {{ $model->start_at->diffForHumans() }}
-                                    </p>
-                                    <p class="fs-4 fw-bold">
-                                        {{ $model->start_at->format('d M - H:i') }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="card mb-2">
-                                <div class="card-body">
-                                    <p class="p-0 m-0 fs-6">
-                                        {{ __('words.location') }}
-                                    </p>
-                                    <p class="p-0 m-0 fs-4">
-                                        {{ $model->location }}
-                                    </p>
-
-                                </div>
-                            </div>
-                            <div class="card mb-2">
-                                <div class="card-body">
-                                    <p class="p-0 m-0 fs-6">
-                                        {{ __('words.website') }}
-                                    </p>
-                                    <a href="{{ $model->website }}" style="text-decoration: none" class="p-0 m-0 fs-4">
-                                        {{ __('words.visit_website') }}
-                                    </a>
-
-                                </div>
-                            </div>
-                            <div class="card mb-2">
-                                <div class="card-body">
-                                    <p class="p-0 m-0 fs-6 fw-bold">
-                                        {{ __('words.description') }}
-                                    </p>
-                                    <hr>
-                                    <p class="p-0 m-0 fs-4">
-                                        {!! $model->description !!}
-                                    </p>
-
-                                </div>
-                            </div>
                         </div>
-                    @elseif(request()->tab == 'products')
-                        <div class="cus-card-body p-2">
-                            @if (count($order->tickets->pluck('extras')->flatMap(fn($extra) => $extra)->groupBy('name')))
-                                <table class="table  table-bordered w-50 mx-auto text-center">
+                    </div>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <p class="p-0 m-0 fs-6">
+                                {{ __('words.website') }}
+                            </p>
+                            <a href="{{ $event->website }}" style="text-decoration: none" class="p-0 m-0 fs-4">
+                                {{ __('words.visit_website') }}
+                            </a>
 
-                                    @foreach ($order->tickets->pluck('extras')->flatMap(fn($extra) => $extra)->groupBy('name') as $name => $extras)
-                                        <div class="card  mb-3  shadow-sm " style="border:1px solid #f3510b;">
-                                            <div class="card-body">
-                                                <h4>
-                                                    {{ $name }}
-                                                </h4>
-                                                <p>
-                                                    {{ __('words.remaining') }} :
-                                                    {{ $extras->sum('qty') - $extras->sum('used') }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                @else
-                                    <h3 class="text-center p-5">
-                                        <i class="fa fa-box"></i> {{ __('words.no_product_found') }}
-                                    </h3>
-                            @endif
                         </div>
-                    @elseif(request()->tab == 'invoice' && $order->payment_method != 'invite')
-                        <div class="cus-card-body p-2">
+                    </div>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <p class="p-0 m-0 fs-6 fw-bold">
+                                {{ __('words.description') }}
+                            </p>
+                            <hr>
+                            <p class="p-0 m-0 fs-4">
+                                {!! $event->description !!}
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+            @elseif(request()->tab == 'products')
+                <div class="cus-card-body p-2">
+
+                    <table class="table  table-bordered w-50 mx-auto text-center">
+
+                        @foreach ($tickets->pluck('extras')->flatMap(fn($extra) => $extra)->groupBy('name') as $name => $extras)
+                            <div class="card  mb-3  shadow-sm " style="border:1px solid #f3510b;">
+                                <div class="card-body">
+                                    <h4>
+                                        {{ $name }}
+                                    </h4>
+                                    <p>
+                                        {{ __('words.remaining') }} :
+                                        {{ $extras->sum('qty') - $extras->sum('used') }}
+                                    </p>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        <h3 class="text-center p-5">
+                            <i class="fa fa-box"></i> {{ __('words.no_product_found') }}
+                        </h3>
+
+                </div>
+            @elseif(request()->tab == 'invoice')
+                <div class="cus-card-body p-2">
 
 
+                    @foreach ($orders as $order)
+                     
                             <div class="card">
                                 <div class="card-body">
                                     <p class="fw-light fs-6 mb-0">
                                         {{ __('words.toc_online_id') }} :
                                     </p>
-                                    <p class="fw-bold fs-4 mb-0">
-                                        {{ $order->invoice_id ?? 'N/A' }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-body">
-                                    <p class="fw-light fs-6 mb-0">
-                                        {{ __('words.toc_online_invoice') }} :
-                                    </p>
-                                    <a class="fw-bold fs-5 mb-0" style="text-decoration: none"
+                                    <div class="d-flex justify-content-between">
+
+                                        <p class="fw-bold fs-4 mb-0">
+                                            #{{ $order->invoice_id ?? 'N/A' }}
+                                        </p>
+                                        <a class="fw-bold fs-5 mb-0" style="text-decoration: none"
                                         href="
-                                {{ $order->invoice_url }}">{{ __('words.view_invoice') }}</a>
+                                        {{ $order->invoice_url }}">{{ __('words.view_invoice') }}</a>
+                                    </div>
                                 </div>
                             </div>
+                    
+                    @endforeach
 
 
+
+
+                </div>
+            @else
+                <div class="cus-card-body p-2">
+                    @foreach ($tickets->groupBy('product_id') as $id => $tickets)
+                        @php
+                            $product = App\Models\Product::find($id);
+                        @endphp
+
+                        <div class="card mb-3  shadow-sm " style="border:1px solid #f3510b;">
+
+
+
+
+                            <div class="card-body">
+                                <a style="text-decoration:none;color: #f3510b;" class="float-end"
+                                    data-bs-toggle="collapse" href="#seeDetails{{ $product->id }}" role="button"
+                                    aria-expanded="false" aria-controls="collapseExample">
+                                    <i class="fa fa-chevron-down"></i>
+                                </a>
+                                <p class="fw-normal mb-1 fs-4">
+                                    {{ $product->name }} &nbsp;<span style="font-size: 14px"
+                                        class=" badge bg-secondary px-2 py-1 ">X
+                                        {{ $tickets->count() }}</span>
+                                </p>
+                                <p class=" text-secondary" style="font-size: 14px">
+                                    <i class="far fa-calendar"></i> &nbsp;
+                                    {{ $product->start_date->format(' d F H:i') }}
+                                </p>
+                                <p>
+
+                                    <a style="color:  #f3510b;text-decoration:none"
+                                        href="{{ route('download.ticket', ['order' => $tickets[0]->order, 'p' => $product->id]) }}">{{ __('words.view_tickets') }}</a>
+                                </p>
+
+                                <div class="collapse" id="seeDetails{{ $product->id }}">
+
+                                    {!! $product->description !!}
+
+                                </div>
+
+                            </div>
 
                         </div>
+                        @endforeach
                     @endif
 
                 </div>
-                @endif
-            @endforeach
-        
+
+
 
     </main>
     </div>

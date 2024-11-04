@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -40,6 +41,11 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    
+    // public function uniqueIds(){
+    //     return ['uniqid'];
+    // }
     public function shops()
     {
         return $this->hasMany(Shop::class);
@@ -147,6 +153,10 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     public function isFollowingShop($shopId)
     {
         return $this->followedShops()->where('shop_id', $shopId)->exists();
+    }
+
+    public function tickets(){
+        return $this->hasMany(Ticket::class);
     }
 
     public function scopeFilter($query)

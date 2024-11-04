@@ -12,12 +12,14 @@ use App\Models\Extra;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
+use App\Models\User;
 use App\Services\TOCOnlineService;
 use Error;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 use Vemcogroup\SmsApi\SmsApi;
@@ -142,6 +144,33 @@ class ApiController extends Controller
         return response()->json($extras);
     }
 
+    protected function getUser($billing)
+    {
+
+        $email = @$billing['email'] ?? null;
+        $phone = @$billing['phone'] ?? null;
+
+        if ($phone != null) {
+            $user = User::where('contact_number', $phone)->first();
+        } else {
+            $user = User::where('email', $email)->first();
+        }
+        if ($user == null) {
+
+            $user = User::create([
+                'name' => @$billing['name'] ?? 'fake user',
+                'email' => @$billing['email'] ?? 'fake' . uniqid() . '@mail.com',
+                'contact_number' => @$billing['phone'] ?? null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password2176565'),
+                'country' => 'PT',
+                'vatNumber' => @$billing['vatNumber'] ?? null,
+                'uniqid' => uniqid(more_entropy: true)
+            ]);
+        }
+
+        return $user;
+    }
     public function createOrder(Request $request)
     {
         // Collect initial order data
@@ -150,7 +179,7 @@ class ApiController extends Controller
             DB::beginTransaction();
             $orderData = [
                 'billing' => request()->get('biling'),
-                'user_id' => auth()->id() ?? null,
+                'user_id' => $this->getUser(request()->get('biling'))->id,
                 'subtotal' => $request->get('subTotal'),
                 'discount' => $request->get('discount'),
                 'total' => $request->get('total'),
@@ -161,6 +190,7 @@ class ApiController extends Controller
                 'send_message' => $request->get('sendToPhone') ? true : false,
                 'send_email' => $request->get('sendToMail') ? true : false
             ];
+
 
 
             $order = Order::create($orderData);
@@ -220,6 +250,7 @@ class ApiController extends Controller
                         'event_id' => $product->event->id,
                         'product_id' => $product->id,
                         'order_id' => $order->id,
+                        'user_id' => $orderData['user_id'],
                         'ticket' => !$physicalQr ? uniqid() : null,
                         'price' =>  $product->price - $discountPerUnit, // Apply discount per unit
                         'dates' => $product->dates

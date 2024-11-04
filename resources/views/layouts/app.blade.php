@@ -44,6 +44,10 @@
             border-radius: 5px;
         }
 
+        
+        .iti__selected-dial-code{
+            font-size: 16px;
+        }
         .ec-subscribe-form .ec-email {
             display: inline-block;
             vertical-align: top;
@@ -336,20 +340,8 @@
                 optionNode.value = country.iso2;
                 var textNode = document.createTextNode(country.name);
                 optionNode.appendChild(textNode);
-                addressDropdown.appendChild(optionNode);
+                // addressDropdown.appendChild(optionNode);
             }
-            // set it's initial value
-            addressDropdown.value = iti.getSelectedCountryData().iso2;
-
-            // listen to the telephone input for changes
-            input.addEventListener('countrychange', function(e) {
-                addressDropdown.value = iti.getSelectedCountryData().iso2;
-            });
-
-            // listen to the address dropdown for changes
-            addressDropdown.addEventListener('change', function() {
-                iti.setCountry(this.value);
-            });
           
         });
     </script>

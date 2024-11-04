@@ -87,6 +87,7 @@ class RegisterController extends Controller
             'country' => $data['country'],
             'password' => Hash::make($data['password']),
             'role_id' => 2,
+            'uniqid' => uniqid(more_entropy: true)
         ];
         $user = User::create($array);
         $verify_token = Str::random(20);
