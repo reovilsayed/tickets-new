@@ -43,9 +43,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     ];
 
     
-    // public function uniqueIds(){
-    //     return ['uniqid'];
-    // }
+
     public function shops()
     {
         return $this->hasMany(Shop::class);
@@ -148,7 +146,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
 
     public function notifications()
     {
-        return $this->hasmany(Notification::class, 'user_id');
+        return $this->hasMany(Notification::class, 'user_id');
     }
     public function isFollowingShop($shopId)
     {

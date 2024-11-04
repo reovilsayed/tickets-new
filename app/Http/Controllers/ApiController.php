@@ -146,36 +146,67 @@ class ApiController extends Controller
 
     protected function getUser($billing)
     {
+        $email = $billing['email'] ?? null;
+        $phone = $billing['phone'] ?? null;
 
-        $email = @$billing['email'] ?? null;
-        $phone = @$billing['phone'] ?? null;
-
-        if ($phone != null) {
+        if ($phone) {
+            // Attempt to find user by phone
             $user = User::where('contact_number', $phone)->first();
-        } else {
-            $user = User::where('email', $email)->first();
-        }
-        if ($user == null) {
 
+            // If no user is found by phone, create with a fake email
+            if (!$user) {
+                $user = User::create([
+                    'name' => $billing['name'] ?? 'fake user',
+                    'email' => 'fake' . uniqid() . '@mail.com',
+                    'contact_number' => $phone,
+                    'email_verified_at' => now(),
+                    'role_id' => 2,
+                    'password' => Hash::make('password2176565'),
+                    'country' => 'PT',
+                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    'uniqid' => uniqid(true)
+                ]);
+            }
+        } elseif ($email) {
+            // Attempt to find user by email
+            $user = User::where('email', $email)->first();
+
+            // If no user is found by email, create with email provided
+            if (!$user) {
+                $user = User::create([
+                    'name' => $billing['name'] ?? 'fake user',
+                    'email' => $email,
+                    'contact_number' => $phone,
+                    'email_verified_at' => now(),
+                    'password' => Hash::make('password2176565'),
+                    'country' => 'PT',
+                    'role_id' => 2,
+                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    'uniqid' => uniqid(true)
+                ]);
+            }
+        } else {
+            // Handle case when neither phone nor email is provided
             $user = User::create([
-                'name' => @$billing['name'] ?? 'fake user',
-                'email' => @$billing['email'] ?? 'fake' . uniqid() . '@mail.com',
-                'contact_number' => @$billing['phone'] ?? null,
+                'name' => $billing['name'] ?? 'fake user',
+                'email' => 'fake' . uniqid() . '@mail.com',
+                'contact_number' => null,
                 'email_verified_at' => now(),
                 'password' => Hash::make('password2176565'),
                 'country' => 'PT',
-                'vatNumber' => @$billing['vatNumber'] ?? null,
-                'uniqid' => uniqid(more_entropy: true)
+                'role_id' => 2,
+                'vatNumber' => $billing['vatNumber'] ?? null,
+                'uniqid' => uniqid(true)
             ]);
         }
 
         return $user;
     }
+
     public function createOrder(Request $request)
     {
         // Collect initial order data
         try {
-
             DB::beginTransaction();
             $orderData = [
                 'billing' => request()->get('biling'),
