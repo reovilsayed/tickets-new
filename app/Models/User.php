@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Notifiable, HasUlids;
 
     /**
      * The attributes that are mass assignable.
@@ -43,7 +43,9 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     ];
 
     
-
+    public function uniqueIds(){
+        return ['uniqid'];
+    }
     public function shops()
     {
         return $this->hasMany(Shop::class);
@@ -146,7 +148,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
 
     public function notifications()
     {
-        return $this->hasMany(Notification::class, 'user_id');
+        return $this->hasmany(Notification::class, 'user_id');
     }
     public function isFollowingShop($shopId)
     {

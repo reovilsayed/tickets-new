@@ -164,7 +164,7 @@ class ApiController extends Controller
                     'password' => Hash::make('password2176565'),
                     'country' => 'PT',
                     'vatNumber' => $billing['vatNumber'] ?? null,
-                    'uniqid' => uniqid()
+                    // 'uniqid' => uniqid()
                 ]);
             }
         } elseif ($email) {

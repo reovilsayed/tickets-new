@@ -261,6 +261,7 @@
                                                     @include('voyager::bread.partials.actions', ['action' => $action])
                                                 @endif
                                             @endforeach
+                                            <a href="{{}}" class="btn btn-primary">Wallet Link</a>
                                         </td>
                                     </tr>
                                     @endforeach
