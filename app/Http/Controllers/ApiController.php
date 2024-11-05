@@ -207,7 +207,7 @@ class ApiController extends Controller
     public function createOrder(Request $request)
     {
         // Collect initial order data
-        // try {
+        try {
             DB::beginTransaction();
             $orderData = [
                 'billing' => request()->get('biling'),
@@ -328,7 +328,7 @@ class ApiController extends Controller
                 'payment_status' => 1,
             ]);
 
-            // try {
+            try {
                 $toco = new TOCOnlineService;
                 $response = $toco->createCommercialSalesDocument($order);
 
@@ -339,9 +339,9 @@ class ApiController extends Controller
                 if ($sendInvoiceToMail) {
                     $toco->sendEmailDocument($order, $response['id']);
                 }
-            // } catch (Exception | Error $e) {
-            //     Log::info($e->getMessage());
-            // }
+            } catch (Exception | Error $e) {
+                Log::info($e->getMessage());
+            }
 
             $order->save();
 
@@ -353,10 +353,10 @@ class ApiController extends Controller
                 // Add invoice creation logic if needed
             }
             return response()->json($order);
-        // } catch (Exception | Error $e) {
-        //     DB::rollBack();
-        //     return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
-        // }
+        } catch (Exception | Error $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
+        }
     }
 
 
