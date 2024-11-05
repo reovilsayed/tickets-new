@@ -58,7 +58,7 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
 
-        
+
         $total = 0;
         foreach ($request->tickets as $ticket) {
             $total += $ticket;
@@ -75,26 +75,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
 
         $email = request()->email;
         $phone = request()->contact_number;
-
-        if ($phone) {
-            // Attempt to find user by phone
-            $user = User::where('contact_number', $phone)->first();
-
-            // If no user is found by phone, create with a fake email
-            if (!$user) {
-                $user = User::create([
-                    'name' => $billing['name'] ?? 'fake user',
-                    'email' => 'fake' . uniqid() . '@mail.com',
-                    'contact_number' => $phone,
-                    'email_verified_at' => now(),
-                    'role_id' => 2,
-                    'password' => Hash::make('password2176565'),
-                    'country' => 'PT',
-                    'vatNumber' => $billing['vatNumber'] ?? null,
-                    // 'uniqid' => uniqid()
-                ]);
-            }
-        } elseif ($email) {
+        if ($email) {
             // Attempt to find user by email
             $user = User::where('email', $email)->first();
 
@@ -112,6 +93,24 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
                     'uniqid' => uniqid()
                 ]);
             }
+        } elseif ($phone) {
+            // Attempt to find user by phone
+            $user = User::where('contact_number', $phone)->first();
+
+            // If no user is found by phone, create with a fake email
+            if (!$user) {
+                $user = User::create([
+                    'name' => $billing['name'] ?? 'fake user',
+                    'email' => 'fake' . uniqid() . '@mail.com',
+                    'contact_number' => $phone,
+                    'email_verified_at' => now(),
+                    'role_id' => 2,
+                    'password' => Hash::make('password2176565'),
+                    'country' => 'PT',
+                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    // 'uniqid' => uniqid()
+                ]);
+            }
         } else {
             // Handle case when neither phone nor email is provided
             $user = User::create([
@@ -127,7 +126,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
             ]);
         }
 
-        
+
         DB::commit();
         $order = CheckoutService::create($event, $request, isFree: true, invite: $invite, user: $user);
 
