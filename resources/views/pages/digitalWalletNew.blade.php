@@ -121,11 +121,11 @@
                 <div class="cus-btn-bar">
                     <a class="cus-btn" href="{{ route('digital-wallet', $user) }}"><i class="fa-solid fa-qrcode"></i>
                         {{ __('words.tickets') }}</a>
-
+@if($orders->count())
                     <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'invoice']) }}"><i
                             class="fa-solid fa-file-invoice"></i>
                         {{ __('words.invoice') }}</a>
-
+@endif
                     <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'info']) }}"><i
                             class="fa-solid fa-circle-info"></i>
                         {{ __('words.information') }}</a>
@@ -188,26 +188,27 @@
 
                     <table class="table  table-bordered w-50 mx-auto text-center">
 
-                        @foreach ($tickets->pluck('extras')->flatMap(fn($extra) => $extra)->groupBy('name') as $name => $extras)
-                            <div class="card  mb-3  shadow-sm " style="border:1px solid #f3510b;">
-                                <div class="card-body">
-                                    <h4>
-                                        {{ $name }}
-                                    </h4>
-                                    <p>
-                                        {{ __('words.remaining') }} :
-                                        {{ $extras->sum('qty') - $extras->sum('used') }}
-                                    </p>
+                        @if ($tickets->pluck('extras')->count())
+                            @foreach ($tickets->pluck('extras')->flatMap(fn($extra) => $extra)->groupBy('name') as $name => $extras)
+                                <div class="card  mb-3  shadow-sm " style="border:1px solid #f3510b;">
+                                    <div class="card-body">
+                                        <h4>
+                                            {{ $name }}
+                                        </h4>
+                                        <p>
+                                            {{ __('words.remaining') }} :
+                                            {{ $extras->sum('qty') - $extras->sum('used') }}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
-
-                        <h3 class="text-center p-5">
-                            <i class="fa fa-box"></i> {{ __('words.no_product_found') }}
-                        </h3>
-
+                            @endforeach
+                        @else
+                            <h3 class="text-center p-5">
+                                <i class="fa fa-box"></i> {{ __('words.no_product_found') }}
+                            </h3>
+                        @endif
                 </div>
-            @elseif(request()->tab == 'invoice')
+            @elseif(request()->tab == 'invoice' && $orders->count())
                 <div class="cus-card-body p-2">
 
 
@@ -252,7 +253,8 @@
 
                                 <div class="card-body">
                                     <a style="text-decoration:none;color: #f3510b;" class="float-end"
-                                        data-bs-toggle="collapse" href="#seeDetails{{ $product->id }}e{{$order->id}}" role="button"
+                                        data-bs-toggle="collapse"
+                                        href="#seeDetails{{ $product->id }}e{{ $order->id }}" role="button"
                                         aria-expanded="false" aria-controls="collapseExample">
                                         <i class="fa fa-chevron-down"></i>
                                     </a>
@@ -271,7 +273,7 @@
                                             href="{{ route('download.ticket', ['order' => $order, 'p' => $product->id]) }}">{{ __('words.view_tickets') }}</a>
                                     </p>
 
-                                    <div class="collapse" id="seeDetails{{ $product->id }}e{{$order->id}}">
+                                    <div class="collapse" id="seeDetails{{ $product->id }}e{{ $order->id }}">
 
                                         {!! $product->description !!}
 

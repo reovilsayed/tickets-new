@@ -90,7 +90,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
                     'country' => 'PT',
                     'role_id' => 2,
                     'vatNumber' => $billing['vatNumber'] ?? null,
-                    'uniqid' => uniqid()
+            
                 ]);
             }
         } elseif ($phone) {
@@ -108,7 +108,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
                     'password' => Hash::make('password2176565'),
                     'country' => 'PT',
                     'vatNumber' => $billing['vatNumber'] ?? null,
-                    // 'uniqid' => uniqid()
+               
                 ]);
             }
         } else {
@@ -122,7 +122,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
                 'country' => 'PT',
                 'role_id' => 2,
                 'vatNumber' => $billing['vatNumber'] ?? null,
-                'uniqid' => uniqid()
+             
             ]);
         }
 
