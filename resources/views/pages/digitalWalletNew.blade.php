@@ -252,7 +252,7 @@
 
                                 <div class="card-body">
                                     <a style="text-decoration:none;color: #f3510b;" class="float-end"
-                                        data-bs-toggle="collapse" href="#seeDetails{{ $product->id }}{{$order->id}}" role="button"
+                                        data-bs-toggle="collapse" href="#seeDetails{{ $product->id }}e{{$order->id}}" role="button"
                                         aria-expanded="false" aria-controls="collapseExample">
                                         <i class="fa fa-chevron-down"></i>
                                     </a>
@@ -271,7 +271,7 @@
                                             href="{{ route('download.ticket', ['order' => $order, 'p' => $product->id]) }}">{{ __('words.view_tickets') }}</a>
                                     </p>
 
-                                    <div class="collapse" id="seeDetails{{ $product->id }}">
+                                    <div class="collapse" id="seeDetails{{ $product->id }}e{{$order->id}}">
 
                                         {!! $product->description !!}
 
