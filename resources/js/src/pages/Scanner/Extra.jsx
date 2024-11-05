@@ -14,7 +14,7 @@ const Extra = ({ extra, index, handleExtraChange }) => {
     const handleWithdraw = () => {
 
         if (withdrawQty > 0 && withdrawQty <= extra.qty - extra.used) {
-
+            
             handleExtraChange(extra, withdrawQty);
             setWithdrawQty(0); // Reset input after withdrawal
         }
@@ -25,7 +25,7 @@ const Extra = ({ extra, index, handleExtraChange }) => {
             <div className="card-body text-start">
                 <div className="d-flex justify-content-between align-items-center">
                     <p className="h6">
-                        {extra?.display_name ?? extra?.name} X {quantity - extra?.used ?? 0}
+                        {extra?.display_name ?? extra?.name} X {quantity ?? 0 - extra?.used ?? 0}
                         {extra?.newQty ? (
                             <sup className="text-secondary fs-6">
                                 + {extra?.newQty - extra?.qty}
