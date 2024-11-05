@@ -170,14 +170,12 @@ class CheckoutService
                 'discount_code' => null,
                 'tax' => 0,
                 'total' => 0,
-
                 'payment_method' => 'invite',
                 'transaction_id' => 0,
                 'security_key' => Str::uuid(),
                 'event_id' => $this->event->id,
                 'send_message' => request()->send_message ? true : false,
                 'send_email' => request()->send_email ? true : false
-
             ];
         } else {
             $tax = $this->cart->map(function ($product) {
@@ -199,11 +197,9 @@ class CheckoutService
                 'security_key' => Str::uuid(),
                 'event_id' => $this->event->id,
                 'send_message' => request()->send_message,
-                'send_email' => request()->send_email
+                'send_email' => request()->send_email ? true : false
             ];
         }
-
-
 
         return Order::create($data);
     }

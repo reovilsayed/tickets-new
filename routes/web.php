@@ -58,6 +58,7 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
 
+        
         $total = 0;
         foreach ($request->tickets as $ticket) {
             $total += $ticket;
@@ -126,9 +127,9 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
             ]);
         }
 
-        $order = CheckoutService::create($event, $request, isFree: true, invite: $invite, user: $user);
-
+        
         DB::commit();
+        $order = CheckoutService::create($event, $request, isFree: true, invite: $invite, user: $user);
 
 
 

@@ -186,6 +186,7 @@ class TOCOnlineService
             'lines' => $lines,
         ];
 
+    
         $response = Http::withHeaders([
             'Content-Type' => 'application/vnd.api+json',
             'Accept' => 'application/json',
