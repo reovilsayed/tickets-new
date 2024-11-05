@@ -12,11 +12,13 @@ use App\Models\Invite;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
+use App\Models\User;
 use Error;
 use Exception;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -214,6 +216,64 @@ class AdminCustomController extends Controller
         return view('vendor.voyager.products.invite', compact('product'));
     }
 
+    protected function getUser($billing)
+    {
+        $email = $billing['email'] ?? null;
+        $phone = $billing['phone'] ?? null;
+
+        if ($phone) {
+            // Attempt to find user by phone
+            $user = User::where('contact_number', $phone)->first();
+
+            // If no user is found by phone, create with a fake email
+            if (!$user) {
+                $user = User::create([
+                    'name' => $billing['name'] ?? 'fake user',
+                    'email' => 'fake' . uniqid() . '@mail.com',
+                    'contact_number' => $phone,
+                    'email_verified_at' => now(),
+                    'role_id' => 2,
+                    'password' => Hash::make('password2176565'),
+                    'country' => 'PT',
+                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    // 'uniqid' => uniqid()
+                ]);
+            }
+        } elseif ($email) {
+            // Attempt to find user by email
+            $user = User::where('email', $email)->first();
+
+            // If no user is found by email, create with email provided
+            if (!$user) {
+                $user = User::create([
+                    'name' => $billing['name'] ?? 'fake user',
+                    'email' => $email,
+                    'contact_number' => $phone,
+                    'email_verified_at' => now(),
+                    'password' => Hash::make('password2176565'),
+                    'country' => 'PT',
+                    'role_id' => 2,
+                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    'uniqid' => uniqid()
+                ]);
+            }
+        } else {
+            // Handle case when neither phone nor email is provided
+            $user = User::create([
+                'name' => $billing['name'] ?? 'fake user',
+                'email' => 'fake' . uniqid() . '@mail.com',
+                'contact_number' => null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password2176565'),
+                'country' => 'PT',
+                'role_id' => 2,
+                'vatNumber' => $billing['vatNumber'] ?? null,
+                'uniqid' => uniqid()
+            ]);
+        }
+
+        return $user;
+    }
     public function personalInvitePost(Request $request, Product $product)
     {
 
@@ -227,14 +287,14 @@ class AdminCustomController extends Controller
         ]);
 
         try {
-
-            $order = Order::create([
-                'user_id' => null,
-                'billing' => [
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'phone' => $request->phone,
-                ],
+            $billing = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+            ];
+            $orderData = [
+                'user_id' => $this->getUser($billing)->id,
+                'billing' => $billing ,
                 'subtotal' => 0,
                 'discount' => 0,
                 'discount_code' => 0,
@@ -247,7 +307,8 @@ class AdminCustomController extends Controller
                 'send_message' => $request->send_message ? true : false,
                 'send_email' => $request->send_email ? true : false,
                 'event_id' => $product->event->id,
-            ]);
+            ];
+            $order = Order::create($orderData);
 
             if ($product->quantity < $request->qty) {
                 throw new Exception($product->name . ' is not available for this quantity');
@@ -257,7 +318,7 @@ class AdminCustomController extends Controller
             $product->save();
             for ($i = 1; $i <= $request->qty; $i++) {
                 $data = [
-                    'user_id' => null,
+                    'user_id' => $orderData['user_id'],
                     'owner' => [
                         'name' => $request->name,
                         'email' => $request->email,
@@ -294,7 +355,7 @@ class AdminCustomController extends Controller
                 'alert-type' => 'error',
             ]);
         } catch (Error $e) {
-            return redirect()->back()->route('voyager.products.index')->with([
+            return redirect()->route('voyager.products.index')->with([
                 'message' => $e->getMessage(),
                 'alert-type' => 'error',
             ]);

@@ -71,7 +71,62 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
 
         $event = $invite->event;
         DB::beginTransaction();
-        $order = CheckoutService::create($event, $request, isFree: true, invite: $invite);
+
+        $email = request()->email;
+        $phone = request()->contact_number;
+
+        if ($phone) {
+            // Attempt to find user by phone
+            $user = User::where('contact_number', $phone)->first();
+
+            // If no user is found by phone, create with a fake email
+            if (!$user) {
+                $user = User::create([
+                    'name' => $billing['name'] ?? 'fake user',
+                    'email' => 'fake' . uniqid() . '@mail.com',
+                    'contact_number' => $phone,
+                    'email_verified_at' => now(),
+                    'role_id' => 2,
+                    'password' => Hash::make('password2176565'),
+                    'country' => 'PT',
+                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    // 'uniqid' => uniqid()
+                ]);
+            }
+        } elseif ($email) {
+            // Attempt to find user by email
+            $user = User::where('email', $email)->first();
+
+            // If no user is found by email, create with email provided
+            if (!$user) {
+                $user = User::create([
+                    'name' => $billing['name'] ?? 'fake user',
+                    'email' => $email,
+                    'contact_number' => $phone,
+                    'email_verified_at' => now(),
+                    'password' => Hash::make('password2176565'),
+                    'country' => 'PT',
+                    'role_id' => 2,
+                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    'uniqid' => uniqid()
+                ]);
+            }
+        } else {
+            // Handle case when neither phone nor email is provided
+            $user = User::create([
+                'name' => $billing['name'] ?? 'fake user',
+                'email' => 'fake' . uniqid() . '@mail.com',
+                'contact_number' => null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password2176565'),
+                'country' => 'PT',
+                'role_id' => 2,
+                'vatNumber' => $billing['vatNumber'] ?? null,
+                'uniqid' => uniqid()
+            ]);
+        }
+
+        $order = CheckoutService::create($event, $request, isFree: true, invite: $invite, user: $user);
 
         DB::commit();
 
@@ -265,7 +320,7 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
         $event = @$events[0] ?? null;
     }
 
- 
+
 
     $orders = $user->orders()->where('event_id', $event->id)->where('payment_method', '!=', 'invite')->get();
 

@@ -161,7 +161,7 @@
                     if (json.status == 'success') {
 
                         let rows = '';
-          
+
                         for (const key in json.ticket.extras) {
                             if (Object.prototype.hasOwnProperty.call(json.ticket.extras, key)) {
                                 const element = json.ticket.extras[key];
@@ -172,16 +172,16 @@
                                         </td>
                                   
                                         <td>
-                                           ${element.qty - element.used ?? 0}
+                                           ${element.qty - element?.used ?? 0}
                                         </td>
                                     <td>
-                                        <input class="form-control text-center" name="withdraw[${element.id}]" min="1" max="${element.qty - element.used}" type="number">
+                                        <input class="form-control text-center" name="withdraw[${element.id}]" min="1" max="${element.qty - element?.used ?? 0}" type="number">
                                     </td>
                                     </tr>
                                 `
                             }
                         }
-                        document.getElementById('result').innerHTML = `   <form method="post" action="{{ route('extras-used') }}">
+                        document.getElementById('result').innerHTML = `<form method="post" action="{{ route('extras-used') }}">
                             
                             <input type="hidden" value="{{ csrf_token() }}" name="_token" />
                             <input type="hidden" value="${json.ticket.ticket}" name="ticket" />

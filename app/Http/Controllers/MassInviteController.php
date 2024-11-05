@@ -9,9 +9,11 @@ use App\Models\Extra;
 use App\Models\Invite;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Error;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -37,6 +39,65 @@ class MassInviteController extends Controller
         return response()->json($products);
     }
 
+    protected function getUser($billing)
+    {
+        $email = $billing['email'] ?? null;
+        $phone = $billing['phone'] ?? null;
+
+        if ($phone) {
+            // Attempt to find user by phone
+            $user = User::where('contact_number', $phone)->first();
+
+            // If no user is found by phone, create with a fake email
+            if (!$user) {
+                $user = User::create([
+                    'name' => $billing['name'] ?? 'fake user',
+                    'email' => 'fake' . uniqid() . '@mail.com',
+                    'contact_number' => $phone,
+                    'email_verified_at' => now(),
+                    'role_id' => 2,
+                    'password' => Hash::make('password2176565'),
+                    'country' => 'PT',
+                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    // 'uniqid' => uniqid()
+                ]);
+            }
+        } elseif ($email) {
+            // Attempt to find user by email
+            $user = User::where('email', $email)->first();
+
+            // If no user is found by email, create with email provided
+            if (!$user) {
+                $user = User::create([
+                    'name' => $billing['name'] ?? 'fake user',
+                    'email' => $email,
+                    'contact_number' => $phone,
+                    'email_verified_at' => now(),
+                    'password' => Hash::make('password2176565'),
+                    'country' => 'PT',
+                    'role_id' => 2,
+                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    'uniqid' => uniqid()
+                ]);
+            }
+        } else {
+            // Handle case when neither phone nor email is provided
+            $user = User::create([
+                'name' => $billing['name'] ?? 'fake user',
+                'email' => 'fake' . uniqid() . '@mail.com',
+                'contact_number' => null,
+                'email_verified_at' => now(),
+                'password' => Hash::make('password2176565'),
+                'country' => 'PT',
+                'role_id' => 2,
+                'vatNumber' => $billing['vatNumber'] ?? null,
+                'uniqid' => uniqid()
+            ]);
+        }
+
+        return $user;
+    }
+
     public function PersonalMassInvite(Request $request)
     {
         try {
@@ -58,13 +119,14 @@ class MassInviteController extends Controller
                 }
 
                 // Create an order
+                $billing = [
+                    'name' => $row[0],
+                    'email' => $row[1],
+                    'phone' => @$row[2],
+                ];
                 $order = Order::create([
                     'user_id' => null,
-                    'billing' => [
-                        'name' => $row[0],
-                        'email' => $row[1],
-                        'phone' => @$row[2],
-                    ],
+                    'billing' => $billing,
                     'subtotal' => 0,
                     'discount' => 0,
                     'discount_code' => 0,
@@ -77,6 +139,7 @@ class MassInviteController extends Controller
                     'send_message' => $request->send_message ? true : false,
                     'send_email' => $request->send_email ? true : false,
                     'event_id' => $request->event_name,
+                    'user_id' => $this->getUser($billing)->id,
                 ]);
 
                 $products = collect($request->product)
@@ -95,7 +158,7 @@ class MassInviteController extends Controller
                     // Create tickets for each product
                     for ($i = 1; $i <= $d['quantity']; $i++) {
                         $ticketData = [
-                            'user_id' => null,
+                            'user_id' => $order->user_id,
                             'owner' => [
                                 'name' => $row[0],
                                 'email' => $row[1],
