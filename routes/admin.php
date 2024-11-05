@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\{AdminCustomController, EventAnalyticsController, ExportController, MassInviteController};
 use App\Exports\CustomerExport;
+use App\Models\Invite;
+use App\Models\Order;
 use App\Models\Ticket;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -42,11 +45,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
     })->name('voyager.users.staff');
 
 
-    Route::get('/tickets/{id}',function($id){
+    Route::get('/tickets/{id}', function ($id) {
 
-        $tickets = Ticket::where('id',$id)->get();
-        
-    
+        $tickets = Ticket::where('id', $id)->get();
+
+
         return view('ticketpdf', compact('tickets'));
     })->name('voyager.tickets.show');
 
@@ -71,7 +74,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
         Route::post('store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('store-product');
     });
 
-    
+
     // mass invite route
     Route::get('bulk/invites', [MassInviteController::class, 'MassInvitePage'])->name('massInvitePage');
     Route::get('bulk/personal-invites', [MassInviteController::class, 'MassPersonalInvitePage'])->name('MassPersonalInvitePage');
@@ -101,6 +104,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
         Route::post('/customer-report/{user}/tickets/access-ticket', [EventAnalyticsController::class, 'giveAccessSubmit'])->name('voyager.events.customer.analytics.tickets.access-ticket-submit');
     });
 
+
+    Route::get('invites/{id}', function ($id, Request $request) {
+        $invite = Invite::find($id);
+        // dd($invite->id);
+        $event = $invite->event;
+
+        $orders = Order::where('invite_id', $invite->id)->get();
+
+        return view('vendor.voyager.events.invites.inviteOrders', compact('orders', 'event'));
+    })->name('voyager.invites.show');
 
     Route::get('orders/refund/{order}', [AdminCustomController::class, 'refund'])->name('order.refund');
     Route::get('/coupon-generate', [AdminCustomController::class, 'couponGenerate'])->name('voyager.coupon.generate');

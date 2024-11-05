@@ -68,6 +68,7 @@ class CheckoutService
 
                 for ($i = 1; $i <= $quantity; $i++) {
                     $data = [
+                        'invite_id' => $this->invite ? @$this->invite?->id : null,
                         'user_id' =>  $this->user ? $this->user->id : auth()->id() ?? null,
                         'owner' => $this->inviteBillingObject(),
                         'event_id' => $this->event->id,
@@ -84,9 +85,7 @@ class CheckoutService
                         $data['extras'] = collect($item->extras)->map(fn($qty, $key) => ['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray();
                     }
                     $order->tickets()->create($data);
-                    
                 }
-                
             }
             $order->update(
                 [
@@ -163,6 +162,7 @@ class CheckoutService
         ]);
         if ($this->isFree) {
             $data = [
+                'invite_id' => $this->invite ? @$this->invite?->id : null,
                 'user_id' => $this->user ? $this->user->id : null,
                 'billing' => $this->inviteBillingObject(),
                 'subtotal' => 0,
