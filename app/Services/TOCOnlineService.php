@@ -64,7 +64,7 @@ class TOCOnlineService
                 'scope' => 'commercial'
             ]);
 
-        
+
         if ($response->successful()) {
             return $response->json()['access_token'];
         }
@@ -131,36 +131,46 @@ class TOCOnlineService
         $token = $this->getAccessTokenFromRefreshToken();
 
         $lines = [];
-        $tickets  = $order->tickets->map(function ($ticket) {
-            $name = $ticket->product->name;
-            return [
-                'item_type' => 'Service',
-                'item_code' => 'Serv001',
-                'description' => $name . ' for ' . $ticket?->event?->name,
-                'quantity' => 1,
-                'unit_price' => $ticket->product->price,
-                'tax_id' => 1,
-                'tax_country_region' => 'PT',
-                'tax_code' => 'NOR',
-                'tax_percentage' => $ticket->product->tax,
-                'settlement_expression' => number_format((($ticket->product->price - $ticket->price) / $ticket->product->price) * 100, 2)
-            ];
-        })->toArray();
-        $extras = $order->getExtras()->map(function ($extra) {
-            $unitPrice = ($extra->purchase_price / $extra->purchase_quantity);
-            return [
-                'item_type' => 'Service',
-                'item_code' => 'Serv001',
-                'description' => $extra->display_name,
-                'quantity' => $extra->purchase_quantity,
-                'unit_price' => $unitPrice,
-                'tax_id' => 1,
-                'tax_country_region' => 'PT',
-                'tax_code' => 'NOR',
-                'tax_percentage' => $extra->tax,
-                'settlement_expression' => number_format((($extra->price - $unitPrice) / $extra->price) * 100, 2)
-            ];
-        })->toArray();
+        if ($order->tickets->count()) {
+
+
+            $tickets  = $order->tickets->map(function ($ticket) {
+                $name = $ticket->product->name;
+                return [
+                    'item_type' => 'Service',
+                    'item_code' => 'Serv001',
+                    'description' => $name . ' for ' . $ticket?->event?->name,
+                    'quantity' => 1,
+                    'unit_price' => $ticket->product->price,
+                    'tax_id' => 1,
+                    'tax_country_region' => 'PT',
+                    'tax_code' => 'NOR',
+                    'tax_percentage' => $ticket->product->tax,
+                    'settlement_expression' => number_format((($ticket->product->price - $ticket->price) / $ticket->product->price) * 100, 2)
+                ];
+            })->toArray();
+        } else {
+            $tickets = [];
+        }
+        if ($order->getExtras()) {
+            $extras = $order->getExtras()->map(function ($extra) {
+                $unitPrice = ($extra->purchase_price / $extra->purchase_quantity);
+                return [
+                    'item_type' => 'Service',
+                    'item_code' => 'Serv001',
+                    'description' => $extra->display_name,
+                    'quantity' => $extra->purchase_quantity,
+                    'unit_price' => $unitPrice,
+                    'tax_id' => 1,
+                    'tax_country_region' => 'PT',
+                    'tax_code' => 'NOR',
+                    'tax_percentage' => $extra->tax,
+                    'settlement_expression' => number_format((($extra->price - $unitPrice) / $extra->price) * 100, 2)
+                ];
+            })->toArray();
+        } else {
+            $extras = [];
+        }
         $lines = array_merge($tickets, $extras);
 
         $body = [
@@ -186,7 +196,7 @@ class TOCOnlineService
             'lines' => $lines,
         ];
 
-    
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/vnd.api+json',
             'Accept' => 'application/json',
