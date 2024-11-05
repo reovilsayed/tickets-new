@@ -14,7 +14,7 @@ const Extra = ({ extra, index, handleExtraChange }) => {
     const handleWithdraw = () => {
 
         if (withdrawQty > 0 && withdrawQty <= extra.qty - extra.used) {
-            
+
             handleExtraChange(extra, withdrawQty);
             setWithdrawQty(0); // Reset input after withdrawal
         }
@@ -42,7 +42,7 @@ const Extra = ({ extra, index, handleExtraChange }) => {
                 </div>
                 <div className="mt-3">
                     <label htmlFor="">
-                        Withdraw (Available: {extra?.qty - extra?.used})
+                        Withdraw (Available: {extra?.qty ?? 0 - extra?.used ?? 0})
                     </label>
                     <div className="form-inline d-flex gap-2">
                         <input
