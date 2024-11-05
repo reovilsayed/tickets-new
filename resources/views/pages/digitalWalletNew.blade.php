@@ -212,24 +212,22 @@
 
 
                     @foreach ($orders as $order)
-                     
-                            <div class="card">
-                                <div class="card-body">
-                                    <p class="fw-light fs-6 mb-0">
-                                        {{ __('words.toc_online_id') }} :
-                                    </p>
-                                    <div class="d-flex justify-content-between">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="fw-light fs-6 mb-0">
+                                    {{ __('words.toc_online_id') }} :
+                                </p>
+                                <div class="d-flex justify-content-between">
 
-                                        <p class="fw-bold fs-4 mb-0">
-                                            #{{ $order->invoice_id ?? 'N/A' }}
-                                        </p>
-                                        <a class="fw-bold fs-5 mb-0" style="text-decoration: none"
+                                    <p class="fw-bold fs-4 mb-0">
+                                        #{{ $order->invoice_id ?? 'N/A' }}
+                                    </p>
+                                    <a class="fw-bold fs-5 mb-0" style="text-decoration: none"
                                         href="
                                         {{ $order->invoice_url }}">{{ __('words.view_invoice') }}</a>
-                                    </div>
                                 </div>
                             </div>
-                    
+                        </div>
                     @endforeach
 
 
@@ -238,50 +236,55 @@
                 </div>
             @else
                 <div class="cus-card-body p-2">
-                    @foreach ($tickets->groupBy('product_id') as $id => $tickets)
+                    @foreach ($tickets->groupBy('order_id') as $orderId => $tickets)
                         @php
-                            $product = App\Models\Product::find($id);
+                            $order = App\Models\Order::find($orderId);
                         @endphp
+                        @foreach ($tickets->groupBy('product_id') as $productId => $item)
+                            @php
+                                $product = App\Models\Product::find($productId);
+                            @endphp
 
-                        <div class="card mb-3  shadow-sm " style="border:1px solid #f3510b;">
+                            <div class="card mb-3  shadow-sm " style="border:1px solid #f3510b;">
 
 
 
 
-                            <div class="card-body">
-                                <a style="text-decoration:none;color: #f3510b;" class="float-end"
-                                    data-bs-toggle="collapse" href="#seeDetails{{ $product->id }}" role="button"
-                                    aria-expanded="false" aria-controls="collapseExample">
-                                    <i class="fa fa-chevron-down"></i>
-                                </a>
-                                <p class="fw-normal mb-1 fs-4">
-                                    {{ $product->name }} &nbsp;<span style="font-size: 14px"
-                                        class=" badge bg-secondary px-2 py-1 ">X
-                                        {{ $tickets->count() }}</span>
-                                </p>
-                                <p class=" text-secondary" style="font-size: 14px">
-                                    <i class="far fa-calendar"></i> &nbsp;
-                                    {{ $product->start_date->format(' d F H:i') }}
-                                </p>
-                                <p>
+                                <div class="card-body">
+                                    <a style="text-decoration:none;color: #f3510b;" class="float-end"
+                                        data-bs-toggle="collapse" href="#seeDetails{{ $product->id }}" role="button"
+                                        aria-expanded="false" aria-controls="collapseExample">
+                                        <i class="fa fa-chevron-down"></i>
+                                    </a>
+                                    <p class="fw-normal mb-1 fs-4">
+                                        {{ $product->name }} &nbsp;<span style="font-size: 14px"
+                                            class=" badge bg-secondary px-2 py-1 ">X
+                                            {{ $tickets->count() }}</span>
+                                    </p>
+                                    <p class=" text-secondary" style="font-size: 14px">
+                                        <i class="far fa-calendar"></i> &nbsp;
+                                        {{ $product->start_date->format(' d F H:i') }}
+                                    </p>
+                                    <p>
 
-                                    <a style="color:  #f3510b;text-decoration:none"
-                                        href="{{ route('download.ticket', ['order' => $tickets[0]->order, 'p' => $product->id]) }}">{{ __('words.view_tickets') }}</a>
-                                </p>
+                                        <a style="color:  #f3510b;text-decoration:none"
+                                            href="{{ route('download.ticket', ['order' => $order, 'p' => $product->id]) }}">{{ __('words.view_tickets') }}</a>
+                                    </p>
 
-                                <div class="collapse" id="seeDetails{{ $product->id }}">
+                                    <div class="collapse" id="seeDetails{{ $product->id }}">
 
-                                    {!! $product->description !!}
+                                        {!! $product->description !!}
+
+                                    </div>
 
                                 </div>
 
                             </div>
-
-                        </div>
                         @endforeach
-                    @endif
+                    @endforeach
+            @endif
 
-                </div>
+        </div>
 
 
 
