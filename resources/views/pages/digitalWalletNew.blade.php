@@ -252,7 +252,7 @@
 
                                 <div class="card-body">
                                     <a style="text-decoration:none;color: #f3510b;" class="float-end"
-                                        data-bs-toggle="collapse" href="#seeDetails{{ $product->id }}" role="button"
+                                        data-bs-toggle="collapse" href="#seeDetails{{ $product->id }}{{$order->id}}" role="button"
                                         aria-expanded="false" aria-controls="collapseExample">
                                         <i class="fa fa-chevron-down"></i>
                                     </a>
