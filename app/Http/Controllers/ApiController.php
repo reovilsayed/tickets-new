@@ -302,7 +302,8 @@ class ApiController extends Controller
                             'id' => $extra['id'],
                             'name' => Extra::find($extra['id'])->display_name,
                             'qty' => $extra['newQuantity'] ?? $extra['quantity'],
-                            'price' => $extra['price']
+                            'price' => $extra['price'],
+                            'used' => $request->withdraw ?  $extra['newQuantity'] ?? $extra['quantity'] : 0
                         ])->toArray();
                     }
                     $hollowTickets[] = $order->tickets()->create($data);

@@ -26,6 +26,7 @@ const PaymentModal = ({ open }) => {
 
     const [sendToPhone, setSendToPhone] = useState(true);
     const [sendToMail, setSendToMail] = useState(false);
+    const [withdraw, setWithdraw] = useState(false);
     const [physicalQr, setPhysicalQr] = useState(false);
     const [sendInvoiceToMail, setSendInvoiceToMail] = useState(false);
     const [printInvoice, setPrintInvoice] = useState(false);
@@ -67,6 +68,7 @@ const PaymentModal = ({ open }) => {
             total: cartTotal,
             sendToMail,
             sendToPhone,
+            withdraw,
             physicalQr,
             printInvoice,
             sendInvoiceToMail,
@@ -135,6 +137,9 @@ const PaymentModal = ({ open }) => {
             return true;
         });
     };
+    const handleSetWithdraw = () => {
+        setWithdraw(!withdraw);
+    };
 
     const handleSendInvoice = () => {
         setSendInvoiceToMail((prev) => {
@@ -158,9 +163,8 @@ const PaymentModal = ({ open }) => {
                 <div className="payment-modal-backdrop payment-modal-fade-in"></div>
             )}
             <div
-                className={`modal payment-modal ${
-                    open ? "payment-modal-fade-in" : "payment-modal-fade-out"
-                }`}
+                className={`modal payment-modal ${open ? "payment-modal-fade-in" : "payment-modal-fade-out"
+                    }`}
                 id="paymentModal"
                 tabIndex="-1"
                 aria-labelledby="paymentModalLabel"
@@ -209,8 +213,8 @@ const PaymentModal = ({ open }) => {
                                     <label htmlFor="emailInput">
                                         Email{" "}
                                         {formData["vatNumber"] ||
-                                        sendToMail ||
-                                        sendInvoiceToMail
+                                            sendToMail ||
+                                            sendInvoiceToMail
                                             ? ""
                                             : "(optional)"}
                                     </label>
@@ -224,10 +228,10 @@ const PaymentModal = ({ open }) => {
                                     />
                                 </div>
                                 {sendToPhone ? (
-                                          <PhoneNumberInput value={formData["phone"]}   onChange={value => setFormData((prev) => {
-                                            return { ...prev, phone: '+'+value };
-                                        })} />
-                                 
+                                    <PhoneNumberInput value={formData["phone"]} onChange={value => setFormData((prev) => {
+                                        return { ...prev, phone: '+' + value };
+                                    })} />
+
 
                                 ) : (
                                     ""
@@ -296,7 +300,22 @@ const PaymentModal = ({ open }) => {
                                         >
                                             Ticket
                                         </label>
-
+                                        <div class="form-check">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                value={withdraw}
+                                                checked={withdraw}
+                                                onChange={handleSetWithdraw}
+                                                id="Withdraw"
+                                            />
+                                            <label
+                                                class="form-check-label"
+                                                htmlFor="Withdraw"
+                                            >
+                                               Withdraw
+                                            </label>
+                                        </div>
                                         <div class="form-check">
                                             <input
                                                 class="form-check-input"
@@ -313,6 +332,7 @@ const PaymentModal = ({ open }) => {
                                                 Send to phone
                                             </label>
                                         </div>
+                                      
                                         <div class="form-check">
                                             <input
                                                 class="form-check-input"
@@ -411,9 +431,9 @@ const PaymentModal = ({ open }) => {
                                 disabled={
                                     !formData["name"] ||
                                     (formData["vatNumber"] ||
-                                    sendToMail ||
-                                    sendToPhone ||
-                                    sendInvoiceToMail
+                                        sendToMail ||
+                                        sendToPhone ||
+                                        sendInvoiceToMail
                                         ? formData["email"] || formData["phone"]
                                             ? false
                                             : true
