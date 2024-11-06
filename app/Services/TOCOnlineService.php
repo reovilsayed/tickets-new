@@ -229,7 +229,7 @@ class TOCOnlineService
                 'id' => $invoice_id,
                 'attributes' => [
                     'type' => 'Document',
-                    'to_email' => $order->user->email,
+                    'to_email' => 'josegalante@essenciacompany.com',
                     'from_email' => 'info@events.essenciacompany.com',
                     'from_name' => 'essenciacompany',
                     'subject' => 'Event ticket'
