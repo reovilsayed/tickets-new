@@ -8,6 +8,7 @@ import CartInfo from "./CartInfo/CartInfo";
 import { Dropdown, DropdownButton, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import PhoneNumberInput from "./PhoneNumberInput";
+import { useFetch } from "../../../lib/hooks/useFetch";
 
 const PaymentModal = ({ open }) => {
     const [formData, setFormData] = useState({
@@ -33,6 +34,13 @@ const PaymentModal = ({ open }) => {
 
     const [orderRequestProcessing, setOrderRequestProcessing] = useState(false);
 
+    
+    const { data : withdrawData } = useFetch(["withdraw_checked"], `${import.meta.env.VITE_APP_URL}/api/withdraw_checked`)
+
+    useEffect(() => {
+      
+        setWithdraw(withdrawData?.checked)
+    }, [withdrawData])
     useEffect(() => {
         const modalElement = document.getElementById("paymentModal");
 

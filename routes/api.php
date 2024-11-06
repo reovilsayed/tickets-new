@@ -26,9 +26,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/scan-ticket', function (Request $request) {
     try {
-  
-        $ticket = Ticket::where('ticket',$request->ticket)->first();
-    
+
+        $ticket = Ticket::where('ticket', $request->ticket)->first();
+
         $zone = Zone::find($request->zone);
 
         if (in_array(now()->format('Y-m-d'), $ticket->product->dates) == false) throw new Exception(__('words.to_early_to_scan'));
@@ -160,3 +160,10 @@ Route::post('/tickets/get', [ApiController::class, 'getTicket']);
 Route::post('/tickets/update-code', [ApiController::class, 'updateTicketCode']);
 Route::post('/tickets/activate', [ApiController::class, 'activateTicket']);
 Route::post('/ticket-extras', [ApiController::class, 'ticketExtras']);
+
+
+Route::get('/withdraw_checked', function () {
+    return response()->json([
+        'checked' => setting('admin.withdraw') == "1" ? true : false
+    ]);
+});

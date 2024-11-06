@@ -42,9 +42,9 @@ class SendEmailToCustomer
 
                     if ($order->payment_method == 'invite') {
 
-                        Mail::to($order->billing->email)->send(new InviteDownload($order, $product, null));
+                        Mail::to($order->user->email)->send(new InviteDownload($order, $product, null));
                     } else {
-                        Mail::to($order->billing->email)->send(new TicketDownload($order, $product, null));
+                        Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));
                     }
                 }
             }

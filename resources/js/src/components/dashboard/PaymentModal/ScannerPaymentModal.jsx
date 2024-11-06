@@ -24,6 +24,12 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
         paymentMethod: "Cash",
     });
 
+    const { data: withdrawData } = useFetch(["withdraw_checked"], `${import.meta.env.VITE_APP_URL}/api/withdraw_checked`)
+
+    useEffect(() => {
+
+        setWithdraw(withdrawData?.checked)
+    }, [withdrawData])
     useEffect(() => {
         if (ticket?.order_id?.billing) {
             setFormData({
@@ -66,7 +72,7 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
     const handleClose = () => onClose();
 
     const submitOrder = async () => {
-    
+
         setOrderRequestProcessing(true);
         const orderData = {
             biling: formData,
@@ -240,7 +246,7 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                     </div>
                                 </div>
                                 <div className="form-check">
-                                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={withdraw} onChange={()=>setWithdraw(!withdraw)} />
+                                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={withdraw} onChange={() => setWithdraw(!withdraw)} />
                                     <label className="form-check-label" for="flexCheckDefault">
                                         Withdraw
                                     </label>
