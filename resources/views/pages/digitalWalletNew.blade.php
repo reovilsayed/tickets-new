@@ -161,7 +161,7 @@
                     </div>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <a href="{{ $event->website }}" style="text-decoration: none" class="p-0 m-0 fs-4">
+                            <a target="_blank" href="{{ $event->website }}" style="text-decoration: none" class="p-0 m-0 fs-4">
                                 {{ __('words.website') }}
                             </a>
 
@@ -169,7 +169,7 @@
                     </div>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <a href="{{ $event->program }}" style="text-decoration: none" class="p-0 m-0 fs-4">
+                            <a target="_blank" href="{{ $event->program }}" style="text-decoration: none" class="p-0 m-0 fs-4">
                                 {{ __('words.website_program') }}
                             </a>
 
