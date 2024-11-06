@@ -157,7 +157,7 @@ class ApiController extends Controller
             // If no user is found by phone, create with a fake email
             if (!$user) {
                 $user = User::create([
-                    'name' => $billing['name'] ?? 'fake user',
+                    'name' => @$billing['name'] ,
                     'email' => 'fake' . uniqid() . '@mail.com',
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -175,7 +175,7 @@ class ApiController extends Controller
             // If no user is found by email, create with email provided
             if (!$user) {
                 $user = User::create([
-                    'name' => $billing['name'] ?? 'fake user',
+                    'name' => @$billing['name'] ,
                     'email' => $email,
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -189,7 +189,7 @@ class ApiController extends Controller
         } else {
             // Handle case when neither phone nor email is provided
             $user = User::create([
-                'name' => $billing['name'] ?? 'fake user',
+                'name' => @$billing['name'] ,
                 'email' => 'fake' . uniqid() . '@mail.com',
                 'contact_number' => null,
                 'email_verified_at' => now(),

@@ -22,6 +22,7 @@ use App\Http\Controllers\PdfDownloadController;
 use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Vemcogroup\SmsApi\SmsApi;
 
@@ -82,7 +83,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
             // If no user is found by email, create with email provided
             if (!$user) {
                 $user = User::create([
-                    'name' => $billing['name'] ?? 'fake user',
+                    'name' => request()->name ,
                     'email' => $email,
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -100,7 +101,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
             // If no user is found by phone, create with a fake email
             if (!$user) {
                 $user = User::create([
-                    'name' => $billing['name'] ?? 'fake user',
+                    'name' => request()->name,
                     'email' => 'fake' . uniqid() . '@mail.com',
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -114,7 +115,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
         } else {
             // Handle case when neither phone nor email is provided
             $user = User::create([
-                'name' => $billing['name'] ?? 'fake user',
+                'name' => request()->name ?? 'fake user',
                 'email' => 'fake' . uniqid() . '@mail.com',
                 'contact_number' => null,
                 'email_verified_at' => now(),
