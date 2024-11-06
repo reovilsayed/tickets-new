@@ -313,7 +313,8 @@ class ApiController extends Controller
 
             // Handle invoice printing or emailing
             $printInvoice = $request->get('printInvoice');
-            $sendInvoiceToMail = $request->get('sendToMail');
+            $sendInvoiceToMail = $request->get('sendInvoiceToMail');
+            $sendTicketToMail = $request->get('sendToMail');
             // if(env('APP_ENV') != 'local'){
 
 
@@ -336,10 +337,8 @@ class ApiController extends Controller
                 $order->invoice_url = $response['public_link'];
                 $order->invoice_body = json_encode($response);
 
-                if ($sendInvoiceToMail) {
-                   
+                if ($sendInvoiceToMail || $sendTicketToMail) {
                     $toco->sendEmailDocument($order, $response['id']);
-                    Log::info();
                 }
             } catch (Exception | Error $e) {
                 Log::info($e->getMessage());
