@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ScannedCartInfo from "./CartInfo/ScannedCartInfo";
 import PhoneNumberInput from "./PhoneNumberInput";
+import { useFetch } from "../../../lib/hooks/useFetch";
 
 const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, setWithdraw }) => {
     const cartTotal = useMemo(() => {
