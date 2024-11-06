@@ -9,7 +9,7 @@
     <section class="rooms1 section-padding">
         <div class="container">
             <div class="row ">
-                <div class="col-md-5 event-details">
+                <div class="col-md-5 event-details d-none d-md-block">
 
                     <div class="event_img d-none d-md-block">
                         <img src=" {{ Voyager::image($event->thumbnail) }}" alt="">
@@ -61,7 +61,7 @@
                                     {!! $event->description !!}
                                 </p>
                             </div>
-                         
+
                         </div>
                         <div class="accordin-item">
                             <div>
@@ -75,7 +75,7 @@
                                     {!! $event->terms !!}
                                 </p>
                             </div>
-                         
+
                         </div>
                     </div>
                 </div>
@@ -134,7 +134,7 @@
                                                     <div class="t-info">
                                                         <p class="t-title">{{ $product->name }} </p>
                                                         <p class="t-des">{!! $product->description !!}
-                                                       
+
                                                         </p>
                                                         @if ($product->status == 2 || $product->quantity <= 0)
                                                             <span class="sold d-none">{{ __('words.sold') }}</span>
@@ -224,6 +224,88 @@
             </div>
         </div>
     </section>
+    <button class="btn btn-primary rounded-circle btn-sm p-2 d-md-none d-block "
+        style="position:fixed;bottom:30px;right:30px" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        <i class="fa fa-info-circle fa-2x"></i>
+    </button>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+
+
+            <div class="event_img d-none d-md-block">
+                <img src=" {{ Voyager::image($event->thumbnail) }}" alt="">
+            </div>
+
+            <h2 class="events-title mt-2 px-3 text-center">{{ $event->name }}</h2>
+            <div class="text-center d-md-none">
+                <a href="#mobile-device"><button
+                        class="custom-button back-button">{{ __('words.envent_list') }}</button></a>
+            </div>
+            <div class="accordins">
+                <div class="accordin-item">
+                    <div>
+                        <i class="fa fa-calendar fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5>
+                            {{ __('words.start_in') }} {{ $event->start_at->diffForHumans() }}
+                        </h5>
+                        <h6>
+                            {{ $event->start_at->format('d M') }}
+                        </h6>
+                        <h6>
+                            {{ $event->start_at->format('H:i') }}
+
+                        </h6>
+                    </div>
+                </div>
+                <div class="accordin-item">
+                    <div>
+                        <i class="fa fa-location-pin fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5>
+                            {{ $event->location }}
+                        </h5>
+
+                    </div>
+                </div>
+                <div class="accordin-item d-none d-md-block">
+                    <div>
+                        <i class="fa fa-info-circle fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5>
+                            {{ __('words.description') }}
+                        </h5>
+
+                        {!! $event->description !!}
+
+                    </div>
+
+                </div>
+                <div class="accordin-item">
+                    <div>
+                        <i class="fa-solid fa-file-contract fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5>
+                            {{ __('words.terms') }}
+                        </h5>
+
+                        {!! $event->terms !!}
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
     @if ($is_invite)
         <div class="modal fade" id="inviteCheckoutModal" tabindex="-1" aria-labelledby="inviteCheckoutModalLabel"
             aria-hidden="true">
@@ -245,20 +327,22 @@
                         </div>
                         <label for="">Phone</label>
                         <div class="form-group">
-                            <input name="contact_number"  type="tel" id="intl-phone" class="form-control">
+                            <input name="contact_number" type="tel" id="intl-phone" class="form-control">
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" checked  name="send_email" type="checkbox" value="1" id="send_email">
+                            <input class="form-check-input" checked name="send_email" type="checkbox" value="1"
+                                id="send_email">
                             <label class="form-check-label" for="send_email">
-                             {{__('words.send_email')}}
+                                {{ __('words.send_email') }}
                             </label>
-                          </div>
+                        </div>
                         <div class="form-check">
-                            <input class="form-check-input"  name="send_message" type="checkbox" value="1" id="send_message">
+                            <input class="form-check-input" name="send_message" type="checkbox" value="1"
+                                id="send_message">
                             <label class="form-check-label" for="send_message">
-                             {{__('words.send_message')}}
+                                {{ __('words.send_message') }}
                             </label>
-                          </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
