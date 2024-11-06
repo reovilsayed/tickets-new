@@ -1,5 +1,8 @@
 <?php
 
+use App\Mail\InviteDownload;
+use App\Mail\InviteMail;
+use App\Mail\TicketDownload;
 use App\Models\Order;
 use App\Models\Coupon;
 use App\Models\Invite;
@@ -91,7 +94,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
                     'country' => 'PT',
                     'role_id' => 2,
                     'vatNumber' => $billing['vatNumber'] ?? null,
-            
+
                 ]);
             }
         } elseif ($phone) {
@@ -109,7 +112,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
                     'password' => Hash::make('password2176565'),
                     'country' => 'PT',
                     'vatNumber' => $billing['vatNumber'] ?? null,
-               
+
                 ]);
             }
         } else {
@@ -123,7 +126,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
                 'country' => 'PT',
                 'role_id' => 2,
                 'vatNumber' => $billing['vatNumber'] ?? null,
-             
+
             ]);
         }
 
@@ -201,7 +204,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
                 foreach ($products as $id => $data) {
                     $product = Product::find($id);
                     if ($product) {
-                        $product->quantity =  $product->quantity - count($data);
+                        $product->quantity = $product->quantity - count($data);
                         $product->save();
                     }
                 }
@@ -312,27 +315,14 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
 
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
-
     $events = Event::where('status', 1)->latest()->get();
-
     if ($request->filled('event_id')) {
         $event = Event::where('id', $request->event_id)->first();
     } else {
         $event = @$events[0] ?? null;
     }
-
-
-
-    $orders = $user->orders()->where('event_id', $event->id)->where('payment_method', '!=', 'invite')->get();
-
-
-
+    $orders = $user->orders()->where('payment_method', '!=', 'invite')->get();
     $tickets = $user->tickets()->where('event_id', $event->id)->where('order_id', '!=', null)->get();
-
-
-
-
-
     return view('pages.digitalWalletNew', compact('user', 'orders', 'events', 'event', 'tickets'));
 })->name('digital-wallet');
 
@@ -347,7 +337,7 @@ Route::get('/payment-confirm', function () {
     foreach ($products as $id => $data) {
         $product = Product::find($id);
         if ($product) {
-            $product->quantity =  $product->quantity - count($data);
+            $product->quantity = $product->quantity - count($data);
             $product->save();
         }
     }
@@ -369,3 +359,18 @@ Route::get('test', function () {
 //     $message = 'Acesso e fatura para o evento: [%goto:' . route('digital-wallet', $order) . '%] !!';
 //     SmsApi::send('+351915240193',  $message);
 // });
+
+Route::get('test', function () {
+    $order = Order::latest()->first();
+    $product = Product::latest()->first();
+    $ticket = Ticket::latest()->first();
+
+    return new InviteDownload($order,$product,$ticket);
+});
+Route::get('test2', function () {
+    $order = Order::latest()->first();
+    $product = Product::latest()->first();
+    $ticket = Ticket::latest()->first();
+
+    return new TicketDownload($order,$product,$ticket);
+});

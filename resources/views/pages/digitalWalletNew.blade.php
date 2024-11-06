@@ -162,11 +162,16 @@
                     </div>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <p class="p-0 m-0 fs-6">
+                            <a style="color: #f3510b" target="_blank" href="{{ $event->website }}" style="text-decoration: none" class="p-0 m-0 fs-4">
                                 {{ __('words.website') }}
-                            </p>
-                            <a href="{{ $event->website }}" style="text-decoration: none" class="p-0 m-0 fs-4">
-                                {{ __('words.visit_website') }}
+                            </a>
+
+                        </div>
+                    </div>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <a style="color: #f3510b" target="_blank" href="{{ $event->program }}" style="text-decoration: none" class="p-0 m-0 fs-4">
+                                {{ __('words.website_program') }}
                             </a>
 
                         </div>
