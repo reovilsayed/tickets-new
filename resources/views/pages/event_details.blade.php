@@ -9,7 +9,7 @@
     <section class="rooms1 section-padding">
         <div class="container">
             <div class="row ">
-                <div class="col-md-5 event-details">
+                <div class="col-md-5 event-details d-none d-md-block">
 
                     <div class="event_img d-none d-md-block">
                         <img src=" {{ Voyager::image($event->thumbnail) }}" alt="">
