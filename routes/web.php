@@ -314,27 +314,14 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
 
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
-
     $events = Event::where('status', 1)->latest()->get();
-
     if ($request->filled('event_id')) {
         $event = Event::where('id', $request->event_id)->first();
     } else {
         $event = @$events[0] ?? null;
     }
-
-
-
     $orders = $user->orders()->where('event_id', $event->id)->where('payment_method', '!=', 'invite')->get();
-
-
-
     $tickets = $user->tickets()->where('event_id', $event->id)->where('order_id', '!=', null)->get();
-
-
-
-
-
     return view('pages.digitalWalletNew', compact('user', 'orders', 'events', 'event', 'tickets'));
 })->name('digital-wallet');
 
