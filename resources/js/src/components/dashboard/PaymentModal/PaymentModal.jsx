@@ -54,6 +54,7 @@ const PaymentModal = ({ open }) => {
 
     const { items, cartTotal, emptyCart } = useCart();
 
+
     const navigate = useNavigate();
 
     const submitOrder = async () => {
@@ -313,7 +314,7 @@ const PaymentModal = ({ open }) => {
                                                 class="form-check-label"
                                                 htmlFor="Withdraw"
                                             >
-                                               Withdraw
+                                                Withdraw
                                             </label>
                                         </div>
                                         <div class="form-check">
@@ -332,7 +333,7 @@ const PaymentModal = ({ open }) => {
                                                 Send to phone
                                             </label>
                                         </div>
-                                      
+
                                         <div class="form-check">
                                             <input
                                                 class="form-check-input"
@@ -349,7 +350,8 @@ const PaymentModal = ({ open }) => {
                                                 Send to mail
                                             </label>
                                         </div>
-                                        <div class="form-check">
+
+                                        {items.filter((item) => item.isTicket).length > 0 && (<div class="form-check">
                                             <input
                                                 class="form-check-input"
                                                 type="checkbox"
@@ -365,6 +367,7 @@ const PaymentModal = ({ open }) => {
                                                 Physical QR Code
                                             </label>
                                         </div>
+                                        )}
                                     </div>
                                     {physicalQr && (
                                         <div className="col-md-6">
