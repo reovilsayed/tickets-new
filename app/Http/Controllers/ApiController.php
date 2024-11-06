@@ -335,9 +335,12 @@ class ApiController extends Controller
                 $order->invoice_id = $response['id'];
                 $order->invoice_url = $response['public_link'];
                 $order->invoice_body = json_encode($response);
-                $toco->sendEmailDocument($order, $response['id']);
-                Log::info('log worked');
-             
+
+                if ($sendInvoiceToMail) {
+                   
+                    $toco->sendEmailDocument($order, $response['id']);
+                    Log::info();
+                }
             } catch (Exception | Error $e) {
                 Log::info($e->getMessage());
             }
