@@ -349,10 +349,11 @@ class ApiController extends Controller
             $order['tickets'] = $hollowTickets;
 
             if ($printInvoice == false) {
-
-                $order = $order->invoice_url = null;
+                $order->invoice_url = null;
+                
                 // Add invoice creation logic if needed
             }
+
             return response()->json($order);
         } catch (Exception | Error $e) {
             DB::rollBack();
