@@ -368,7 +368,7 @@ class ApiController extends Controller
         $requestTicket = $request->ticket;
         $ticket = Ticket::findOrFail($requestTicket['id']);
         $ticket->extras = collect($requestTicket['extras'])->map(function ($extra) use ($request) {
-            $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQty'] ?? $extra['qty'], 'price' => $extra['price'], 'used' => @$extra['used'] ?? 0];
+            $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => @$extra['newQty'] ?? $extra['qty'], 'price' => $extra['price'], 'used' => @$extra['used'] ?? 0];
             if ($request->can_withdraw && @$extra['newQty'] ) {
                 $data['used'] = $data['used'] + @$extra['newQty'] ?? 0 - $extra['qty'];
             } else {
