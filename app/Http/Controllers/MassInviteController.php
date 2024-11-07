@@ -52,7 +52,7 @@ class MassInviteController extends Controller
             if (!$user) {
                 $user = User::create([
                     'name' => @$billing['name'] ,
-                    'email' => 'fake' . uniqid() . '@mail.com',
+                    'email' => $email ??  'fake' . uniqid() . '@mail.com',
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
                     'role_id' => 2,
