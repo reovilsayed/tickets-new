@@ -55,6 +55,7 @@ class OrderSalesChart
             ->setTitle('Total Sale');
 
         foreach ($data as $name => $ticket) {
+            
             $values = [];
             foreach ($dates as $date) {
                 array_push($values,$ticket[$date]);
@@ -62,7 +63,8 @@ class OrderSalesChart
           
             $chart->addData($name,$values);
         }
-
+        // dd($data);
+        // dd($chart->setXAxis($dates));
         return $chart->setXAxis($dates);
     }
 }
