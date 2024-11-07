@@ -252,15 +252,19 @@ class ApiController extends Controller
         // Adjust extra product prices
         if (count($extraProducts)) {
             $orderExtras = collect($extraProducts)->map(function ($extra) use ($discountPerUnit) {
-                if (@$extra['price']) {
-                    $extra['price'] -= $discountPerUnit; // Subtract discount per unit
+                if (@$extra['id']) {
+
+
+                    if (@$extra['price']) {
+                        $extra['price'] -= $discountPerUnit; // Subtract discount per unit
+                    }
+                    return [
+                        'id' => $extra['id'],
+                        'name' => Extra::find($extra['id'])->display_name,
+                        'qty' => @$extra['quantity'] ?? 0,
+                        'price' => max(0, @$extra['price'] ?? 0), // Ensure price doesn't go below zero
+                    ];
                 }
-                return [
-                    'id' => $extra['id'],
-                    'name' => Extra::find($extra['id'])->display_name,
-                    'qty' => @$extra['quantity'] ?? 0,
-                    'price' => max(0, @$extra['price'] ?? 0), // Ensure price doesn't go below zero
-                ];
             })->toArray();
             $order['extras'] = json_encode($orderExtras);
         }
