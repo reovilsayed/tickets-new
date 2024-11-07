@@ -207,7 +207,7 @@ class ApiController extends Controller
     public function createOrder(Request $request)
     {
         // Collect initial order data
-        // try {
+        try {
             DB::beginTransaction();
             $orderData = [
                 'billing' => request()->get('biling'),
@@ -362,10 +362,10 @@ class ApiController extends Controller
             ];
 
             return response()->json($data, 200);
-        // } catch (Exception | Error $e) {
-        //     DB::rollBack();
-        //     return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
-        // }
+        } catch (Exception | Error $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
+        }
     }
 
 
