@@ -354,6 +354,7 @@ class ApiController extends Controller
                 // Add invoice creation logic if needed
             }
 
+            dd($order);
             return response()->json($order);
         // } catch (Exception | Error $e) {
         //     DB::rollBack();
