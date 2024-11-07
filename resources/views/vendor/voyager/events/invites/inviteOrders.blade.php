@@ -129,7 +129,7 @@
                                         <td scope="row">{{ $order->id }}</td>
                                         <td>{{ $order?->billing?->name }}</td>
                                         <td>{{ $order?->billing?->email }}</td>
-                                        <td>{{ $order?->user?->phone }}</td>
+                                        <td>{{ $order?->user?->contact_number }}</td>
                                         <td> 
                                             <ul>
                                                 @foreach ($order->tickets as $ticket)
