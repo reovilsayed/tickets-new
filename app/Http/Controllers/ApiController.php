@@ -354,8 +354,14 @@ class ApiController extends Controller
                 // Add invoice creation logic if needed
             }
 
+            
+            $data = [
+                'id'=>$order->id,
+                'tickets'=>$hollowTickets,
+                'invoice_url' => $order->invoice_url,
+            ];
 
-            return response()->json($order, 200);
+            return response()->json($data, 200);
         // } catch (Exception | Error $e) {
         //     DB::rollBack();
         //     return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
