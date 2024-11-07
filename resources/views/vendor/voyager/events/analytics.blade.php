@@ -60,8 +60,14 @@
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Physical Sales',
+                        'label' => 'Physical Tickets',
                         'value' => $event->physicalTickets->count(),
+                    ])
+                </div>
+                <div class="col-md-4">
+                    @include('vendor.voyager.events.partial.card', [
+                        'label' => 'Pos SAles',
+                        'value' => 000,
                     ])
                 </div>
                 <div class="col-md-4">
@@ -105,7 +111,23 @@
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Sales',
+                        'label' => 'Digital Sales Money',
+                        // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
+                        'value' => 0,
+                    ])
+
+                </div>
+                <div class="col-md-4">
+                    @include('vendor.voyager.events.partial.card', [
+                        'label' => 'Pos Sales Money',
+                        // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
+                        'value' => 0,
+                    ])
+
+                </div>
+                <div class="col-md-4">
+                    @include('vendor.voyager.events.partial.card', [
+                        'label' => 'Total Sales Money',
                         'value' => Sohoj::price($event->tickets()->sum('price') / 100),
                     ])
 

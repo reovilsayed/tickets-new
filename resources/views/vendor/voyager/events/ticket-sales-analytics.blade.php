@@ -16,14 +16,12 @@
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'With Tax',
                                     'value' => '${data.total.total}',
-                                   
                                 ])
                             </div>
                             <div class="col-md-6">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'Without Tax',
                                     'value' => '${data.total.withoutTax}',
-                                   
                                 ])
                             </div>
                         </div>
@@ -36,14 +34,12 @@
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'With Tax',
                                     'value' => '${data.refunded.total}',
-                                   
                                 ])
                             </div>
                             <div class="col-md-6">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'Without Tax',
                                     'value' => '${data.refunded.withoutTax}',
-                                   
                                 ])
                             </div>
                         </div>
@@ -54,13 +50,8 @@
                 // console.log(data);
             })
         });
-   
     </script>
-    <script src="{{ $lineChart->cdn() }}"></script>
-    <script src="{{ $pieChart->cdn() }}"></script>
 
-    {{ $lineChart->script() }}
-    {{ $pieChart->script() }}
 @endsection
 @section('css')
     <style>
@@ -130,7 +121,7 @@
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Total',
-                                'value' => Sohoj::price($event->tickets->sum('price')/100),
+                                'value' => Sohoj::price($event->tickets->sum('price') / 100),
                                 'button' => $btnTotal,
                             ])
 
@@ -139,7 +130,7 @@
 
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Online Sales',
-                                'value' => Sohoj::price($event->digitalTickets->sum('price')/100),
+                                'value' => Sohoj::price($event->digitalTickets->sum('price') / 100),
                                 'button' => $btnDigital,
                             ])
 
@@ -147,7 +138,7 @@
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Physical Sales',
-                                'value' => Sohoj::price($event->physicalTickets->sum('price')/100),
+                                'value' => Sohoj::price($event->physicalTickets->sum('price') / 100),
                                 'button' => $btnPhysical,
                             ])
 
@@ -158,19 +149,22 @@
                     <div class="row">
                         <div class="col-md-6">
                             {!! $lineChart->container() !!}
-
                         </div>
                         <div class="col-md-6">
                             {!! $pieChart->container() !!}
-
                         </div>
+                        <script src="{{ $lineChart->cdn() }}"></script>
+                        {!! $lineChart->script() !!}
+                        {!! $pieChart->script() !!}
+                        
                     </div>
                 </div>
             </div>
 
 
         </div>
-
+        
+       
         <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog modal-lg">
 
@@ -181,7 +175,7 @@
 
                     </div>
                     <div class="modal-body" id="myModalBody">
-                     
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -191,7 +185,7 @@
             </div>
         </div>
 
-        
+
     </div>
 
 @endsection
