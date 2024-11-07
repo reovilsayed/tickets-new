@@ -12,9 +12,6 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
     const [sendToMail, setSendToMail] = useState(false);
 
 
-    const [sendInvoiceToMail, setSendInvoiceToMail] = useState(false);
-    const [printInvoice, setPrintInvoice] = useState(false);
-
     const handleSendToMail = () => {
         setSendToMail((prev) => {
             if (prev) return false;
@@ -43,8 +40,6 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
         vatNumber: "",
         discount: 0.0,
         paymentMethod: "Cash",
-        sendToMail,
-        sendToPhone,
         withdraw,
 
     });
@@ -110,7 +105,8 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
             paymentMethod: formData["paymentMethod"],
             subTotal: cartTotal,
             total: cartTotal,
-
+            sendToMail,
+            sendToPhone,
         };
         const response = await axios.post(
             `${import.meta.env.VITE_APP_URL}/api/create-order`,
@@ -130,6 +126,7 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                 phone: "",
                 vatNumber: "",
                 discount: 0.0,
+
                 paymentMethod: "Cash",
             });
             setSendToMail(false);
@@ -196,11 +193,10 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                 <div className="form-group mb-2">
                                     <label htmlFor="emailInput">
                                         Email{" "}
-                                        {/* {formData["vatNumber"] ||
-                                        sendToMail ||
-                                        sendInvoiceToMail
+                                        {formData["vatNumber"] ||
+                                            sendToMail 
                                             ? ""
-                                            : "(optional)"} */}
+                                            : "(optional)"}
                                     </label>
                                     <input
                                         id="emailInput"
@@ -211,9 +207,16 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                         placeholder="Enter email"
                                     />
                                 </div>
-                                <PhoneNumberInput value={formData["phone"]} onChange={value => setFormData((prev) => {
-                                    return { ...prev, phone: '+' + value };
-                                })} />
+                                {sendToPhone ? (
+                                    <PhoneNumberInput value={formData["phone"]} onChange={value => setFormData((prev) => {
+                                        return { ...prev, phone: '+' + value };
+                                    })} />
+
+
+                                ) : (
+                                    ""
+                                )}
+                            
 
                                 <div className="form-group mb-2">
                                     <label htmlFor="vatInput">

@@ -36,6 +36,7 @@ class ApiController extends Controller
         $event_date = $request->get('event_date');
 
         $products = Product::with('event')
+            ->where('quantity', '>', 0)
             ->where('name', 'like', "%{$query}%")
             ->where('status', 1)
             ->whereHas('poses', function ($q) {
@@ -102,7 +103,9 @@ class ApiController extends Controller
 
         $extrasList = $validatedData['extras'];
 
-        $extras = Extra::whereIn('id', $extrasList)->get();
+        $extras = Extra::whereIn('id', $extrasList)->whereHas('poses', function ($q) {
+            $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
+        })->get();
 
         return response()->json($extras);
     }
@@ -314,7 +317,7 @@ class ApiController extends Controller
             // Handle invoice printing or emailing
             $printInvoice = $request->get('printInvoice');
             $sendInvoiceToMail = $request->get('sendInvoiceToMail');
-            $sendTicketToMail = $request->get('sendToMail');
+            $sendTicketToMail = $request->get('sendToMail') ?? $request->billing->sendToMail;
             // if(env('APP_ENV') != 'local'){
 
 
@@ -354,10 +357,10 @@ class ApiController extends Controller
                 // Add invoice creation logic if needed
             }
 
-            
+
             $data = [
-                'id'=>$order->id,
-                'tickets'=>$hollowTickets,
+                'id' => $order->id,
+                'tickets' => $hollowTickets,
                 'invoice_url' => $order->invoice_url,
             ];
 
