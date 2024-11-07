@@ -121,11 +121,12 @@
                 <div class="cus-btn-bar">
                     <a class="cus-btn" href="{{ route('digital-wallet', $user) }}"><i class="fa-solid fa-qrcode"></i>
                         {{ __('words.tickets') }}</a>
-@if($orders->count())
-                    <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'invoice']) }}"><i
-                            class="fa-solid fa-file-invoice"></i>
-                        {{ __('words.invoice') }}</a>
-@endif
+                    @if ($orders->count())
+                        <a class="cus-btn"
+                            href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'invoice']) }}"><i
+                                class="fa-solid fa-file-invoice"></i>
+                            {{ __('words.invoice') }}</a>
+                    @endif
                     <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'info']) }}"><i
                             class="fa-solid fa-circle-info"></i>
                         {{ __('words.information') }}</a>
@@ -161,11 +162,16 @@
                     </div>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <p class="p-0 m-0 fs-6">
+                            <a style="color: #f3510b" target="_blank" href="{{ $event->website }}" style="text-decoration: none" class="p-0 m-0 fs-4">
                                 {{ __('words.website') }}
-                            </p>
-                            <a href="{{ $event->website }}" style="text-decoration: none" class="p-0 m-0 fs-4">
-                                {{ __('words.visit_website') }}
+                            </a>
+
+                        </div>
+                    </div>
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <a style="color: #f3510b" target="_blank" href="{{ $event->program }}" style="text-decoration: none" class="p-0 m-0 fs-4">
+                                {{ __('words.website_program') }}
                             </a>
 
                         </div>

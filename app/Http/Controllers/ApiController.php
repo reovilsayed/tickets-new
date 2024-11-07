@@ -157,15 +157,15 @@ class ApiController extends Controller
             // If no user is found by phone, create with a fake email
             if (!$user) {
                 $user = User::create([
-                    'name' => $billing['name'] ?? 'fake user',
-                    'email' => 'fake' . uniqid() . '@mail.com',
+                    'name' => @$billing['name'],
+                    'email' => $email ?? 'fake' . uniqid() . '@mail.com',
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
                     'role_id' => 2,
                     'password' => Hash::make('password2176565'),
                     'country' => 'PT',
                     'vatNumber' => $billing['vatNumber'] ?? null,
-                
+
                 ]);
             }
         } elseif ($email) {
@@ -175,7 +175,7 @@ class ApiController extends Controller
             // If no user is found by email, create with email provided
             if (!$user) {
                 $user = User::create([
-                    'name' => $billing['name'] ?? 'fake user',
+                    'name' => @$billing['name'],
                     'email' => $email,
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -183,13 +183,13 @@ class ApiController extends Controller
                     'country' => 'PT',
                     'role_id' => 2,
                     'vatNumber' => $billing['vatNumber'] ?? null,
-             
+
                 ]);
             }
         } else {
             // Handle case when neither phone nor email is provided
             $user = User::create([
-                'name' => $billing['name'] ?? 'fake user',
+                'name' => @$billing['name'],
                 'email' => 'fake' . uniqid() . '@mail.com',
                 'contact_number' => null,
                 'email_verified_at' => now(),
@@ -197,7 +197,7 @@ class ApiController extends Controller
                 'country' => 'PT',
                 'role_id' => 2,
                 'vatNumber' => $billing['vatNumber'] ?? null,
-                
+
             ]);
         }
 
@@ -207,7 +207,7 @@ class ApiController extends Controller
     public function createOrder(Request $request)
     {
         // Collect initial order data
-        try {
+        // try {
             DB::beginTransaction();
             $orderData = [
                 'billing' => request()->get('biling'),
@@ -314,6 +314,7 @@ class ApiController extends Controller
             // Handle invoice printing or emailing
             $printInvoice = $request->get('printInvoice');
             $sendInvoiceToMail = $request->get('sendInvoiceToMail');
+            $sendTicketToMail = $request->get('sendToMail');
             // if(env('APP_ENV') != 'local'){
 
 
@@ -336,7 +337,7 @@ class ApiController extends Controller
                 $order->invoice_url = $response['public_link'];
                 $order->invoice_body = json_encode($response);
 
-                if ($sendInvoiceToMail) {
+                if ($sendInvoiceToMail || $sendTicketToMail) {
                     $toco->sendEmailDocument($order, $response['id']);
                 }
             } catch (Exception | Error $e) {
@@ -348,15 +349,23 @@ class ApiController extends Controller
             $order['tickets'] = $hollowTickets;
 
             if ($printInvoice == false) {
+                $order->invoice_url = null;
 
-                $order = $order->invoice_url = null;
                 // Add invoice creation logic if needed
             }
-            return response()->json($order);
-        } catch (Exception | Error $e) {
-            DB::rollBack();
-            return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
-        }
+
+            
+            $data = [
+                'id'=>$order->id,
+                'tickets'=>$hollowTickets,
+                'invoice_url' => $order->invoice_url,
+            ];
+
+            return response()->json($data, 200);
+        // } catch (Exception | Error $e) {
+        //     DB::rollBack();
+        //     return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
+        // }
     }
 
 
@@ -366,9 +375,9 @@ class ApiController extends Controller
         $requestTicket = $request->ticket;
         $ticket = Ticket::findOrFail($requestTicket['id']);
         $ticket->extras = collect($requestTicket['extras'])->map(function ($extra) use ($request) {
-            $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['newQty'] ?? $extra['qty'], 'price' => $extra['price'], 'used' => @$extra['used'] ?? 0];
-            if ($request->can_withdraw && $extra['newQty']) {
-                $data['used'] = $data['used'] + $extra['newQty'] - $extra['qty'];
+            $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => @$extra['newQty'] ?? $extra['qty'], 'price' => $extra['price'], 'used' => @$extra['used'] ?? 0];
+            if ($request->can_withdraw && @$extra['newQty']) {
+                $data['used'] = $data['used'] + @$extra['newQty'] ?? 0 - $extra['qty'];
             } else {
 
                 $data['used'] = $extra['used'] ?? 0;

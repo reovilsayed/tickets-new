@@ -228,15 +228,14 @@ class AdminCustomController extends Controller
             // If no user is found by phone, create with a fake email
             if (!$user) {
                 $user = User::create([
-                    'name' => $billing['name'] ?? 'fake user',
-                    'email' => 'fake' . uniqid() . '@mail.com',
+                    'name' => @$billing['name'] ,
+                    'email' => $email ?? 'fake' . uniqid() . '@mail.com',
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
                     'role_id' => 2,
                     'password' => Hash::make('password2176565'),
                     'country' => 'PT',
                     'vatNumber' => $billing['vatNumber'] ?? null,
-                  
                 ]);
             }
         } elseif ($email) {
@@ -246,7 +245,7 @@ class AdminCustomController extends Controller
             // If no user is found by email, create with email provided
             if (!$user) {
                 $user = User::create([
-                    'name' => $billing['name'] ?? 'fake user',
+                    'name' => @$billing['name'] ,
                     'email' => $email,
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -260,7 +259,7 @@ class AdminCustomController extends Controller
         } else {
             // Handle case when neither phone nor email is provided
             $user = User::create([
-                'name' => $billing['name'] ?? 'fake user',
+                'name' => @$billing['name'] ,
                 'email' => 'fake' . uniqid() . '@mail.com',
                 'contact_number' => null,
                 'email_verified_at' => now(),

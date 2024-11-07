@@ -66,8 +66,19 @@
 @endsection
 @section('javascript')
     <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script>
-        var table = $('#dataTable').DataTable()
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                dom: 'Bfrtip', // This line integrates buttons in the DataTable
+                buttons: [
+                    'excelHtml5',
+                   
+                ]
+            });
+        });
     </script>
 @endsection
 @section('content')
@@ -77,7 +88,7 @@
         </h1>
 
         <hr>
-   
+
         <div class="container">
             <div class="panel">
                 <div class="panel-body">
@@ -93,9 +104,9 @@
                                 </h1>
                             </div>
                         </div>
-                        
-                    
-                    
+
+
+
                     </div>
 
                     <div class="table-responsive">
@@ -103,13 +114,11 @@
                             <thead>
                                 <tr class="text-center">
                                     <th>Order Id</th>
-                                    <th style="width: 120px;">Status</th>
-                                    <th>Discount</th>
-                                    <th>Total</th>
-                                    <th>Tax</th>
-                                    <th>Refund Amount</th>
-                                    <th>Date Paid</th>
-                                    <th>Date Completed</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Tickets</th>
+                                    <th>Quantity</th>
                                     <th>Created At</th>
                                     <th>Action</th>
                                 </tr>
@@ -118,16 +127,21 @@
                                 @foreach ($orders as $order)
                                     <tr>
                                         <td scope="row">{{ $order->id }}</td>
-                                        <td>{{ $order->getStatus() }}</td>
-                                        <td>{{ Sohoj::price($order->discount) }}</td>
-                                        <td>{{ Sohoj::price($order->total) }}</td>
-                                        <td>{{ Sohoj::price($order->tax) }}</td>
-                                        <td>{{ Sohoj::price($order->refund_amount) }}</td>
-                                        <td>{{ optional($order->date_paid)->format('d F, Y') ?? 'N/A' }}</td>
-                                        <td>{{ optional($order->date_completed)->format('d F, Y') ?? 'N/A' }}</td>
+                                        <td>{{ $order?->billing?->name }}</td>
+                                        <td>{{ $order?->billing?->email }}</td>
+                                        <td>{{ $order?->user?->contact_number }}</td>
+                                        <td> 
+                                            <ul>
+                                                @foreach ($order->tickets as $ticket)
+                                                <li>{{$ticket->product->name}}</li>
+                                                    
+                                                @endforeach
+                                            </ul>
+                                        </td>
+                                        <td>{{ $order->tickets->count()}}</td>
                                         <td>{{ $order->created_at->format(' d F, Y') }}</td>
                                         <td class="align-center" style="display: flex">
-                                         
+
                                             <a style="margin-right: 5px;"href="{{ route('voyager.orders.show', $order) }}"
                                                 class="btn btn-sm btn-warning pull-right">
                                                 <i class="voyager-eye"></i> View
@@ -149,11 +163,9 @@
                         </table>
 
                     </div>
-                   
+
                 </div>
             </div>
         </div>
     </div>
-
-
 @endsection

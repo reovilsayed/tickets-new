@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\OrderIsPaid;
+use Error;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
@@ -25,10 +27,14 @@ class SendMessageToCustomer
     {
 
 
-        if ($event->order->send_message) {
-            $message = 'Acesso e fatura para o evento Aceda aqui: [%goto:' . route('digital-wallet', $event->order->user) . '%] !!';
-            SmsApi::send($event->order->billing->phone,  $message);
-            Log::info($message);
+        try {
+
+            if ($event->order->send_message) {
+                $message = 'Acesso e fatura para o evento Aceda aqui: [%goto:' . route('digital-wallet', $event->order->user) . '%] !!';
+                SmsApi::send($event->order->billing->phone,  $message);
+                Log::info($message);
+            }
+        } catch (Exception | Error $e) {
         }
     }
 }

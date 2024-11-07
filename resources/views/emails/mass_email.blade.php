@@ -3,20 +3,7 @@
 
 <head>
     <title>{{ __('words.invite_email_subject') }}</title>
-    <style>
-       
-
-       
-
-       
-
-
-
-        
-
-       
-
-    </style>
+ 
 </head>
 
 <body
@@ -24,10 +11,10 @@
             background-color: #cccbcb;
             margin: 0;
             padding: 0;'>
-    <div class="email-header" style="text-align: center;">
+    <div  style="text-align: center;">
         <img src="{{ Voyager::image(setting('site.logo_black')) }}" alt="Essência Company" style="max-width: 200px;">
     </div>
-    <div class="email-container"
+    <div 
         style=" max-width: 600px;
             margin: 0 auto;
             background-color: #ffffff;
