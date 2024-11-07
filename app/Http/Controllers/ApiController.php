@@ -237,7 +237,8 @@ class ApiController extends Controller
             $tickets = $request->get('tickets') ?? [];
 
             foreach ($extraProducts as $extra) {
-                $totalItems += $extra['quantity'];
+                $quantity = @$extra['quantity'] ?? @$extra['newQty'] ?? 0;
+                $totalItems +=  $quantity;
             }
             foreach ($tickets as $ticket) {
                 $totalItems += $ticket['quantity'];
