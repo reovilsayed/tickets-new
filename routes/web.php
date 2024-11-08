@@ -22,6 +22,7 @@ use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EnterzoneContoller;
 use App\Http\Controllers\PdfDownloadController;
+use App\Http\Controllers\PosDashboardReport;
 use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
 use App\Models\User;
@@ -302,9 +303,7 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::post('api/create-order', [ApiController::class, 'createOrder']);
     Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
 
-    Route::get('/pos/reports', function () {
-        return view('pos-report');
-    });
+    Route::get('/pos/reports',PosDashboardReport::class);
     Route::get('/pos/{page}', function () {
         return view('pos');
     });

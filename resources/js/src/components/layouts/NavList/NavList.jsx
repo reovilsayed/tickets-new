@@ -39,6 +39,12 @@ const NavList = () => {
                         ""
                     );
                 })}
+                <li >
+                    <a href={`${import.meta.env.VITE_APP_URL}/pos/reports`} target="__blank">
+                        <i className="fas fa-file"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
                 <li onClick={handleLogout}>
                     <a className="logout-trigger">
                         <i className="fas fa-sign-out-alt"></i>
