@@ -55,7 +55,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
     })->name('voyager.tickets.show');
 
     Route::get('uesr/{id}/pos/report', function () {
-        return view('pages.user-dashboard');
+        return view('pages.pos-user-dashboard');
     })->name('pos.user.report');
 
     Route::group([

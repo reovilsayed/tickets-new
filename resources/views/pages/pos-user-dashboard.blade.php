@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
 @endsection
 @section('javascript')
-<script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     <script>
         var table = $('#dataTable').DataTable()
     </script>
@@ -52,7 +52,18 @@
         <h1>
             Pos Report - <span style="color: #EF5927">User Name</span>
         </h1>
-
+        <div class="">
+            <select class="form-select" aria-label="Default select example" style="color: #EF5927">
+                <option selected class="fw-bold">SELECT DATE</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+            <select class="form-select" aria-label="Default select example" style="color: #EF5927">
+                <option value="">ALERT</option>
+                <option value="">Unmarked</option>
+            </select>
+        </div>
         <hr>
         {{-- @include('vendor.voyager.events.partial.buttons') --}}
         <hr>
@@ -250,32 +261,32 @@
                 <tbody>
 
                     <tr>
-                            <td>Lorem, ipsum.</td>
-                            <td>Lorem@gmail.com</td>
-                            <td>+987656789</td>
-                            <td>link</td>
-                            <td>mark alert</td>
+                        <td>Lorem, ipsum.</td>
+                        <td>Lorem@gmail.com</td>
+                        <td>+987656789</td>
+                        <td>link</td>
+                        <td>mark alert</td>
                     </tr>
                     <tr>
-                            <td>Lorem, ipsum.</td>
-                            <td>Lorem@gmail.com</td>
-                            <td>+987656789</td>
-                            <td>link</td>
-                            <td>mark alert</td>
+                        <td>Lorem, ipsum.</td>
+                        <td>Lorem@gmail.com</td>
+                        <td>+987656789</td>
+                        <td>link</td>
+                        <td>mark alert</td>
                     </tr>
                     <tr>
-                            <td>Lorem, ipsum.</td>
-                            <td>Lorem@gmail.com</td>
-                            <td>+987656789</td>
-                            <td>link</td>
-                            <td>mark alert</td>
+                        <td>Lorem, ipsum.</td>
+                        <td>Lorem@gmail.com</td>
+                        <td>+987656789</td>
+                        <td>link</td>
+                        <td>mark alert</td>
                     </tr>
                     <tr>
-                            <td>Lorem, ipsum.</td>
-                            <td>Lorem@gmail.com</td>
-                            <td>+987656789</td>
-                            <td>link</td>
-                            <td>mark alert</td>
+                        <td>Lorem, ipsum.</td>
+                        <td>Lorem@gmail.com</td>
+                        <td>+987656789</td>
+                        <td>link</td>
+                        <td>mark alert</td>
                     </tr>
 
                 </tbody>
