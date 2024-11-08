@@ -444,6 +444,7 @@ class AdminCustomController extends Controller
     public function orderMarkPay(Order $order)
     {
        $order->payment_status = 1;
+       $order->status = 1;
        $order->save();
         $products = $order->tickets->groupBy('product_id');
         foreach ($products as $key => $tickets) {
