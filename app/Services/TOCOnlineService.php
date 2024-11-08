@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
@@ -175,7 +176,7 @@ class TOCOnlineService
 
         $body = [
             'document_type' => 'FR',
-            'date' => $order->created_at->format('Y-m-d'),
+            'date' => Carbon::now()->format('Y-m-d'),
             'finalize' => 0,
             'customer_id' => @$order->billing?->vatNumber ? null : 452,
             'customer_tax_registration_number' => @$order->billing?->vatNumber ? $order->billing->vatNumber : null,
@@ -184,7 +185,7 @@ class TOCOnlineService
             'customer_postcode' => '',
             'customer_city' => '',
             'customer_country' => 'PT',
-            'due_date' => $order->created_at->format('Y-m-d'),
+            'due_date' => Carbon::now()->addDays(5)->format('Y-m-d'),
             'settlement_expression' => '0',
             'payment_mechanism' => 'MO',
             'vat_included_prices' => true,
