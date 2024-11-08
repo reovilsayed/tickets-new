@@ -45,7 +45,7 @@ class Order extends Model
     public function getExtras()
     {
         return collect($this->extras)->map(function ($extra) {
-            if($extra == null){
+            if($extra != null){
                 $data = Extra::find($extra->id);
                 $data->purchase_quantity =  $extra->qty;
                 $data->purchase_price =  $extra->price;
