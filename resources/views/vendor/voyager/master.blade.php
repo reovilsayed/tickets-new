@@ -60,11 +60,12 @@
 
     @yield('head')
     <style>
-        .btn-custom{
+        .btn-custom {
             background-color: #EF5927;
             border-color: #EF5927;
             color: #fff;
         }
+
         .btn-custom:hover {
             background-color: #ef5927ac;
             border-color: #ef5927ac;
@@ -84,7 +85,7 @@
     </div>
 
     <?php
-    if (auth()->user() && \Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://') || \Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'https://')) {
+    if ((auth()->user() && \Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'http://')) || \Illuminate\Support\Str::startsWith(Auth::user()->avatar, 'https://')) {
         $user_avatar = Auth::user()->avatar;
     } else {
         $user_avatar = Voyager::image(Auth::user()->avatar);
