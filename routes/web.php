@@ -344,22 +344,26 @@ Route::get('/payment-confirm', function () {
     $order->save();
 });
 
-Route::get('test', function () {
-    $tickets = DB::table('tickets')->whereNotNull('extras')->get();
-        foreach ($tickets as $ticket) {
-            $updatedExtras = json_decode($ticket->extras, true); // Decode JSON to array
+Route::get('test/{order}', function ($order) {
+    $order = Order::find($order);
+    $toco = new TOCOnlineService;
+    $response = $toco->createCommercialSalesDocument($order);
+    dd($response);
+    // $tickets = DB::table('tickets')->whereNotNull('extras')->get();
+    //     foreach ($tickets as $ticket) {
+    //         $updatedExtras = json_decode($ticket->extras, true); // Decode JSON to array
             
-            // Loop through each product in extras and set 'used' to 0
-            foreach ($updatedExtras as $id => $product) {
-                $updatedExtras[$id]['used'] = 0;
-            }
-            DB::table('tickets')
-            ->where('id', $ticket->id)
-            ->update([
-                'extras' => json_encode($updatedExtras)
-            ]);
+    //         // Loop through each product in extras and set 'used' to 0
+    //         foreach ($updatedExtras as $id => $product) {
+    //             $updatedExtras[$id]['used'] = 0;
+    //         }
+    //         DB::table('tickets')
+    //         ->where('id', $ticket->id)
+    //         ->update([
+    //             'extras' => json_encode($updatedExtras)
+    //         ]);
           
-        }
+    //     }
 
 });
 // Route::get('send',function(){
