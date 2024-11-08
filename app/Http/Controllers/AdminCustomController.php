@@ -455,6 +455,6 @@ class AdminCustomController extends Controller
        $order->invoice_body = json_encode($response);
        $order->save();
        $response = $toco->sendEmailDocument($order, $response['id']);
-       return back();
+       return redirect(url('admin/orders'));
     }
 }
