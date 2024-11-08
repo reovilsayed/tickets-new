@@ -303,7 +303,7 @@
                                                 @endif
 
                                                 @if ($data->payment_status != 1)
-                                                <a href="{{route('order.refund',$data)}}" class="btn btn-info pull-right" style="margin-right:7px;"><i
+                                                <a href="{{route('order.mark.pay',$data)}}" class="btn btn-info pull-right" style="margin-right:7px;"><i
                                                     class="voyager-wallet" style="margin-right:5px;"></i>Mark As Pay</a>
                                                 @endif
                                                 {{-- @if ($data->payouts_status == 0)
