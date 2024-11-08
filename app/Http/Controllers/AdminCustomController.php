@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Services\TOCOnlineService;
 use Error;
 use Exception;
 use GuzzleHttp\Promise\Create;
@@ -439,5 +440,35 @@ class AdminCustomController extends Controller
             'message' => 'Physical ticket delete  successfully',
             'alert_type' => 'success',
         ]);
+    }
+    public function orderMarkPay(Order $order)
+    {
+       $order->payment_status = 1;
+       $order->save();
+        $products = $order->tickets->groupBy('product_id');
+        foreach ($products as $key => $tickets) {
+            $product = Product::find($key);
+
+            if ($order->user) {
+                Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));
+            } else {
+
+                if ($order->payment_method == 'invite') {
+
+                    Mail::to($order->user->email)->send(new InviteDownload($order, $product, null));
+                } else {
+                    Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));
+                }
+            }
+        }
+   
+       $toco = new TOCOnlineService;
+       $response = $toco->createCommercialSalesDocument($order);
+       $order->invoice_id = $response['id'];
+       $order->invoice_url = $response['public_link'];
+       $order->invoice_body = json_encode($response);
+       $order->save();
+       $response = $toco->sendEmailDocument($order, $response['id']);
+       return back();
     }
 }

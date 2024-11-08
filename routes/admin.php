@@ -121,4 +121,5 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
     Route::get('orders/refund/{order}', [AdminCustomController::class, 'refund'])->name('order.refund');
     Route::get('/coupon-generate', [AdminCustomController::class, 'couponGenerate'])->name('voyager.coupon.generate');
     Route::post('/coupon-create', [AdminCustomController::class, 'couponCreate'])->name('voyager.coupon.create');
+    Route::get('order/mark-as-pay/{order}', [AdminCustomController::class, 'orderMarkPay'])->name('order.mark.pay');
 });
