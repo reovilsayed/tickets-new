@@ -27,6 +27,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
         return Excel::download(new CustomerExport($users), 'customer_' . now()->format('dmyhi') . '.xlsx');
     })->name('voyager.customer.export');
+
     Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicateProduct'])->name('voyager.products.duplicate');
     Route::get('/users/{user}/staff', function (User $user) {
         $logs = $user->scans->groupBy('ticket')->map(function ($ticket) {
@@ -52,6 +53,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
         return view('ticketpdf', compact('tickets'));
     })->name('voyager.tickets.show');
+
+    Route::get('uesr/{id}/pos/report', function () {
+        return view('pages.user-dashboard');
+    })->name('pos.user.report');
 
     Route::group([
         'prefix' => '/products/{product}',

@@ -262,6 +262,7 @@
                                                 @endif
                                             @endforeach
                                             <a href="{{route('digital-wallet',$data)}}" class="btn btn-primary">Wallet Link</a>
+                                            <a href="{{route('pos.user.report',$data)}}" class="btn btn-primary">User Report</a>
                                         </td>
                                     </tr>
                                     @endforeach
