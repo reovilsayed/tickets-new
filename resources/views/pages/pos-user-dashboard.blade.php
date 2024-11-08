@@ -50,11 +50,17 @@
 @section('content')
     <div class="container">
         <h1>
-            Pos Report - <span style="color: #EF5927">User Name</span>
+            Pos Report - <span style="color: #EF5927">{{$user->email}} </span>
         </h1>
         <div class="">
             <select class="form-select" aria-label="Default select example" style="color: #EF5927">
                 <option selected class="fw-bold">SELECT DATE</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+            <select class="form-select" aria-label="Default select example" style="color: #EF5927">
+                <option selected class="fw-bold">Event Name</option>
                 <option value="1">One</option>
                 <option value="2">Two</option>
                 <option value="3">Three</option>
@@ -156,10 +162,70 @@
                 <div class="col-md-4">
                     <div class="card">
                         <h3>
-                            total sell
+                            Total Amount
+                        </h3>
+                        <h1>
+                            {{$orders->sum('total') }}€
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <h3>
+                            Card Amount
+                        </h3>
+                        <h1>
+                            {{$orders->where('payment_method','card')->sum('total')}}€
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <h3>
+                            Cash Amount
+                        </h3>
+                        <h1>
+                            {{$orders->where('payment_method','Cash')->sum('total')}}€
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <h3>
+                            Total Ticket Sell
+                        </h3>
+                        <h1>
+                            {{$tickets->count()}}
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <h3>
+                          Total Product sell
                         </h3>
                         <h1>
                             000
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <h3>
+                            Product sell Amount
+                        </h3>
+                        <h1>
+                            000€
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <h3>
+                            Ticket sell Amount
+                        </h3>
+                        <h1>
+                            000€
                         </h1>
                     </div>
                 </div>
@@ -177,16 +243,6 @@
                     <div class="card">
                         <h3>
                             quantity tickets 1
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            total
                         </h3>
                         <h1>
                             000
@@ -213,37 +269,6 @@
                         </h1>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            total
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            product sell
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            tickets sell
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
-                    </div>
-                </div>
-
             </div>
         </div>
         <div class="table-responsive">
@@ -254,41 +279,22 @@
                         <th>name</th>
                         <th>email</th>
                         <th>Phone Number</th>
+                        <th>description</th>
                         <th>invoice</th>
                         <th>Alert</th>
                     </tr>
                 </thead>
                 <tbody>
-
+                    @foreach ($orders as  $order)
                     <tr>
                         <td>Lorem, ipsum.</td>
                         <td>Lorem@gmail.com</td>
                         <td>+987656789</td>
+                        <td>Tickets</td>
                         <td>link</td>
                         <td>mark alert</td>
                     </tr>
-                    <tr>
-                        <td>Lorem, ipsum.</td>
-                        <td>Lorem@gmail.com</td>
-                        <td>+987656789</td>
-                        <td>link</td>
-                        <td>mark alert</td>
-                    </tr>
-                    <tr>
-                        <td>Lorem, ipsum.</td>
-                        <td>Lorem@gmail.com</td>
-                        <td>+987656789</td>
-                        <td>link</td>
-                        <td>mark alert</td>
-                    </tr>
-                    <tr>
-                        <td>Lorem, ipsum.</td>
-                        <td>Lorem@gmail.com</td>
-                        <td>+987656789</td>
-                        <td>link</td>
-                        <td>mark alert</td>
-                    </tr>
-
+                    @endforeach
                 </tbody>
             </table>
 
