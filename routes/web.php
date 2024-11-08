@@ -302,6 +302,9 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::post('api/create-order', [ApiController::class, 'createOrder']);
     Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
 
+    Route::get('/pos/reports', function () {
+        return view('pos-report');
+    });
     Route::get('/pos/{page}', function () {
         return view('pos');
     });

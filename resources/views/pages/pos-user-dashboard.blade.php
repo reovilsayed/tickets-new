@@ -22,7 +22,7 @@
             text-transform: uppercase;
             font-weight: bold;
             margin: 0px;
-            font-size: 30px;
+            font-size: 24px;
             color: #EF5927;
             font-family: Arial, Helvetica, sans-serif;
         }
@@ -58,6 +58,11 @@
                 <option value="1">One</option>
                 <option value="2">Two</option>
                 <option value="3">Three</option>
+            </select>
+            <select class="form-select" aria-label="Default select example" style="color: #EF5927">
+                <option selected class="fw-bold">Select Pos</option>
+                <option value="">ALERT</option>
+                <option value="">Unmarked</option>
             </select>
             <select class="form-select" aria-label="Default select example" style="color: #EF5927">
                 <option value="">ALERT</option>
@@ -176,7 +181,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <h3>
-                            quantity tickets 1
+                            quantity tickets 2
                         </h3>
                         <h1>
                             000
@@ -186,7 +191,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <h3>
-                            total
+                            total tickets quantity
                         </h3>
                         <h1>
                             000
@@ -216,7 +221,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <h3>
-                            total
+                            total product quantity
                         </h3>
                         <h1>
                             000
