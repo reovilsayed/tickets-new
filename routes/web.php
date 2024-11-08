@@ -187,7 +187,7 @@ Route::get('t/{order:security_key}', function (Request $request, Order $order) {
 Route::post('t/{order:security_key}', [PdfDownloadController::class, 'download'])->name('downloadPdf.ticket');
 
 Route::post('payment-callback/{type}', function ($type, Request $request) {
-    Log::info('payment request'.$request->all());
+    Log::info('payment request: ' . json_encode($request->all()));
     if ($type == 'generic') {
         $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
         if ($order) {
