@@ -211,6 +211,7 @@ class ApiController extends Controller
     {
         // Collect initial order data
         // try {
+        $event_id = null;
         DB::beginTransaction();
         $orderData = [
             'billing' => request()->get('biling'),
@@ -224,7 +225,7 @@ class ApiController extends Controller
             'security_key' => Str::uuid(),
             'send_message' => $request->get('sendToPhone') ? true : false,
             'send_email' => $request->get('sendToMail') ? true : false,
-            'event_id'=>63
+            'pos_id'=>auth()->id()
         ];
 
 
@@ -294,6 +295,7 @@ class ApiController extends Controller
                     'product_id' => $product->id,
                     'order_id' => $order->id,
                     'user_id' => $orderData['user_id'],
+                    'pos_id' => auth()->id(),
                     'ticket' => !$physicalQr ? uniqid() : null,
                     'price' =>  $product->price - $discountPerUnit, // Apply discount per unit
                     'dates' => $product->dates
@@ -320,6 +322,7 @@ class ApiController extends Controller
                 }
                 $hollowTickets[] = $order->tickets()->create($data);
             }
+            $event_id =$product->event->id;
         }
 
         // Handle invoice printing or emailing
@@ -338,6 +341,7 @@ class ApiController extends Controller
         $order->update([
             'status' => 1,
             'payment_status' => 1,
+            'event_id'=>$event_id
         ]);
 
         try {
