@@ -344,15 +344,31 @@ Route::get('/payment-confirm', function () {
     $order->save();
 });
 
-Route::get('test', function () {
-    $users = User::all();
-    foreach ($users as $user) {
-        $user->update(
-            [
-                'uniqid' => strtolower((string) Str::ulid())
-            ]
-        );
-    }
+Route::get('test/{order}', function ($order) {
+    $order = Order::find($order);
+    $toco = new TOCOnlineService;
+    $response = $toco->createCommercialSalesDocument($order);
+    $order->invoice_id = $response['id'];
+    $order->invoice_url = $response['public_link'];
+    $order->invoice_body = json_encode($response);
+    $order->save();
+    dd($response);
+    // $tickets = DB::table('tickets')->whereNotNull('extras')->get();
+    //     foreach ($tickets as $ticket) {
+    //         $updatedExtras = json_decode($ticket->extras, true); // Decode JSON to array
+            
+    //         // Loop through each product in extras and set 'used' to 0
+    //         foreach ($updatedExtras as $id => $product) {
+    //             $updatedExtras[$id]['used'] = 0;
+    //         }
+    //         DB::table('tickets')
+    //         ->where('id', $ticket->id)
+    //         ->update([
+    //             'extras' => json_encode($updatedExtras)
+    //         ]);
+          
+    //     }
+
 });
 // Route::get('send',function(){
 //     $order = Order::where('payment_status',1)->first();
@@ -360,19 +376,17 @@ Route::get('test', function () {
 //     SmsApi::send('+351915240193',  $message);
 // });
 
-Route::get('test', function () {
-    $order = Order::latest()->first();
-    $product = Product::latest()->first();
-    $ticket = Ticket::latest()->first();
+// Route::get('test', function () {
+//     $order = Order::latest()->first();
+//     $product = Product::latest()->first();
+//     $ticket = Ticket::latest()->first();
 
-    return new InviteDownload($order,$product,$ticket);
-});
-Route::get('test2', function () {
-    $order = Order::latest()->first();
-    $product = Product::latest()->first();
-    $ticket = Ticket::latest()->first();
+//     return new InviteDownload($order,$product,$ticket);
+// });
+// Route::get('test2', function () {
+//     $order = Order::latest()->first();
+//     $product = Product::latest()->first();
+//     $ticket = Ticket::latest()->first();
 
-    return new TicketDownload($order,$product,$ticket);
-});
-
-
+//     return new TicketDownload($order,$product,$ticket);
+// });

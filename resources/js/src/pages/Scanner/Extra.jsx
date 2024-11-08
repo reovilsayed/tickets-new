@@ -25,14 +25,7 @@ const Extra = ({ extra, index, handleExtraChange }) => {
             <div className="card-body text-start">
                 <div className="d-flex justify-content-between align-items-center">
                     <p className="h6">
-                        {extra?.display_name ?? extra?.name} X {quantity  - extra?.used }
-                        {extra?.newQty ? (
-                            <sup className="text-secondary fs-6">
-                                + {extra?.newQty - extra?.qty}
-                            </sup>
-                        ) : (
-                            ""
-                        )}
+                        {extra?.display_name ?? extra?.name} X { extra?.qty - extra?.used}
                     </p>
                     <h6>
                         €{" "}
@@ -42,7 +35,7 @@ const Extra = ({ extra, index, handleExtraChange }) => {
                 </div>
                 <div className="mt-3">
                     <label htmlFor="">
-                        Withdraw (Available: {extra?.qty   - extra?.used  })
+                        Withdraw (Available: {extra?.qty  - extra?.used })
                     </label>
                     <div className="form-inline d-flex gap-2">
                         <input

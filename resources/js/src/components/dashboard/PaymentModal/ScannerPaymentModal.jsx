@@ -8,6 +8,23 @@ import PhoneNumberInput from "./PhoneNumberInput";
 import { useFetch } from "../../../lib/hooks/useFetch";
 
 const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, setWithdraw }) => {
+    const [sendToPhone, setSendToPhone] = useState(true);
+    const [sendToMail, setSendToMail] = useState(false);
+
+
+    const handleSendToMail = () => {
+        setSendToMail((prev) => {
+            if (prev) return false;
+            return true;
+        });
+    };
+    const handleSendToPhone = () => {
+        setSendToPhone((prev) => {
+            if (prev) return false;
+            return true;
+        });
+    };
+
     const cartTotal = useMemo(() => {
         var total = 0.0;
         ticket?.extras?.map((item) => {
@@ -23,14 +40,16 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
         vatNumber: "",
         discount: 0.0,
         paymentMethod: "Cash",
+        withdraw,
+
     });
 
     const { data: withdrawData } = useFetch(["withdraw_checked"], `${import.meta.env.VITE_APP_URL}/api/withdraw_checked`)
 
     useEffect(() => {
-
         setWithdraw(withdrawData?.checked)
     }, [withdrawData])
+
     useEffect(() => {
         if (ticket?.order_id?.billing) {
             setFormData({
@@ -86,7 +105,8 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
             paymentMethod: formData["paymentMethod"],
             subTotal: cartTotal,
             total: cartTotal,
-
+            sendToMail,
+            sendToPhone,
         };
         const response = await axios.post(
             `${import.meta.env.VITE_APP_URL}/api/create-order`,
@@ -106,9 +126,11 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                 phone: "",
                 vatNumber: "",
                 discount: 0.0,
+
                 paymentMethod: "Cash",
             });
-
+            setSendToMail(false);
+            setSendToPhone(false);
             handleClose();
         }
         setOrderRequestProcessing(false);
@@ -171,11 +193,10 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                 <div className="form-group mb-2">
                                     <label htmlFor="emailInput">
                                         Email{" "}
-                                        {/* {formData["vatNumber"] ||
-                                        sendToMail ||
-                                        sendInvoiceToMail
+                                        {formData["vatNumber"] ||
+                                            sendToMail 
                                             ? ""
-                                            : "(optional)"} */}
+                                            : "(optional)"}
                                     </label>
                                     <input
                                         id="emailInput"
@@ -186,9 +207,16 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                         placeholder="Enter email"
                                     />
                                 </div>
-                                <PhoneNumberInput value={formData["phone"]} onChange={value => setFormData((prev) => {
-                                    return { ...prev, phone: '+' + value };
-                                })} />
+                                {sendToPhone ? (
+                                    <PhoneNumberInput value={formData["phone"]} onChange={value => setFormData((prev) => {
+                                        return { ...prev, phone: '+' + value };
+                                    })} />
+
+
+                                ) : (
+                                    ""
+                                )}
+                            
 
                                 <div className="form-group mb-2">
                                     <label htmlFor="vatInput">
@@ -250,6 +278,39 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                     <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={withdraw} onChange={() => setWithdraw(!withdraw)} />
                                     <label className="form-check-label" for="flexCheckDefault">
                                         Withdraw
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value={sendToPhone}
+                                        checked={sendToPhone}
+                                        onChange={handleSendToPhone}
+                                        id="sendToPhoneCheck"
+                                    />
+                                    <label
+                                        class="form-check-label"
+                                        htmlFor="sendToPhoneCheck"
+                                    >
+                                        Send to phone
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        value={sendToMail}
+                                        checked={sendToMail}
+                                        onChange={handleSendToMail}
+                                        id="sendToMailCheck"
+                                    />
+                                    <label
+                                        class="form-check-label"
+                                        htmlFor="sendToMailCheck"
+                                    >
+                                        Send to mail
                                     </label>
                                 </div>
                             </div>
