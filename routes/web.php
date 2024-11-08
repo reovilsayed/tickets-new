@@ -351,6 +351,7 @@ Route::get('test/{order}', function ($order) {
     $order->invoice_id = $response['id'];
     $order->invoice_url = $response['public_link'];
     $order->invoice_body = json_encode($response);
+    $order->save();
     dd($response);
     // $tickets = DB::table('tickets')->whereNotNull('extras')->get();
     //     foreach ($tickets as $ticket) {
