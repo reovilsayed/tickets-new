@@ -137,7 +137,7 @@ class CheckoutService
 
         if (!$this->isFree) {
             $payment = EasyPay::createPaymentLink($order);
-            Log::info('payment link created'.$payment);
+            Log::info('payment link created'. json_encode($payment));
             $order->payment_link = $payment['url'];
             $order->payment_id = $payment['id'];
         }
