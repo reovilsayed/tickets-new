@@ -14,7 +14,13 @@
             transition: .2s ease-in;
         }
 
-        .card:hover {
+        th {
+            font-size: 20px;
+            color: #EF5927 !important;
+        }
+
+        .card:hover,
+        .form-control:hover {
             box-shadow: 5px 5px #EF5927;
         }
 
@@ -22,7 +28,7 @@
             text-transform: uppercase;
             font-weight: bold;
             margin: 0px;
-            font-size: 30px;
+            font-size: 24px;
             color: #EF5927;
             font-family: Arial, Helvetica, sans-serif;
         }
@@ -42,262 +48,202 @@
     <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
 @endsection
 @section('javascript')
+
     <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
     <script>
         var table = $('#dataTable').DataTable()
     </script>
 @endsection
 @section('content')
-    <div class="container">
-        <h1>
-            Pos Report - <span style="color: #EF5927">{{$user->email}} </span>
-        </h1>
-        <div class="">
-            <select class="form-select" aria-label="Default select example" style="color: #EF5927">
-                <option selected class="fw-bold">SELECT DATE</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-            </select>
-            <select class="form-select" aria-label="Default select example" style="color: #EF5927">
-                <option selected class="fw-bold">Event Name</option>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
-            </select>
-            <select class="form-select" aria-label="Default select example" style="color: #EF5927">
-                <option value="">ALERT</option>
-                <option value="">Unmarked</option>
-            </select>
-        </div>
-        <hr>
-        {{-- @include('vendor.voyager.events.partial.buttons') --}}
-        <hr>
-        {{-- <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Digital Sales',
-                        'value' => $event->digitalTickets->count(),
-                    ])
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Physical Tickets',
-                        'value' => $event->physicalTickets->count(),
-                    ])
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Pos SAles',
-                        'value' => 000,
-                    ])
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Invites Send',
-                        'value' => $event->inviteTickets->count(),
-                    ])
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Total',
-                        'value' => $event->tickets->count(),
-                    ])
-                </div>
-
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Tickets',
-                        'value' => $event->products->count(),
-                    ])
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Invites',
-                        'value' => $event->invites->count(),
-                    ])
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Customer',
-                        'value' => $event->tickets()->distinct('user_id')->pluck('user_id')->count(),
-                    ])
-
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Product',
-                        'value' => $event->extras->count(),
-                    ])
-
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Digital Sales Money',
-                        // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => 0,
-                    ])
-
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Pos Sales Money',
-                        // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => 0,
-                    ])
-
-                </div>
-                <div class="col-md-4">
-                    @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Total Sales Money',
-                        'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                    ])
-
-                </div>
-            </div>
-        </div> --}}
+    <form action="{{ url()->current() }}" method="get" id="form1">
         <div class="container">
+            <h1>
+                Pos Report - <span style="color: #EF5927">{{ $user->email }} </span>
+            </h1>
+
             <div class="row">
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            Total Amount
-                        </h3>
-                        <h1>
-                            {{$orders->sum('total') }}€
-                        </h1>
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label for="date">Select Date</label>
+                        <input value="{{ request()->date }}" onchange="document.getElementById('form1').submit()"
+                            name="date" type="date" id="date" class="form-control">
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            Card Amount
-                        </h3>
-                        <h1>
-                            {{$orders->where('payment_method','card')->sum('total')}}€
-                        </h1>
+                <div class="col-md-3">
+
+                    <div class="form-group">
+                        <label for="event">Select Event</label>
+                        <select onchange="document.getElementById('form1').submit()" name="event" id="event"
+                            class="form-control">
+                            <option value="">
+                                All</option>
+                            @foreach ($events as $event)
+                                <option @if ($event->id == request()->event) selected @endif value="{{ $event->id }}">
+                                    {{ $event->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            Cash Amount
-                        </h3>
-                        <h1>
-                            {{$orders->where('payment_method','Cash')->sum('total')}}€
-                        </h1>
+
+            </div>
+
+            <hr>
+
+            <hr>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Total Amount',
+                            'value' => Sohoj::price($orders->sum('total')),
+                        ])
+
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            Total Ticket Sell
-                        </h3>
-                        <h1>
-                            {{$tickets->count()}}
-                        </h1>
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Card Amount',
+                            'value' => Sohoj::price($orders->where('payment_method', 'Card')->sum('total')),
+                        ])
+
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                          Total Product sell
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Cash Amount',
+                            'value' => Sohoj::price($orders->where('payment_method', 'Cash')->sum('total')),
+                        ])
+
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            Product sell Amount
-                        </h3>
-                        <h1>
-                            000€
-                        </h1>
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Total Ticket Sell',
+                            'value' => $tickets->count(),
+                        ])
+
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            Ticket sell Amount
-                        </h3>
-                        <h1>
-                            000€
-                        </h1>
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Total Product sell',
+                            'value' => $extras->sum('qty'),
+                        ])
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            quantity tickets 1
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Product sell Amount',
+                            'value' => Sohoj::price($extras->sum('price')),
+                        ])
+
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            quantity tickets 1
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Ticket sell Amount',
+                            'value' => Sohoj::price($tickets->sum('price')),
+                        ])
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            quantity product 1
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            quantity product 2
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
-                    </div>
+
+
+                    @foreach ($tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $tickets)
+                        <div class="col-md-4">
+                            <div class="card">
+                                <h3>
+                                    {{ $product }}
+                                </h3>
+                                <h1>
+                                    {{ count($tickets) }}
+                                </h1>
+                            </div>
+                        </div>
+                    @endforeach
+
+                    @foreach ($extras->groupBy('name') as $name => $data)
+                        <div class="col-md-4">
+                            <div class="card">
+                                <h3>
+                                    {{ $name }}
+                                </h3>
+                                <h1>
+                                    {{ $data->sum('qty') }}
+                                </h1>
+                            </div>
+                        </div>
+                    @endforeach
+
                 </div>
             </div>
-        </div>
-        <div class="table-responsive">
+            <div class="card">
 
-            <table class="table table-hover" id="dataTable">
-                <thead>
-                    <tr class="text-center">
-                        <th>name</th>
-                        <th>email</th>
-                        <th>Phone Number</th>
-                        <th>description</th>
-                        <th>invoice</th>
-                        <th>Alert</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($orders as  $order)
-                    <tr>
-                        <td>Lorem, ipsum.</td>
-                        <td>Lorem@gmail.com</td>
-                        <td>+987656789</td>
-                        <td>Tickets</td>
-                        <td>link</td>
-                        <td>mark alert</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                <div class="row text-left mb-0">
+                    <div class="col-md-4">
+                        <div class="form-group ">
+
+                            <input value="{{request()->search}}" onchange="document.getElementById('form1').submit()" type="text" id="search"
+                                name="search" class="form-control" placeholder="Search here">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+
+                        <div class="form-group m-0">
+                            <select onchange="document.getElementById('form1').submit()" name="alert" id="alert"
+                                class="form-control">
+                                <option value="">Alert</option>
+                                <option @if(request()->alert == 'true') selected @endif value="true">Marked</option>
+                                <option @if(request()->alert == 'false') selected @endif value="false">Not marked</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="">
+                                <th>
+                                    #
+                                </th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone Number</th>
+                                <th>Description</th>
+                                <th>Invoice</th>
+                                <th>Alert</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($allorders as $order)
+                                <tr>
+                                    <td>
+                                        {{ $order->id }}
+                                    </td>
+                                    <td>{{ $order->user->name }}</td>
+                                    <td>{{ $order->user->email }}</td>
+                                    <td>{{ $order->user->contact_number }}</td>
+                                    <td>
+                                        <ul>
+                                            @foreach ($order->getDescription() as $line)
+                                                <li>
+                                                    {{ $line }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td><a href="{{ $order->invoice_url }}">Invoice #{{ $order->invoice_id }}</a></td>
+                                    <td>
+                                        <span class="badge badge-danger p-2">Marked</span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{ $allorders->withQueryString()->links('pagination::bootstrap-4') }}
+
+                </div>
+            </div>
 
         </div>
-    </div>
+    </form>
+
+
 @endsection

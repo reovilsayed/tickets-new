@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{AdminCustomController, EventAnalyticsController, ExportController, MassInviteController};
+use App\Http\Controllers\{AdminCustomController, EventAnalyticsController, ExportController, MassInviteController, PosUserReport};
 use App\Exports\CustomerExport;
 use App\Models\Invite;
 use App\Models\Order;
@@ -54,12 +54,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
         return view('ticketpdf', compact('tickets'));
     })->name('voyager.tickets.show');
 
-    Route::get('uesr/{id}/pos/report', function ($id) {
-        $user = User::find($id);
-        $orders = Order::where('pos_id',$user->id)->get();
-        $tickets = Ticket::where('pos_id',$user->id)->get();
-        return view('pages.pos-user-dashboard',compact(['user','orders','tickets']));
-    })->name('pos.user.report');
+    Route::get('uesr/{id}/pos/report', PosUserReport::class)->name('pos.user.report');
 
     Route::group([
         'prefix' => '/products/{product}',

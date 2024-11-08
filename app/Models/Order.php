@@ -167,4 +167,21 @@ class Order extends Model
                 return 'secondary';
         }
     }
+
+    public function getDescription()
+    {
+        $products = [];
+        if ($this->tickets) {
+            foreach ($this->tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $ticket) {
+                array_push($products, $product . ' X ' . $ticket->count());
+            }
+        }
+        if ($this->extras) {
+            
+            foreach ((collect($this->extras))->groupBy('name') as $name => $extras) {
+                array_push($products, $name . ' X' . $extras->sum('qty'));
+            }
+        }
+        return $products;
+    }
 }
