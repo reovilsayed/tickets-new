@@ -22,7 +22,7 @@
             text-transform: uppercase;
             font-weight: bold;
             margin: 0px;
-            font-size: 24px;
+            font-size: 30px;
             color: #EF5927;
             font-family: Arial, Helvetica, sans-serif;
         }
@@ -60,9 +60,10 @@
                 <option value="3">Three</option>
             </select>
             <select class="form-select" aria-label="Default select example" style="color: #EF5927">
-                <option selected class="fw-bold">Select Pos</option>
-                <option value="">ALERT</option>
-                <option value="">Unmarked</option>
+                <option selected class="fw-bold">Event Name</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
             </select>
             <select class="form-select" aria-label="Default select example" style="color: #EF5927">
                 <option value="">ALERT</option>
@@ -231,7 +232,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <h3>
-                            quantity tickets 2
+                            quantity tickets 1
                         </h3>
                         <h1>
                             000
@@ -241,7 +242,7 @@
                 <div class="col-md-4">
                     <div class="card">
                         <h3>
-                            total tickets quantity
+                            quantity tickets 1
                         </h3>
                         <h1>
                             000
@@ -268,37 +269,6 @@
                         </h1>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            total product quantity
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            product sell
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card">
-                        <h3>
-                            tickets sell
-                        </h3>
-                        <h1>
-                            000
-                        </h1>
-                    </div>
-                </div>
-
             </div>
         </div>
         <div class="table-responsive">
