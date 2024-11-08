@@ -223,7 +223,8 @@ class ApiController extends Controller
             'transaction_id' => Str::uuid(),
             'security_key' => Str::uuid(),
             'send_message' => $request->get('sendToPhone') ? true : false,
-            'send_email' => $request->get('sendToMail') ? true : false
+            'send_email' => $request->get('sendToMail') ? true : false,
+            'event_id'=>63
         ];
 
 
