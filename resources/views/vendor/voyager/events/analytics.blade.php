@@ -55,19 +55,19 @@
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Digital Sales',
-                        'value' => $event->digitalTickets->count(),
+                        'value' => $digitalTickets->count(),
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Physical Tickets',
+                        'label' => 'Physical',
                         'value' => $event->physicalTickets->count(),
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Pos SAles',
-                        'value' => 000,
+                        'value' => $posTickets->count(),
                     ])
                 </div>
                 <div class="col-md-4">
@@ -78,8 +78,8 @@
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Total',
-                        'value' => $event->tickets->count(),
+                        'label' => 'Total Sales',
+                        'value' => $digitalTickets->count() + $posTickets->count(),
                     ])
                 </div>
 
@@ -113,7 +113,7 @@
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Digital Sales Money',
                         // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => 0,
+                        'value' =>Sohoj::price( $digitalOrder->sum('total')),
                     ])
 
                 </div>
@@ -121,14 +121,14 @@
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Pos Sales Money',
                         // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => 0,
+                        'value' => Sohoj::price($posOrder->sum('total')),
                     ])
 
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Total Sales Money',
-                        'value' => Sohoj::price($event->tickets()->sum('price') / 100),
+                        'value' =>Sohoj::price($digitalOrder->sum('total')+$posOrder->sum('total')) ,
                     ])
 
                 </div>
