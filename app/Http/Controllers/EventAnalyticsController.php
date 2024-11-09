@@ -22,7 +22,14 @@ class EventAnalyticsController extends Controller
 
     public function index(Event $event)
     {
-        return view('vendor.voyager.events.analytics', compact('event'));
+
+        $digitalOrder= Order::where('payment_method','easypay.pt')->where('event_id',$event->id)->where('payment_status',1)->get();
+        $digitalTickets = Ticket::whereIn('order_id',$digitalOrder->pluck('id')->toArray())->get();
+
+        $posOrder= Order::whereNotNull('pos_id')->where('event_id',$event->id)->get();
+        $posTickets = Ticket::whereIn('order_id',$posOrder->pluck('id')->toArray())->get();
+        $totalWithoutPhysical = Ticket::whereNot('type','physical')->get();
+        return view('vendor.voyager.events.analytics', compact('event','digitalTickets','posTickets','totalWithoutPhysical','digitalOrder','posOrder'));
     }
 
     public function ticketParticipanReport(
