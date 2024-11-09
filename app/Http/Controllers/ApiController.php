@@ -155,7 +155,7 @@ class ApiController extends Controller
 
         if ($phone) {
             // Attempt to find user by phone
-            $user = User::where('contact_number', $phone)->first();
+            $user = User::where('contact_number', $phone)->orWhere('email', $email)->first();
 
             // If no user is found by phone, create with a fake email
             if (!$user) {
@@ -173,7 +173,7 @@ class ApiController extends Controller
             }
         } elseif ($email) {
             // Attempt to find user by email
-            $user = User::where('email', $email)->first();
+            $user = User::where('email', $email)->orWhere('contact_number', $phone)->first();
 
             // If no user is found by email, create with email provided
             if (!$user) {
@@ -225,7 +225,7 @@ class ApiController extends Controller
             'security_key' => Str::uuid(),
             'send_message' => $request->get('sendToPhone') ? true : false,
             'send_email' => $request->get('sendToMail') ? true : false,
-            'pos_id'=>auth()->id()
+            'pos_id' => auth()->id()
         ];
 
 
@@ -322,7 +322,7 @@ class ApiController extends Controller
                 }
                 $hollowTickets[] = $order->tickets()->create($data);
             }
-            $event_id =$product->event->id;
+            $event_id = $product->event->id;
         }
 
         // Handle invoice printing or emailing
@@ -341,7 +341,7 @@ class ApiController extends Controller
         $order->update([
             'status' => 1,
             'payment_status' => 1,
-            'event_id'=>$event_id
+            'event_id' => $event_id
         ]);
 
         try {
@@ -392,7 +392,7 @@ class ApiController extends Controller
         $ticket->extras = collect($requestTicket['extras'])->map(function ($extra) use ($request) {
             $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => @$extra['newQty'] ?? $extra['qty'], 'price' => $extra['price'], 'used' => @$extra['used'] ?? 0];
             if ($request->can_withdraw && @$extra['newQty']) {
-                $data['used'] =  @$extra['newQty'] ;
+                $data['used'] =  @$extra['newQty'];
             }
             return $data;
         })->toArray();
