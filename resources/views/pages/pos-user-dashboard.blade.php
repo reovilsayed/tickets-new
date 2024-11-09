@@ -177,8 +177,8 @@
                     <div class="col-md-4">
                         <div class="form-group ">
 
-                            <input value="{{request()->search}}" onchange="document.getElementById('form1').submit()" type="text" id="search"
-                                name="search" class="form-control" placeholder="Search here">
+                            <input value="{{ request()->search }}" onchange="document.getElementById('form1').submit()"
+                                type="text" id="search" name="search" class="form-control" placeholder="Search here">
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -187,8 +187,13 @@
                             <select onchange="document.getElementById('form1').submit()" name="alert" id="alert"
                                 class="form-control">
                                 <option value="">Alert</option>
-                                <option @if(request()->alert == 'true') selected @endif value="true">Marked</option>
-                                <option @if(request()->alert == 'false') selected @endif value="false">Not marked</option>
+                                        <option @if (request()->alert == 'marked') selected @endif value="marked">Marked
+                                        </option>
+                                        <option @if (request()->alert == 'unmarked') selected @endif value="unmarked">Not
+                                            marked
+                                        </option>
+                                        <option @if (request()->alert == 'resolved') selected @endif value="resolved">Resolved
+                                        </option>
                             </select>
                         </div>
                     </div>
@@ -231,7 +236,14 @@
                                     </td>
                                     <td><a href="{{ $order->invoice_url }}">Invoice #{{ $order->invoice_id }}</a></td>
                                     <td>
-                                        <span class="badge badge-danger p-2">Marked</span>
+                                        @if ($order->alert == 'unmarked')
+                                            <button class="btn btn-secondary" class="btn btn-primary">Unmarked</button>
+                                        @elseif($order->alert == 'resolved')
+                                            <button class="btn btn-success">Resolved</button>
+                                        @else
+                                            <a href="{{ route('admin.order.marked', $order) }}"
+                                                class="btn btn-danger">Marked</a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

@@ -87,7 +87,7 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
             // If no user is found by email, create with email provided
             if (!$user) {
                 $user = User::create([
-                    'name' => request()->name ,
+                    'name' => request()->name,
                     'email' => $email,
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -302,8 +302,14 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     });
     Route::post('api/create-order', [ApiController::class, 'createOrder']);
     Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
-
-    Route::get('/pos/reports',PosDashboardReport::class);
+    Route::get('/pos/{order}/mark', function (Order $order) {
+        
+        $order->update([
+            'alert' => 'marked'
+        ]);
+        return redirect()->back()->with('sucess', 'Order marked');
+    })->name('order.marked');
+    Route::get('/pos/reports', PosDashboardReport::class);
     Route::get('/pos/{page}', function () {
         return view('pos');
     });
@@ -358,7 +364,7 @@ Route::get('test/{order}', function ($order) {
     // $tickets = DB::table('tickets')->whereNotNull('extras')->get();
     //     foreach ($tickets as $ticket) {
     //         $updatedExtras = json_decode($ticket->extras, true); // Decode JSON to array
-            
+
     //         // Loop through each product in extras and set 'used' to 0
     //         foreach ($updatedExtras as $id => $product) {
     //             $updatedExtras[$id]['used'] = 0;
@@ -368,7 +374,7 @@ Route::get('test/{order}', function ($order) {
     //         ->update([
     //             'extras' => json_encode($updatedExtras)
     //         ]);
-          
+
     //     }
 
 });

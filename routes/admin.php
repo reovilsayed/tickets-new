@@ -14,6 +14,13 @@ use TCG\Voyager\Facades\Voyager;
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
+    Route::get('/pos/{order}/mark', function (Order $order) {
+
+        $order->update([
+            'alert' => 'resolved'
+        ]);
+        return redirect()->back()->with('sucess', 'Order marked');
+    })->name('admin.order.marked');
     Voyager::routes();
     Route::get('customer/export', function () {
         $users = User::all()->map(fn($user) => [

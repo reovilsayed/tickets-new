@@ -201,10 +201,12 @@
                                     <select onchange="document.getElementById('form1').submit()" name="alert"
                                         id="alert" class="form-control">
                                         <option value="">Alert</option>
-                                        <option @if (request()->alert == 'true') selected @endif value="true">Marked
+                                        <option @if (request()->alert == 'marked') selected @endif value="marked">Marked
                                         </option>
-                                        <option @if (request()->alert == 'false') selected @endif value="false">Not
+                                        <option @if (request()->alert == 'unmarked') selected @endif value="unmarked">Not
                                             marked
+                                        </option>
+                                        <option @if (request()->alert == 'resolved') selected @endif value="resolved">Resolved
                                         </option>
                                     </select>
                                 </div>
@@ -250,7 +252,14 @@
                                                     #{{ $order->invoice_id }}</a>
                                             </td>
                                             <td>
-                                               <button  class="btn btn-primary">Mark</button>
+                                                @if ($order->alert == 'unmarked')
+                                                    <a href="{{ route('order.marked', $order) }}"
+                                                        class="btn btn-primary">Mark</a>
+                                                @elseif($order->alert == 'resolved')
+                                                    <button class="btn btn-success">Resolved</button>
+                                                @else
+                                                    <button class="btn btn-danger">Marked</button>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
