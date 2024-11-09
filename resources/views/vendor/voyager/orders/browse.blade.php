@@ -301,6 +301,11 @@
                                                 <a href="{{route('order.refund',$data)}}" class="btn btn-dark pull-right" style="margin-right:7px;"><i
                                                         class="voyager-wallet" style="margin-right:5px;"></i>Refund</a>
                                                 @endif
+
+                                                @if ($data->payment_status != 1)
+                                                <a href="{{route('order.mark.pay',$data)}}" class="btn btn-info pull-right" style="margin-right:7px;"><i
+                                                    class="voyager-wallet" style="margin-right:5px;"></i>Mark As Pay</a>
+                                                @endif
                                                 {{-- @if ($data->payouts_status == 0)
                                                 <a href="{{ route('payout', $data) }}" OnClick='return (confirm("Are you sure you want to payment request?"));' title="Payouts"
                                                     class="btn btn-sm btn-success pull-right">

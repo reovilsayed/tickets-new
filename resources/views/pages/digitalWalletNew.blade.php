@@ -221,6 +221,7 @@
                     @foreach ($orders as $order)
                         <div class="card">
                             <div class="card-body">
+                                {{$order->id}}
                                 <p class="fw-light fs-6 mb-0">
                                     {{ __('words.toc_online_id') }} :
                                 </p>

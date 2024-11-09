@@ -187,7 +187,7 @@ Route::get('t/{order:security_key}', function (Request $request, Order $order) {
 Route::post('t/{order:security_key}', [PdfDownloadController::class, 'download'])->name('downloadPdf.ticket');
 
 Route::post('payment-callback/{type}', function ($type, Request $request) {
-    Log::info($request->all());
+    Log::info('payment request: ' . json_encode($request->all()));
     if ($type == 'generic') {
         $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
         if ($order) {
@@ -350,10 +350,10 @@ Route::get('test/{order}', function ($order) {
     $order = Order::find($order);
     $toco = new TOCOnlineService;
     $response = $toco->createCommercialSalesDocument($order);
-    $order->invoice_id = $response['id'];
-    $order->invoice_url = $response['public_link'];
-    $order->invoice_body = json_encode($response);
-    $order->save();
+    // $order->invoice_id = $response['id'];
+    // $order->invoice_url = $response['public_link'];
+    // $order->invoice_body = json_encode($response);
+    // $order->save();
     dd($response);
     // $tickets = DB::table('tickets')->whereNotNull('extras')->get();
     //     foreach ($tickets as $ticket) {
