@@ -166,7 +166,8 @@ class TOCOnlineService
                     'tax_country_region' => 'PT',
                     'tax_code' => 'NOR',
                     'tax_percentage' => $extra->tax,
-                    'settlement_expression' => number_format((($extra->price - $unitPrice) / $extra->price) * 100, 2)
+                    // 'settlement_expression' => number_format((($extra->price - $unitPrice) / $extra->price) * 100, 2),
+                    'settlement_expression' => 0,
                 ];
             })->toArray();
         } else {
