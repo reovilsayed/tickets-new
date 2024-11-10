@@ -131,7 +131,7 @@
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
                             'label' => 'Product sell Amount',
-                            'value' => Sohoj::price($extras->sum('price')),
+                            'value' => Sohoj::price($orders->sum('total') - $tickets->sum('price')),
                         ])
 
                     </div>
@@ -187,13 +187,13 @@
                             <select onchange="document.getElementById('form1').submit()" name="alert" id="alert"
                                 class="form-control">
                                 <option value="">Alert</option>
-                                        <option @if (request()->alert == 'marked') selected @endif value="marked">Marked
-                                        </option>
-                                        <option @if (request()->alert == 'unmarked') selected @endif value="unmarked">Not
-                                            marked
-                                        </option>
-                                        <option @if (request()->alert == 'resolved') selected @endif value="resolved">Resolved
-                                        </option>
+                                <option @if (request()->alert == 'marked') selected @endif value="marked">Marked
+                                </option>
+                                <option @if (request()->alert == 'unmarked') selected @endif value="unmarked">Not
+                                    marked
+                                </option>
+                                <option @if (request()->alert == 'resolved') selected @endif value="resolved">Resolved
+                                </option>
                             </select>
                         </div>
                     </div>
