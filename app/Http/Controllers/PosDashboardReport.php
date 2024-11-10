@@ -33,7 +33,8 @@ class PosDashboardReport extends Controller
             ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))
             ->when(request()->filled('date'), fn($query) => $query->whereBetween('created_at', [Carbon::parse(request()->date)->startOfDay(), Carbon::parse(request()->date)->endOfDay()]))
             ->get();
-        $extras = $this->getExtras($user);
+        $extras =  $this->getExtras($user);
+        $extras = $extras->filter()->values();
 
         return view('pos-report', compact(['user', 'orders', 'tickets', 'events', 'extras', 'allorders']));
     }

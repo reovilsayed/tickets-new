@@ -1,3 +1,11 @@
+@php
+    $productsellamount = 0;
+    foreach($extras as $extra) {
+        $productsellamount += ($extra->qty * $extra->price);
+    }
+@endphp
+
+
 <!doctype html>
 <html lang="en">
 
@@ -116,20 +124,6 @@
                         </div>
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Card Amount',
-                                'value' => Sohoj::price($orders->where('payment_method', 'Card')->sum('total')),
-                            ])
-
-                        </div>
-                        <div class="col-md-4">
-                            @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Cash Amount',
-                                'value' => Sohoj::price($orders->where('payment_method', 'Cash')->sum('total')),
-                            ])
-
-                        </div>
-                        <div class="col-md-4">
-                            @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Total Ticket Sell',
                                 'value' => $tickets->count(),
                             ])
@@ -144,7 +138,7 @@
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Product sell Amount',
-                                'value' => Sohoj::price($extras->sum('price')),
+                                'value' => Sohoj::price($productsellamount),
                             ])
 
                         </div>
