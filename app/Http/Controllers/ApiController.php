@@ -155,7 +155,7 @@ class ApiController extends Controller
 
         if ($phone) {
             // Attempt to find user by phone
-            $user = User::where('contact_number', $phone)->orWhere('email', $email)->first();
+            $user = User::where('contact_number', $phone)->first();
 
             // If no user is found by phone, create with a fake email
             if (!$user) {
@@ -173,7 +173,7 @@ class ApiController extends Controller
             }
         } elseif ($email) {
             // Attempt to find user by email
-            $user = User::where('email', $email)->orWhere('contact_number', $phone)->first();
+            $user = User::where('email', $email)->first();
 
             // If no user is found by email, create with email provided
             if (!$user) {
