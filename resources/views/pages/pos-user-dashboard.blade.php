@@ -55,6 +55,13 @@
     </script>
 @endsection
 @section('content')
+    @php
+        $productsellamount = 0;
+        foreach ($extras as $extra) {
+            $productsellamount += $extra->qty * $extra->price;
+        }
+    @endphp
+
     <form action="{{ url()->current() }}" method="get" id="form1">
         <div class="container">
             <h1>
@@ -131,14 +138,14 @@
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
                             'label' => 'Product sell Amount',
-                            'value' => Sohoj::price($orders->sum('total') - $tickets->sum('price')),
+                            'value' => Sohoj::price($productsellamount),
                         ])
 
                     </div>
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
                             'label' => 'Ticket sell Amount',
-                            'value' => Sohoj::price($tickets->sum('price')),
+                            'value' => Sohoj::price($order->sum('total') - $productsellamount),
                         ])
                     </div>
 

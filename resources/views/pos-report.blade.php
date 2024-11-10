@@ -1,7 +1,7 @@
 @php
     $productsellamount = 0;
-    foreach($extras as $extra) {
-        $productsellamount += ($extra->qty * $extra->price);
+    foreach ($extras as $extra) {
+        $productsellamount += $extra->qty * $extra->price;
     }
 @endphp
 
@@ -145,7 +145,7 @@
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Ticket sell Amount',
-                                'value' => Sohoj::price($tickets->sum('price')),
+                                'value' => Sohoj::price($orders->sum('total') - $productsellamount),
                             ])
                         </div>
 
@@ -200,7 +200,8 @@
                                         <option @if (request()->alert == 'unmarked') selected @endif value="unmarked">Not
                                             marked
                                         </option>
-                                        <option @if (request()->alert == 'resolved') selected @endif value="resolved">Resolved
+                                        <option @if (request()->alert == 'resolved') selected @endif value="resolved">
+                                            Resolved
                                         </option>
                                     </select>
                                 </div>
