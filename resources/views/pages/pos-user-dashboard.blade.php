@@ -58,7 +58,9 @@
     @php
         $productsellamount = 0;
         foreach ($extras as $extra) {
-            $productsellamount += $extra->qty * $extra->price;
+            if($extra != null){
+                $productsellamount += $extra->qty * $extra->price;
+            }
         }
     @endphp
 
@@ -145,7 +147,7 @@
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
                             'label' => 'Ticket sell Amount',
-                            'value' => Sohoj::price($order->sum('total') - $productsellamount),
+                            'value' => Sohoj::price($orders->sum('total') - $productsellamount),
                         ])
                     </div>
 
