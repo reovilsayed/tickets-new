@@ -6,6 +6,11 @@
             <form action="{{ route('cart.store', $event) }}" method="post">
     @endif
     @csrf
+    <style>
+        .rooms1 ul{ 
+            list-style: disc;
+        }
+    </style>
     <section class="rooms1 section-padding">
         <div class="container">
             <div class="row ">
