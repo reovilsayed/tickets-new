@@ -7,8 +7,8 @@
     @endif
     @csrf
     <style>
-        .rooms1 ul{ 
-            list-style: disc;
+        .terms ul li{ 
+            list-style: disc; 
         }
     </style>
     <section class="rooms1 section-padding">
@@ -72,13 +72,13 @@
                             <div>
                                 <i class="fa-solid fa-file-contract fa-2x"></i>
                             </div>
-                            <div>
+                            <div class="terms">
                                 <h5>
                                     {{ __('words.terms') }}
                                 </h5>
-                                <p>
+                           
                                     {!! $event->terms !!}
-                                </p>
+                               
                             </div>
 
                         </div>
