@@ -44,6 +44,7 @@ use Vemcogroup\SmsApi\SmsApi;
 Route::get('/', [PageController::class, 'home'])->name('homepage');
 Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
 Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) {
+
     $request->validate([
         'security' => 'required',
     ]);
@@ -53,6 +54,9 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
 
     $is_invite = true;
     $event = $invite->event;
+    if($event->status == 0){
+        return "Event Closed";
+    }
     $products = [];
     $products['all'] = $invite->products;
     foreach ($event->dates() as $date) {
