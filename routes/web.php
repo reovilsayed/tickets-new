@@ -323,14 +323,27 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
 
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
-    $events = Event::where('status', 1)->latest()->get();
-    if ($request->filled('event_id')) {
-        $event = Event::where('id', $request->event_id)->first();
-    } else {
-        $event = @$events[0] ?? null;
-    }
-    $orders = $user->orders()->where('payment_method', '!=', 'invite')->get();
-    $tickets = $user->tickets()->where('event_id', $event->id)->where('order_id', '!=', null)->get();
+// Fetch the events where the wallet is 1, ordered by latest
+        $events = Event::where('wallet', 1)->latest()->get();
+        if( $events->count() == 0){
+            return "No event found";
+        }
+
+        // Determine the current event based on the request or default to the first event
+        $event = $request->filled('event_id') 
+            ? Event::find($request->event_id) 
+            : $events->first() ?? new Event();
+
+        // Fetch the user's orders excluding those with 'invite' as the payment method
+        $orders = $user->orders()
+            ->where('payment_method', '!=', 'invite')
+            ->get();
+
+        // Fetch the user's tickets for the selected event and with a non-null order ID
+        $tickets = $user->tickets()
+            ->where('event_id', $event->id)
+            ->whereNotNull('order_id')
+            ->get();
     return view('pages.digitalWalletNew', compact('user', 'orders', 'events', 'event', 'tickets'));
 })->name('digital-wallet');
 
