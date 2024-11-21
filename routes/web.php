@@ -339,7 +339,7 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
             : $events->first() ?? new Event();
 
         // Fetch the user's orders excluding those with 'invite' as the payment method
-        $orders = $user->orders()
+        $orders = Order::where('user_id',$user->id)->where('event_id',$event->id)
             ->where('payment_method', '!=', 'invite')
             ->get();
 
