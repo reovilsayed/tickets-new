@@ -18,7 +18,7 @@ class EventTicketSellChart
     public function build(Event $event): \ArielMejiaDev\LarapexCharts\LineChart
     {
         $ticketsByHour = $event->tickets->groupBy(function ($ticket) {
-            return $ticket->created_at->format('d M H:00');
+            return $ticket->created_at->format('d M');
         })->map(function ($ticket) {
             $byProduct = $ticket->groupBy('product_id')->mapWithKeys(function ($tickets, $key) {
                 return [Product::find($key)->name => $tickets->count()];

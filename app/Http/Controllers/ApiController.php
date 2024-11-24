@@ -219,6 +219,11 @@ class ApiController extends Controller
         // try {
         $event_id = null;
         DB::beginTransaction();
+        $extraProducts = $request->get('extras') ?? [];
+        $tickets = $request->get('tickets') ?? [];
+
+        if (count($extraProducts) <= 0 && count($tickets) <= 0) throw new Exception('No products in cart');
+        
         $orderData = [
             'billing' => request()->get('biling'),
             'user_id' => $this->getUser(request()->get('biling'))->id,
@@ -241,8 +246,7 @@ class ApiController extends Controller
 
         // Calculate total quantity of extras and tickets
         $totalItems = 0;
-        $extraProducts = $request->get('extras') ?? [];
-        $tickets = $request->get('tickets') ?? [];
+
 
         foreach ($extraProducts as $extra) {
             $quantity = @$extra['quantity'] ?? @$extra['newQty'] ?? 0;

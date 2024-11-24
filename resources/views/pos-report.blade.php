@@ -243,8 +243,13 @@
                                                     @endforeach
                                                 </ul>
                                             </td>
-                                            <td><a href="{{ $order->invoice_url }}">Invoice
-                                                    #{{ $order->invoice_id }}</a>
+                                            <td>
+                                                @if (!empty($order->invoice_url) && !empty($order->invoice_id))
+                                                    <a href="{{ $order->invoice_url }}">Invoice
+                                                        #{{ $order->invoice_id }}</a>
+                                                @else
+                                                    N/A
+                                                @endif
                                             </td>
                                             <td>
                                                 @if ($order->alert == 'unmarked')

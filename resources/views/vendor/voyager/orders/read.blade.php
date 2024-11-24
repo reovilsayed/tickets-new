@@ -46,7 +46,7 @@
 
         <link rel="icon" href="images/favicon.png" type="image/x-icon">
 
-        <title>Haladeals |Email</title>
+        <title></title>
 
 
     </head>
@@ -97,10 +97,13 @@
                                     TOC Online Invoice :
                                 </span>
                                 <p class="">
-                                    <a href="
-                                    {{ $dataTypeContent->invoice_url }}">View
-                                        Invoice</a>
+                                    @if (!empty($dataTypeContent->invoice_url))
+                                        <a href="{{ $dataTypeContent->invoice_url }}">View Invoice</a>
+                                    @else
+                                        N/A
+                                    @endif
                                 </p>
+
                             </div>
                         </div>
                     </div>

@@ -22,14 +22,18 @@ class EventAnalyticsController extends Controller
 
     public function index(Event $event)
     {
+        $digitalOrder = Order::where('payment_method', 'easypay.pt')->where('event_id', $event->id)->where('payment_status', 1)->get();
+        $digitalTickets = Ticket::whereIn('order_id', $digitalOrder->pluck('id')->toArray())->get();
 
-        $digitalOrder= Order::where('payment_method','easypay.pt')->where('event_id',$event->id)->where('payment_status',1)->get();
-        $digitalTickets = Ticket::whereIn('order_id',$digitalOrder->pluck('id')->toArray())->get();
+        $posOrder = Order::whereNotNull('pos_id')->where('event_id', $event->id)->get();
+        $posTickets = Ticket::whereIn('order_id', $posOrder->pluck('id')->toArray())->get();
+        $totalWithoutPhysical = Ticket::whereNot('type', 'physical')->get();
 
-        $posOrder= Order::whereNotNull('pos_id')->where('event_id',$event->id)->get();
-        $posTickets = Ticket::whereIn('order_id',$posOrder->pluck('id')->toArray())->get();
-        $totalWithoutPhysical = Ticket::whereNot('type','physical')->get();
-        return view('vendor.voyager.events.analytics', compact('event','digitalTickets','posTickets','totalWithoutPhysical','digitalOrder','posOrder'));
+        $event = Event::with(['orders', 'tickets'])->find($event->id);
+
+        $totalProductSales = $event->orders->pluck('total')->sum() - $event->tickets->pluck('price')->sum();
+
+        return view('vendor.voyager.events.analytics', compact('event', 'totalProductSales', 'digitalTickets', 'posTickets', 'totalWithoutPhysical', 'digitalOrder', 'posOrder'));
     }
 
     public function ticketParticipanReport(
@@ -39,7 +43,7 @@ class EventAnalyticsController extends Controller
 
         $report = EventReport::generate($event);
 
-  
+
         $ticketSoldChart = $ticketSoldChart->build($event);
 
         return view('vendor.voyager.events.ticket-particiapants-analytics', compact('event', 'report', 'ticketSoldChart'));
@@ -49,49 +53,77 @@ class EventAnalyticsController extends Controller
         OrderSalesChart $orderSalesLineChart,
         OrderSalesByTicketChart $orderSalesByTicketPiChart
     ) {
-        $lineChart = $orderSalesLineChart->build($event);
-        $pieChart = $orderSalesByTicketPiChart->build($event);
-
+        // Eager load necessary relationships
+        $event->load([
+            'tickets.product', 
+            'orders', 
+        ]);
+    
+        // Precompute aggregated values to reduce redundant calculations
+        $tickets = $event->tickets;
+        $orders = $event->orders;
+    
+        // Ticket sums
+        $totalTicketPrice = $tickets->sum('price');
+        $totalTicketTax = $tickets->sum(fn($ticket) => $ticket->product->totalTax());
+    
+        // Physical tickets
+        $physicalTickets = $tickets->where('type', 'physical');
+        $physicalTicketPrice = $physicalTickets->sum('price');
+        $physicalTicketTax = $physicalTickets->sum(fn($ticket) => $ticket->product->totalTax());
+    
+        // Orders filtered by status
+        $refundedOrders = $orders->where('payment_status', 1)->where('status', 3);
+        $digitalOrders = $orders->where('payment_status', 1)->where('status', 1);
+    
+        // Order sums
+        $refundedTotal = $refundedOrders->sum('total');
+        $refundedTax = $refundedOrders->sum('tax');
+        $digitalTotal = $digitalOrders->sum('total');
+        $digitalTax = $digitalOrders->sum('tax');
+    
+        // Prepare report data
         $report = [
             'total' => [
                 'total' => [
-                    'total' => Sohoj::price(setMinValue($event->tickets->sum('price'), 0)),
-                    'withoutTax' => Sohoj::price(setMinValue($event->tickets->sum('price') - $event->tickets->sum(fn($ticket) => $ticket->product->totalTax()), 0)),
+                    'total' => Sohoj::price(setMinValue($totalTicketPrice, 0)),
+                    'withoutTax' => Sohoj::price(setMinValue($totalTicketPrice - $totalTicketTax, 0)),
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price($event->orders->where('payment_status', 1)->where('status', 3)->sum('total')),
-                    'withoutTax' => Sohoj::price(setMinValue($event->orders->where('payment_status', 1)->where('status', 3)->sum('total') - $event->orders->where('payment_status', 1)->where('status', 1)->sum('tax'), 0)),
-
+                    'total' => Sohoj::price(setMinValue($refundedTotal, 0)),
+                    'withoutTax' => Sohoj::price(setMinValue($refundedTotal - $refundedTax, 0)),
                 ],
             ],
             'digital' => [
                 'total' => [
-                    'total' => Sohoj::price($event->orders->where('payment_status', 1)->where('status', 1)->sum('total')),
-                    'withoutTax' => Sohoj::price(setMinValue($event->orders->where('payment_status', 1)->where('status', 1)->sum('total') - $event->orders->where('payment_status', 1)->where('status', 1)->sum('tax'), 0)),
+                    'total' => Sohoj::price(setMinValue($digitalTotal, 0)),
+                    'withoutTax' => Sohoj::price(setMinValue($digitalTotal - $digitalTax, 0)),
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price($event->orders->where('payment_status', 1)->where('status', 3)->sum('total')),
-                    'withoutTax' => Sohoj::price(setMinValue($event->orders->where('payment_status', 1)->where('status', 3)->sum('total') - $event->orders->where('payment_status', 1)->where('status', 1)->sum('tax'), 0)),
-
+                    'total' => Sohoj::price(setMinValue($refundedTotal, 0)),
+                    'withoutTax' => Sohoj::price(setMinValue($refundedTotal - $refundedTax, 0)),
                 ],
             ],
             'physical' => [
                 'total' => [
-                    'total' => Sohoj::price(setMinValue($event->tickets()->where('type', 'physical')->sum('price'), 0)),
-                    'withoutTax' => Sohoj::price(setMinValue($event->tickets()->where('type', 'physical')->sum('price') - $event->tickets->sum(fn($ticket) => $ticket->product->totalTax()), 0)),
+                    'total' => Sohoj::price(setMinValue($physicalTicketPrice, 0)),
+                    'withoutTax' => Sohoj::price(setMinValue($physicalTicketPrice - $physicalTicketTax, 0)),
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price(0),
+                    'total' => Sohoj::price(0), // Assumes no refunds for physical tickets
                     'withoutTax' => Sohoj::price(0),
-
                 ],
-
             ],
-
         ];
-
+    
+        // Generate charts
+        $lineChart = $orderSalesLineChart->build($event);
+        $pieChart = $orderSalesByTicketPiChart->build($event);
+    
+        // Return view with data
         return view('vendor.voyager.events.ticket-sales-analytics', compact('event', 'lineChart', 'pieChart', 'report'));
     }
+    
     public function customerReport(Event $event)
     {
         $users = $event->orders()->has('user')->when(request()->filled('q'), function ($query) {

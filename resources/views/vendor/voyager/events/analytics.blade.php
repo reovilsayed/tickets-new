@@ -42,6 +42,7 @@
 @endsection
 
 @section('content')
+
     <div class="container">
         <h1>
             {{ $event->name }} - Analytics
@@ -113,7 +114,7 @@
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Digital Sales Money',
                         // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' =>Sohoj::price( $digitalOrder->sum('total')),
+                        'value' => Sohoj::price($digitalOrder->sum('total')),
                     ])
 
                 </div>
@@ -128,9 +129,22 @@
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Total Sales Money',
-                        'value' =>Sohoj::price($digitalOrder->sum('total')+$posOrder->sum('total')) ,
+                        'value' => Sohoj::price($digitalOrder->sum('total') + $posOrder->sum('total')),
                     ])
 
+                </div>
+             
+                <div class="col-md-4">
+                    @include('vendor.voyager.events.partial.card', [
+                        'label' => 'Total Product  Sales',
+                        'value' => Sohoj::price($totalProductSales),
+                    ])
+                </div>
+                <div class="col-md-4">
+                    @include('vendor.voyager.events.partial.card', [
+                        'label' => 'Total Ticket Sales',
+                        'value' => Sohoj::price($event->tickets->sum('price')),
+                    ])
                 </div>
             </div>
         </div>
