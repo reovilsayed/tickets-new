@@ -57,13 +57,13 @@ function CartInfo({ discount = 0.0 }) {
                                 {" €"}
                             </td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                             <td>Discount</td>
                             <td>
                                 {discount}
                                 {" €"}
                             </td>
-                        </tr>
+                        </tr> */}
                         <tr>
                             <td>Total</td>
                             <td>

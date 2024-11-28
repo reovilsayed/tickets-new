@@ -282,7 +282,7 @@ const PaymentModal = ({ open }) => {
                                             <option value="Card">Card</option>
                                         </select>
                                     </div>
-                                    <div className="col-md-8">
+                                    {/* <div className="col-md-8">
                                         <label htmlFor="discountInput">
                                             Discount
                                         </label>
@@ -299,8 +299,8 @@ const PaymentModal = ({ open }) => {
                                             onChange={handleFormData}
                                             placeholder="Enter discount"
                                         />
-                                    </div>
-                                </div>
+                                    </div> */}
+                                </div>  
                                 <div className="row">
                                     <div className="col-md-6">
                                         <label
