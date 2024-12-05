@@ -32,10 +32,18 @@ class EventAnalyticsController extends Controller
         $event = Event::with(['orders', 'tickets'])->find($event->id);
 
         $totalProductSales = $event->orders->pluck('total')->sum() - $event->tickets->pluck('price')->sum();
-
-        return view('vendor.voyager.events.analytics', compact('event', 'totalProductSales', 'digitalTickets', 'posTickets', 'totalWithoutPhysical', 'digitalOrder', 'posOrder'));
+        $extras = $this->getExtras($event->id);
+        return view('vendor.voyager.events.analytics', compact('event', 'totalProductSales', 'digitalTickets', 'posTickets', 'totalWithoutPhysical', 'digitalOrder', 'posOrder','extras'));
     }
-
+    protected function getExtras($event_id)
+    {
+        $extras = Order::whereNotNull('pos_id')->where('event_id',$event_id)
+            ->whereNotNull('extras')
+            ->select('extras')
+            ->get()
+            ->map(fn($order) => $order->extras)->flatten();
+        return $extras;
+    }
     public function ticketParticipanReport(
         Event $event,
         EventTicketSellChart $ticketSoldChart
@@ -62,7 +70,8 @@ class EventAnalyticsController extends Controller
         // Precompute aggregated values to reduce redundant calculations
         $tickets = $event->tickets;
         $orders = $event->orders;
-    
+        $posOrder = Order::whereNotNull('pos_id')->where('event_id', $event->id)->get();
+        $websiteOrder = Order::whereNull('pos_id')->where('event_id', $event->id)->get();
         // Ticket sums
         $totalTicketPrice = $tickets->sum('price');
         $totalTicketTax = $tickets->sum(fn($ticket) => $ticket->product->totalTax());
@@ -121,7 +130,7 @@ class EventAnalyticsController extends Controller
         $pieChart = $orderSalesByTicketPiChart->build($event);
     
         // Return view with data
-        return view('vendor.voyager.events.ticket-sales-analytics', compact('event', 'lineChart', 'pieChart', 'report'));
+        return view('vendor.voyager.events.ticket-sales-analytics', compact('event', 'lineChart', 'pieChart', 'report','posOrder','websiteOrder'));
     }
     
     public function customerReport(Event $event)

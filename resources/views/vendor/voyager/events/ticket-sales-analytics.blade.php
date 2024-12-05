@@ -121,7 +121,7 @@
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Total',
-                                'value' => Sohoj::price($event->tickets->sum('price')),
+                                'value' => Sohoj::price($event->orders->sum('total')),
                                 'button' => $btnTotal,
                             ])
 
@@ -130,15 +130,15 @@
 
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Online Sales',
-                                'value' => Sohoj::price($event->digitalTickets->sum('price')),
+                                'value' => Sohoj::price($websiteOrder->sum('total')),
                                 'button' => $btnDigital,
                             ])
 
                         </div>
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Physical Sales',
-                                'value' => Sohoj::price($event->physicalTickets->sum('price')),
+                                'label' => 'Pos Sales',
+                                'value' => Sohoj::price($posOrder->sum('total')),
                                 'button' => $btnPhysical,
                             ])
 

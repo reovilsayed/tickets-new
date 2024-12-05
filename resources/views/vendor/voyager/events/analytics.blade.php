@@ -42,7 +42,14 @@
 @endsection
 
 @section('content')
-
+@php
+$productsellamount = 0;
+foreach ($extras as $extra) {
+    if($extra != null){
+        $productsellamount += $extra->qty * $extra->price;
+    }
+}
+@endphp
     <div class="container">
         <h1>
             {{ $event->name }} - Analytics
@@ -120,11 +127,24 @@
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
-                        'label' => 'Pos Sales Money',
+                        'label' => 'Pos Sales Products',
                         // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => Sohoj::price($posOrder->sum('total')),
+                        'value' => Sohoj::price($productsellamount),
                     ])
-
+                </div>
+                <div class="col-md-4">
+                    @include('vendor.voyager.events.partial.card', [
+                        'label' => 'Pos Sales Tickets',
+                        // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
+                        'value' => Sohoj::price($posTickets->sum('price')),
+                    ])
+                </div>
+                <div class="col-md-4">
+                    @include('vendor.voyager.events.partial.card', [
+                        'label' => 'Total Pos Sales',
+                        // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
+                        'value' => Sohoj::price($posTickets->sum('price') + $productsellamount),
+                    ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
@@ -134,7 +154,7 @@
 
                 </div>
              
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Total Product  Sales',
                         'value' => Sohoj::price($totalProductSales),
@@ -145,7 +165,7 @@
                         'label' => 'Total Ticket Sales',
                         'value' => Sohoj::price($event->tickets->sum('price')),
                     ])
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
