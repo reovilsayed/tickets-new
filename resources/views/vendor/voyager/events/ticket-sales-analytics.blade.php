@@ -97,33 +97,33 @@
       {{ $event->name }} - Analytics
     </h1>
 
-    <hr>
-    @include('vendor.voyager.events.partial.buttons')
-    <hr>
-    <div class="container">
-      @php
-        $btnTotal = "<button type='button' class='btn btn-custom' data-json='" .
-          json_encode($order['total'])
-          . "' data-toggle='modal' data-target='#myModal'>View</button>";
-        $btnDigital = "<button type='button' class='btn btn-custom' data-json='" .
-          json_encode($order['digital'])
-          . "' data-toggle='modal' data-target='#myModal'>View</button>";
-        $btnPhysical = "<button type='button' class='btn btn-custom' data-json='" .
-          json_encode($order['physical'])
-          . "' data-toggle='modal' data-target='#myModal'>View</button>";
-      @endphp
-      <div class="panel">
-        <div class="panel-body">
-          <div class="row mb-3">
-            <div class="col-md-4">
-              @include('vendor.voyager.events.partial.card', [
-                  'label' => 'Total',
-                  'value' => $totalOrder->online_cost + $totalOrder->pos_cost,
-                  'button' => $btnTotal,
-              ])
-            </div>
+        <hr>
+        @include('vendor.voyager.events.partial.buttons')
+        <hr>
+        <div class="container">
+          @php
+            $btnTotal = "<button type='button' class='btn btn-custom' data-json='" .
+              json_encode($order['total'])
+              . "' data-toggle='modal' data-target='#myModal'>View</button>";
+            $btnDigital = "<button type='button' class='btn btn-custom' data-json='" .
+              json_encode($order['digital'])
+              . "' data-toggle='modal' data-target='#myModal'>View</button>";
+            $btnPhysical = "<button type='button' class='btn btn-custom' data-json='" .
+              json_encode($order['physical'])
+              . "' data-toggle='modal' data-target='#myModal'>View</button>";
+          @endphp
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Total',
+                                'value' => $totalOrder->online_cost + $totalOrder->pos_cost,
+                                'button' => $btnTotal,
+                            ])
 
-            <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
 
               @include('vendor.voyager.events.partial.card', [
                   'label' => 'Online Sales',
