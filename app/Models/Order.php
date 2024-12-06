@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\ConvertFullMoney;
 use App\Observers\OrderObserver;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -19,7 +20,15 @@ class Order extends Model
     protected $casts = [
         'paid_date' => 'datetime',
         'date_paid' => 'datetime',
-        'date_completed' => 'datetime'
+        'date_completed' => 'datetime',
+        'online_cost' => ConvertFullMoney::class,
+        'online_tax' => ConvertFullMoney::class,
+        'pos_cost' => ConvertFullMoney::class,
+        'pos_tax' => ConvertFullMoney::class,
+        'refund_online_cost' => ConvertFullMoney::class,
+        'refund_online_tax' => ConvertFullMoney::class,
+        'refund_pos_cost' => ConvertFullMoney::class,
+        'refund_pos_tax' => ConvertFullMoney::class,
     ];
 
     public function user()
@@ -177,7 +186,7 @@ class Order extends Model
             }
         }
         if ($this->extras) {
-            
+
             foreach ((collect($this->extras))->groupBy('name') as $name => $extras) {
                 array_push($products, $name . ' X' . $extras->sum('qty'));
             }

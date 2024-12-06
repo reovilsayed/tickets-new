@@ -2,6 +2,7 @@
 
 namespace App\Charts;
 
+use ArielMejiaDev\LarapexCharts\PieChart;
 use ArielMejiaDev\LarapexCharts\LarapexChart;
 
 class OrderSalesByTicketChart
@@ -13,18 +14,13 @@ class OrderSalesByTicketChart
         $this->chart = $chart;
     }
 
-    public function build($event): \ArielMejiaDev\LarapexCharts\PieChart
+    public function build($digital, $physical): PieChart
     {
-        $data = [
-            'Digital' => $event->digitalTickets->sum('price'),
-            'Physical' => $event->physicalTickets->sum('price'),
-        ];
-
         $chart = $this->chart->pieChart()
             ->setTitle('Sales report')
-            ->setLabels(array_keys($data)) // Set the labels here
-            ->setDataset(array_values($data)); // Set the data here
+            ->setLabels(['Digital', 'Physical'])
+            ->setDataset([$digital, $physical]);
+
         return $chart;
     }
-
 }

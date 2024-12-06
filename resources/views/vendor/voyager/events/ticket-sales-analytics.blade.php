@@ -3,15 +3,15 @@
 @section('page_title', $event->title . ' analytics')
 
 @section('javascript')
-    <script>
-        [...document.querySelectorAll("[data-target='#myModal']")].forEach(element => {
-            element.addEventListener("click", function(e) {
-                document.getElementById('myModalBody').innerHTML = '';
-                let data = JSON.parse(e.target.dataset.json);
-                let html = `    <h1 class="text-center">
+  <script>
+    [...document.querySelectorAll("[data-target='#myModal']")].forEach(element => {
+      element.addEventListener("click", function(e) {
+        document.getElementById('myModalBody').innerHTML = '';
+        let data = JSON.parse(e.target.dataset.json);
+        let html = `    <h1 class="text-center">
                                     Total
                                 </h1> <div class="row">
-                        
+
                             <div class="col-md-6">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'With Tax',
@@ -29,7 +29,7 @@
                                     Refunded
                                 </h1>
                         <div class="row">
-                          
+
                             <div class="col-md-6">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'With Tax',
@@ -45,147 +45,144 @@
                         </div>
                         `;
 
-                document.getElementById('myModalBody').innerHTML = html;
-                // document.getElementById('myModalTitle').innerText = e.target.dataset.title;
-                // console.log(data);
-            })
-        });
-    </script>
+        document.getElementById('myModalBody').innerHTML = html;
+        // document.getElementById('myModalTitle').innerText = e.target.dataset.title;
+        // console.log(data);
+      })
+    });
+  </script>
 
 @endsection
 @section('css')
-    <style>
-        .card {
-            text-align: center;
-            padding: 20px;
-            width: 100%;
-            border-radius: 10px;
+  <style>
+    .card {
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+      border-radius: 10px;
 
-            border: 2px solid #EF5927 !important;
-            transition: .2s ease-in;
-        }
+      border: 2px solid #EF5927 !important;
+      transition: .2s ease-in;
+    }
 
-        .card:hover {
-            box-shadow: 5px 5px #EF5927;
-        }
+    .card:hover {
+      box-shadow: 5px 5px #EF5927;
+    }
 
-        .card h3 {
-            text-transform: uppercase;
-            font-weight: bold;
-            margin: 0px;
-            font-size: 30px;
-            color: #EF5927;
-            font-family: Arial, Helvetica, sans-serif;
-        }
+    .card h3 {
+      text-transform: uppercase;
+      font-weight: bold;
+      margin: 0px;
+      font-size: 30px;
+      color: #EF5927;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-        .card h1 {
-            font-size: 50px;
-            font-weight: bold;
-            color: #000;
-        }
+    .card h1 {
+      font-size: 50px;
+      font-weight: bold;
+      color: #000;
+    }
 
-        h1 {
-            font-size: 40px;
-            font-weight: bold;
-            color: #000;
-        }
-    </style>
+    h1 {
+      font-size: 40px;
+      font-weight: bold;
+      color: #000;
+    }
+  </style>
 @endsection
 @section('content')
+  <div class="container">
+    <h1>
+      {{ $event->name }} - Analytics
+    </h1>
+
+    <hr>
+    @include('vendor.voyager.events.partial.buttons')
+    <hr>
     <div class="container">
-        <h1>
-            {{ $event->name }} - Analytics
-        </h1>
+      @php
+        $btnTotal = "<button type='button' class='btn btn-custom' data-json='" .
+          json_encode($order['total'])
+          . "' data-toggle='modal' data-target='#myModal'>View</button>";
+        $btnDigital = "<button type='button' class='btn btn-custom' data-json='" .
+          json_encode($order['digital'])
+          . "' data-toggle='modal' data-target='#myModal'>View</button>";
+        $btnPhysical = "<button type='button' class='btn btn-custom' data-json='" .
+          json_encode($order['physical'])
+          . "' data-toggle='modal' data-target='#myModal'>View</button>";
+      @endphp
+      <div class="panel">
+        <div class="panel-body">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              @include('vendor.voyager.events.partial.card', [
+                  'label' => 'Total',
+                  'value' => $totalOrder->online_cost + $totalOrder->pos_cost,
+                  'button' => $btnTotal,
+              ])
+            </div>
 
-        <hr>
-        @include('vendor.voyager.events.partial.buttons')
-        <hr>
-        <div class="container">
-            @php
-                $btnTotal =
-                    "<button type='button' class='btn btn-custom' data-json='" .
-                    json_encode($report['total']) .
-                    "' data-toggle='modal' data-target='#myModal'>View</button>";
-                $btnDigital =
-                    "<button type='button' class='btn btn-custom' data-json='" .
-                    json_encode($report['digital']) .
-                    "' data-toggle='modal' data-target='#myModal'>View</button>";
-                $btnPhysical =
-                    "<button type='button' class='btn btn-custom' data-json='" .
-                    json_encode($report['physical']) .
-                    "' data-toggle='modal' data-target='#myModal'>View</button>";
-            @endphp
-            <div class="panel">
-                <div class="panel-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Total',
-                                'value' => Sohoj::price($event->orders->sum('total')),
-                                'button' => $btnTotal,
-                            ])
+            <div class="col-md-4">
 
-                        </div>
-                        <div class="col-md-4">
+              @include('vendor.voyager.events.partial.card', [
+                  'label' => 'Online Sales',
+                  'value' => $totalOrder->online_cost,
+                  'button' => $btnDigital,
+              ])
 
-                            @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Online Sales',
-                                'value' => Sohoj::price($websiteOrder->sum('total')),
-                                'button' => $btnDigital,
-                            ])
+            </div>
+            <div class="col-md-4">
+              @include('vendor.voyager.events.partial.card', [
+                  'label' => 'Pos Sales',
+                  'value' => $totalOrder->pos_cost,
+                  'button' => $btnPhysical,
+              ])
 
-                        </div>
-                        <div class="col-md-4">
-                            @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Pos Sales',
-                                'value' => Sohoj::price($posOrder->sum('total')),
-                                'button' => $btnPhysical,
-                            ])
-
-                        </div>
-
-
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            {!! $lineChart->container() !!}
-                        </div>
-                        <div class="col-md-6">
-                            {!! $pieChart->container() !!}
-                        </div>
-                        <script src="{{ $lineChart->cdn() }}"></script>
-                        {!! $lineChart->script() !!}
-                        {!! $pieChart->script() !!}
-                        
-                    </div>
-                </div>
             </div>
 
 
-        </div>
-        
-       
-        <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog modal-lg">
-
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-                    </div>
-                    <div class="modal-body" id="myModalBody">
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              {!! $lineChart->container() !!}
             </div>
+            <div class="col-md-6">
+              {!! $pieChart->container() !!}
+            </div>
+            <script src="{{ $lineChart->cdn() }}"></script>
+            {!! $lineChart->script() !!}
+            {!! $pieChart->script() !!}
+
+          </div>
         </div>
+      </div>
 
 
     </div>
+
+
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+          </div>
+          <div class="modal-body" id="myModalBody">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
 
 @endsection

@@ -87,7 +87,7 @@ foreach ($extras as $extra) {
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Total Sales',
-                        'value' => $digitalTickets->count() + $posTickets->count(),
+                        'value' => ($digitalTickets->count() + $posTickets->count()),
                     ])
                 </div>
 
@@ -153,7 +153,7 @@ foreach ($extras as $extra) {
                     ])
 
                 </div>
-             
+
                 {{-- <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Total Product  Sales',

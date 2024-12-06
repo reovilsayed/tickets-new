@@ -33,11 +33,11 @@ class EventAnalyticsController extends Controller
 
         $totalProductSales = $event->orders->pluck('total')->sum() - $event->tickets->pluck('price')->sum();
         $extras = $this->getExtras($event->id);
-        return view('vendor.voyager.events.analytics', compact('event', 'totalProductSales', 'digitalTickets', 'posTickets', 'totalWithoutPhysical', 'digitalOrder', 'posOrder','extras'));
+        return view('vendor.voyager.events.analytics', compact('event', 'totalProductSales', 'digitalTickets', 'posTickets', 'totalWithoutPhysical', 'digitalOrder', 'posOrder', 'extras'));
     }
     protected function getExtras($event_id)
     {
-        $extras = Order::whereNotNull('pos_id')->where('event_id',$event_id)
+        $extras = Order::whereNotNull('pos_id')->where('event_id', $event_id)
             ->whereNotNull('extras')
             ->select('extras')
             ->get()
@@ -56,83 +56,69 @@ class EventAnalyticsController extends Controller
 
         return view('vendor.voyager.events.ticket-particiapants-analytics', compact('event', 'report', 'ticketSoldChart'));
     }
+
     public function salesReport(
         Event $event,
         OrderSalesChart $orderSalesLineChart,
         OrderSalesByTicketChart $orderSalesByTicketPiChart
     ) {
-        // Eager load necessary relationships
-        $event->load([
-            'tickets.product', 
-            'orders', 
-        ]);
-    
-        // Precompute aggregated values to reduce redundant calculations
-        $tickets = $event->tickets;
-        $orders = $event->orders;
-        $posOrder = Order::whereNotNull('pos_id')->where('event_id', $event->id)->where('payment_status',1)->get();
-        $websiteOrder = Order::whereNull('pos_id')->where('event_id', $event->id)->where('payment_status',1)->get();
-        // Ticket sums
-        $totalTicketPrice = $tickets->sum('price');
-        $totalTicketTax = $tickets->sum(fn($ticket) => $ticket->product->totalTax());
-    
-        // Physical tickets
-        $physicalTickets = $tickets->where('type', 'physical');
-        $physicalTicketPrice = $physicalTickets->sum('price');
-        $physicalTicketTax = $physicalTickets->sum(fn($ticket) => $ticket->product->totalTax());
-    
-        // Orders filtered by status
-        $refundedOrders = $orders->where('payment_status', 1)->where('status', 3);
-        $digitalOrders = $orders->where('payment_status', 1)->where('status', 1);
-    
-        // Order sums
-        $refundedTotal = $refundedOrders->sum('total');
-        $refundedTax = $refundedOrders->sum('tax');
-        $digitalTotal = $digitalOrders->sum('total');
-        $digitalTax = $digitalOrders->sum('tax');
-    
-        // Prepare report data
-        $report = [
+        $totalOrder = Order::whereBelongsTo($event)
+            ->selectRaw('sum(case when pos_id is null and payment_status = 1 then total end) as online_cost')
+            ->selectRaw('sum(case when pos_id is null and payment_status = 1 then tax end) as online_tax')
+            ->selectRaw('sum(case when pos_id is null and payment_status = 3 then total end) as refund_online_cost')
+            ->selectRaw('sum(case when pos_id is null and payment_status = 3 then tax end) as refund_online_tax')
+            ->selectRaw('sum(case when pos_id is not null and payment_status = 1 then total end) as pos_cost')
+            ->selectRaw('sum(case when pos_id is not null and payment_status = 1 then tax end) as pos_tax')
+            ->selectRaw('sum(case when pos_id is not null and payment_status = 3 then total end) as refund_pos_cost')
+            ->selectRaw('sum(case when pos_id is not null and payment_status = 3 then tax end) as refund_pos_tax')
+            ->groupBy('event_id')
+            ->first();
+
+        $order = [
             'total' => [
                 'total' => [
-                    'total' => Sohoj::price(setMinValue($totalTicketPrice, 0)),
-                    'withoutTax' => Sohoj::price(setMinValue($totalTicketPrice - $totalTicketTax, 0)),
+                    'total' => $totalOrder->online_cost + $totalOrder->pos_cost,
+                    'withoutTax' => $totalOrder->online_cost + $totalOrder->pos_cost - ($totalOrder->online_tax + $totalOrder->pos_tax)
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price(setMinValue($refundedTotal, 0)),
-                    'withoutTax' => Sohoj::price(setMinValue($refundedTotal - $refundedTax, 0)),
+                    'total' => $totalOrder->refund_online_cost + $totalOrder->refund_pos_cost,
+                    'withoutTax' => $totalOrder->refund_online_cost + $totalOrder->refund_pos_cost - ($totalOrder->refund_online_tax + $totalOrder->refund_pos_tax)
                 ],
             ],
             'digital' => [
                 'total' => [
-                    'total' => Sohoj::price(setMinValue($digitalTotal, 0)),
-                    'withoutTax' => Sohoj::price(setMinValue($digitalTotal - $digitalTax, 0)),
+                    'total' => $totalOrder->online_cost,
+                    'withoutTax' => $totalOrder->online_cost - $totalOrder->online_tax,
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price(setMinValue($refundedTotal, 0)),
-                    'withoutTax' => Sohoj::price(setMinValue($refundedTotal - $refundedTax, 0)),
+                    'total' => $totalOrder->refund_online_cost,
+                    'withoutTax' => $totalOrder->refund_online_tax,
                 ],
             ],
             'physical' => [
                 'total' => [
-                    'total' => Sohoj::price(setMinValue($physicalTicketPrice, 0)),
-                    'withoutTax' => Sohoj::price(setMinValue($physicalTicketPrice - $physicalTicketTax, 0)),
+                    'total' => $totalOrder->pos_cost,
+                    'withoutTax' => $totalOrder->pos_cost - $totalOrder->pos_tax,
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price(0), // Assumes no refunds for physical tickets
-                    'withoutTax' => Sohoj::price(0),
+                    'total' => $totalOrder->refund_pos_cost,
+                    'withoutTax' => $totalOrder->refund_pos_tax,
                 ],
             ],
         ];
-    
-        // Generate charts
+
         $lineChart = $orderSalesLineChart->build($event);
-        $pieChart = $orderSalesByTicketPiChart->build($event);
-    
-        // Return view with data
-        return view('vendor.voyager.events.ticket-sales-analytics', compact('event', 'lineChart', 'pieChart', 'report','posOrder','websiteOrder'));
+        $pieChart = $orderSalesByTicketPiChart->build($totalOrder->online_cost, $totalOrder->pos_cost);
+
+        return view('vendor.voyager.events.ticket-sales-analytics', [
+            'event' => $event,
+            'pieChart' => $pieChart,
+            'lineChart' => $lineChart,
+            'order' => $order,
+            'totalOrder' => $totalOrder,
+        ]);
     }
-    
+
     public function customerReport(Event $event)
     {
         $users = $event->orders()->has('user')->when(request()->filled('q'), function ($query) {
