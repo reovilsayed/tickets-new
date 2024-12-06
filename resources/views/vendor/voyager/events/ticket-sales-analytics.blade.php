@@ -121,7 +121,7 @@
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
                                 'label' => 'Total',
-                                'value' => Sohoj::price($event->orders->sum('total')),
+                                'value' => Sohoj::price($event->orders->where('payment_status',1)->sum('total')),
                                 'button' => $btnTotal,
                             ])
 
