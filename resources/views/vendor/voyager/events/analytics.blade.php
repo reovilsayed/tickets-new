@@ -129,7 +129,7 @@ foreach ($extras as $extra) {
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Pos Sales Products',
                         // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => Sohoj::price($productsellamount),
+                        'value' => Sohoj::price($posOrder->sum('total') - $posTickets->sum('price') ),
                     ])
                 </div>
                 <div class="col-md-4">
@@ -143,7 +143,7 @@ foreach ($extras as $extra) {
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Total Pos Sales',
                         // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => Sohoj::price($posTickets->sum('price') + $productsellamount),
+                        'value' => Sohoj::price($posOrder->sum('total')),
                     ])
                 </div>
                 <div class="col-md-4">

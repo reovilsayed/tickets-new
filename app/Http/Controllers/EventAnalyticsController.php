@@ -22,7 +22,7 @@ class EventAnalyticsController extends Controller
 
     public function index(Event $event)
     {
-        $digitalOrder = Order::where('payment_method', 'easypay.pt')->where('event_id', $event->id)->where('payment_status', 1)->get();
+        $digitalOrder = Order::where('event_id', $event->id)->where('payment_status', 1)->whereNull('pos_id')->get();
         $digitalTickets = Ticket::whereIn('order_id', $digitalOrder->pluck('id')->toArray())->get();
 
         $posOrder = Order::whereNotNull('pos_id')->where('event_id', $event->id)->get();
@@ -70,8 +70,8 @@ class EventAnalyticsController extends Controller
         // Precompute aggregated values to reduce redundant calculations
         $tickets = $event->tickets;
         $orders = $event->orders;
-        $posOrder = Order::whereNotNull('pos_id')->where('event_id', $event->id)->get();
-        $websiteOrder = Order::whereNull('pos_id')->where('event_id', $event->id)->get();
+        $posOrder = Order::whereNotNull('pos_id')->where('event_id', $event->id)->where('payment_status',1)->get();
+        $websiteOrder = Order::whereNull('pos_id')->where('event_id', $event->id)->where('payment_status',1)->get();
         // Ticket sums
         $totalTicketPrice = $tickets->sum('price');
         $totalTicketTax = $tickets->sum(fn($ticket) => $ticket->product->totalTax());
