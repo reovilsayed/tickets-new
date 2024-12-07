@@ -308,7 +308,8 @@ class ApiController extends Controller
                     'pos_id' => auth()->id(),
                     'ticket' => !$physicalQr ? uniqid() : null,
                     'price' =>  $product->price - $discountPerUnit, // Apply discount per unit
-                    'dates' => $product->dates
+                    'dates' => $product->dates,
+                    'type' => 'pos'
                 ];
 
                 $extras = $item['extras'] ?? [];

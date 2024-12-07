@@ -123,7 +123,8 @@ class CheckoutService
                         'order_id' => $order->id,
                         'ticket' => uniqid(),
                         'price' => isset($discountedProduct[$key]) ? $item->price - $discountPerUnit : $item->price,
-                        'dates' => $item->model->dates
+                        'dates' => $item->model->dates,
+                        'type' => 'web'
                     ];
 
                     if ($item->model->extras && count($item->model->extras)) {

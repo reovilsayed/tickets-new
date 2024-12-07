@@ -35,9 +35,13 @@ class Event extends Model
     {
         return $this->hasMany(Invite::class);
     }
+    public function posTickets()
+    {
+        return $this->hasMany(Ticket::class)->whereNotNull('pos_id')->where('type', 'paid');
+    }
     public function digitalTickets()
     {
-        return $this->hasMany(Ticket::class)->where('type', 'paid');
+        return $this->hasMany(Ticket::class)->whereNull('pos_id')->where('type', 'paid');
     }
     public function inviteTickets()
     {
