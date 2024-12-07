@@ -51,7 +51,6 @@ class PageController extends Controller
         $products = Product::where("status", 1)->limit(12)->filter()->paginate(10);
         $categories = Prodcat::has('products')->latest()->get();
         $cities = City::all();
-
         return view('pages.shops', compact('products', 'categories', 'cities'));
     }
     public function about()
