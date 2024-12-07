@@ -32,7 +32,7 @@ class PageController extends Controller
 {
     public function home()
     {
-        $events = Event::where('status', 1)->get();
+        $events = Event::where('status', 1)->orderBy('sequence','asc')->get();
         return view('pages.home', compact('events'));
     }
     public function event_details(Event $event)
