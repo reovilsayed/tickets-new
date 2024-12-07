@@ -97,32 +97,32 @@ class EventAnalyticsController extends Controller
         $order = [
             'total' => [
                 'total' => [
-                    'total' => $totalOrder->online_cost + $totalOrder->pos_cost,
-                    'withoutTax' => $totalOrder->online_cost + $totalOrder->pos_cost - ($totalOrder->online_tax + $totalOrder->pos_tax)
+                    'total' => Sohoj::price($totalOrder->online_cost + $totalOrder->pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder->online_cost + $totalOrder->pos_cost - ($totalOrder->online_tax + $totalOrder->pos_tax))
                 ],
                 'refunded' => [
-                    'total' => $totalOrder->refund_online_cost + $totalOrder->refund_pos_cost,
-                    'withoutTax' => $totalOrder->refund_online_cost + $totalOrder->refund_pos_cost - ($totalOrder->refund_online_tax + $totalOrder->refund_pos_tax)
+                    'total' => Sohoj::price($totalOrder->refund_online_cost + $totalOrder->refund_pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder->refund_online_cost + $totalOrder->refund_pos_cost - ($totalOrder->refund_online_tax + $totalOrder->refund_pos_tax))
                 ],
             ],
             'digital' => [
                 'total' => [
-                    'total' => $totalOrder->online_cost,
-                    'withoutTax' => $totalOrder->online_cost - $totalOrder->online_tax,
+                    'total' => Sohoj::price($totalOrder->online_cost),
+                    'withoutTax' => Sohoj::price($totalOrder->online_cost - $totalOrder->online_tax),
                 ],
                 'refunded' => [
-                    'total' => $totalOrder->refund_online_cost,
-                    'withoutTax' => $totalOrder->refund_online_tax,
+                    'total' => Sohoj::price($totalOrder->refund_online_cost),
+                    'withoutTax' => Sohoj::price($totalOrder->refund_online_tax),
                 ],
             ],
             'physical' => [
                 'total' => [
-                    'total' => $totalOrder->pos_cost,
-                    'withoutTax' => $totalOrder->pos_cost - $totalOrder->pos_tax,
+                    'total' => Sohoj::price($totalOrder->pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder->pos_cost - $totalOrder->pos_tax),
                 ],
                 'refunded' => [
-                    'total' => $totalOrder->refund_pos_cost,
-                    'withoutTax' => $totalOrder->refund_pos_tax,
+                    'total' => Sohoj::price($totalOrder->refund_pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder->refund_pos_tax),
                 ],
             ],
         ];
