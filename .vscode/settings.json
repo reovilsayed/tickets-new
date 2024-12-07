@@ -1,4 +1,7 @@
 {
     "search.useGlobalIgnoreFiles": true,
-    "search.useParentIgnoreFiles": false
+    "search.useParentIgnoreFiles": false,
+    "cSpell.words": [
+      "Sohoj"
+    ]
 }

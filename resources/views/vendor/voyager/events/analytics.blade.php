@@ -42,14 +42,6 @@
 @endsection
 
 @section('content')
-@php
-$productsellamount = 0;
-foreach ($extras as $extra) {
-    if($extra != null){
-        $productsellamount += $extra->qty * $extra->price;
-    }
-}
-@endphp
     <div class="container">
         <h1>
             {{ $event->name }} - Analytics
@@ -63,57 +55,57 @@ foreach ($extras as $extra) {
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Digital Sales',
-                        'value' => $digitalTickets->count(),
+                        'value' => $totalTicket->digital,
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Physical',
-                        'value' => $event->physicalTickets->count(),
+                        'value' => $physicalTicket,
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Pos SAles',
-                        'value' => $posTickets->count(),
+                        'value' => $totalTicket->pos,
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Invites Send',
-                        'value' => $event->inviteTickets->count(),
+                        'value' => $totalTicket->invite,
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Total Sales',
-                        'value' => ($digitalTickets->count() + $posTickets->count()),
+                        'value' => ($totalTicket->digital + $totalTicket->pos),
                     ])
                 </div>
 
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Tickets',
-                        'value' => $event->products->count(),
+                        'value' => $event->products_count,
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Invites',
-                        'value' => $event->invites->count(),
+                        'value' => $event->invites_count,
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Customer',
-                        'value' => $event->tickets()->distinct('user_id')->pluck('user_id')->count(),
+                        'value' => $totalTicket->customer,
                     ])
 
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Product',
-                        'value' => $event->extras->count(),
+                        'value' => $event->extras_count,
                     ])
 
                 </div>
@@ -121,35 +113,32 @@ foreach ($extras as $extra) {
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Digital Sales Money',
                         // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => Sohoj::price($digitalOrder->sum('total')),
+                        'value' => Sohoj::price($totalOrder->online_cost),
                     ])
 
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Pos Sales Products',
-                        // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => Sohoj::price($posOrder->sum('total') - $posTickets->sum('price') ),
+                        'value' => Sohoj::price($totalOrder->pos_cost - $totalTicket->price ),
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Pos Sales Tickets',
-                        // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => Sohoj::price($posTickets->sum('price')),
+                        'value' => Sohoj::price($totalTicket->price),
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Total Pos Sales',
-                        // 'value' => Sohoj::price($event->tickets()->sum('price') / 100),
-                        'value' => Sohoj::price($posOrder->sum('total')),
+                        'value' => Sohoj::price($totalOrder->pos_cost),
                     ])
                 </div>
                 <div class="col-md-4">
                     @include('vendor.voyager.events.partial.card', [
                         'label' => 'Total Sales Money',
-                        'value' => Sohoj::price($digitalOrder->sum('total') + $posOrder->sum('total')),
+                        'value' => Sohoj::price($totalOrder->online_cost + $totalOrder->pos_cost),
                     ])
 
                 </div>

@@ -14,6 +14,7 @@ use App\Services\CheckoutService;
 use App\Services\EventReport;
 use Error;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Sohoj;
 
@@ -22,18 +23,37 @@ class EventAnalyticsController extends Controller
 
     public function index(Event $event)
     {
-        $digitalOrder = Order::where('event_id', $event->id)->where('payment_status', 1)->whereNull('pos_id')->get();
-        $digitalTickets = Ticket::whereIn('order_id', $digitalOrder->pluck('id')->toArray())->get();
+        $totalOrder = Order::where('event_id', $event->id)
+            ->selectRaw('sum(case when pos_id is null then total end) as online_cost')
+            ->selectRaw('sum(case when pos_id is not null then total end) as pos_cost')
+            ->where('payment_status', 1)
+            ->groupBy('event_id')
+            ->first();
 
-        $posOrder = Order::whereNotNull('pos_id')->where('event_id', $event->id)->get();
-        $posTickets = Ticket::whereIn('order_id', $posOrder->pluck('id')->toArray())->get();
-        $totalWithoutPhysical = Ticket::whereNot('type', 'physical')->get();
+        $totalTicket = Ticket::withoutGlobalScope('validTicket')
+            ->selectRaw("count(case when type = 'web' then 1 end) as digital")
+            ->selectRaw("count(case when type = 'pos' then 1 end) as pos")
+            ->selectRaw("count(case when type = 'invite' then 1 end) as invite")
+            ->selectRaw("count(distinct user_id) as customer")
+            ->selectRaw("sum(case when type = 'pos' then price end) as price")
+            ->whereHas('order', fn(Builder $query) => $query->where('payment_status', 1))
+            ->where('event_id', $event->id)
+            ->groupBy('event_id')
+            ->first();
 
-        $event = Event::with(['orders', 'tickets'])->find($event->id);
+        $physicalTicket = Ticket::withoutGlobalScope('validTicket')
+            ->where('event_id', $event->id)
+            ->where('type', 'physical')
+            ->count();
 
-        $totalProductSales = $event->orders->pluck('total')->sum() - $event->tickets->pluck('price')->sum();
-        $extras = $this->getExtras($event->id);
-        return view('vendor.voyager.events.analytics', compact('event', 'totalProductSales', 'digitalTickets', 'posTickets', 'totalWithoutPhysical', 'digitalOrder', 'posOrder', 'extras'));
+        $event->loadCount(['products', 'invites', 'extras']);
+
+        return view('vendor.voyager.events.analytics', [
+            'event' => $event,
+            'totalOrder' => $totalOrder,
+            'totalTicket' => $totalTicket,
+            'physicalTicket' => $physicalTicket,
+        ]);
     }
     protected function getExtras($event_id)
     {
