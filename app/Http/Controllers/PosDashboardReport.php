@@ -61,4 +61,18 @@ class PosDashboardReport extends Controller
 
         return redirect()->back()->with('sucess', 'Order marked');
     }
+
+    public function update(Request $request, Order $order)
+    {
+        $attributes = $request->validate([
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'phone' => ['required', 'string', 'max:255'],
+        ]);
+
+        $order->billing->phone = $attributes['phone'];
+        $order->billing->email = $attributes['email'];
+        $order->save();
+
+        return response()->json();
+    }
 }

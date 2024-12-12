@@ -14,6 +14,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
   {{-- <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}"> --}}
 
   <style>
@@ -214,8 +215,8 @@
                         {{ $order->id }}
                       </td>
                       <td>{{ $order->user->name }}</td>
-                      <td>{{ $order->user->email }}</td>
-                      <td>{{ $order->user->contact_number }}</td>
+                      <td>{{ $order->billing->email ?? $order->user->email }}</td>
+                      <td>{{ $order->billing->phone ?? $order->user->contact_number }}</td>
                       <td>
                         <ul>
                           @foreach ($order->getDescription() as $line)
@@ -236,7 +237,6 @@
                       <td>{{ $order->note }}</td>
                       <td>
                         @if ($order->alert == 'unmarked')
-                          {{-- <a href="{{ route('order.marked', $order) }}" class="btn btn-primary">Mark</a> --}}
                           <button type="button" class="btn btn-primary ticket-marked-button" data-url="{{ route('order.marked', $order) }}" data-bs-toggle="modal" data-bs-target="#ticket-marked">
                             Mark
                           </button>
@@ -245,6 +245,9 @@
                         @else
                           <button class="btn btn-danger">Marked</button>
                         @endif
+                        <button type="button" class="btn btn-primary ticket-action-button" data-url="{{ route('order.update', $order) }}" data-email="{{ $order->billing->email ?? $order->user->email }}" data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}" data-bs-toggle="modal" data-bs-target="#action-modal">
+                          Action
+                        </button>
                       </td>
                     </tr>
                   @endforeach
@@ -287,21 +290,114 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" tabindex="-1" id="action-modal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tell us why you marked this?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body container">
+          <form action="#" id="ticket-action-form" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <label for="email" class="form-label">Email address</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@example.com">
+              </div>
+              <div class="mb-3 col-md-6">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="phone number">
+              </div>
+              <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">Update</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger">Send SMS</button>
+          <button class="btn btn-success">Send Email</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <script>
     const ticketTableBody = document.getElementById("ticket-table-body");
     ticketTableBody.addEventListener('click', (e) => {
       const el = e.target;
-      if (!el.classList.contains('ticket-marked-button')) {
+      if (el.classList.contains('ticket-marked-button')) {
+        const url = el.dataset.url;
+        const formEl = document.getElementById('ticket-marked-form');
+
+        formEl.action = url;
         return;
       }
-      const url = el.dataset.url;
-      const formEl = document.getElementById('ticket-marked-form');
 
-      formEl.action = url;
+      if (el.classList.contains('ticket-action-button')) {
+        const url = el.dataset.url;
+
+        const formEl = document.getElementById('ticket-action-form');
+        const emailEl = formEl.querySelector('[name=email]');
+        const phoneEl = formEl.querySelector('[name=phone]');
+
+        emailEl.value = el.dataset.email;
+        phoneEl.value = el.dataset.phone;
+
+        formEl.action = url;
+        return;
+      }
+
+    });
+
+    let _hasDataChange = false;
+
+    const ticketActionForm = document.getElementById('ticket-action-form');
+    ticketActionForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const formEl = e.target;
+      const phone = formEl.querySelector('[name=phone]').value;
+      const email = formEl.querySelector('[name=email]').value;
+
+      axios.put(formEl.action, {
+          phone,
+          email
+        })
+        .then(res => {
+          toastr.success('Successfully updated');
+          _hasDataChange = true;
+        })
+        .catch(err => {
+          if (err.status !== 422) {
+            throw err;
+          }
+
+          const errors = err.response.data.errors;
+
+          for (const property in errors) {
+            const msg = errors[property][0];
+            toastr.error(msg);
+
+          }
+
+        });
+
+    });
+
+    const myModalEl = document.getElementById('action-modal')
+    myModalEl.addEventListener('hidden.bs.modal', event => {
+      if (_hasDataChange) {
+        location.reload()
+      }
 
     });
   </script>
