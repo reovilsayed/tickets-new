@@ -64,17 +64,20 @@ class EventAnalyticsController extends Controller
             ->map(fn($order) => $order->extras)->flatten();
         return $extras;
     }
+
     public function ticketParticipanReport(
         Event $event,
-        EventTicketSellChart $ticketSoldChart
+        // EventTicketSellChart $ticketSoldChart
     ) {
-
         $report = EventReport::generate($event);
 
+        // $ticketSoldChart = $ticketSoldChart->build($event);
 
-        $ticketSoldChart = $ticketSoldChart->build($event);
-
-        return view('vendor.voyager.events.ticket-particiapants-analytics', compact('event', 'report', 'ticketSoldChart'));
+        return view('vendor.voyager.events.ticket-particiapants-analytics', [
+            'event' => $event,
+            'report' => $report,
+            // 'ticketSoldChart' => $ticketSoldChart,
+        ]);
     }
 
     public function salesReport(

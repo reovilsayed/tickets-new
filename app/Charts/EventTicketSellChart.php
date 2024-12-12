@@ -31,7 +31,6 @@ class EventTicketSellChart
             return $array->keys();
         })->flatten()->unique();
 
-
         $chart =  $this->chart->lineChart()
             ->setTitle('Ticket sales of ' . $event->name)
             ->setSubtitle('Ticket sales report.');
