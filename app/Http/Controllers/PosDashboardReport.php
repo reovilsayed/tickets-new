@@ -86,4 +86,13 @@ class PosDashboardReport extends Controller
 
         return response()->json();
     }
+
+    public function sms(Order $order)
+    {
+        $order->send_message = true;
+
+        OrderIsPaid::dispatch($order);
+
+        return response()->json();
+    }
 }

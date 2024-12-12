@@ -245,7 +245,7 @@
                         @else
                           <button class="btn btn-danger">Marked</button>
                         @endif
-                        <span class="d-none" id="ticket-action-url-{{ $order->id }}" data-email-url="{{ route('order.email', $order) }}"></span>
+                        <span class="d-none" id="ticket-action-url-{{ $order->id }}" data-email-url="{{ route('order.email', $order) }}" data-sms-url="{{ route('order.sms', $order) }}"></span>
                         <button type="button" class="btn btn-primary ticket-action-button" data-order-no="{{ $order->id }}" data-has-product="{{ $order->tickets_count === 0 ? 0 : 1 }}" data-url="{{ route('order.update', $order) }}" data-email="{{ $order->billing->email ?? $order->user->email }}" data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}" data-bs-toggle="modal" data-bs-target="#action-modal">
                           Action
                         </button>
@@ -318,7 +318,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-danger">Send SMS</button>
+          <button id="send-sms-ticket" class="btn btn-danger">Send SMS</button>
           <button id="email-ticket" class="btn btn-success">Send Email</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
@@ -332,8 +332,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <script>
-    const emailTicket = document.getElementById("email-ticket");
-    emailTicket.addEventListener('click', e => {
+    const emailTicketBtn = document.getElementById("email-ticket");
+    emailTicketBtn.addEventListener('click', e => {
       const csk = confirm('Are you sure?');
 
       if (!csk) {
@@ -342,6 +342,18 @@
 
       const url = document.getElementById(`ticket-action-url-${e.target.dataset.orderNo}`).dataset.emailUrl;
       axios.put(url).then(res => toastr.success('Email send to the user.'))
+
+    });
+    const sendSmsTicketBtn = document.getElementById("send-sms-ticket");
+    sendSmsTicketBtn.addEventListener('click', e => {
+      const csk = confirm('Are you sure?');
+
+      if (!csk) {
+        return;
+      }
+
+      const url = document.getElementById(`ticket-action-url-${e.target.dataset.orderNo}`).dataset.smsUrl;
+      axios.put(url).then(res => toastr.success('SMS send to the user.'))
 
     });
 
@@ -361,15 +373,23 @@
         const hasProduct = el.dataset.hasProduct;
 
         if (hasProduct === '0') {
-          emailTicket.classList.add('d-none')
+          emailTicketBtn.classList.add('d-none')
         }
 
         if (hasProduct !== '0') {
-          emailTicket.classList.remove('d-none')
+          emailTicketBtn.classList.remove('d-none')
         }
 
+        if (!el.dataset.phone) {
+          sendSmsTicketBtn.classList.add('d-none')
+        }
 
-        emailTicket.dataset.orderNo = el.dataset.orderNo;
+        if (el.dataset.phone) {
+          sendSmsTicketBtn.classList.remove('d-none')
+        }
+
+        emailTicketBtn.dataset.orderNo = el.dataset.orderNo;
+        sendSmsTicketBtn.dataset.orderNo = el.dataset.orderNo;
 
         const formEl = document.getElementById('ticket-action-form');
         const emailEl = formEl.querySelector('[name=email]');
