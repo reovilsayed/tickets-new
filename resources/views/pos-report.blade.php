@@ -245,6 +245,7 @@
                         @else
                           <button class="btn btn-danger">Marked</button>
                         @endif
+                        <span class="d-none" id="ticket-action-url" data-email-url="{{ route('order.email', $order) }}"></span>
                         <button type="button" class="btn btn-primary ticket-action-button" data-url="{{ route('order.update', $order) }}" data-email="{{ $order->billing->email ?? $order->user->email }}" data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}" data-bs-toggle="modal" data-bs-target="#action-modal">
                           Action
                         </button>
@@ -318,7 +319,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-danger">Send SMS</button>
-          <button class="btn btn-success">Send Email</button>
+          <button id="email-ticket" class="btn btn-success">Send Email</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
@@ -331,6 +332,19 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <script>
+    const emailTicket = document.getElementById("email-ticket");
+    emailTicket.addEventListener('click', e => {
+      const csk = confirm('Are you sure?');
+
+      if (!csk) {
+        return;
+      }
+
+      const url = document.getElementById('ticket-action-url').dataset.emailUrl;
+      axios.put(url).then(res => toastr.success('Email send to the user.'))
+
+    });
+
     const ticketTableBody = document.getElementById("ticket-table-body");
     ticketTableBody.addEventListener('click', (e) => {
       const el = e.target;

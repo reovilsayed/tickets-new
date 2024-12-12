@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderIsPaid;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Ticket;
@@ -72,6 +73,15 @@ class PosDashboardReport extends Controller
         $order->billing->phone = $attributes['phone'];
         $order->billing->email = $attributes['email'];
         $order->save();
+
+        return response()->json();
+    }
+
+    public function email(Order $order)
+    {
+        $order->send_email = true;
+
+        OrderIsPaid::dispatch($order);
 
         return response()->json();
     }

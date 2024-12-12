@@ -29,7 +29,7 @@ class SendEmailToCustomer
 
         $order = $event->order;
         Log::info('order event ' . $event->order->id);
-   
+
         if ($order->send_email) {
 
             $products = $order->tickets->groupBy('product_id');
