@@ -245,8 +245,8 @@
                         @else
                           <button class="btn btn-danger">Marked</button>
                         @endif
-                        <span class="d-none" id="ticket-action-url" data-email-url="{{ route('order.email', $order) }}"></span>
-                        <button type="button" class="btn btn-primary ticket-action-button" data-url="{{ route('order.update', $order) }}" data-email="{{ $order->billing->email ?? $order->user->email }}" data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}" data-bs-toggle="modal" data-bs-target="#action-modal">
+                        <span class="d-none" id="ticket-action-url-{{ $order->id }}" data-email-url="{{ route('order.email', $order) }}"></span>
+                        <button type="button" class="btn btn-primary ticket-action-button" data-order-no="{{ $order->id }}" data-has-product="{{ $order->tickets_count === 0 ? 0 : 1 }}" data-url="{{ route('order.update', $order) }}" data-email="{{ $order->billing->email ?? $order->user->email }}" data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}" data-bs-toggle="modal" data-bs-target="#action-modal">
                           Action
                         </button>
                       </td>
@@ -340,7 +340,7 @@
         return;
       }
 
-      const url = document.getElementById('ticket-action-url').dataset.emailUrl;
+      const url = document.getElementById(`ticket-action-url-${e.target.dataset.orderNo}`).dataset.emailUrl;
       axios.put(url).then(res => toastr.success('Email send to the user.'))
 
     });
@@ -358,6 +358,18 @@
 
       if (el.classList.contains('ticket-action-button')) {
         const url = el.dataset.url;
+        const hasProduct = el.dataset.hasProduct;
+
+        if (hasProduct === '0') {
+          emailTicket.classList.add('d-none')
+        }
+
+        if (hasProduct !== '0') {
+          emailTicket.classList.remove('d-none')
+        }
+
+
+        emailTicket.dataset.orderNo = el.dataset.orderNo;
 
         const formEl = document.getElementById('ticket-action-form');
         const emailEl = formEl.querySelector('[name=email]');

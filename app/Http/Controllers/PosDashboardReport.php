@@ -28,6 +28,7 @@ class PosDashboardReport extends Controller
             ->when(request()->filled('search'), function ($query) {
                 $query->whereHas('user', fn($q) => $q->where('name', 'LIKE', '%' . request()->search . '%')->orWhere('email', 'LIKE', '%' . request()->search . '%')->orWhere('contact_number', 'LIKE', '%' . request()->search . '%'));
             })
+            ->withCount('tickets')
             ->paginate(50);
 
         $tickets = Ticket::where('pos_id', $user->id)
