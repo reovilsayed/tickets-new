@@ -23,9 +23,9 @@ class PosDashboardReport extends Controller
             ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))
             ->when(request()->filled('date'), fn($query) => $query->whereBetween('created_at', [Carbon::parse(request()->date)->startOfDay(), Carbon::parse(request()->date)->endOfDay()]))
             ->when(request()->filled('alert'), fn($query) => $query->where('alert', request()->alert))
-          
+
             ->when(request()->filled('search'), function ($query) {
-                $query->whereHas('user', fn($q) => $q->where('name','LIKE','%'.request()->search.'%')->orWhere('email','LIKE','%'.request()->search.'%')->orWhere('contact_number','LIKE','%'.request()->search.'%'));
+                $query->whereHas('user', fn($q) => $q->where('name', 'LIKE', '%' . request()->search . '%')->orWhere('email', 'LIKE', '%' . request()->search . '%')->orWhere('contact_number', 'LIKE', '%' . request()->search . '%'));
             })
             ->paginate(50);
 
@@ -49,5 +49,16 @@ class PosDashboardReport extends Controller
             ->get()
             ->map(fn($order) => $order->extras)->flatten();
         return $extras;
+    }
+
+    public function index(Request $request, Order $order)
+    {
+        $attributes = $request->validate([
+            'note' => ['nullable', 'string', 'max:1500']
+        ]);
+
+        $order->update(['alert' => 'marked', 'note' => $attributes['note']]);
+
+        return redirect()->back()->with('sucess', 'Order marked');
     }
 }

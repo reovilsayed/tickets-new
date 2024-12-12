@@ -306,13 +306,7 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     });
     Route::post('api/create-order', [ApiController::class, 'createOrder']);
     Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
-    Route::get('/pos/{order}/mark', function (Order $order) {
-        
-        $order->update([
-            'alert' => 'marked'
-        ]);
-        return redirect()->back()->with('sucess', 'Order marked');
-    })->name('order.marked');
+    Route::get('/pos/{order}/mark', [PosDashboardReport::class, 'index'])->name('order.marked');
     Route::get('/pos/reports', PosDashboardReport::class);
     Route::get('/pos/{page}', function () {
         return view('pos');
@@ -334,8 +328,8 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
         }
 
         // Determine the current event based on the request or default to the first event
-        $event = $request->filled('event_id') 
-            ? Event::find($request->event_id) 
+        $event = $request->filled('event_id')
+            ? Event::find($request->event_id)
             : $events->first() ?? new Event();
 
         // Fetch the user's orders excluding those with 'invite' as the payment method
