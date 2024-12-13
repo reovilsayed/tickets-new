@@ -26,28 +26,26 @@ class SendEmailToCustomer
      */
     public function handle(OrderIsPaid $event): void
     {
-
         $order = $event->order;
-        Log::info('order event ' . $event->order->id);
 
-        if ($order->send_email) {
+        if (!$order->send_email) {
+            return;
+        }
 
-            $products = $order->tickets->groupBy('product_id');
-            foreach ($products as $key => $tickets) {
-                $product = Product::find($key);
+        $products = $order->tickets->groupBy('product_id');
 
-                if ($order->user) {
-                    Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));
-                } else {
+        foreach ($products as $key => $tickets) {
+            $product = Product::find($key);
 
-                    if ($order->payment_method == 'invite') {
+            if ($order->payment_method == 'invite') {
+                Mail::to($order->billing->email ?? $order->user->email)
+                    ->send(new InviteDownload($order, $product, null));
 
-                        Mail::to($order->user->email)->send(new InviteDownload($order, $product, null));
-                    } else {
-                        Mail::to($order->user->email)->send(new TicketDownload($order, $product, null));
-                    }
-                }
+                continue;
             }
+
+            Mail::to($order->billing->email ?? $order->user->email)
+                ->send(new TicketDownload($order, $product, null));
         }
     }
 }
