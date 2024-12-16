@@ -23,6 +23,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EnterzoneContoller;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\PosDashboardReport;
+use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
 use App\Models\User;
@@ -293,6 +294,8 @@ Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['auth', 'rol
     Route::get('/', [EnterzoneContoller::class, 'enterForm'])->name('enter');
     Route::post('/enter', [EnterzoneContoller::class, 'enter'])->name('enter.post');
     Route::get('/scanner', [EnterzoneContoller::class, 'scanner'])->name('scanner');
+    Route::get('{zone}/{ticket}/checkin', [ZoneScannerController::class, 'checkIn'])->name('checkin');
+    Route::get('{zone}/{ticket}/checkout', [ZoneScannerController::class, 'checkOut'])->name('checkout');
 });
 Route::group(['prefix' => 'food-zone', 'as' => 'extraszone.', 'middleware' => ['auth', 'role:staffzone']], function () {
     Route::get('/', [EnterzoneContoller::class, 'enterExtraForm'])->name('enter');

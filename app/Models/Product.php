@@ -8,17 +8,20 @@ use Carbon\CarbonPeriod;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Session;
 
 class Product extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
+
     protected $casts = [
         'expired_at' => 'datetime',
         'start_date' => 'datetime',
         'end_date' => 'datetime',
-        'dates' => 'json'
+        'dates' => 'json',
+        'one_time' => 'boolean',
+        'check_in' => 'boolean',
     ];
 
     public function dates(): Attribute

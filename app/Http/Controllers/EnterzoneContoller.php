@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ticket;
 use App\Models\Zone;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class EnterzoneContoller extends Controller
@@ -15,7 +17,7 @@ class EnterzoneContoller extends Controller
     public function enterExtraForm()
     {
         session()->forget('enter-extra-zone');
-    return view('pages.zone.extra-enter');
+        return view('pages.zone.extra-enter');
     }
 
     public function enter(Request $request)
@@ -48,10 +50,36 @@ class EnterzoneContoller extends Controller
         if (session()->has('enter-zone') == false) {
             abort(403);
         }
+
         $zone = session()->get('enter-zone')['zone'];
+
         $event = session()->get('enter-zone')['event'];
-        return view('pages.zone.scanner', compact('zone', 'event'));
+
+        $tickets = Ticket::with('user', 'product')
+            ->when(
+                request()->filled('q'),
+                function (Builder $query) {
+                    return $query->whereHas('user', function (Builder $query) {
+                        $q = request()->q;
+                        $query->where('name', 'LIKE', "%{$q}%")
+                            ->orWhere('l_name', 'LIKE', "%{$q}%")
+                            ->orWhere('email', 'LIKE', "%{$q}%")
+                            ->orWhere('contact_number', 'LIKE', "%{$q}%")
+                            ->orWhere('vatNumber', 'LIKE', "%{$q}%");
+                    })->orWhere('ticket', 'LIKE', '%' . request()->q . '%');
+                }
+            )
+            ->where('event_id', $event->id)
+            ->whereHas('product', fn(Builder $query) => $query->whereRaw('json_contains(zones, JSON_QUOTE(?))', ["{$zone->id}"]))
+            ->paginate(30);
+
+        return view('pages.zone.scanner', [
+            'zone' => $zone,
+            'event' => $event,
+            'tickets' => $tickets,
+        ]);
     }
+
     public function scannerExtra()
     {
         if (session()->has('enter-extra-zone') == false) {
