@@ -100,38 +100,38 @@ class EventAnalyticsController extends Controller
         $order = [
             'total' => [
                 'total' => [
-                    'total' => Sohoj::price($totalOrder->online_cost + $totalOrder->pos_cost),
-                    'withoutTax' => Sohoj::price($totalOrder->online_cost + $totalOrder->pos_cost - ($totalOrder->online_tax + $totalOrder->pos_tax))
+                    'total' => Sohoj::price($totalOrder?->online_cost + $totalOrder?->pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder?->online_cost + $totalOrder?->pos_cost - ($totalOrder?->online_tax + $totalOrder?->pos_tax))
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price($totalOrder->refund_online_cost + $totalOrder->refund_pos_cost),
-                    'withoutTax' => Sohoj::price($totalOrder->refund_online_cost + $totalOrder->refund_pos_cost - ($totalOrder->refund_online_tax + $totalOrder->refund_pos_tax))
+                    'total' => Sohoj::price($totalOrder?->refund_online_cost + $totalOrder?->refund_pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder?->refund_online_cost + $totalOrder?->refund_pos_cost - ($totalOrder?->refund_online_tax + $totalOrder?->refund_pos_tax))
                 ],
             ],
             'digital' => [
                 'total' => [
-                    'total' => Sohoj::price($totalOrder->online_cost),
-                    'withoutTax' => Sohoj::price($totalOrder->online_cost - $totalOrder->online_tax),
+                    'total' => Sohoj::price($totalOrder?->online_cost),
+                    'withoutTax' => Sohoj::price($totalOrder?->online_cost - $totalOrder?->online_tax),
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price($totalOrder->refund_online_cost),
-                    'withoutTax' => Sohoj::price($totalOrder->refund_online_tax),
+                    'total' => Sohoj::price($totalOrder?->refund_online_cost),
+                    'withoutTax' => Sohoj::price($totalOrder?->refund_online_tax),
                 ],
             ],
             'physical' => [
                 'total' => [
-                    'total' => Sohoj::price($totalOrder->pos_cost),
-                    'withoutTax' => Sohoj::price($totalOrder->pos_cost - $totalOrder->pos_tax),
+                    'total' => Sohoj::price($totalOrder?->pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder?->pos_cost - $totalOrder?->pos_tax),
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price($totalOrder->refund_pos_cost),
-                    'withoutTax' => Sohoj::price($totalOrder->refund_pos_tax),
+                    'total' => Sohoj::price($totalOrder?->refund_pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder?->refund_pos_tax),
                 ],
             ],
         ];
 
         $lineChart = $orderSalesLineChart->build($event);
-        $pieChart = $orderSalesByTicketPiChart->build($totalOrder->online_cost, $totalOrder->pos_cost);
+        $pieChart = $orderSalesByTicketPiChart->build($totalOrder?->online_cost, $totalOrder?->pos_cost);
 
         return view('vendor.voyager.events.ticket-sales-analytics', [
             'event' => $event,
