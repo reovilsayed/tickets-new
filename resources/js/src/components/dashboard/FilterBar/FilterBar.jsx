@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./FilterBar.css";
 import { useFetch } from "../../../lib/hooks/useFetch";
 import { formatDate } from "../../../lib/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDate, changeEvent } from "../../../lib/features/filterSlice";
+import { useCart } from "react-use-cart";
 
 function FilterBar() {
+    const { emptyCart } = useCart();
     const dispatch = useDispatch();
     const { data: filterEvents } = useFetch(["filter-events"], "/api/events");
 
@@ -16,6 +18,9 @@ function FilterBar() {
     const [selectedDate, setSelectedDate] = useState(dateOfEvent);
 
     const handleEventSelect = (event) => {
+        var res = confirm("The cart will reset upon changing event");
+        if (!res) return;
+        emptyCart();
         const selectedEvent = filterEvents?.data?.find(
             (e) => e.id === parseInt(event.target.value, 10)
         );
@@ -81,11 +86,13 @@ function FilterBar() {
                                 onChange={handleDateSelect}
                             >
                                 <option value="">All</option>
-                                {selectedEvent?.dates?.map((eventDate, index) => (
-                                    <option key={index} value={eventDate}>
-                                        {formatDate(eventDate) ?? "N/A"}
-                                    </option>
-                                ))}
+                                {selectedEvent?.dates?.map(
+                                    (eventDate, index) => (
+                                        <option key={index} value={eventDate}>
+                                            {formatDate(eventDate) ?? "N/A"}
+                                        </option>
+                                    )
+                                )}
                             </select>
                         </div>
                     </div>
