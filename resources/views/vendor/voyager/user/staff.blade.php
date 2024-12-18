@@ -79,11 +79,11 @@
             <div class="panel-body">
                 <div class="row">
 
-                    @foreach ($data as $key => $product)
+                    @foreach ($products as $product)
                         <div class="col-md-4">
                             @include('vendor.voyager.events.partial.card', [
-                                'label' => $key,
-                                'value' => $product,
+                                'label' => $product->name,
+                                'value' => $product->total,
                             ])
                         </div>
                     @endforeach

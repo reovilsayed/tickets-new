@@ -41,15 +41,34 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
             return $ticket->map(fn($data) => ['log' => $data->pivot->action . ' at ' . $data->created_at->format('Y-m-d')]);
         });
 
-        $products = $user->scans->groupBy(function ($ticket) {
-            return $ticket->product->name;
-        })->map(fn($products) => $products->count())->toArray();
-        $zones = $user->zones->groupBy(function ($zone) {
-            return $zone->name;
-        })->map(fn($products) => $products->count())->toArray();
-        $data = array_merge($products, $zones);
+        // $products = $user->scans->groupBy(function ($ticket) {
+        //     return $ticket->product->name;
+        // })->map(fn($products) => $products->count())->toArray();
 
-        return view('vendor.voyager.user.staff', compact('user', 'logs', 'data'));
+        // $zones = $user->zones->groupBy(function ($zone) {
+        //     return $zone->name;
+        // })->map(fn($products) => $products->count())->toArray();
+
+        $products = \DB::table('tickets')
+            ->select('products.name')
+            ->selectRaw('count(*) as total')
+            ->join('ticket_user', 'tickets.id', 'ticket_user.ticket_id')
+            ->join('products', 'products.id', 'tickets.product_id')
+            ->where('ticket_user.user_id', $user->id)
+            ->groupBy('tickets.product_id')
+            ->get();
+
+        $zones = \DB::table('zones')
+            ->select('zones.name')
+            ->selectRaw('count(*) as total')
+            ->join('ticket_user', 'zones.id', 'ticket_user.zone_id')
+            ->where('ticket_user.user_id', $user->id)
+            ->groupBy('zones.id')
+            ->get();
+
+        $products = $products->merge($zones);
+
+        return view('vendor.voyager.user.staff', compact('user', 'logs', 'products'));
     })->name('voyager.users.staff');
 
 
