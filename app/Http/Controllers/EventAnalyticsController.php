@@ -144,16 +144,25 @@ class EventAnalyticsController extends Controller
 
     public function customerReport(Event $event)
     {
-        $users = $event->orders()->has('user')->when(request()->filled('q'), function ($query) {
-            return $query->whereHas('user', function ($query) {
-                $query->where('name', 'LIKE', '%' . request()->q . '%')
-                    ->orWhere('l_name', 'LIKE', '%' . request()->q . '%')
-                    ->orWhere('email', 'LIKE', '%' . request()->q . '%')
-                    ->orWhere('contact_number', 'LIKE', '%' . request()->q . '%')
-                    ->orWhere('vatNumber', 'LIKE', '%' . request()->q . '%');
-            });
-        })->distinct('user_id')->pluck('user_id')->map(fn($user) => User::find($user));
-        return view('vendor.voyager.events.ticket-customer-report', compact('users', 'event'));
+        $users = User::whereHas('orders', function (Builder $builder) use ($event) {
+            return $builder->whereBelongsTo($event);
+        })
+            ->where(function (Builder $builder) {
+                if (request()->filled('q')) {
+                    $q = request()->q;
+                    return $builder->where('name', 'LIKE', "%{$q}%")
+                        ->orWhere('l_name', 'LIKE', "%{$q}%")
+                        ->orWhere('email', 'LIKE', "%{$q}%")
+                        ->orWhere('contact_number', 'LIKE', "%{$q}%")
+                        ->orWhere('vatNumber', 'LIKE', "%{$q}%");
+                }
+            })
+            ->paginate(40);
+
+        return view('vendor.voyager.events.ticket-customer-report', [
+            'users' => $users,
+            'event' => $event,
+        ]);
     }
 
     public function invitesReport(Event $event)
