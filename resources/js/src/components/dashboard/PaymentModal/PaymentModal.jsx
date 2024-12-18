@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./PaymentModal.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { close } from "../../../lib/features/paymentModalSlice";
 import { useCart } from "react-use-cart";
 import axios from "axios";
@@ -9,6 +9,7 @@ import { Dropdown, DropdownButton, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import PhoneNumberInput from "./PhoneNumberInput";
 import { useFetch } from "../../../lib/hooks/useFetch";
+import { toast } from "react-toastify";
 
 const PaymentModal = ({ open }) => {
     const [formData, setFormData] = useState({
@@ -34,13 +35,14 @@ const PaymentModal = ({ open }) => {
 
     const [orderRequestProcessing, setOrderRequestProcessing] = useState(false);
 
-    
-    const { data : withdrawData } = useFetch(["withdraw_checked"], `${import.meta.env.VITE_APP_URL}/api/withdraw_checked`)
+    const { data: withdrawData } = useFetch(
+        ["withdraw_checked"],
+        `${import.meta.env.VITE_APP_URL}/api/withdraw_checked`
+    );
 
     useEffect(() => {
-      
-        setWithdraw(withdrawData?.checked)
-    }, [withdrawData])
+        setWithdraw(withdrawData?.checked);
+    }, [withdrawData]);
     useEffect(() => {
         const modalElement = document.getElementById("paymentModal");
 
@@ -62,12 +64,17 @@ const PaymentModal = ({ open }) => {
 
     const { items, cartTotal, emptyCart } = useCart();
 
-
     const navigate = useNavigate();
+    const filterEvent = useSelector((state) => state.filter.event);
 
     const submitOrder = async () => {
+        if (!filterEvent?.id) {
+            toast("No event was selected!");
+            return;
+        }
         setOrderRequestProcessing(true);
         const orderData = {
+            event_id: filterEvent.id,
             biling: formData,
             tickets: items.filter((item) => item.isTicket),
             extras: items.filter((item) => !item.isTicket),
@@ -172,8 +179,9 @@ const PaymentModal = ({ open }) => {
                 <div className="payment-modal-backdrop payment-modal-fade-in"></div>
             )}
             <div
-                className={`modal payment-modal ${open ? "payment-modal-fade-in" : "payment-modal-fade-out"
-                    }`}
+                className={`modal payment-modal ${
+                    open ? "payment-modal-fade-in" : "payment-modal-fade-out"
+                }`}
                 id="paymentModal"
                 tabIndex="-1"
                 aria-labelledby="paymentModalLabel"
@@ -222,8 +230,8 @@ const PaymentModal = ({ open }) => {
                                     <label htmlFor="emailInput">
                                         Email{" "}
                                         {formData["vatNumber"] ||
-                                            sendToMail ||
-                                            sendInvoiceToMail
+                                        sendToMail ||
+                                        sendInvoiceToMail
                                             ? ""
                                             : "(optional)"}
                                     </label>
@@ -237,11 +245,17 @@ const PaymentModal = ({ open }) => {
                                     />
                                 </div>
                                 {sendToPhone ? (
-                                    <PhoneNumberInput value={formData["phone"]} onChange={value => setFormData((prev) => {
-                                        return { ...prev, phone: '+' + value };
-                                    })} />
-
-
+                                    <PhoneNumberInput
+                                        value={formData["phone"]}
+                                        onChange={(value) =>
+                                            setFormData((prev) => {
+                                                return {
+                                                    ...prev,
+                                                    phone: "+" + value,
+                                                };
+                                            })
+                                        }
+                                    />
                                 ) : (
                                     ""
                                 )}
@@ -300,7 +314,7 @@ const PaymentModal = ({ open }) => {
                                             placeholder="Enter discount"
                                         />
                                     </div> */}
-                                </div>  
+                                </div>
                                 <div className="row">
                                     <div className="col-md-6">
                                         <label
@@ -359,22 +373,24 @@ const PaymentModal = ({ open }) => {
                                             </label>
                                         </div>
 
-                                        {items.filter((item) => item.isTicket).length > 0 && (<div class="form-check">
-                                            <input
-                                                class="form-check-input"
-                                                type="checkbox"
-                                                value={physicalQr}
-                                                checked={physicalQr}
-                                                onChange={handlePhysicalQr}
-                                                id="printTicketCheck"
-                                            />
-                                            <label
-                                                class="form-check-label"
-                                                htmlFor="printTicketCheck"
-                                            >
-                                                Physical QR Code
-                                            </label>
-                                        </div>
+                                        {items.filter((item) => item.isTicket)
+                                            .length > 0 && (
+                                            <div class="form-check">
+                                                <input
+                                                    class="form-check-input"
+                                                    type="checkbox"
+                                                    value={physicalQr}
+                                                    checked={physicalQr}
+                                                    onChange={handlePhysicalQr}
+                                                    id="printTicketCheck"
+                                                />
+                                                <label
+                                                    class="form-check-label"
+                                                    htmlFor="printTicketCheck"
+                                                >
+                                                    Physical QR Code
+                                                </label>
+                                            </div>
                                         )}
                                     </div>
                                     {physicalQr && (
@@ -442,9 +458,9 @@ const PaymentModal = ({ open }) => {
                                 disabled={
                                     !formData["name"] ||
                                     (formData["vatNumber"] ||
-                                        sendToMail ||
-                                        sendToPhone ||
-                                        sendInvoiceToMail
+                                    sendToMail ||
+                                    sendToPhone ||
+                                    sendInvoiceToMail
                                         ? formData["email"] || formData["phone"]
                                             ? false
                                             : true
