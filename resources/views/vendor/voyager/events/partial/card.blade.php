@@ -1,7 +1,7 @@
 @props(['label', 'value', 'button' => null])
-<div class="card">
+<div class="card" title="{{ $label }}">
     <h3>
-        {{ $label }}
+        {{ Str::limit($label, 15) }}
     </h3>
     <h1>
         {{ $value }}

@@ -64,9 +64,9 @@
         h1{
             font-size: 40px;
             font-weight: bold;
-            color: #000; 
+            color: #000;
         }
-      
+
     </style>
 @endsection
 @endsection
@@ -104,7 +104,7 @@
                                 <th>
                                     Logs
                                 </th>
-                    
+
                             </tr>
                         </thead>
                         <tbody>
@@ -130,7 +130,7 @@
                                             @endforeach
                                         </ul>
                                     </td>
-                                
+
                                 </tr>
                             @endforeach
                         </tbody>
