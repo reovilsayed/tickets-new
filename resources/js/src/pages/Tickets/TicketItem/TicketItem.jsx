@@ -4,6 +4,7 @@ import { formatDateRange, formatPrice, verifyImage } from "../../../lib/utils";
 import { useDispatch } from "react-redux";
 import { open } from "../../../lib/features/itemInfoModalSlice";
 import { useCart } from "react-use-cart";
+import { toast } from "react-toastify";
 
 const TicketItem = ({ ticket }) => {
     const dispatch = useDispatch();
@@ -19,7 +20,13 @@ const TicketItem = ({ ticket }) => {
             className={`ticket-item-container col-lg-2 col-md-3 col-sm-3 col-6 my-hover-effect g-3 ${
                 active ? "active" : ""
             }`}
-            onClick={() => addItem({ ...ticket, isTicket: true })}
+            onClick={() => {
+                if (!(item?.quantity > 0)) {
+                    toast("Cannot add to cart as no tickets are available!");
+                    return;
+                }
+                addItem({ ...ticket, isTicket: true });
+            }}
         >
             <div className="ticket-item-card">
                 {active ? (

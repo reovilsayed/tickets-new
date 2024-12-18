@@ -109,6 +109,30 @@ function InfoModal() {
                                     </div>
 
                                     <div className="accordin-item d-flex align-items-start mb-3">
+                                        {item?.quantity ? (
+                                            <>
+                                                <div className="me-3">
+                                                    <i className="fa fa-weight fa-2x"></i>
+                                                </div>
+                                                <div>
+                                                    <h5>Quantity</h5>
+                                                    <h6>
+                                                        {item?.quantity ?? 0}
+                                                    </h6>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div>
+                                                    <h5>
+                                                        No available tickets
+                                                    </h5>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className="accordin-item d-flex align-items-start mb-3">
                                         <div className="me-3">
                                             <i className="fa fa-info-circle fa-2x"></i>
                                         </div>
