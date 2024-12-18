@@ -7,7 +7,6 @@ use App\Charts\OrderSalesByTicketChart;
 use App\Charts\OrderSalesChart;
 use App\Models\Event;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Services\CheckoutService;
@@ -242,6 +241,10 @@ class EventAnalyticsController extends Controller
 
     public function checkinReport(Event $event, Request $request)
     {
+        $staffs = User::select(['id', 'name', 'l_name'])
+            ->where('role_id', 4)
+            ->get();
+
         $tickets = $event->tickets()
             ->with([
                 'user:id,name,l_name,email,contact_number',
@@ -273,7 +276,14 @@ class EventAnalyticsController extends Controller
             ->selectRaw('count(*) as total')
             ->join('ticket_user', 'tickets.id', 'ticket_user.ticket_id')
             ->join('products', 'products.id', 'tickets.product_id')
-            // ->where('ticket_user.user_id', 1124)
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('ticket_user.user_id', $request->staff)
+            )
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('ticket_user.created_at', $request->date)
+            )
             ->groupBy('tickets.product_id')
             ->get();
 
@@ -281,7 +291,14 @@ class EventAnalyticsController extends Controller
             ->select('zones.name')
             ->selectRaw('count(*) as total')
             ->join('ticket_user', 'zones.id', 'ticket_user.zone_id')
-            // ->where('ticket_user.user_id', 1124)
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('ticket_user.user_id', $request->staff)
+            )
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('ticket_user.created_at', $request->date)
+            )
             ->groupBy('zones.id')
             ->get();
 
@@ -289,6 +306,7 @@ class EventAnalyticsController extends Controller
 
         return view('vendor.voyager.events.checkin', [
             'event' => $event,
+            'staffs' => $staffs,
             'tickets' => $tickets,
             'products' => $products,
         ]);

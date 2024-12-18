@@ -97,13 +97,36 @@
 @endsection
 @section('content')
   <div class="container">
-    <h1>
-      {{ $event->name }} - Analytics
-    </h1>
-
+    <h1>{{ $event->name }} - Analytics</h1>
     <hr>
     @include('vendor.voyager.events.partial.buttons')
     <hr>
+    <form action="">
+      <div class="row">
+        <div class="col-md-4">
+
+          <div class="form-group">
+            <input value="{{ request()->date }}" name="date" type="date" id="date" class="form-control">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <select name="staff" id="staff" class="form-control">
+              <option value="">Select Staff</option>
+              @foreach ($staffs as $staff)
+                <option value="{{ $staff->id }}" @selected($staff->id == request('staff'))>{{ $staff->fullName() }}</option>
+              @endforeach
+            </select>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="search-group">
+            <button class="btn btn-custom"><i class="voyager-search"></i></button>
+          </div>
+        </div>
+
+      </div>
+    </form>
     <div class="panel">
       <div class="panel-body">
         <div class="row">
