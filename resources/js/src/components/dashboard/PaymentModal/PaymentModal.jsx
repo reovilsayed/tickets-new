@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./PaymentModal.css";
 import { useDispatch, useSelector } from "react-redux";
 import { close } from "../../../lib/features/paymentModalSlice";
@@ -10,8 +10,11 @@ import { useNavigate } from "react-router-dom";
 import PhoneNumberInput from "./PhoneNumberInput";
 import { useFetch } from "../../../lib/hooks/useFetch";
 import { toast } from "react-toastify";
+import { calculateExtrasFeesForTotalCart } from "../../../lib/utils";
 
 const PaymentModal = ({ open }) => {
+    const { items, cartTotal, emptyCart } = useCart();
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -32,6 +35,21 @@ const PaymentModal = ({ open }) => {
     const [physicalQr, setPhysicalQr] = useState(false);
     const [sendInvoiceToMail, setSendInvoiceToMail] = useState(false);
     const [printInvoice, setPrintInvoice] = useState(false);
+
+    const totalExtrasFees = useMemo(
+        () => calculateExtrasFeesForTotalCart(items),
+        [items]
+    );
+    const grandTotal = useMemo(
+        () => cartTotal + totalExtrasFees - parseFloat(formData["discount"]),
+        [cartTotal, totalExtrasFees, formData]
+    );
+    const [paidTotal, setPaidTotal] = useState(0.0);
+    const returnAmount = useMemo(
+        () =>
+            paidTotal > grandTotal ? parseFloat(paidTotal - grandTotal) : 0.0,
+        [grandTotal, paidTotal]
+    );
 
     const [orderRequestProcessing, setOrderRequestProcessing] = useState(false);
 
@@ -61,8 +79,6 @@ const PaymentModal = ({ open }) => {
 
     const dispatch = useDispatch();
     const handleClose = () => dispatch(close());
-
-    const { items, cartTotal, emptyCart } = useCart();
 
     const navigate = useNavigate();
     const filterEvent = useSelector((state) => state.filter.event);
@@ -273,7 +289,7 @@ const PaymentModal = ({ open }) => {
                                     />
                                 </div>
                                 <div className="form-group row mb-4">
-                                    <div className="col-md-4">
+                                    <div className="col-md-3">
                                         <label htmlFor="discountInput">
                                             Payment Method
                                         </label>
@@ -295,6 +311,55 @@ const PaymentModal = ({ open }) => {
                                             </option>
                                             <option value="Card">Card</option>
                                         </select>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="amountToPay">
+                                            Amount to Pay
+                                        </label>
+                                        <input
+                                            id="atp"
+                                            className="form-control"
+                                            name="atp"
+                                            value={parseFloat(
+                                                grandTotal
+                                            ).toFixed(2)}
+                                            readOnly
+                                            disabled
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="amountPaid">
+                                            Amount Paid
+                                        </label>
+                                        <input
+                                            id="ap"
+                                            className="form-control"
+                                            name="ap"
+                                            type="number"
+                                            value={paidTotal}
+                                            onChange={(event) =>
+                                                setPaidTotal(
+                                                    parseFloat(
+                                                        event.target.value
+                                                    )
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="amountPaid">
+                                            Amount to Return
+                                        </label>
+                                        <input
+                                            id="atr"
+                                            className="form-control"
+                                            name="atr"
+                                            value={parseFloat(
+                                                returnAmount
+                                            ).toFixed(2)}
+                                            readOnly
+                                            disabled
+                                        />
                                     </div>
                                     {/* <div className="col-md-8">
                                         <label htmlFor="discountInput">
