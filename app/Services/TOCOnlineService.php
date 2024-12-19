@@ -114,14 +114,14 @@ class TOCOnlineService
 
     public function getCustomer()
     {
-        // $accessToken = $this->getAccessTokenFromRefreshToken();
+         $token = $this->getAccessTokenFromRefreshToken();
 
 
-        // if (isset($accessToken['error'])) {
-        //     return $accessToken;
-        // }
-        $response = Http::withToken('15-341575-1929572-cfcdc85c1e10331bd05190cb56077d49c07b1c1671f74b168c129a7b1a8f9497')
-            ->get('https://api15.toconline.pt/api/customers/1116');
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/vnd.api+json',
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer ' . $token
+            ])->get('https://api15.toconline.pt/api/customers');
 
         return $response->json();
     }

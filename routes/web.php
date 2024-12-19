@@ -369,31 +369,23 @@ Route::get('/payment-confirm', function () {
     $order->save();
 });
 
-Route::get('test/{order}', function ($order) {
-    $order = Order::find($order);
-    $toco = new TOCOnlineService;
-    $response = $toco->createCommercialSalesDocument($order);
-    // $order->invoice_id = $response['id'];
-    // $order->invoice_url = $response['public_link'];
-    // $order->invoice_body = json_encode($response);
-    // $order->save();
-    dd($response);
-    // $tickets = DB::table('tickets')->whereNotNull('extras')->get();
-    //     foreach ($tickets as $ticket) {
-    //         $updatedExtras = json_decode($ticket->extras, true); // Decode JSON to array
+Route::get('test', function () {
+ $toc = new TOCOnlineService();
+ $customersData = $toc->getCustomer();
+ foreach ($customersData['data'] as $customer) {
+    $customerAttributes = [
+        'customer_id' => $customer['id'], // Assign customer_id (to update in case of match)
+        'business_name' => $customer['attributes']['business_name'],
+        'phone_number' => $customer['attributes']['phone_number'],
+        'email' => $customer['attributes']['email'],
+    ];
 
-    //         // Loop through each product in extras and set 'used' to 0
-    //         foreach ($updatedExtras as $id => $product) {
-    //             $updatedExtras[$id]['used'] = 0;
-    //         }
-    //         DB::table('tickets')
-    //         ->where('id', $ticket->id)
-    //         ->update([
-    //             'extras' => json_encode($updatedExtras)
-    //         ]);
-
-    //     }
-
+    // Update or create customer based on tax_registration_number
+    \App\Models\Customer::updateOrCreate(
+        ['tax_registration_number' => $customer['attributes']['tax_registration_number']], // Match condition
+        $customerAttributes // Attributes to update or insert
+    );
+}
 });
 // Route::get('send',function(){
 //     $order = Order::where('payment_status',1)->first();

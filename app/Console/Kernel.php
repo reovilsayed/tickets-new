@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('app:generate-auth-code')->everySixHours();
+        $schedule->command('sync:customers')->hourly();
     }
 
     /**
