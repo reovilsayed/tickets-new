@@ -369,24 +369,24 @@ Route::get('/payment-confirm', function () {
     $order->save();
 });
 
-Route::get('test', function () {
- $toc = new TOCOnlineService();
- $customersData = $toc->getCustomer();
- foreach ($customersData['data'] as $customer) {
-    $customerAttributes = [
-        'customer_id' => $customer['id'], // Assign customer_id (to update in case of match)
-        'business_name' => $customer['attributes']['business_name'],
-        'phone_number' => $customer['attributes']['phone_number'],
-        'email' => $customer['attributes']['email'],
-    ];
+// Route::get('test', function () {
+//  $toc = new TOCOnlineService();
+//  $customersData = $toc->getCustomer();
+//  foreach ($customersData['data'] as $customer) {
+//     $customerAttributes = [
+//         'customer_id' => $customer['id'], // Assign customer_id (to update in case of match)
+//         'business_name' => $customer['attributes']['business_name'],
+//         'phone_number' => $customer['attributes']['phone_number'],
+//         'email' => $customer['attributes']['email'],
+//     ];
 
-    // Update or create customer based on tax_registration_number
-    \App\Models\Customer::updateOrCreate(
-        ['tax_registration_number' => $customer['attributes']['tax_registration_number']], // Match condition
-        $customerAttributes // Attributes to update or insert
-    );
-}
-});
+//     // Update or create customer based on tax_registration_number
+//     \App\Models\Customer::updateOrCreate(
+//         ['tax_registration_number' => $customer['attributes']['tax_registration_number']], // Match condition
+//         $customerAttributes // Attributes to update or insert
+//     );
+// }
+// });
 // Route::get('send',function(){
 //     $order = Order::where('payment_status',1)->first();
 //     $message = 'Acesso e fatura para o evento: [%goto:' . route('digital-wallet', $order) . '%] !!';
