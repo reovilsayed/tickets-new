@@ -312,6 +312,50 @@ class EventAnalyticsController extends Controller
         ]);
     }
 
+    public function POS(Event $event, Request $request)
+    {
+        $staffs = User::select(['id', 'name', 'l_name'])
+            ->where('role_id', 6)
+            ->get();
+
+        $order = Order::selectRaw('sum(total) as total')
+            ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
+            ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
+            ->selectRaw('SUM(jt.qty) as extra_qty')
+            ->selectRaw('SUM(jt.qty * jt.price) as extra_total')
+            ->leftJoin(DB::raw('JSON_TABLE(orders.extras, \'$[*]\' COLUMNS (
+                        qty INT PATH \'$.qty\',
+                        price INT PATH \'$.price\')) AS jt'), function ($join) {
+                $join->on(DB::raw('1'), '=', DB::raw('1'));
+            })
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )
+            ->where('orders.event_id', $event->id)
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('orders.pos_id', $request->staff)
+            )
+            ->first();
+
+        $ticket = Ticket::selectRaw('count(*) as total')
+            ->where('event_id', $event->id)
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )
+            ->where('pos_id', 531)
+            ->first();
+
+        return view('vendor.voyager.events.pos', [
+            'event' => $event,
+            'order' => $order,
+            'staffs' => $staffs,
+            'ticket' => $ticket,
+        ]);
+    }
+
     public function giveAccessPage(Event $event, User $user)
     {
         $tickets = $event->products()->where('status', 1)->where('invite_only', 0)->get();

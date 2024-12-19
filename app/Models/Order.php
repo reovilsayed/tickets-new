@@ -29,6 +29,8 @@ class Order extends Model
         'refund_online_tax' => ConvertFullMoney::class,
         'refund_pos_cost' => ConvertFullMoney::class,
         'refund_pos_tax' => ConvertFullMoney::class,
+        'card_amount' => ConvertFullMoney::class,
+        'cash_amount' => ConvertFullMoney::class,
     ];
 
     public function user()
