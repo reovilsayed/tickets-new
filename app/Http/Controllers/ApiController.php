@@ -228,7 +228,7 @@ class ApiController extends Controller
             'billing' => request()->get('biling'),
             'user_id' => $this->getUser(request()->get('biling'))->id,
             'subtotal' => $request->get('subTotal'),
-            'discount' => $request->get('discount'),
+            'discount' => 0,
             'total' => $request->get('total'),
 
             'payment_method' => $request->get('paymentMethod') ?? 'Pos',
@@ -255,20 +255,14 @@ class ApiController extends Controller
         foreach ($tickets as $ticket) {
             $totalItems += $ticket['quantity'];
         }
-
-        // Calculate discount per unit
-        $totalDiscount = $orderData['discount'];
-        $discountPerUnit = $totalItems > 0 ? $totalDiscount / $totalItems : 0;
-
-
         // Adjust extra product prices
         if (count($extraProducts)) {
-            $orderExtras = collect($extraProducts)->map(function ($extra) use ($discountPerUnit) {
+            $orderExtras = collect($extraProducts)->map(function ($extra) {
                 if (@$extra['id']) {
 
 
                     if (@$extra['price']) {
-                        $extra['price'] -= $discountPerUnit; // Subtract discount per unit
+                        $extra['price'];
                     }
                     return [
                         'id' => $extra['id'],
@@ -307,7 +301,7 @@ class ApiController extends Controller
                     'user_id' => $orderData['user_id'],
                     'pos_id' => auth()->id(),
                     'ticket' => !$physicalQr ? uniqid() : null,
-                    'price' =>  $product->price - $discountPerUnit, // Apply discount per unit
+                    'price' =>  $product->price ,
                     'dates' => $product->dates,
                     'type' => 'pos'
                 ];

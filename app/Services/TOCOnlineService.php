@@ -157,8 +157,7 @@ class TOCOnlineService
             $extras = $order->getExtras()->map(function ($extra) {
                 $unitPrice = $extra->purchase_price;
                 return [
-                    'item_type' => 'Service',
-                    'item_code' => 'Serv001',
+                    'item_type' => 'Product',
                     'description' => $extra->display_name,
                     'quantity' => $extra->purchase_quantity,
                     'unit_price' => $unitPrice,
