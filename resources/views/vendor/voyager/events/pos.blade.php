@@ -1,5 +1,5 @@
 @extends('voyager::master')
-@section('page_title', $event->title . 'Orders')
+@section('page_title', $event->title . 'Pos Report')
 @section('css')
   <style>
     .pill {
@@ -149,7 +149,7 @@
           <div class="col-md-4">
             @include('vendor.voyager.events.partial.card', [
                 'label' => 'Total Ticket Sell',
-                'value' => $ticket->total ?? 0,
+                'value' => $tickets->sum('total') ?? 0,
             ])
           </div>
           <div class="col-md-4">
@@ -170,6 +170,30 @@
                 'value' => Sohoj::price($order?->total - $order?->extra_total),
             ])
           </div>
+          @foreach ($tickets as $ticket)
+            <div class="col-md-4">
+              <div class="card">
+                <h3>
+                  {{ $ticket->product?->name }}
+                </h3>
+                <h1>
+                  {{ $ticket->total }}
+                </h1>
+              </div>
+            </div>
+          @endforeach
+          @foreach ($extras as $extra)
+            <div class="col-md-4">
+              <div class="card">
+                <h3>
+                  {{ $extra->name }}
+                </h3>
+                <h1>
+                  {{ $extra->qty }}
+                </h1>
+              </div>
+            </div>
+          @endforeach
         </div>
       </div>
     </div>

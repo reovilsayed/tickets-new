@@ -339,20 +339,53 @@ class EventAnalyticsController extends Controller
             )
             ->first();
 
-        $ticket = Ticket::selectRaw('count(*) as total')
+        $extras = Order::select('jt.name as name')
+            ->selectRaw("SUM(jt.qty) AS qty")
+            ->from(DB::raw("
+            orders,
+            JSON_TABLE(
+                extras,
+                '$[*]' COLUMNS (
+                    id INT PATH '$.id',
+                    name VARCHAR(255) PATH '$.name',
+                    qty INT PATH '$.qty'
+                )
+            ) AS jt
+        "))
+            ->where('orders.event_id', $event->id)
+            ->whereNotNull('jt.id')
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('orders.pos_id', $request->staff)
+            )
+            ->groupBy('jt.id', 'jt.name')
+            ->get();
+
+        $tickets = Ticket::with('product:id,name')
+            ->select('product_id')
+            ->selectRaw('count(*) as total')
             ->where('event_id', $event->id)
             ->when(
                 $request->filled('date'),
                 fn($query) => $query->whereDate('created_at', $request->date)
             )
-            ->where('pos_id', 531)
-            ->first();
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('pos_id', $request->staff)
+            )
+            ->groupBy('product_id')
+            ->get();
 
         return view('vendor.voyager.events.pos', [
             'event' => $event,
             'order' => $order,
             'staffs' => $staffs,
-            'ticket' => $ticket,
+            'extras' => $extras,
+            'tickets' => $tickets,
         ]);
     }
 
