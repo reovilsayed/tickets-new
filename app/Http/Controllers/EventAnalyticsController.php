@@ -284,7 +284,7 @@ class EventAnalyticsController extends Controller
                 $request->filled('date'),
                 fn($query) => $query->whereDate('ticket_user.created_at', $request->date)
             )
-            ->groupBy('tickets.product_id')
+            ->groupBy('tickets.product_id', 'products.name')
             ->get();
 
         $zones = DB::table('zones')
@@ -299,7 +299,7 @@ class EventAnalyticsController extends Controller
                 $request->filled('date'),
                 fn($query) => $query->whereDate('ticket_user.created_at', $request->date)
             )
-            ->groupBy('zones.id')
+            ->groupBy('zones.id','zones.name')
             ->get();
 
         $products = $products->merge($zones);
