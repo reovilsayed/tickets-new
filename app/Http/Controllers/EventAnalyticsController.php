@@ -261,6 +261,7 @@ class EventAnalyticsController extends Controller
                         ->orWhere('vatNumber', 'LIKE', '%' . request()->q . '%');
                 })->orWhere('ticket', 'LIKE', '%' . request()->q . '%');
             })
+            ->where('event_id', $event->id)
             ->where(function ($query) {
                 $query->when(request()->filled('ticket'), function ($query) {
                     return $query->where('product_id', request()->ticket);
@@ -284,6 +285,7 @@ class EventAnalyticsController extends Controller
                 $request->filled('date'),
                 fn($query) => $query->whereDate('ticket_user.created_at', $request->date)
             )
+            ->where('tickets.event_id', $event->id)
             ->groupBy('tickets.product_id', 'products.name')
             ->get();
 
@@ -299,6 +301,7 @@ class EventAnalyticsController extends Controller
                 $request->filled('date'),
                 fn($query) => $query->whereDate('ticket_user.created_at', $request->date)
             )
+            ->where('zones.event_id', $event->id)
             ->groupBy('zones.id','zones.name')
             ->get();
 
