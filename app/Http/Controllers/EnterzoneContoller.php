@@ -70,7 +70,7 @@ class EnterzoneContoller extends Controller
                 }
             )
             ->where('event_id', $event->id)
-            ->whereHas('product', fn(Builder $query) => $query->whereRaw('json_contains(zones, JSON_QUOTE(?))', ["{$zone->id}"]))
+            ->whereHas('product', fn(Builder $query) => $query->whereJsonContains('zones', "{$zone->id}"))
             ->paginate(30);
 
         return view('pages.zone.scanner', [
