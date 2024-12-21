@@ -151,7 +151,7 @@
               <select name="ticket" id="" class="form-control">
                 <option value="">Select Ticket</option>
                 @foreach ($event->products as $product)
-                  <option value="{{ $product->id }}" @if ($product->id == request()->ticket) selected @endif>{{ $product->name }}</option>
+                  <option value="{{ $product->id }}" @if ($product->id == request()->ticket) selected @endif>{{ $product->internal_name ?? $product->name }}</option>
                 @endforeach
               </select>
             </div>
