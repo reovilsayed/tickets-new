@@ -336,6 +336,7 @@ class EventAnalyticsController extends Controller
                 fn($query) => $query->whereDate('created_at', $request->date)
             )
             ->where('orders.event_id', $event->id)
+            ->whereNotNull('orders.pos_id')
             ->when(
                 $request->filled('staff'),
                 fn($query) => $query->where('orders.pos_id', $request->staff)
@@ -380,6 +381,7 @@ class EventAnalyticsController extends Controller
                 $request->filled('staff'),
                 fn($query) => $query->where('pos_id', $request->staff)
             )
+            ->whereType('pos')
             ->groupBy('product_id')
             ->get();
 
