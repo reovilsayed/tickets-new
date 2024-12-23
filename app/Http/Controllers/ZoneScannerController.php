@@ -7,16 +7,19 @@ use App\Models\Zone;
 
 class ZoneScannerController extends Controller
 {
-    public function checkIn(Zone $zone, Ticket $ticket)
+    public function checkIn(Zone $zone, $ticket)
     {
+        $ticket = Ticket::whereAny(['id', 'ticket'], $ticket)
+            ->firstOrFail();
+
         // check if the ticket is valid for the current date
         if (!in_array(now()->format('Y-m-d'), $ticket->product->dates)) {
-            return redirect()->back()->withError(__('words.to_early_to_scan'));
+            return $this->withResponse(__('words.to_early_to_scan'));
         }
 
         // check if the ticket is valid for this zone
         if ($ticket->product->zones->doesntContain($zone)) {
-            return redirect()->back()->withError(__('words.invalid_zone_error'));
+            return $this->withResponse(__('words.invalid_zone_error'));
         }
 
         $isCheckedIn = $ticket->scanedBy()
@@ -25,7 +28,7 @@ class ZoneScannerController extends Controller
             ->exists();
 
         if ($ticket->product->one_time && $isCheckedIn) {
-            return redirect()->back()->withError(__('words.one_time_usage'));
+            return $this->withResponse(__('words.one_time_usage'));
         }
 
         $isCheckedInToday = $ticket->scanedBy()
@@ -34,21 +37,19 @@ class ZoneScannerController extends Controller
             ->whereDate('ticket_user.created_at', today())
             ->exists();
 
-        if ($isCheckedInToday) {
-            return redirect()->back()->withError(__('words.ticket_already_scanned_error'));
+        if (!$ticket->product->check_out && $isCheckedInToday) {
+            return $this->withResponse(__('words.ticket_already_scanned_error'));
         }
 
-        $logs = [
-            ...$ticket->logs,
-            [
-                'time' => now()->format('Y-m-d H:i:s'),
-                'action' => 'Checked in',
-                'zone' => $zone->name
-            ]
-        ];
-
         $ticket->update([
-            'logs' => $logs,
+            'logs' => [
+                ...$ticket->logs,
+                [
+                    'time' => now()->format('Y-m-d H:i:s'),
+                    'action' => 'Checked in',
+                    'zone' => $zone->name
+                ]
+            ],
             'check_in_zone' => $zone->id
         ]);
 
@@ -58,7 +59,7 @@ class ZoneScannerController extends Controller
                 ['action' => 'Checked in', 'zone_id' => $zone->id]
             );
 
-        return redirect()->back();
+        return $this->withResponse(__('words.ticket_checked_in'), 'success');
     }
 
     public function checkOut(Zone $zone, Ticket $ticket)
@@ -77,17 +78,15 @@ class ZoneScannerController extends Controller
             return redirect()->back()->withError(__('words.check_out_not_available'));
         }
 
-        $logs = [
-            ...$ticket->logs,
-            [
-                'time' => now()->format('Y-m-d H:i:s'),
-                'action' => 'Checked Out',
-                'zone' => $zone->name
-            ]
-        ];
-
         $ticket->update([
-            'logs' => $logs,
+            'logs' => [
+                ...$ticket->logs,
+                [
+                    'time' => now()->format('Y-m-d H:i:s'),
+                    'action' => 'Checked Out',
+                    'zone' => $zone->name
+                ]
+            ],
             'check_out_zone' => $zone->id
         ]);
 
@@ -97,5 +96,18 @@ class ZoneScannerController extends Controller
                 ['action' => 'Checked Out', 'zone_id' => $zone->id]
             );
         return redirect()->back();
+    }
+
+    private function withResponse(string $msg, $mode = 'error')
+    {
+        if (request()->wantsJson()) {
+
+            return response()->json([
+                'msg' => __($msg),
+                'hasError' => $mode === 'error',
+            ]);
+        }
+
+        return redirect()->back()->with($mode, __($msg));
     }
 }

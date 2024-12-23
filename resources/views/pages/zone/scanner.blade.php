@@ -134,11 +134,10 @@
       <a href="{{ route('zone.enter') }}" class="add-new-session">Add new session</a>
       <div class="form-group">
         <select class="form-control text-center w-50 mx-auto" name="mode" id="mode">
-          <option value="1">{{ __('words.check_in_mode') }}</option>
-          <option value="2">{{ __('words.check_out_mode') }}</option>
+          <option value="check-in">{{ __('words.check_in_mode') }}</option>
+          <option value="check-out">{{ __('words.check_out_mode') }}</option>
         </select>
       </div>
-      <div id="statusBox" style="display: none;" class="status"></div>
     </div>
 
     <div class="scanner-inner">
@@ -225,6 +224,7 @@
 @endsection
 
 @section('js')
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   <script src="{{ asset('assets/js/qr/qr-scanner.min.js') }}" type="module"></script>
   <script type="module">
@@ -233,44 +233,51 @@
     const video = document.getElementById('qr-video');
     const qrBox = document.querySelector('.qr-box');
     const viewfinder = document.getElementById('viewfinder');
-    const statusBox = document.getElementById('statusBox');
     const manualInput = document.getElementById('manual-input');
     const submitButton = document.getElementById('submit-manual-code');
 
     function setResult(result) {
       scanner.stop();
-      statusBox.style.display = 'block';
 
-      fetch("{{ route('api.scan-ticket') }}", {
-          method: "POST",
-          body: JSON.stringify({
-            ticket: result.data,
-            zone: "{{ $zone->id }}",
-            mode: document.getElementById('mode').value,
-            user: "{{ auth()->id() }}",
-            session: "{{ session()->get('enter-zone')['id'] }}",
-            checksum: "{{ Hash::make(env('SECURITY_KEY')) }}"
-          }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8"
+      const checkInMode = document.getElementById('mode').value;
+
+      let url = checkInMode === 'check-in' ?
+        "{{ route('zone.checkin', [$zone, '/ticket/']) }}" :
+        "{{ route('zone.checkout', [$zone, '/ticket/']) }}";
+
+      url = url.replace('/ticket/', result.data);
+
+      axios.get(url)
+        .then(res => {
+          if (res.data.hasError) {
+            toastr.error(res.data.msg);
+            return;
           }
-        }).then((response) => response.json())
-        .then((json) => {
-          if (json.status == 'success') {
-            statusBox.innerHTML = `
-                        <div class="box" id="log-success">
-                            <img src="{{ asset('assets/green-light.png') }}" alt="">
-                            <h6>${json.data.name}</h6>
-                        </div>`;
-          } else {
-            statusBox.innerHTML = `
-                        <div class="box" id="log-error">
-                            <img src="{{ asset('assets/red-light.png') }}" alt="">
-                            <h5>${json.message}</h5>
-                            <h6>${json.data.name}</h6>
-                        </div>`;
+
+          toastr.success(res.data.msg)
+        })
+        .catch(err => {
+          if (err.status === 404) {
+            toastr.error("{{ __('words.ticket_not_found') }}");
           }
+          throw err;
         });
+
+      // fetch("{{ route('api.scan-ticket') }}", {
+      //     method: "POST",
+      //     body: JSON.stringify({
+      //       ticket: result.data,
+      //       zone: "{{ $zone->id }}",
+      //       mode: document.getElementById('mode').value,
+      //       user: "{{ auth()->id() }}",
+      //       session: "{{ session()->get('enter-zone')['id'] }}",
+      //       checksum: "{{ Hash::make(env('SECURITY_KEY')) }}"
+      //     }),
+      //     headers: {
+      //       "Content-type": "application/json; charset=UTF-8"
+      //     }
+      //   }).then((response) => response.json())
+      //   .then((json) => {});
       qrBox.style.display = 'flex';
       viewfinder.style.display = 'none';
     }
@@ -283,7 +290,6 @@
     document.getElementById('qrbox').addEventListener('click', function() {
       qrBox.style.display = 'none';
       viewfinder.style.display = 'block';
-      statusBox.style.display = 'none';
       scanner._updateOverlay()
       scanner.start();
     });
