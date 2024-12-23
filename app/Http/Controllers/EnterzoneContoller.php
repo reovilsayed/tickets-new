@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use App\Models\Zone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EnterzoneContoller extends Controller
 {
@@ -56,6 +57,15 @@ class EnterzoneContoller extends Controller
         $event = session()->get('enter-zone')['event'];
 
         $tickets = Ticket::with('user', 'product')
+            ->addSelect([
+                'is_checked_in' => DB::table('ticket_user')
+                    ->selectRaw("case when action = 'Checked in' then 1 else 0 end")
+                    ->whereColumn('ticket_user.ticket_id', 'tickets.id')
+                    ->where('zone_id', $zone->id)
+                    ->whereDate('ticket_user.created_at', today())
+                    ->orderByDesc('ticket_user.created_at')
+                    ->limit(1)
+            ])
             ->when(
                 request()->filled('q'),
                 function (Builder $query) {

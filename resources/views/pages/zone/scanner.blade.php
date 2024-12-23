@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('css')
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
   <style>
     .scanner-page {
       min-height: 100vh;
@@ -124,84 +125,6 @@
   </style>
 @endsection
 
-@section('js')
-  <script src="{{ asset('assets/js/qr/qr-scanner.min.js') }}" type="module"></script>
-  <script type="module">
-    import QrScanner from "{{ asset('assets/js/qr/qr-scanner.min.js') }}";
-
-    const video = document.getElementById('qr-video');
-    const qrBox = document.querySelector('.qr-box');
-    const viewfinder = document.getElementById('viewfinder');
-    const statusBox = document.getElementById('statusBox');
-    const manualInput = document.getElementById('manual-input');
-    const submitButton = document.getElementById('submit-manual-code');
-
-    function setResult(result) {
-      scanner.stop();
-      statusBox.style.display = 'block';
-
-      fetch("{{ route('api.scan-ticket') }}", {
-          method: "POST",
-          body: JSON.stringify({
-            ticket: result.data,
-            zone: "{{ $zone->id }}",
-            mode: document.getElementById('mode').value,
-            user: "{{ auth()->id() }}",
-            session: "{{ session()->get('enter-zone')['id'] }}",
-            checksum: "{{ Hash::make(env('SECURITY_KEY')) }}"
-          }),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8"
-          }
-        }).then((response) => response.json())
-        .then((json) => {
-          if (json.status == 'success') {
-            statusBox.innerHTML = `
-                        <div class="box" id="log-success">
-                            <img src="{{ asset('assets/green-light.png') }}" alt="">
-                            <h6>${json.data.name}</h6>
-                        </div>`;
-          } else {
-            statusBox.innerHTML = `
-                        <div class="box" id="log-error">
-                            <img src="{{ asset('assets/red-light.png') }}" alt="">
-                            <h5>${json.message}</h5>
-                            <h6>${json.data.name}</h6>
-                        </div>`;
-          }
-        });
-      qrBox.style.display = 'flex';
-      viewfinder.style.display = 'none';
-    }
-
-    const scanner = new QrScanner(video, result => setResult(result), {
-      highlightScanRegion: true,
-      highlightCodeOutline: true,
-    });
-
-    document.getElementById('qrbox').addEventListener('click', function() {
-      qrBox.style.display = 'none';
-      viewfinder.style.display = 'block';
-      statusBox.style.display = 'none';
-      scanner._updateOverlay()
-      scanner.start();
-    });
-
-    submitButton.addEventListener('click', () => {
-      const manualCode = manualInput.value.trim();
-      if (manualCode) {
-        setResult({
-          data: manualCode
-        });
-      }
-    });
-
-    window.addEventListener('unload', () => {
-      scanner.stop();
-    });
-  </script>
-@endsection
-
 @section('content')
   <section class="scanner-page">
     <br><br><br>
@@ -282,10 +205,10 @@
                     @endif
                   </td>
                   <td>
-                    @if ($ticket->status === 0)
+                    @if (!$ticket->is_checked_in)
                       <a href="{{ route('zone.checkin', [$zone, $ticket]) }}" class="btn btn-success">{{ __('words.check_in') }}</a>
                     @endif
-                    @if ($ticket->status === 1 && $ticket->product->check_in)
+                    @if ($ticket->is_checked_in === 1 && !$ticket->product->one_time)
                       <a href="{{ route('zone.checkout', [$zone, $ticket]) }}" class="btn btn-danger">{{ __('words.check_out') }}</a>
                     @endif
                   </td>
@@ -299,4 +222,89 @@
 
     </div>
   </section>
+@endsection
+
+@section('js')
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="{{ asset('assets/js/qr/qr-scanner.min.js') }}" type="module"></script>
+  <script type="module">
+    import QrScanner from "{{ asset('assets/js/qr/qr-scanner.min.js') }}";
+
+    const video = document.getElementById('qr-video');
+    const qrBox = document.querySelector('.qr-box');
+    const viewfinder = document.getElementById('viewfinder');
+    const statusBox = document.getElementById('statusBox');
+    const manualInput = document.getElementById('manual-input');
+    const submitButton = document.getElementById('submit-manual-code');
+
+    function setResult(result) {
+      scanner.stop();
+      statusBox.style.display = 'block';
+
+      fetch("{{ route('api.scan-ticket') }}", {
+          method: "POST",
+          body: JSON.stringify({
+            ticket: result.data,
+            zone: "{{ $zone->id }}",
+            mode: document.getElementById('mode').value,
+            user: "{{ auth()->id() }}",
+            session: "{{ session()->get('enter-zone')['id'] }}",
+            checksum: "{{ Hash::make(env('SECURITY_KEY')) }}"
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8"
+          }
+        }).then((response) => response.json())
+        .then((json) => {
+          if (json.status == 'success') {
+            statusBox.innerHTML = `
+                        <div class="box" id="log-success">
+                            <img src="{{ asset('assets/green-light.png') }}" alt="">
+                            <h6>${json.data.name}</h6>
+                        </div>`;
+          } else {
+            statusBox.innerHTML = `
+                        <div class="box" id="log-error">
+                            <img src="{{ asset('assets/red-light.png') }}" alt="">
+                            <h5>${json.message}</h5>
+                            <h6>${json.data.name}</h6>
+                        </div>`;
+          }
+        });
+      qrBox.style.display = 'flex';
+      viewfinder.style.display = 'none';
+    }
+
+    const scanner = new QrScanner(video, result => setResult(result), {
+      highlightScanRegion: true,
+      highlightCodeOutline: true,
+    });
+
+    document.getElementById('qrbox').addEventListener('click', function() {
+      qrBox.style.display = 'none';
+      viewfinder.style.display = 'block';
+      statusBox.style.display = 'none';
+      scanner._updateOverlay()
+      scanner.start();
+    });
+
+    submitButton.addEventListener('click', () => {
+      const manualCode = manualInput.value.trim();
+      if (manualCode) {
+        setResult({
+          data: manualCode
+        });
+      }
+    });
+
+    window.addEventListener('unload', () => {
+      scanner.stop();
+    });
+  </script>
+
+  @if (session()->has('error'))
+    <script>
+      toastr.error("{{ session('error') }}");
+    </script>
+  @endif
 @endsection
