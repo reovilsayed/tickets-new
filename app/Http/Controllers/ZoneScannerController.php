@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ticket;
 use App\Models\Zone;
+use App\Models\Ticket;
+use Illuminate\Support\Str;
 
 class ZoneScannerController extends Controller
 {
@@ -31,13 +32,16 @@ class ZoneScannerController extends Controller
             return $this->withResponse(__('words.one_time_usage'));
         }
 
-        $isCheckedInToday = $ticket->scanedBy()
-            ->where('action', 'Checked in')
+        $lastScan = $ticket->scanedBy()
+            ->whereIn('action', ['Checked in', 'Checked Out'])
             ->where('zone_id', $zone->id)
             ->whereDate('ticket_user.created_at', today())
-            ->exists();
+            ->orderByPivot('created_at', 'desc')
+            ->first();
 
-        if (!$ticket->product->check_out && $isCheckedInToday) {
+        $isCheckedIn = Str::of($lastScan?->pivot?->action)->lower()->exactly('checked in');
+
+        if (!$ticket->product->check_out || $isCheckedIn) {
             return $this->withResponse(__('words.ticket_already_scanned_error'));
         }
 
@@ -62,20 +66,20 @@ class ZoneScannerController extends Controller
         return $this->withResponse(__('words.ticket_checked_in'), 'success');
     }
 
-    public function checkOut(Zone $zone, Ticket $ticket)
+    public function checkOut(Zone $zone, $ticket)
     {
-        if (!$ticket->product->check_out || $ticket->product->one_time) {
-            return redirect()->back()->withError(__('words.check_out_not_available'));
-        }
+        $ticket = Ticket::whereAny(['id', 'ticket'], $ticket)
+            ->firstOrFail();
 
-        $isCheckedInToday = $ticket->scanedBy()
-            ->where('action', 'Checked in')
+        $isCheckedOutNow = $ticket->scanedBy()
+            ->where('action', 'Checked Out')
             ->where('zone_id', $zone->id)
             ->whereDate('ticket_user.created_at', today())
+            ->orderByPivot('created_at', 'desc')
             ->exists();
 
-        if (!$isCheckedInToday) {
-            return redirect()->back()->withError(__('words.check_out_not_available'));
+        if ($isCheckedOutNow || !$ticket->product->check_out || $ticket->product->one_time) {
+            return $this->withResponse(__('words.check_out_not_available'));
         }
 
         $ticket->update([
@@ -95,7 +99,7 @@ class ZoneScannerController extends Controller
                 auth()->user(),
                 ['action' => 'Checked Out', 'zone_id' => $zone->id]
             );
-        return redirect()->back();
+        return $this->withResponse(__('words.ticket_checked_out'), 'success');
     }
 
     private function withResponse(string $msg, $mode = 'error')
