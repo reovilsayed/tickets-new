@@ -23,8 +23,7 @@ class EventReport
     {
         $data = [];
 
-        $products = Ticket::withoutGlobalScope('validTicket')
-            ->with('product')
+        $products = Ticket::with('product')
             ->select('product_id')
             ->selectRaw('min(dates) as dates')
             ->where(function (Builder $builder) {
@@ -37,8 +36,7 @@ class EventReport
             ->groupBy('product_id')
             ->get();
 
-        $tickets = Ticket::withoutGlobalScope('validTicket')
-            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(dates, CONCAT("$[", n.n, "]"))) AS ticket_date')
+        $tickets = Ticket::selectRaw('JSON_UNQUOTE(JSON_EXTRACT(dates, CONCAT("$[", n.n, "]"))) AS ticket_date')
             ->selectRaw("count(*) as participants")
             ->selectRaw("count(case when status = 1 then 1 end) as checked_in")
             ->selectRaw("count(case when status = 3 then 1 end) as returned")
@@ -87,9 +85,7 @@ class EventReport
 
     protected function reportBySingleType($type)
     {
-        $products = Ticket::withoutGlobalScope('validTicket')
-            ->withoutGlobalScope('validTicket')
-            ->with('product:id,name,start_date,end_date')
+        $products = Ticket::with('product:id,name,start_date,end_date')
             ->select('product_id')
             ->selectRaw("count(*) as participants")
             ->selectRaw("count(case when status = 1 then 1 end) as checked_in")
@@ -97,7 +93,7 @@ class EventReport
             ->when(
                 $type === 'invite',
                 fn($query) => $query->where('type', $type),
-                fn($query) => $query->whereIn('type', ['web', 'pos']),
+                fn($query) => $query->where('type', '!=', 'invite'),
             )
             ->where('event_id', $this->event->id)
             ->groupBy('product_id')
