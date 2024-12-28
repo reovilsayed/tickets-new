@@ -366,6 +366,7 @@ class EventAnalyticsController extends Controller
                 $request->filled('staff'),
                 fn($query) => $query->where('orders.pos_id', $request->staff)
             )
+            ->whereNotNull('orders.pos_id')
             ->groupBy('jt.id', 'jt.name')
             ->get();
 
