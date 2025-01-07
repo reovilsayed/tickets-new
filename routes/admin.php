@@ -119,6 +119,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
     Route::get('/send/email/{order}', [AdminCustomController::class, 'sendEmailOrder'])->name('send.email');
     Route::group(['prefix' => '/events/{event}/analytics'], function () {
         Route::get('/', [EventAnalyticsController::class, 'index'])->name('voyager.events.analytics');
+        Route::get('/orders', [EventAnalyticsController::class, 'orders'])->name('voyager.events.orders');
         Route::get('/ticket-participants-report', [EventAnalyticsController::class, 'ticketParticipanReport'])->name('voyager.events.ticketParticipanReport.analytics');
         Route::get('/sales-report', [EventAnalyticsController::class, 'salesReport'])->name('voyager.events.salesReport.analytics');
         Route::get('/checkin', [EventAnalyticsController::class, 'checkinReport'])->name('voyager.events.checkinReport.analytics');

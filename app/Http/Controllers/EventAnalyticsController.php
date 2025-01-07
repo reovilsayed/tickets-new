@@ -80,6 +80,18 @@ class EventAnalyticsController extends Controller
         ]);
     }
 
+    public function orders(Event $event)
+    {
+        $orders = Order::where('event_id', $event->id)
+            ->where('payment_status', 1)
+            ->paginate(40);
+
+        return view('vendor.voyager.events.orders', [
+            'event' => $event,
+            'orders' => $orders,
+        ]);
+    }
+
     public function salesReport(
         Event $event,
         OrderSalesChart $orderSalesLineChart,
@@ -221,7 +233,7 @@ class EventAnalyticsController extends Controller
         }
         $ordersByStatus = (clone $orders)->get()->groupBy(fn($order) => $order->getStatus())->map(fn($orders) => $orders->count());
         $orders = $orders->get();
-        return view('vendor.voyager.events.orders', compact('orders', 'event', 'ordersByStatus'));
+        return view('vendor.voyager.events.order-reports', compact('orders', 'event', 'ordersByStatus'));
     }
     public function customerReportTickets(Event $event, User $user)
     {
@@ -302,7 +314,7 @@ class EventAnalyticsController extends Controller
                 fn($query) => $query->whereDate('ticket_user.created_at', $request->date)
             )
             ->where('zones.event_id', $event->id)
-            ->groupBy('zones.id','zones.name')
+            ->groupBy('zones.id', 'zones.name')
             ->get();
 
         $products = $products->merge($zones);
