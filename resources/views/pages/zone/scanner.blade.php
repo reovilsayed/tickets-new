@@ -183,10 +183,11 @@
                 <td class="text-center">{{ __('words.id') }}</td>
                 <td class="text-center">{{ __('words.ticket') }}</td>
                 <td class="text-center">{{ __('words.usage') }}</td>
+                <td class="text-center">{{ __('words.logs') }}</td>
                 <td class="text-center">{{ __('words.action') }}</td>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="ticket-list">
               @foreach ($tickets as $ticket)
                 <tr class="text-center">
                   <td>
@@ -204,11 +205,18 @@
                     @endif
                   </td>
                   <td>
+                    @foreach ($ticket->scans as $scan)
+                      <p class="mb-1 text-{{ $scan->isCheckedIn() ? 'success' : 'danger' }}">
+                        {{ $scan->action }} - {{ $scan->created_at->format('d M y g:i A') }}
+                      </p>
+                    @endforeach
+                  </td>
+                  <td>
                     @if (!$ticket->is_checked_in)
-                      <a href="{{ route('zone.checkin', [$zone, $ticket]) }}" class="btn btn-success">{{ __('words.check_in') }}</a>
+                      <a href="{{ route('zone.checkin', [$zone, $ticket]) }}" class="btn btn-success ticket-action">{{ __('words.check_in') }}</a>
                     @endif
                     @if ($ticket->is_checked_in === 1 && !$ticket->product->one_time)
-                      <a href="{{ route('zone.checkout', [$zone, $ticket]) }}" class="btn btn-danger">{{ __('words.check_out') }}</a>
+                      <a href="{{ route('zone.checkout', [$zone, $ticket]) }}" class="btn btn-danger ticket-action">{{ __('words.check_out') }}</a>
                     @endif
                   </td>
                 </tr>
@@ -305,6 +313,16 @@
 
     window.addEventListener('unload', () => {
       scanner.stop();
+    });
+
+    document.getElementById('ticket-list').addEventListener('click', (e) => {
+      if (e.target.classList.contains('ticket-action')) {
+        const csk = confirm('Are you sure?');
+
+        if (!csk) {
+          e.preventDefault();
+        }
+      }
     });
   </script>
 

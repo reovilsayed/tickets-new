@@ -41,7 +41,7 @@ class ZoneScannerController extends Controller
 
         $isCheckedIn = Str::of($lastScan?->pivot?->action)->lower()->exactly('checked in');
 
-        if (!$ticket->product->check_out || $isCheckedIn) {
+        if ($isCheckedIn) {
             return $this->withResponse(__('words.ticket_already_scanned_error'));
         }
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ticket extends Model
 {
@@ -83,6 +84,12 @@ class Ticket extends Model
     {
         return $this->belongsToMany(User::class, 'ticket_user', 'ticket_id', 'user_id', 'id', 'id')->withPivot('action', 'zone_id')->withTimestamps();
     }
+
+    public function scans() : HasMany
+    {
+        return $this->hasMany(Scan::class);
+    }
+
     protected static function booted(): void
     {
         static::addGlobalScope('validTicket', function (Builder $builder) {

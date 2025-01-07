@@ -56,7 +56,11 @@ class EnterzoneContoller extends Controller
 
         $event = session()->get('enter-zone')['event'];
 
-        $tickets = Ticket::with('user', 'product')
+        $tickets = Ticket::with([
+            'user',
+            'product',
+            'scans' => fn($query) => $query->where('zone_id', $zone->id)->whereDate('created_at', today())
+        ])
             ->addSelect([
                 'is_checked_in' => DB::table('ticket_user')
                     ->selectRaw("case when action = 'Checked in' then 1 else 0 end")
