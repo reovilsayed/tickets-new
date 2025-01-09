@@ -141,19 +141,20 @@
     </div>
 
     <div class="scanner-inner">
-      <div class="qr-box" id="qrbox">
-        <img class="qr-image" src="{{ asset('assets/qr-code.png') }}" alt="">
-        <h3>Tap to read code</h3>
-      </div>
-
-      <div id="viewfinder" class="qr-box">
-        <div id="video-container">
-          <video id="qr-video"></video>
+      <div class="mobile-only d-block d-sm-none">
+        <div class="qr-box" id="qrbox">
+          <img class="qr-image" src="{{ asset('assets/qr-code.png') }}" alt="">
+          <h3>Tap to read code</h3>
+        </div>
+  
+        <div id="viewfinder" class="qr-box">
+          <div id="video-container">
+            <video id="qr-video"></video>
+          </div>
         </div>
       </div>
-
       <!-- Add manual code input -->
-      <div class="card">
+      <div class="card d-none d-sm-block">
         <div class="card-body">
           <p>{{ __('words.enter_manually') }}</p>
           <div class="manual-entry d-flex align-items-center">
@@ -167,7 +168,7 @@
         </div>
       </div>
 
-      <div class="container mt-4">
+      <div class="container mt-4 d-none d-sm-block">
         <form class="d-flex mb-3" role="search">
           <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
           <button class="btn btn-primary" type="submit">Search</button>
