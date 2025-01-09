@@ -77,8 +77,10 @@ class ZoneScannerController extends Controller
             ->whereDate('ticket_user.created_at', today())
             ->orderByPivot('created_at', 'desc')
             ->exists();
-
-        if ($isCheckedOutNow || !$ticket->product->check_out || $ticket->product->one_time) {
+        if($ticket->product->one_time && $isCheckedOutNow){
+            return $this->withResponse(__('words.check_out_not_available'));
+        }
+        if ( !$ticket->product->check_out || $ticket->product->one_time) {
             return $this->withResponse(__('words.check_out_not_available'));
         }
 
