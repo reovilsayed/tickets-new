@@ -14,7 +14,7 @@ class ZoneScannerController extends Controller
             ->firstOrFail();
 
         // check if the ticket is valid for the current date
-        if (!in_array(now()->format('Y-m-d'), $ticket->product->dates)) {
+        if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
             return $this->withResponse(__('words.to_early_to_scan'));
         }
 
