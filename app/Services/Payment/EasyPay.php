@@ -57,7 +57,7 @@ class EasyPay
     {
         return [
             'type' => 'SINGLE',
-            'expiration_time' => now()->addHour(1),
+            'expiration_time' => now()->addHour(12),
             'payment' => [
 
                 'single' => [
