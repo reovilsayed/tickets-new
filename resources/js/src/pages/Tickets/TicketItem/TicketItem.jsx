@@ -21,7 +21,7 @@ const TicketItem = ({ ticket }) => {
                 active ? "active" : ""
             }`}
             onClick={() => {
-                if (!(item?.quantity > 0)) {
+                if (!(ticket?.quantity > 0)) {
                     toast("Cannot add to cart as no tickets are available!");
                     return;
                 }
