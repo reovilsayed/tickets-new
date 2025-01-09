@@ -213,10 +213,10 @@
                   </td>
                   <td>
                     @if (!$ticket->is_checked_in)
-                      <a href="{{ route('zone.checkin', [$zone, $ticket]) }}" class="btn btn-success ticket-action">{{ __('words.check_in') }}</a>
+                      <a href="{{ route('zone.checkin', [$zone, $ticket->ticket]) }}" class="btn btn-success ticket-action">{{ __('words.check_in') }}</a>
                     @endif
                     @if ($ticket->is_checked_in === 1 && !$ticket->product->one_time)
-                      <a href="{{ route('zone.checkout', [$zone, $ticket]) }}" class="btn btn-danger ticket-action">{{ __('words.check_out') }}</a>
+                      <a href="{{ route('zone.checkout', [$zone, $ticket->ticket]) }}" class="btn btn-danger ticket-action">{{ __('words.check_out') }}</a>
                     @endif
                   </td>
                 </tr>

@@ -10,7 +10,7 @@ class ZoneScannerController extends Controller
 {
     public function checkIn(Zone $zone, $ticket)
     {
-        $ticket = Ticket::whereAny(['id', 'ticket'], $ticket)
+        $ticket = Ticket::where('ticket', $ticket)
             ->firstOrFail();
 
         // check if the ticket is valid for the current date
@@ -68,7 +68,7 @@ class ZoneScannerController extends Controller
 
     public function checkOut(Zone $zone, $ticket)
     {
-        $ticket = Ticket::whereAny(['id', 'ticket'], $ticket)
+        $ticket = Ticket::where('ticket', $ticket)
             ->firstOrFail();
 
         $isCheckedOutNow = $ticket->scanedBy()
