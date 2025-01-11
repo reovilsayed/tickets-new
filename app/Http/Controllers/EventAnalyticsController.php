@@ -317,7 +317,7 @@ class EventAnalyticsController extends Controller
             ->groupBy('zones.id', 'zones.name')
             ->get();
 
-        $products = $products->merge($zones);
+        $products = $zones->merge($products);
 
         return view('vendor.voyager.events.checkin', [
             'event' => $event,
