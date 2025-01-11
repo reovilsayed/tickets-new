@@ -71,16 +71,16 @@ class ZoneScannerController extends Controller
         $ticket = Ticket::where('ticket', $ticket)
             ->firstOrFail();
 
-        $isCheckedOutNow = $ticket->scanedBy()
-            ->where('action', 'Checked Out')
+        $lastScan = $ticket->scanedBy()
+            ->whereIn('action', ['Checked in', 'Checked Out'])
             ->where('zone_id', $zone->id)
             ->whereDate('ticket_user.created_at', today())
             ->orderByPivot('created_at', 'desc')
-            ->exists();
-        if($ticket->product->one_time && $isCheckedOutNow){
-            return $this->withResponse(__('words.check_out_not_available'));
-        }
-        if ( !$ticket->product->check_out || $ticket->product->one_time) {
+            ->first();
+
+        $isCheckedOut = Str::of($lastScan?->pivot?->action)->lower()->exactly('checked out');
+
+        if ($isCheckedOut || is_null($lastScan) || !$ticket->product->check_out || $ticket->product->one_time) {
             return $this->withResponse(__('words.check_out_not_available'));
         }
 
