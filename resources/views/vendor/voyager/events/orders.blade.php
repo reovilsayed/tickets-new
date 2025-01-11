@@ -64,12 +64,7 @@
   </style>
   <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
 @endsection
-@section('javascript')
-  <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
-  <script>
-    var table = $('#dataTable').DataTable()
-  </script>
-@endsection
+
 @section('content')
   <div class="container">
     <h1>
@@ -124,6 +119,11 @@
                       <a href="{{ route('send.email', ['order' => $order]) }}" class="btn btn-sm btn-warning pull-left">
                         <i class="voyager-mail"></i> Send Mail
                       </a>
+                      @if (isset($order->billing->phone) || $order->user?->contact_number)
+                        <a href="{{ route('order.sms', $order) }}" onclick="askForConfirmation(this)" class="btn btn-sm btn-success pull-left">
+                          <i class="voyager-mail"></i> Send Sms
+                        </a>
+                      @endif
                     </td>
                   </tr>
                 @endforeach
@@ -137,6 +137,32 @@
       </div>
     </div>
   </div>
+  <form action="" method="post" id="send-sms-form">
+    @csrf
+    @method('put')
+  </form>
 
+@endsection
 
+@section('javascript')
+  <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
+  <script>
+    var table = $('#dataTable').DataTable();
+
+    function askForConfirmation(el) {
+      const csk = confirm('Are you sure?');
+
+      event.preventDefault();
+
+      if (!csk) {
+        return;
+      }
+
+      const formEl = document.getElementById('send-sms-form');
+
+      formEl.action = el.href
+
+      formEl.submit();
+    }
+  </script>
 @endsection
