@@ -72,7 +72,7 @@ class EnterzoneContoller extends Controller
             ])
             ->when(
                 request()->filled('q'),
-                function (Builder $query) {
+                fn(Builder $query) => $query->where(function (Builder $query) {
                     return $query->whereHas('user', function (Builder $query) {
                         $q = request()->q;
                         $query->where('name', 'LIKE', "%{$q}%")
@@ -81,7 +81,7 @@ class EnterzoneContoller extends Controller
                             ->orWhere('contact_number', 'LIKE', "%{$q}%")
                             ->orWhere('vatNumber', 'LIKE', "%{$q}%");
                     })->orWhere('ticket', 'LIKE', '%' . request()->q . '%');
-                }
+                })
             )
             ->where('event_id', $event->id)
             ->whereHas('product', fn(Builder $query) => $query->whereJsonContains('zones', "{$zone->id}"))

@@ -146,7 +146,7 @@
           <img class="qr-image" src="{{ asset('assets/qr-code.png') }}" alt="">
           <h3>Tap to read code</h3>
         </div>
-  
+
         <div id="viewfinder" class="qr-box">
           <div id="video-container">
             <video id="qr-video"></video>
@@ -182,7 +182,6 @@
                 <td class="text-center">{{ __('words.email') }}</td>
                 <td class="text-center">{{ __('words.phone') }}</td>
                 <td class="text-center">{{ __('words.id') }}</td>
-                <td class="text-center">{{ __('words.ticket') }}</td>
                 <td class="text-center">{{ __('words.usage') }}</td>
                 <td class="text-center">{{ __('words.logs') }}</td>
                 <td class="text-center">{{ __('words.action') }}</td>
@@ -198,13 +197,6 @@
                   <td>{{ $ticket->user ? $ticket->user->contact_number : 'N/A' }}</td>
                   <td>{{ $ticket->ticket }}</td>
                   <td>{{ $ticket->product->name }}</td>
-                  <td>
-                    @if ($ticket->product->one_time || !$ticket->product->check_in)
-                      {{ __('words.one_time') }}
-                    @elseif($ticket->product->check_in)
-                      {{ __('words.multiple_times') }}
-                    @endif
-                  </td>
                   <td>
                     @foreach ($ticket->scans as $scan)
                       <p class="mb-1 text-{{ $scan->isCheckedIn() ? 'success' : 'danger' }}">
