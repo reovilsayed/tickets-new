@@ -398,12 +398,37 @@ class EventAnalyticsController extends Controller
             ->groupBy('product_id')
             ->get();
 
+        $allOrders = Order::with('user', 'tickets:id,product_id')
+            ->where('event_id', $event->id)
+            ->when(request()->filled('alert'), fn($query) => $query->where('alert', request()->alert))
+            ->when(
+                request()->filled('search'),
+                function (Builder $query) {
+                    $query->whereHas('user', fn($q) => $q->where('name', 'LIKE', '%' . request()->search . '%')
+                        ->orWhere('email', 'LIKE', '%' . request()->search . '%')
+                        ->orWhere('contact_number', 'LIKE', '%' . request()->search . '%'));
+                }
+            )
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )
+            ->whereNotNull('pos_id')
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('pos_id', $request->staff)
+            )
+            ->latest()
+            ->withCount('tickets')
+            ->paginate(50);
+
         return view('vendor.voyager.events.pos', [
             'event' => $event,
             'order' => $order,
             'staffs' => $staffs,
             'extras' => $extras,
             'tickets' => $tickets,
+            'allOrders' => $allOrders,
         ]);
     }
 
