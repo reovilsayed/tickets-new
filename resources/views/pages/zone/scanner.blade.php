@@ -122,6 +122,12 @@
     .status {
       background-color: #fff;
     }
+
+    .content-wrapper {
+      max-height: 100px;
+      overflow: scroll;
+      transition: max-height 0.3s ease;
+    }
   </style>
 @endsection
 
@@ -198,11 +204,13 @@
                   <td>{{ $ticket->ticket }}</td>
                   <td>{{ $ticket->product->name }}</td>
                   <td>
-                    @foreach ($ticket->scans as $scan)
-                      <p class="mb-1 text-{{ $scan->isCheckedIn() ? 'success' : 'danger' }}">
-                        {{ $scan->action }} - {{ $scan->created_at->format('d M y g:i A') }}
-                      </p>
-                    @endforeach
+                    <div class="content-wrapper">
+                      @foreach ($ticket->scans as $scan)
+                        <p class="mb-1 text-{{ $scan->isCheckedIn() ? 'success' : 'danger' }}">
+                          {{ $scan->action }} - {{ $scan->created_at->format('d M y g:i A') }}
+                        </p>
+                      @endforeach
+                    </div>
                   </td>
                   <td>
                     @if (!$ticket->is_checked_in)
