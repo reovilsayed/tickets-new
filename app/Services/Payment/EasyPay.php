@@ -55,9 +55,11 @@ class EasyPay
     // }
     private function createPaymentBody(Order $order)
     {
+        $hour = $order->event?->payment_expire_hour ?? 1;
+
         return [
             'type' => 'SINGLE',
-            'expiration_time' => now()->addHour(12),
+            'expiration_time' => now()->addHour($hour),
             'payment' => [
 
                 'single' => [
