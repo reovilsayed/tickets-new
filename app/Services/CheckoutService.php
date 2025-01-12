@@ -196,7 +196,7 @@ class CheckoutService
                 'security_key' => Str::uuid(),
                 'event_id' => $this->event->id,
                 'send_message' => request()->send_message,
-                'send_email' => request()->send_email ? true : false
+                'send_email' => true,
             ];
         }
 

@@ -189,7 +189,7 @@
                                                     X {{ $cart->quantity }}
                                                 </td>
                                                 <td>
-                                                    {{ Sohoj::price($cart->price) }} 
+                                                    {{ Sohoj::price($cart->price) }}
                                                 </td>
                                                 <td>
                                                     {{ Sohoj::price($cart->quantity * $cart->price) }} @if (isset($discountedProduct[$key]))
@@ -251,14 +251,14 @@
                                             </th>
                                         </tr>
                                     </table>
-                               
+
                                     <form method="post" action="{{ route('checkout.store', $event) }}">
-                                        <div class="form-check">
+                                        {{-- <div class="form-check">
                                             <input class="form-check-input" checked  name="send_email" type="checkbox" value="1" id="send_email">
                                             <label class="form-check-label" for="send_email">
                                              {{__('words.send_email')}}
                                             </label>
-                                          </div>
+                                          </div> --}}
                                         {{-- <div class="form-check">
                                             <input class="form-check-input"  name="send_message" type="checkbox" value="1" id="send_message">
                                             <label class="form-check-label" for="send_message">
@@ -266,7 +266,7 @@
                                             </label>
                                           </div> --}}
                                         @csrf
-                                        
+
                                         <div class="accordion" id="accordionExample">
                                             <div class="accordion-item bg-transparent">
                                                 <h2 class="accordion-header" id="headingOne">
@@ -297,7 +297,7 @@
                                                          <label for="intl-phone"
                                                                 class="form-label">{{ __('words.contact_number') }}</label>
                                                         <div class="mb-3">
-                                                           
+
                                                             <input type="tel"  name="contact_number" class="form-control"
                                                                 id="intl-phone" placeholder="{{ __('words.contact_number') }}"
                                                                 value="{{  auth()->user()->contact_number }}">
