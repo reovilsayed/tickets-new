@@ -328,7 +328,7 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 // Fetch the events where the wallet is 1, ordered by latest
-        $events = Event::where('wallet', 1)->orderBy('sequence'.'asc')->get();
+        $events = Event::where('wallet', 1)->orderBy('sequence','asc')->get();
         if( $events->count() == 0){
             return "No event found";
         }
