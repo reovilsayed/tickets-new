@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('title', $event->title)
+@section('meta_description', $event->meta_description)
+@section('keywords', $event->keywords)
 @section('css')
     <style>
         .coupon-form div {
@@ -193,7 +196,8 @@
                                                 </td>
                                                 <td>
                                                     {{ Sohoj::price($cart->quantity * $cart->price) }} @if (isset($discountedProduct[$key]))
-                                                        <small class="text-danger"> - {{ Sohoj::price($discountPerUnit * $cart->quantity) }}</small>
+                                                        <small class="text-danger"> -
+                                                            {{ Sohoj::price($discountPerUnit * $cart->quantity) }}</small>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -294,13 +298,14 @@
                                                                 id="name" placeholder="{{ __('words.enter_name') }}"
                                                                 value="{{ auth()->user()->name . ' ' . auth()->user()->l_name }}">
                                                         </div>
-                                                         <label for="intl-phone"
-                                                                class="form-label">{{ __('words.contact_number') }}</label>
+                                                        <label for="intl-phone"
+                                                            class="form-label">{{ __('words.contact_number') }}</label>
                                                         <div class="mb-3">
 
-                                                            <input type="tel"  name="contact_number" class="form-control"
-                                                                id="intl-phone" placeholder="{{ __('words.contact_number') }}"
-                                                                value="{{  auth()->user()->contact_number }}">
+                                                            <input type="tel" name="contact_number" class="form-control"
+                                                                id="intl-phone"
+                                                                placeholder="{{ __('words.contact_number') }}"
+                                                                value="{{ auth()->user()->contact_number }}">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label for="address"

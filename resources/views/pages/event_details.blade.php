@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('title', $event->title)
+@section('meta_description', $event->meta_description)
+@section('keywords', $event->keywords)
 @section('content')
     @if ($is_invite)
         <form action="{{ route('invite.checkout', $invite) }}" method="post">
