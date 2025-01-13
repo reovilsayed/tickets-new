@@ -39,12 +39,12 @@ function DashboardLayout({ children }) {
     const { pathname } = useLocation();
 
     const showFilter = useMemo(
-        () => ["tickets", "extras"].includes(pathname.split("/")[2]),
+        () => !["scanner", "reports"].includes(pathname.split("/")[2]),
         [pathname]
     );
 
     const showCart = useMemo(
-        () => ["tickets", "extras"].includes(pathname.split("/")[2]),
+        () => !["scanner", "reports"].includes(pathname.split("/")[2]),
         [pathname]
     );
 

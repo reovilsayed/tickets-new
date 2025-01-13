@@ -7,10 +7,12 @@ export const navRoutes = [
         path: "/pos/",
         name: "Dashboard",
         icon: "fas fa-home",
-        layout: React.lazy(() => import("./components/layouts/MainLayout")),
-        element: React.lazy(() => import("./App")),
+        layout: React.lazy(() =>
+            import("./components/layouts/DashboardLayout")
+        ),
+        element: React.lazy(() => import("./pages/Tickets/Tickets")),
     },
-    {
+    /* {
         path: "/pos/tickets",
         name: "Tickets",
         icon: "fas fa-ticket-alt",
@@ -18,7 +20,7 @@ export const navRoutes = [
             import("./components/layouts/DashboardLayout")
         ),
         element: React.lazy(() => import("./pages/Tickets/Tickets")),
-    },
+    }, */
     {
         path: "/pos/extras",
         name: "Extras",
