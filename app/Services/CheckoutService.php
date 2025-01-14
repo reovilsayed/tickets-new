@@ -77,7 +77,8 @@ class CheckoutService
                         'ticket' => uniqid(),
                         'price' => 0,
                         'dates' => $item->dates,
-                        'type' => 'invite'
+                        'type' => 'invite',
+                        'active'=> $item->paid_invite ? 0 : 1
                     ];
 
                     if ($item->extras && count($item->extras)) {
