@@ -85,7 +85,7 @@ class Ticket extends Model
         return $this->belongsToMany(User::class, 'ticket_user', 'ticket_id', 'user_id', 'id', 'id')->withPivot('action', 'zone_id')->withTimestamps();
     }
 
-    public function scans() : HasMany
+    public function scans(): HasMany
     {
         return $this->hasMany(Scan::class);
     }
@@ -97,6 +97,11 @@ class Ticket extends Model
                 $order->where('status', 1)->where('payment_status', 1);
             });
         });
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
     }
 
     public function user()

@@ -84,6 +84,7 @@ class EnterzoneContoller extends Controller
                 })
             )
             ->where('event_id', $event->id)
+            ->active()
             ->whereHas('product', fn(Builder $query) => $query->whereJsonContains('zones', "{$zone->id}"))
             ->paginate(30);
 
