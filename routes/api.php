@@ -162,6 +162,7 @@ Route::post('/extras-scan-ticker', function (Request $request) {
 Route::post('/tickets/get', [ApiController::class, 'getTicket']);
 Route::post('/tickets/update-code', [ApiController::class, 'updateTicketCode']);
 Route::post('/tickets/activate', [ApiController::class, 'activateTicket']);
+Route::post('/tickets/toggle-active', [ApiController::class, 'toggleTicketActive']);
 Route::post('/ticket-extras', [ApiController::class, 'ticketExtras']);
 
 

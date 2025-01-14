@@ -302,7 +302,7 @@ class ApiController extends Controller
                     'user_id' => $orderData['user_id'],
                     'pos_id' => auth()->id(),
                     'ticket' => !$physicalQr ? uniqid() : null,
-                    'price' =>  $product->price ,
+                    'price' =>  $product->price,
                     'dates' => $product->dates,
                     'type' => 'pos'
                 ];
@@ -449,6 +449,19 @@ class ApiController extends Controller
         $ticket = Ticket::findOrFail($requestTicket);
         if ($ticket->active == 1) return response()->json(['ticket' => $ticket]);
         $ticket->active = 1;
+        $ticket->save();
+        return response()->json(['ticket' => $ticket]);
+    }
+
+    public function toggleTicketActive(Request $request)
+    {
+        $requestTicket = $request->ticket;
+        $ticket = Ticket::findOrFail($requestTicket);
+        if ($ticket->active == 1) {
+            $ticket->active = 0;
+        } else {
+            $ticket->active = 1;
+        }
         $ticket->save();
         return response()->json(['ticket' => $ticket]);
     }
