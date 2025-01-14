@@ -61,7 +61,6 @@ const Scanner = () => {
                 { ticket: data?.data }
             );
             setScannedTicket(response.data);
-
         } catch (error) {
             toast("Error scanning ticket", error);
         }
@@ -109,7 +108,7 @@ const Scanner = () => {
         setScannedTicket(ticket);
         console.log(scannedTicket);
 
-        submitChanges()
+        submitChanges();
     };
     const {
         data: extrasList,
@@ -119,14 +118,14 @@ const Scanner = () => {
         refetch,
     } = useFetch(
         ["scanner-extras", scannedTicket],
-        `${import.meta.env.VITE_APP_URL}/api/event-extras/${scannedTicket?.event_id
+        `${import.meta.env.VITE_APP_URL}/api/event-extras/${
+            scannedTicket?.event_id
         }`
     );
 
     const [showNewExtraFields, setShowNewExtraFields] = useState(false);
     const [selectedNewExtra, setSelectedNewExtra] = useState(null);
     const [selectedNewExtraQuantity, setSelectedNewExtraQuantity] = useState(1);
-
 
     const handleAddExtra = () => {
         if (!showNewExtraFields) {
@@ -141,7 +140,7 @@ const Scanner = () => {
         var isUniqueItem = true;
 
         var ticketExtras = scannedTicket?.extras?.map((item) => {
-            console.log(item)
+            console.log(item);
             if (item.id === targetExtra.id) {
                 isUniqueItem = false;
                 return {
@@ -166,12 +165,8 @@ const Scanner = () => {
 
     const [changesProcessing, setChangesProcessing] = useState(false);
 
-    const withdrawSubmit = async () => {
-
-    }
+    const withdrawSubmit = async () => {};
     const submitChanges = async () => {
-
-
         setChangesProcessing(true);
 
         const response = await axios.post(
@@ -225,6 +220,33 @@ const Scanner = () => {
         setChangesProcessing(false);
     };
 
+    const toggleTicketActive = async () => {
+        setChangesProcessing(true);
+        const response = await axios.post(
+            `${import.meta.env.VITE_APP_URL}/api/tickets/toggle-active`,
+            { ticket: scannedTicket?.id },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Secret-Key": "pos_password",
+                },
+            }
+        );
+        if (response.status == 200) {
+            setScannedTicket((prev) => {
+                return { ...prev, active: response?.data?.ticket?.active };
+            });
+            toast(
+                `Ticket ${
+                    response?.data?.ticket?.active === 1
+                        ? "activated"
+                        : "de-activated"
+                } successfully!!`
+            );
+        }
+        setChangesProcessing(false);
+    };
+
     const [showPaymentModal, setShowPaymentModal] = useState(false);
 
     return (
@@ -261,28 +283,34 @@ const Scanner = () => {
                             {scannedTicket?.dates.join(", ")}
                         </p>
                         <p>
-                            <strong>
-                                {scannedTicket?.active === 0 && "Not "}Active
-                                {scannedTicket?.active === 0 && (
-                                    <span
-                                        className="btn btn-success ms-3 py-1 px-2"
-                                        onClick={activateTicket}
-                                    >
-                                        Activate
-                                    </span>
-                                )}
-                            </strong>
+                            <div className="active-toggle-container">
+                                <strong>Active</strong>
+                                <div class="form-check form-switch">
+                                    <input
+                                        class={`form-check-input ${
+                                            scannedTicket?.active === 1
+                                                ? "bg-success"
+                                                : "bg-danger"
+                                        }`}
+                                        type="checkbox"
+                                        onClick={toggleTicketActive}
+                                        checked={scannedTicket?.active === 1}
+                                    />
+                                </div>
+                            </div>
                         </p>
                     </div>
-
-
 
                     {scannedTicket?.extras?.length > 0 ? (
                         <div className="extras">
                             <h4>Extras</h4>
-                            {scannedTicket?.extras.map((extra, index) => <Extra extra={extra} index={index} handleExtraChange={handleExtraChange} />)}
-
-
+                            {scannedTicket?.extras.map((extra, index) => (
+                                <Extra
+                                    extra={extra}
+                                    index={index}
+                                    handleExtraChange={handleExtraChange}
+                                />
+                            ))}
                         </div>
                     ) : null}
                     {showNewExtraFields && (
