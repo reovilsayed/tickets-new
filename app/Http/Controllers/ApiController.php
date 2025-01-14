@@ -217,20 +217,24 @@ class ApiController extends Controller
     {
         // Collect initial order data
         // try {
-        $event_id = null;
         DB::beginTransaction();
         $extraProducts = $request->get('extras') ?? [];
         $tickets = $request->get('tickets') ?? [];
 
         if (count($extraProducts) <= 0 && count($tickets) <= 0) throw new Exception('No products in cart');
-        
+        foreach ($tickets as $item) {
+            $product = Product::findOrFail($item['id']);
+            if ($product->quantity < $item['quantity']) {
+                throw new Exception($item['name'] . ' is not available for this quantity');
+            }
+        }
         $orderData = [
             'billing' => request()->get('biling'),
             'user_id' => $this->getUser(request()->get('biling'))->id,
             'subtotal' => $request->get('subTotal'),
             'discount' => 0,
             'total' => $request->get('total'),
-
+            'event_id' => $request->get('event_id'),
             'payment_method' => $request->get('paymentMethod') ?? 'Pos',
             'transaction_id' => Str::uuid(),
             'security_key' => Str::uuid(),
@@ -281,9 +285,6 @@ class ApiController extends Controller
 
         foreach ($tickets as $item) {
             $product = Product::findOrFail($item['id']);
-            if ($product->quantity < $item['quantity']) {
-                throw new Exception($item['name'] . ' is not available for this quantity');
-            }
             $product->quantity -= $item['quantity'];
             $product->save();
 
@@ -327,7 +328,6 @@ class ApiController extends Controller
                 }
                 $hollowTickets[] = $order->tickets()->create($data);
             }
-            $event_id = $product->event->id;
         }
 
         // Handle invoice printing or emailing
@@ -345,8 +345,7 @@ class ApiController extends Controller
         DB::commit();
         $order->update([
             'status' => 1,
-            'payment_status' => 1,
-            'event_id' => $event_id
+            'payment_status' => 1
         ]);
 
         try {
