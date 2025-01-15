@@ -86,7 +86,7 @@
         <div class="col-md-4">
           @include('vendor.voyager.events.partial.card', [
               'label' => 'Tickets',
-              'value' => $event->products_count,
+              'value' => $event->products_count - $event->invites_count,
           ])
         </div>
         <div class="col-md-4">
