@@ -465,4 +465,33 @@ class ApiController extends Controller
         $ticket->save();
         return response()->json(['ticket' => $ticket]);
     }
+
+    public function paidTicketStatusUpdate(Request $request)
+    {
+        $requestTicket = $request->ticket;
+        $ticket = Ticket::findOrFail($requestTicket);
+
+        $orderData = [
+            'billing' => request()->get('biling'),
+            'user_id' => $this->getUser(request()->get('biling'))->id,
+            'subtotal' => $ticket->price,
+            'discount' => 0,
+            'total' => $ticket->price,
+            'event_id' => $ticket->event->id,
+            'payment_method' => $request->get('paymentMethod') ?? 'Pos',
+            'transaction_id' => Str::uuid(),
+            'security_key' => Str::uuid(),
+            'send_message' => $request->get('sendToPhone') ? true : false,
+            'send_email' => $request->get('sendToMail') ? true : false,
+            'pos_id' => auth()->id()
+        ];
+        $order = Order::create($orderData);
+
+        $ticket->status = 1;
+        $ticket->active = 1;
+        $ticket->order_id = $order->id;
+        
+        $ticket->save();
+        return response()->json(['ticket' => $ticket]);
+    }
 }

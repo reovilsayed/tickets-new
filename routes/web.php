@@ -309,6 +309,7 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     });
     Route::post('api/create-order', [ApiController::class, 'createOrder']);
     Route::post('api/update-ticket', [ApiController::class, 'updateTicket']);
+    Route::post('api/paid-ticket/update', [ApiController::class, 'paidTicketStatusUpdate']);
     Route::get('/pos/{order}/mark', [PosDashboardReport::class, 'index'])->name('order.marked');
     Route::put('/pos/{order}/update', [PosDashboardReport::class, 'update'])->name('order.update');
     Route::put('/pos/{order}/email', [PosDashboardReport::class, 'email'])->name('order.email');
