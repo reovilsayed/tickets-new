@@ -331,6 +331,7 @@ class AdminCustomController extends Controller
                     'price' => 0,
                     'dates' => $product->dates,
                     'type' => 'invite',
+                    'active' => 0,
                 ];
 
                 if ($product->extras && count($product->extras)) {
