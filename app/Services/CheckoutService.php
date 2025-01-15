@@ -75,7 +75,7 @@ class CheckoutService
                         'product_id' => $id,
                         'order_id' => $order->id,
                         'ticket' => uniqid(),
-                        'price' => 0,
+                        'price' => $item->price,
                         'dates' => $item->dates,
                         'type' => 'invite',
                         'active'=> $item->paid_invite ? 0 : 1

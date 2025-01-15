@@ -328,7 +328,7 @@ class AdminCustomController extends Controller
                     'product_id' => $product->id,
                     'order_id' => $order->id,
                     'ticket' => uniqid(),
-                    'price' => 0,
+                    'price' => $product->price,
                     'dates' => $product->dates,
                     'type' => 'invite',
                     'active'=> $product->paid_invite ? 0 : 1
