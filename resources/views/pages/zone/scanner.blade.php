@@ -127,6 +127,7 @@
       max-height: 100px;
       overflow: scroll;
       transition: max-height 0.3s ease;
+      overflow-x: hidden;
     }
   </style>
 @endsection
@@ -175,10 +176,15 @@
       </div>
 
       <div class="container mt-4 d-none d-sm-block">
-        <form class="d-flex mb-3" role="search">
+        <form class="d-flex mb-2" role="search">
           <input class="form-control me-2" type="search" name="q" placeholder="Search" aria-label="Search">
           <button class="btn btn-primary" type="submit">Search</button>
         </form>
+
+        <div class="mb-2">
+          <button class="btn btn-success">Total: {{ $tickets->count() }}</button>
+          <button class="btn btn-success">Checked In: {{ $checkedIn->ticket }}</button>
+        </div>
 
         <div class="row">
           <table class="table table-primary">

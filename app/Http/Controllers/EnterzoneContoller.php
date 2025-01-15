@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Scan;
 use App\Models\Ticket;
 use App\Models\Zone;
 use Illuminate\Database\Eloquent\Builder;
@@ -56,6 +57,28 @@ class EnterzoneContoller extends Controller
 
         $event = session()->get('enter-zone')['event'];
 
+        $checkedIn = Scan::selectRaw("count(DISTINCT ticket_id) as ticket")
+            ->where('zone_id', $zone->id)
+            ->whereHas('ticket', function (Builder $query) use ($event) {
+                return $query->where('event_id', $event->id)
+                    ->when(
+                        request()->filled('q'),
+                        fn(Builder $query) => $query->where(function (Builder $query) {
+                            return $query->whereHas('user', function (Builder $query) {
+                                $q = request()->q;
+                                $query->where('name', 'LIKE', "%{$q}%")
+                                    ->orWhere('l_name', 'LIKE', "%{$q}%")
+                                    ->orWhere('email', 'LIKE', "%{$q}%")
+                                    ->orWhere('contact_number', 'LIKE', "%{$q}%")
+                                    ->orWhere('vatNumber', 'LIKE', "%{$q}%");
+                            })->orWhere('ticket', 'LIKE', '%' . request()->q . '%');
+                        })
+                    );
+            })
+            ->where('action', 'Checked in')
+            ->first();
+        // dd($checkedIn);
+
         $tickets = Ticket::with([
             'user',
             'product',
@@ -92,6 +115,7 @@ class EnterzoneContoller extends Controller
             'zone' => $zone,
             'event' => $event,
             'tickets' => $tickets,
+            'checkedIn' => $checkedIn,
         ]);
     }
 
