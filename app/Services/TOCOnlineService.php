@@ -130,9 +130,9 @@ class TOCOnlineService
         return Customer::create([
             'customer_id' => $res['data']['id'],
             'tax_registration_number' => $order->billing->vatNumber,
-            'business_name' => 'Enter business name',
-            'email' => 'Enter email address',
-            'phone_number' => 'Enter email address',
+            'business_name' => $order->user->name,
+            'email' => $order->user->name,
+            'phone_number' => $order->user->contact_number,
         ]);
     }
 
