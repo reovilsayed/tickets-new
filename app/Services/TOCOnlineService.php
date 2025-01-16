@@ -100,7 +100,7 @@ class TOCOnlineService
                         'mobile_number' => $order->user?->contact_number,
                         'observations' => '',
                         'phone_number' => '',
-                        'tax_registration_number' => $order->billing->vatNumber,
+                        'tax_registration_number' => $order->billing->vatNumber ?? 273088521,
                         'website' => '',
                     ],
                     'type' => 'customers',
