@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { setCartOpen } from "../../lib/features/paymentModalSlice";
 import ScannerPaymentModal from "../../components/dashboard/PaymentModal/ScannerPaymentModal";
 import Extra from "./Extra";
+import ScannerPaidInviteModal from "../../components/dashboard/PaymentModal/ScannerPaidInviteModal";
 
 const Scanner = () => {
     const videoRef = React.useRef(null);
@@ -61,9 +62,21 @@ const Scanner = () => {
                 { ticket: data?.data }
             );
             setScannedTicket(response.data);
+            if (response.data?.active === 0) {
+                setShowPaidInviteModal(true);
+            }
         } catch (error) {
             toast("Error scanning ticket", error);
         }
+    };
+
+    const handleRescan = () => {
+        setStartScan(false);
+        setScannedTicket(null);
+        setManualCode("");
+        setscanViaQr(false);
+        setEnterManual(false);
+        setWithdraw(false);
     };
 
     const handleManualKeyPress = (e) => {
@@ -82,8 +95,10 @@ const Scanner = () => {
                 { ticket: manualCode }
             );
             setScannedTicket(response.data);
-
-            setManualCode(""); // Reset the manual input
+            setManualCode("");
+            if (response.data?.active === 0) {
+                setShowPaidInviteModal(true);
+            }
         } catch (error) {
             toast("Error scanning ticket", error);
         } finally {
@@ -201,11 +216,11 @@ const Scanner = () => {
         setChangesProcessing(false);
     };
 
-    const activateTicket = async () => {
+    const activateTicket = async (paymentData = {}) => {
         setChangesProcessing(true);
         const response = await axios.post(
-            `${import.meta.env.VITE_APP_URL}/api/tickets/activate`,
-            { ticket: scannedTicket?.id },
+            `${import.meta.env.VITE_APP_URL}/api/paid-ticket/update`,
+            { ticket: scannedTicket?.id, ...paymentData },
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -248,10 +263,11 @@ const Scanner = () => {
     };
 
     const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [showPaidInviteModal, setShowPaidInviteModal] = useState(false);
 
     return (
         <section className="scanner-page">
-            {scannedTicket ? (
+            {scannedTicket && scannedTicket?.active === 1 ? (
                 <div className="ticket-info">
                     <h3>Ticket Information</h3>
                     <div className="ticket-details">
@@ -283,21 +299,11 @@ const Scanner = () => {
                             {scannedTicket?.dates.join(", ")}
                         </p>
                         <p>
-                            <div className="active-toggle-container">
-                                <strong>Active</strong>
-                                <div class="form-check form-switch">
-                                    <input
-                                        class={`form-check-input ${
-                                            scannedTicket?.active === 1
-                                                ? "bg-success"
-                                                : "bg-danger"
-                                        }`}
-                                        type="checkbox"
-                                        onClick={toggleTicketActive}
-                                        checked={scannedTicket?.active === 1}
-                                    />
-                                </div>
-                            </div>
+                            <strong>
+                                {scannedTicket?.active === 1
+                                    ? "Active"
+                                    : "Inactive"}
+                            </strong>
                         </p>
                     </div>
 
@@ -424,6 +430,15 @@ const Scanner = () => {
                                 : "Save Changes"}
                         </button>
                     </span>
+                    <span className="d-flex justify-content-center align-items-center mt-2">
+                        <button
+                            type="button"
+                            class="btn btn-warning text-light w-100 py-1"
+                            onClick={handleRescan}
+                        >
+                            Re-Scan
+                        </button>
+                    </span>
                 </div>
             ) : !startScan ? (
                 <div className="d-flex flex-column align-items-center gap-3">
@@ -486,6 +501,13 @@ const Scanner = () => {
                 handleSubmit={submitChanges}
                 withdraw={withdraw}
                 setWithdraw={setWithdraw}
+            />
+            <ScannerPaidInviteModal
+                open={showPaidInviteModal}
+                onClose={() => setShowPaidInviteModal(false)}
+                ticket={scannedTicket}
+                handleSubmit={activateTicket}
+                onSubmit={setScannedTicket}
             />
         </section>
     );
