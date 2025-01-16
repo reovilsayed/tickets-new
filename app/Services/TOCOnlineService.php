@@ -91,7 +91,7 @@ class TOCOnlineService
                 'data' => [
                     'attributes' => [
                         'business_name' => $order->user?->fullName(),
-                        'contact_name' => $order->billing->name,
+                        'contact_name' => $order->user?->name,
                         'email' => $order->user?->email,
                         'internal_observations' => '',
                         'mobile_number' => $order->user?->contact_number,
