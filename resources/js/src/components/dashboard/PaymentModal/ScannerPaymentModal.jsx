@@ -142,6 +142,7 @@ const ScannerPaymentModal = ({
 
                 paymentMethod: "Cash",
             });
+            setPaidTotal(0.0);
             setSendToMail(false);
             setSendToPhone(false);
             handleClose();
@@ -377,6 +378,7 @@ const ScannerPaymentModal = ({
                                 className="btn btn-primary"
                                 onClick={submitOrder}
                                 disabled={
+                                    !cartTotal > 0 ||
                                     !formData["name"] ||
                                     (formData["vatNumber"]
                                         ? /* sendToMail ||
