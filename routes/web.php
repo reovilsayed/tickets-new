@@ -370,12 +370,12 @@ Route::get('/payment-confirm', function () {
     $order->save();
 });
 
-Route::get('test', function () {
- $toc = new TOCOnlineService();
-  $order = Order::latest()->first();
-    $response = $toc->createCustomer($order);
-    dd($response);
-});
+// Route::get('test', function () {
+//  $toc = new TOCOnlineService();
+//   $order = Order::latest()->first();
+//     $response = $toc->createCustomer($order);
+//     dd($response);
+// });
 // Route::get('send',function(){
 //     $order = Order::where('payment_status',1)->first();
 //     $message = 'Acesso e fatura para o evento: [%goto:' . route('digital-wallet', $order) . '%] !!';

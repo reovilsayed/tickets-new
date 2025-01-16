@@ -100,7 +100,7 @@ class TOCOnlineService
                         'mobile_number' => $order->user?->contact_number,
                         'observations' => '',
                         'phone_number' => '',
-                        'tax_registration_number' => $order->billing->vatNumber ?? 270988521,
+                        'tax_registration_number' => $order->billing?->vatNumber,
                         'website' => '',
                     ],
                     'type' => 'customers',
@@ -128,7 +128,7 @@ class TOCOnlineService
         $res = $this->createCustomer($order);
 
         return Customer::create([
-            'customer_id' => 'enter customer id',
+            'customer_id' => $res['data']['id'],
             'tax_registration_number' => $order->billing->vatNumber,
             'business_name' => 'Enter business name',
             'email' => 'Enter email address',
