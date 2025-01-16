@@ -483,7 +483,9 @@ class ApiController extends Controller
             'security_key' => Str::uuid(),
             'send_message' => $request->get('sendToPhone') ? true : false,
             'send_email' => $request->get('sendToMail') ? true : false,
-            'pos_id' => auth()->id()
+            'pos_id' => auth()->id(),
+            'payment_status'=>1,
+            'status'=>1,
         ];
         $order = Order::create($orderData);
 
