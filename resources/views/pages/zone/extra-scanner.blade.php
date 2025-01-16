@@ -175,7 +175,7 @@
                                            ${element.qty - element?.used ?? 0}
                                         </td>
                                     <td>
-                                        <input class="form-control text-center" name="withdraw[${element.id}]" min="1" max="${element.qty - element?.used ?? 0}" type="number">
+                                        <input class="form-control text-center" name="withdraw[${element.id}]" min="1" max="${element.qty - element?.used ?? 0}" type="number" value="${element.qty - element?.used}" required>
                                     </td>
                                     </tr>
                                 `

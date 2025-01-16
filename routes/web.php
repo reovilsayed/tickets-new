@@ -287,7 +287,7 @@ Route::post('extras-used', function (Request $request) {
     $ticket->logs = $data;
     $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
     $ticket->save();
-    return redirect()->back()->with('success_msg', __('extra_product_withdraw_success_message'));
+    return redirect()->back()->with('success_msg', __('words.extra_product_withdraw_success_message'));
 })->name('extras-used');
 
 Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['auth', 'role:staffzone']], function () {
