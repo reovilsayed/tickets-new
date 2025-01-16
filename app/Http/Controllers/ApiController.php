@@ -473,11 +473,11 @@ class ApiController extends Controller
 
         $orderData = [
             'billing' => request()->get('biling'),
-            'user_id' => $this->getUser(request()->get('biling'))->id,
+            'user_id' => $ticket->user_id,
             'subtotal' => $ticket->price,
             'discount' => 0,
             'total' => $ticket->price,
-            'event_id' => $ticket->event->id,
+            'event_id' => $ticket->event_id,
             'payment_method' => $request->get('paymentMethod') ?? 'Pos',
             'transaction_id' => Str::uuid(),
             'security_key' => Str::uuid(),
@@ -487,7 +487,6 @@ class ApiController extends Controller
         ];
         $order = Order::create($orderData);
 
-        $ticket->status = 1;
         $ticket->active = 1;
         $ticket->order_id = $order->id;
         
