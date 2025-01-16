@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Customer;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
@@ -75,7 +76,8 @@ class TOCOnlineService
             'message' => $response->body(),
         ];
     }
-    public function createCustomer()
+
+    public function createCustomer(Order $order)
     {
         $accessToken = $this->getAccessTokenFromRefreshToken();
 
@@ -88,15 +90,15 @@ class TOCOnlineService
             ->acceptJson()->post($this->apiBaseUrl . '/customers', [
                 'data' => [
                     'attributes' => [
-                        'business_name' => 'Empresa de Testes',
-                        'contact_name' => 'Testes',
-                        'email' => 'testes@testes.pt',
-                        'internal_observations' => 'Empresa de teste',
-                        'mobile_number' => 939038342,
-                        'observations' => 'Empresa de teste',
-                        'phone_number' => 309867004,
-                        'tax_registration_number' => '221976302',
-                        'website' => 'http://testes.pt',
+                        'business_name' => $order->user?->fullName(),
+                        'contact_name' => $order->billing->name,
+                        'email' => $order->user?->email,
+                        'internal_observations' => '',
+                        'mobile_number' => $order->user?->contact_number,
+                        'observations' => '',
+                        'phone_number' => '',
+                        'tax_registration_number' => $order->billing->vatNumber,
+                        'website' => '',
                     ],
                     'type' => 'customers',
                 ],
@@ -112,16 +114,35 @@ class TOCOnlineService
         ];
     }
 
+    public function getOrCreateCustomer(Order $order): Customer
+    {
+        $customer = Customer::where('tax_registration_number', $order->billing->vatNumber)->first();
+
+        if ($customer) {
+            return $customer;
+        }
+
+        $res = $this->createCustomer($order);
+
+        return Customer::create([
+            'customer_id' => 'enter customer id',
+            'tax_registration_number' => $order->billing->vatNumber,
+            'business_name' => 'Enter business name',
+            'email' => 'Enter email address',
+            'phone_number' => 'Enter email address',
+        ]);
+    }
+
     public function getCustomer()
     {
-         $token = $this->getAccessTokenFromRefreshToken();
+        $token = $this->getAccessTokenFromRefreshToken();
 
 
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/vnd.api+json',
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . $token
-            ])->get('https://api15.toconline.pt/api/customers');
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token
+        ])->get('https://api15.toconline.pt/api/customers');
 
         return $response->json();
     }
@@ -174,11 +195,13 @@ class TOCOnlineService
         }
         $lines = array_merge($tickets, $extras);
 
+
+
         $body = [
             'document_type' => 'FR',
             'date' => Carbon::now()->format('Y-m-d'),
             'finalize' => 0,
-            'customer_id' => $order->billing?->vatNumber ? null : 452,
+            'customer_id' => $order->billing?->vatNumber ? $this->getOrCreateCustomer($order)->customer_id : 452,
             'customer_tax_registration_number' => $order->billing?->vatNumber ? $order->billing->vatNumber : null,
             'customer_business_name' => $order->billing?->vatNumber ? @$order->billing?->name : null,
             'customer_address_detail' => $order->billing?->vatNumber ? @$order->billing?->address : null,
