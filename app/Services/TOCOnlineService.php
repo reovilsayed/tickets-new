@@ -86,8 +86,11 @@ class TOCOnlineService
             return $accessToken;
         }
 
-        $response = Http::withToken($accessToken)
-            ->acceptJson()->post($this->apiBaseUrl . '/customers', [
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $accessToken
+        ])->post($this->apiBaseUrl . '/customers', [
                 'data' => [
                     'attributes' => [
                         'business_name' => $order->user?->fullName(),
