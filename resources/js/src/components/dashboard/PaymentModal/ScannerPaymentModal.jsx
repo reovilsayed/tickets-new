@@ -7,10 +7,16 @@ import ScannedCartInfo from "./CartInfo/ScannedCartInfo";
 import PhoneNumberInput from "./PhoneNumberInput";
 import { useFetch } from "../../../lib/hooks/useFetch";
 
-const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, setWithdraw }) => {
+const ScannerPaymentModal = ({
+    open,
+    onClose,
+    ticket,
+    handleSubmit,
+    withdraw,
+    setWithdraw,
+}) => {
     const [sendToPhone, setSendToPhone] = useState(true);
     const [sendToMail, setSendToMail] = useState(false);
-
 
     const handleSendToMail = () => {
         setSendToMail((prev) => {
@@ -41,14 +47,24 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
         discount: 0.0,
         paymentMethod: "Cash",
         withdraw,
-
     });
+    const [paidTotal, setPaidTotal] = useState(0.0);
+    const returnAmount = useMemo(
+        () =>
+            paidTotal > cartTotal - formData["discount"]
+                ? parseFloat(paidTotal - cartTotal - formData["discount"])
+                : 0.0,
+        [cartTotal, formData["discount"], paidTotal]
+    );
 
-    const { data: withdrawData } = useFetch(["withdraw_checked"], `${import.meta.env.VITE_APP_URL}/api/withdraw_checked`)
+    const { data: withdrawData } = useFetch(
+        ["withdraw_checked"],
+        `${import.meta.env.VITE_APP_URL}/api/withdraw_checked`
+    );
 
     useEffect(() => {
-        setWithdraw(withdrawData?.checked)
-    }, [withdrawData])
+        setWithdraw(withdrawData?.checked);
+    }, [withdrawData]);
 
     useEffect(() => {
         if (ticket?.order_id?.billing) {
@@ -68,8 +84,6 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
             return { ...prev, [name]: value };
         });
     };
-
-
 
     const [orderRequestProcessing, setOrderRequestProcessing] = useState(false);
 
@@ -92,7 +106,6 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
     const handleClose = () => onClose();
 
     const submitOrder = async () => {
-
         setOrderRequestProcessing(true);
         const orderData = {
             biling: formData,
@@ -136,16 +149,15 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
         setOrderRequestProcessing(false);
     };
 
-
-
     return (
         <>
             {open && (
                 <div className="payment-modal-backdrop payment-modal-fade-in"></div>
             )}
             <div
-                className={`modal payment-modal ${open ? "payment-modal-fade-in" : "payment-modal-fade-out"
-                    }`}
+                className={`modal payment-modal ${
+                    open ? "payment-modal-fade-in" : "payment-modal-fade-out"
+                }`}
                 id="scannerPaymentModal"
                 tabIndex="-1"
                 aria-labelledby="paymentModalLabel"
@@ -193,8 +205,7 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                 <div className="form-group mb-2">
                                     <label htmlFor="emailInput">
                                         Email{" "}
-                                        {formData["vatNumber"] ||
-                                            sendToMail 
+                                        {formData["vatNumber"] || sendToMail
                                             ? ""
                                             : "(optional)"}
                                     </label>
@@ -208,15 +219,20 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                     />
                                 </div>
                                 {sendToPhone ? (
-                                    <PhoneNumberInput value={formData["phone"]} onChange={value => setFormData((prev) => {
-                                        return { ...prev, phone: '+' + value };
-                                    })} />
-
-
+                                    <PhoneNumberInput
+                                        value={formData["phone"]}
+                                        onChange={(value) =>
+                                            setFormData((prev) => {
+                                                return {
+                                                    ...prev,
+                                                    phone: "+" + value,
+                                                };
+                                            })
+                                        }
+                                    />
                                 ) : (
                                     ""
                                 )}
-                            
 
                                 <div className="form-group mb-2">
                                     <label htmlFor="vatInput">
@@ -255,28 +271,54 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                             <option value="Card">Card</option>
                                         </select>
                                     </div>
-                                    <div className="col-md-8">
-                                        <label htmlFor="discountInput">
-                                            Discount
+                                    <div className="col-md-3">
+                                        <label htmlFor="amountPaid">
+                                            Amount Paid
                                         </label>
                                         <input
-                                            id="discountInput"
-                                            type="number"
+                                            id="ap"
                                             className="form-control"
-                                            name="discount"
-                                            value={
-                                                formData["discount"] > 0.0
-                                                    ? formData["discount"]
-                                                    : ""
+                                            name="ap"
+                                            type="number"
+                                            value={paidTotal}
+                                            onChange={(event) =>
+                                                setPaidTotal(
+                                                    parseFloat(
+                                                        event.target.value
+                                                    )
+                                                )
                                             }
-                                            onChange={handleFormData}
-                                            placeholder="Enter discount"
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="amountPaid">
+                                            Amount to Return
+                                        </label>
+                                        <input
+                                            id="atr"
+                                            className="form-control"
+                                            name="atr"
+                                            value={parseFloat(
+                                                returnAmount
+                                            ).toFixed(2)}
+                                            readOnly
+                                            disabled
                                         />
                                     </div>
                                 </div>
                                 <div className="form-check">
-                                    <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked={withdraw} onChange={() => setWithdraw(!withdraw)} />
-                                    <label className="form-check-label" for="flexCheckDefault">
+                                    <input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        value=""
+                                        id="flexCheckDefault"
+                                        checked={withdraw}
+                                        onChange={() => setWithdraw(!withdraw)}
+                                    />
+                                    <label
+                                        className="form-check-label"
+                                        for="flexCheckDefault"
+                                    >
                                         Withdraw
                                     </label>
                                 </div>
@@ -340,7 +382,7 @@ const ScannerPaymentModal = ({ open, onClose, ticket, handleSubmit, withdraw, se
                                         ? /* sendToMail ||
                                     sendToPhone ||
                                     sendInvoiceToMail */
-                                        formData["email"] || formData["phone"]
+                                          formData["email"] || formData["phone"]
                                             ? false
                                             : true
                                         : false) ||
