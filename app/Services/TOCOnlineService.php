@@ -90,7 +90,7 @@ class TOCOnlineService
             'Content-Type' => 'application/vnd.api+json',
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $accessToken
-        ])->post($this->apiBaseUrl . '/customers', [
+        ])->post('https://api15.toconline.pt/api/customers', [
                 'data' => [
                     'attributes' => [
                         'business_name' => $order->user?->fullName(),
