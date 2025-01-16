@@ -491,6 +491,20 @@ class ApiController extends Controller
         $ticket->order_id = $order->id;
         
         $ticket->save();
+        try {
+            $toco = new TOCOnlineService;
+            $response = $toco->createCommercialSalesDocument($order);
+
+            $order->invoice_id = $response['id'];
+            $order->invoice_url = $response['public_link'];
+            $order->invoice_body = json_encode($response);
+            $sendInvoiceToMail = $request->get('sendInvoiceToMail');
+            if ($sendInvoiceToMail) {
+                $toco->sendEmailDocument($order, $response['id']);
+            }
+        } catch (Exception | Error $e) {
+            Log::info($e->getMessage());
+        }
         return response()->json(['ticket' => $ticket]);
     }
 }

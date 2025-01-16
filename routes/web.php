@@ -373,7 +373,7 @@ Route::get('/payment-confirm', function () {
 Route::get('test', function () {
  $toc = new TOCOnlineService();
   $order = Order::latest()->first();
-    $response = $toc->createCustomer($order);
+    $response = $toc->getCustomer();
     dd($response);
 });
 // Route::get('send',function(){
