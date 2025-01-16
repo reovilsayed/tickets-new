@@ -484,8 +484,6 @@ class ApiController extends Controller
             'send_message' => $request->get('sendToPhone') ? true : false,
             'send_email' => $request->get('sendToMail') ? true : false,
             'pos_id' => auth()->id(),
-            'payment_status'=>1,
-            'status'=>1,
         ];
         $order = Order::create($orderData);
 
@@ -508,6 +506,10 @@ class ApiController extends Controller
         } catch (Exception | Error $e) {
             Log::info($e->getMessage());
         }
+        $order->update([
+            'status' => 1,
+            'payment_status' => 1
+        ]);
         return response()->json(['ticket' => $ticket]);
     }
 }
