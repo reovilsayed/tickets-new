@@ -502,6 +502,7 @@ class ApiController extends Controller
             if ($sendInvoiceToMail) {
                 $toco->sendEmailDocument($order, $response['id']);
             }
+            $order->save();
         } catch (Exception | Error $e) {
             Log::info($e->getMessage());
         }
