@@ -285,7 +285,7 @@
                     <video id="qr-video"></video>
                 </div>
             </div>
-            <div class="card">
+            <div class="card d-none d-sm-block">
                 <div class="card-body">
                     <p>{{ __('words.enter_manually') }}</p>
                     <div class="manual-entry d-flex align-items-center">
