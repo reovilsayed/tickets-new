@@ -163,7 +163,6 @@ const Scanner = () => {
                     newQty:
                         parseInt(targetExtra.newQty) +
                         parseInt(item?.newQty ?? item?.qty ?? 0),
-                    event_id: scannedTicket?.event_id,
                 };
             }
             return item;

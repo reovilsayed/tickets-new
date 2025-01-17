@@ -108,6 +108,7 @@ const ScannerPaymentModal = ({
     const submitOrder = async () => {
         setOrderRequestProcessing(true);
         const orderData = {
+            event_id: ticket.event_id,
             biling: formData,
             tickets: [],
             extras: ticket?.extras?.map((item) => {
