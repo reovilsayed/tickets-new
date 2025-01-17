@@ -135,28 +135,24 @@ Route::post('/scan-ticket', function (Request $request) {
 })->name('api.scan-ticket');
 
 Route::post('/extras-scan-ticker', function (Request $request) {
-    try {
-        if (Hash::check(env('SECURITY_KEY'), $request->checksum)) {
-            $ticket = Ticket::where('ticket', $request->ticket)->where('active',1)->first();
-            if(!$ticket){
-                return response()->json(['status' => 'error', 'message' => __('words.invalid_ticket_error')]);
+
+    $ticket = Ticket::where('ticket', $request->ticket)->where('active', 1)->first();
+    if ($ticket) {
+        $extras = [];
+
+        foreach ($ticket->extras as $extra) {
+            if (Extra::find($extra['id'])->zone_id != $request->zone) {
+                continue;
             }
-            $extras = [];
-
-            foreach ($ticket->extras as $extra) {
-                if (Extra::find($extra['id'])->zone_id != $request->zone) {
-                    continue;
-                }
-                array_push($extras, $extra);
-            }
-
-
-            $zone = Zone::find($request->zone);
-            $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
-            return response()->json($data);
+            array_push($extras, $extra);
         }
-    } catch (Exception $e) {
-        return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+
+
+        $zone = Zone::find($request->zone);
+        $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
+        return response()->json($data);
+    } else {
+        return response()->json(['status' => 'error', 'message' => __('words.invalid_ticket_error')]);
     }
 })->name('api.extras-scan-ticket');
 
