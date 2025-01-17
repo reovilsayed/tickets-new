@@ -137,7 +137,7 @@ Route::post('/scan-ticket', function (Request $request) {
 Route::post('/extras-scan-ticker', function (Request $request) {
     try {
         if (Hash::check(env('SECURITY_KEY'), $request->checksum)) {
-            $ticket = Ticket::where('ticket', $request->ticket)->first();
+            $ticket = Ticket::where('ticket', $request->ticket)->where('active',1)->first();
             $extras = [];
 
             foreach ($ticket->extras as $extra) {
