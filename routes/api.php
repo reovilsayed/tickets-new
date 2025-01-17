@@ -138,7 +138,9 @@ Route::post('/extras-scan-ticker', function (Request $request) {
     try {
         if (Hash::check(env('SECURITY_KEY'), $request->checksum)) {
             $ticket = Ticket::where('ticket', $request->ticket)->where('active',1)->first();
-            if (!$ticket) throw new Exception(__('words.ticket_not_active'));
+            if(!$ticket){
+                return response()->json(['status' => 'error', 'message' => __('words.invalid_ticket_error')]);
+            }
             $extras = [];
 
             foreach ($ticket->extras as $extra) {
