@@ -83,11 +83,11 @@
             <div class="form-group">
               <label for="event">Select Event</label>
               <select onchange="document.getElementById('form1').submit()" name="event" id="event" class="form-control">
-                <option value="">
-                  All</option>
+                <option value="">Select Event</option>
                 @foreach ($events as $event)
                   <option @if ($event->id == request()->event) selected @endif value="{{ $event->id }}">
-                    {{ $event->name }}</option>
+                    {{ $event->name }}
+                  </option>
                 @endforeach
               </select>
             </div>
@@ -96,169 +96,172 @@
         </div>
 
 
-        <hr>
+        @if (request()->filled('event'))
+          <hr>
 
-        <div class="container">
-          <div class="row g-3 mb-3">
-            <div class="col-md-4">
-              @include('vendor.voyager.events.partial.card', [
-                  'label' => 'Total Amount',
-                  'value' => Sohoj::price($orders->sum('total')),
-              ])
-
-            </div>
-            <div class="col-md-4">
-              @include('vendor.voyager.events.partial.card', [
-                  'label' => 'Total Ticket Sell',
-                  'value' => $tickets->count(),
-              ])
-
-            </div>
-            <div class="col-md-4">
-              @include('vendor.voyager.events.partial.card', [
-                  'label' => 'Total Product sell',
-                  'value' => $extras->sum('qty'),
-              ])
-            </div>
-            <div class="col-md-4">
-              @include('vendor.voyager.events.partial.card', [
-                  'label' => 'Product sell Amount',
-                  'value' => Sohoj::price($productsellamount),
-              ])
-
-            </div>
-            <div class="col-md-4">
-              @include('vendor.voyager.events.partial.card', [
-                  'label' => 'Ticket sell Amount',
-                  'value' => Sohoj::price($orders->sum('total') - $productsellamount),
-              ])
-            </div>
-
-
-            @foreach ($tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $tickets)
+          <div class="container">
+            <div class="row g-3 mb-3">
               <div class="col-md-4">
-                <div class="card">
-                  <h3>
-                    {{ $product }}
-                  </h3>
-                  <h1>
-                    {{ count($tickets) }}
-                  </h1>
-                </div>
-              </div>
-            @endforeach
+                @include('vendor.voyager.events.partial.card', [
+                    'label' => 'Total Amount',
+                    'value' => Sohoj::price($orders->sum('total')),
+                ])
 
-            @foreach ($extras->groupBy('name') as $name => $data)
+              </div>
               <div class="col-md-4">
-                <div class="card">
-                  <h3>
-                    {{ $name }}
-                  </h3>
-                  <h1>
-                    {{ $data->sum('qty') }}
-                  </h1>
-                </div>
+                @include('vendor.voyager.events.partial.card', [
+                    'label' => 'Total Ticket Sell',
+                    'value' => $tickets->count(),
+                ])
+
               </div>
-            @endforeach
-
-          </div>
-
-          <div class="card">
-
-            <div class="row text-left mb-0">
               <div class="col-md-4">
-                <div class="form-group ">
-
-                  <input value="{{ request()->search }}" onchange="document.getElementById('form1').submit()" type="text" id="search" name="search" class="form-control" placeholder="Search here">
-                </div>
+                @include('vendor.voyager.events.partial.card', [
+                    'label' => 'Total Product sell',
+                    'value' => $extras->sum('qty'),
+                ])
               </div>
-              <div class="col-md-3">
+              <div class="col-md-4">
+                @include('vendor.voyager.events.partial.card', [
+                    'label' => 'Product sell Amount',
+                    'value' => Sohoj::price($productsellamount),
+                ])
 
-                <div class="form-group m-0">
-                  <select onchange="document.getElementById('form1').submit()" name="alert" id="alert" class="form-control">
-                    <option value="">Alert</option>
-                    <option @if (request()->alert == 'marked') selected @endif value="marked">Marked
-                    </option>
-                    <option @if (request()->alert == 'unmarked') selected @endif value="unmarked">Not
-                      marked
-                    </option>
-                    <option @if (request()->alert == 'resolved') selected @endif value="resolved">
-                      Resolved
-                    </option>
-                  </select>
-                </div>
               </div>
+              <div class="col-md-4">
+                @include('vendor.voyager.events.partial.card', [
+                    'label' => 'Ticket sell Amount',
+                    'value' => Sohoj::price($orders->sum('total') - $productsellamount),
+                ])
+              </div>
+
+
+              @foreach ($tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $tickets)
+                <div class="col-md-4">
+                  <div class="card">
+                    <h3>
+                      {{ $product }}
+                    </h3>
+                    <h1>
+                      {{ count($tickets) }}
+                    </h1>
+                  </div>
+                </div>
+              @endforeach
+
+              @foreach ($extras->groupBy('name') as $name => $data)
+                <div class="col-md-4">
+                  <div class="card">
+                    <h3>
+                      {{ $name }}
+                    </h3>
+                    <h1>
+                      {{ $data->sum('qty') }}
+                    </h1>
+                  </div>
+                </div>
+              @endforeach
 
             </div>
 
-            <div class="table-responsive">
+            <div class="card">
 
-              <table class="table table-hover">
-                <thead>
-                  <tr class="">
-                    <th>
-                      #
-                    </th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
-                    <th>Description</th>
-                    <th>Invoice</th>
-                    <th>Note</th>
-                    <th>Alert</th>
-                  </tr>
-                </thead>
-                <tbody id="ticket-table-body">
-                  @foreach ($allorders as $order)
-                    <tr>
-                      <td>
-                        {{ $order->id }}
-                      </td>
-                      <td>{{ $order->user->name }}</td>
-                      <td>{{ $order->billing->email ?? $order->user->email }}</td>
-                      <td>{{ $order->billing->phone ?? $order->user->contact_number }}</td>
-                      <td>
-                        <ul>
-                          @foreach ($order->getDescription() as $line)
-                            <li>
-                              {{ $line }}
-                            </li>
-                          @endforeach
-                        </ul>
-                      </td>
-                      <td>
-                        @if (!empty($order->invoice_url) && !empty($order->invoice_id))
-                          <a href="{{ $order->invoice_url }}">Invoice
-                            #{{ $order->invoice_id }}</a>
-                        @else
-                          N/A
-                        @endif
-                      </td>
-                      <td>{{ $order->note }}</td>
-                      <td>
-                        @if ($order->alert == 'unmarked')
-                          <button type="button" class="btn btn-primary ticket-marked-button" data-url="{{ route('order.marked', $order) }}" data-bs-toggle="modal" data-bs-target="#ticket-marked">
-                            Mark
-                          </button>
-                        @elseif($order->alert == 'resolved')
-                          <button class="btn btn-success">Resolved</button>
-                        @else
-                          <button class="btn btn-danger">Marked</button>
-                        @endif
-                        <span class="d-none" id="ticket-action-url-{{ $order->id }}" data-email-url="{{ route('order.email', $order) }}" data-sms-url="{{ route('order.sms', $order) }}"></span>
-                        <button type="button" class="btn btn-primary ticket-action-button" data-order-no="{{ $order->id }}" data-has-product="{{ $order->tickets_count === 0 ? 0 : 1 }}" data-url="{{ route('order.update', $order) }}" data-email="{{ $order->billing->email ?? $order->user->email }}" data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}" data-bs-toggle="modal" data-bs-target="#action-modal">
-                          Action
-                        </button>
-                      </td>
+              <div class="row text-left mb-0">
+                <div class="col-md-4">
+                  <div class="form-group ">
+
+                    <input value="{{ request()->search }}" onchange="document.getElementById('form1').submit()" type="text" id="search" name="search" class="form-control" placeholder="Search here">
+                  </div>
+                </div>
+                <div class="col-md-3">
+
+                  <div class="form-group m-0">
+                    <select onchange="document.getElementById('form1').submit()" name="alert" id="alert" class="form-control">
+                      <option value="">Alert</option>
+                      <option @if (request()->alert == 'marked') selected @endif value="marked">Marked
+                      </option>
+                      <option @if (request()->alert == 'unmarked') selected @endif value="unmarked">Not
+                        marked
+                      </option>
+                      <option @if (request()->alert == 'resolved') selected @endif value="resolved">
+                        Resolved
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="table-responsive">
+
+                <table class="table table-hover">
+                  <thead>
+                    <tr class="">
+                      <th>
+                        #
+                      </th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone Number</th>
+                      <th>Description</th>
+                      <th>Invoice</th>
+                      <th>Note</th>
+                      <th>Alert</th>
                     </tr>
-                  @endforeach
-                </tbody>
-              </table>
-              {{ $allorders->withQueryString()->links('pagination::bootstrap-4') }}
+                  </thead>
+                  <tbody id="ticket-table-body">
+                    @foreach ($allorders as $order)
+                      <tr>
+                        <td>
+                          {{ $order->id }}
+                        </td>
+                        <td>{{ $order->user->name }}</td>
+                        <td>{{ $order->billing->email ?? $order->user->email }}</td>
+                        <td>{{ $order->billing->phone ?? $order->user->contact_number }}</td>
+                        <td>
+                          <ul>
+                            @foreach ($order->getDescription() as $line)
+                              <li>
+                                {{ $line }}
+                              </li>
+                            @endforeach
+                          </ul>
+                        </td>
+                        <td>
+                          @if (!empty($order->invoice_url) && !empty($order->invoice_id))
+                            <a href="{{ $order->invoice_url }}">Invoice
+                              #{{ $order->invoice_id }}</a>
+                          @else
+                            N/A
+                          @endif
+                        </td>
+                        <td>{{ $order->note }}</td>
+                        <td>
+                          @if ($order->alert == 'unmarked')
+                            <button type="button" class="btn btn-primary ticket-marked-button" data-url="{{ route('order.marked', $order) }}" data-bs-toggle="modal" data-bs-target="#ticket-marked">
+                              Mark
+                            </button>
+                          @elseif($order->alert == 'resolved')
+                            <button class="btn btn-success">Resolved</button>
+                          @else
+                            <button class="btn btn-danger">Marked</button>
+                          @endif
+                          <span class="d-none" id="ticket-action-url-{{ $order->id }}" data-email-url="{{ route('order.email', $order) }}" data-sms-url="{{ route('order.sms', $order) }}"></span>
+                          <button type="button" class="btn btn-primary ticket-action-button" data-order-no="{{ $order->id }}" data-has-product="{{ $order->tickets_count === 0 ? 0 : 1 }}" data-url="{{ route('order.update', $order) }}" data-email="{{ $order->billing->email ?? $order->user->email }}" data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}" data-bs-toggle="modal"
+                            data-bs-target="#action-modal">
+                            Action
+                          </button>
+                        </td>
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+                {{ $allorders->withQueryString()->links('pagination::bootstrap-4') }}
 
+              </div>
             </div>
           </div>
-        </div>
+        @endif
       </div>
 
     </form>

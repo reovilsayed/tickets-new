@@ -14,7 +14,7 @@ class PosDashboardReport extends Controller
     public function __invoke()
     {
         $user = auth()->user();
-        $events = Event::where('status', 1)->get();
+        $events = Event::where('status', 1)->where('in_pos', 1)->get();
 
         $orders = Order::where('pos_id', $user->id)
             ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))

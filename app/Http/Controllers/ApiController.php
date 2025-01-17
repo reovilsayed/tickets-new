@@ -112,7 +112,7 @@ class ApiController extends Controller
 
     public function events(Request $request)
     {
-        $events = Event::where('status', 1)->get();
+        $events = Event::where('status', 1)->where('in_pos', 1)->get();
 
         return new EventCollection($events);
     }
@@ -489,7 +489,7 @@ class ApiController extends Controller
 
         $ticket->active = 1;
         $ticket->order_id = $order->id;
-        
+
         $ticket->save();
         try {
             $toco = new TOCOnlineService;
