@@ -211,7 +211,7 @@
                         
                         </form>`;
                     } else {
-                        toastr.error('O Acesso não foi ativado! Diriga-se à Bilheteira!')
+                        toastr.error('O Acesso não foi ativado! Dirija-se à Bilheteira!')
                     }
 
                 });
