@@ -86,6 +86,13 @@
       height: 40px;
       border-radius: 20px;
     }
+
+    .content-wrapper {
+      max-height: 100px;
+      overflow: scroll;
+      transition: max-height 0.3s ease;
+      overflow-x: hidden;
+    }
   </style>
   <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
 @endsection
@@ -174,8 +181,7 @@
                 <td class="text-center">Phone Number</td>
                 <td class="text-center">ID</td>
                 <td class="text-center">Ticket</td>
-                <td class="text-center">Check in</td>
-                <td>Zone</td>
+                <td class="text-center">Logs</td>
               </tr>
             </thead>
             <tbody>
@@ -186,22 +192,15 @@
                   <td>{{ $ticket->user ? $ticket->user->contact_number : 'N/A' }}</td>
                   <td>{{ $ticket->ticket }}</td>
                   <td>{{ $ticket->product->name }}</td>
-                  @if ($ticket->status === 1)
-                    <td class="text-center bg-success">
-                      IN - {{ $ticket->updated_at->format('Y-m-d') }}
-                    </td>
-                    <td class="text-center bg-success">
-                      {{ $ticket->checkIn->name }}
-                    </td>
-                  @elseif($ticket->status === 2)
-                    <td class="text-center bg-danger">
-                      Out - {{ $ticket?->updated_at?->format('Y-m-d') ?? 'N/A' }}
-                    </td>
-                    <td class="text-center bg-danger">{{ $ticket?->checkOut?->name ?? 'N/A' }}</td>
-                  @else
-                    <td>Pending</td>
-                    <td>N/A</td>
-                  @endif
+                  <td>
+                    <div class="content-wrapper">
+                      @foreach ($ticket->scans as $scan)
+                        <p class="mb-1 text-{{ $scan->isCheckedIn() ? 'success' : 'danger' }}">
+                          {{ $scan->action }} - {{ $scan->created_at->format('d M y g:i A') }}
+                        </p>
+                      @endforeach
+                    </div>
+                  </td>
                 </tr>
               @endforeach
             </tbody>

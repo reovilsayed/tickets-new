@@ -182,7 +182,7 @@
         </form>
 
         <div class="mb-2">
-          <button class="btn btn-success">Total: {{ $tickets->count() }}</button>
+          <button class="btn btn-success">Total: {{ $tickets->total() }}</button>
           <button class="btn btn-success">Checked In: {{ $checkedIn->ticket }}</button>
         </div>
 

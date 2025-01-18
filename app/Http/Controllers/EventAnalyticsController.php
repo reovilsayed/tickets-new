@@ -261,8 +261,7 @@ class EventAnalyticsController extends Controller
             ->with([
                 'user:id,name,l_name,email,contact_number',
                 'product:id,name',
-                'checkIn',
-                'checkOut',
+                'scans',
             ])
             ->when(request()->filled('q'), function ($query) {
                 return $query->whereHas('user', function ($query) {
