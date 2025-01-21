@@ -312,55 +312,62 @@ const PaymentModal = ({ open }) => {
                                             <option value="Card">Card</option>
                                         </select>
                                     </div>
-                                    <div className="col-md-3">
-                                        <label htmlFor="amountToPay">
-                                            Amount to Pay
-                                        </label>
-                                        <input
-                                            id="atp"
-                                            className="form-control"
-                                            name="atp"
-                                            value={parseFloat(
-                                                grandTotal
-                                            ).toFixed(2)}
-                                            readOnly
-                                            disabled
-                                        />
-                                    </div>
-                                    <div className="col-md-3">
-                                        <label htmlFor="amountPaid">
-                                            Amount Paid
-                                        </label>
-                                        <input
-                                            id="ap"
-                                            className="form-control"
-                                            name="ap"
-                                            type="number"
-                                            value={paidTotal}
-                                            onChange={(event) =>
-                                                setPaidTotal(
-                                                    parseFloat(
-                                                        event.target.value
-                                                    )
-                                                )
-                                            }
-                                        />
-                                    </div>
-                                    <div className="col-md-3">
-                                        <label htmlFor="amountPaid">
-                                            Amount to Return
-                                        </label>
-                                        <input
-                                            id="atr"
-                                            className="form-control"
-                                            name="atr"
-                                            value={parseFloat(
-                                                returnAmount
-                                            ).toFixed(2)}
-                                            readOnly
-                                            disabled
-                                        />
-                                    </div>
+                                    {formData["paymentMethod"] === "Cash" ? (
+                                        <>
+                                            <div className="col-md-3">
+                                                <label htmlFor="amountToPay">
+                                                    Amount to Pay
+                                                </label>
+                                                <input
+                                                    id="atp"
+                                                    className="form-control"
+                                                    name="atp"
+                                                    value={parseFloat(
+                                                        grandTotal
+                                                    ).toFixed(2)}
+                                                    readOnly
+                                                    disabled
+                                                />
+                                            </div>
+                                            <div className="col-md-3">
+                                                <label htmlFor="amountPaid">
+                                                    Amount Paid
+                                                </label>
+                                                <input
+                                                    id="ap"
+                                                    className="form-control"
+                                                    name="ap"
+                                                    type="number"
+                                                    value={paidTotal}
+                                                    onChange={(event) =>
+                                                        setPaidTotal(
+                                                            parseFloat(
+                                                                event.target
+                                                                    .value
+                                                            )
+                                                        )
+                                                    }
+                                                />
+                                            </div>
+                                            <div className="col-md-3">
+                                                <label htmlFor="amountPaid">
+                                                    Amount to Return
+                                                </label>
+                                                <input
+                                                    id="atr"
+                                                    className="form-control"
+                                                    name="atr"
+                                                    value={parseFloat(
+                                                        returnAmount
+                                                    ).toFixed(2)}
+                                                    readOnly
+                                                    disabled
+                                                />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        ""
+                                    )}
                                     {/* <div className="col-md-8">
                                         <label htmlFor="discountInput">
                                             Discount
