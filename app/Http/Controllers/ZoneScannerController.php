@@ -10,19 +10,19 @@ class ZoneScannerController extends Controller
 {
     public function checkIn(Zone $zone, $ticket)
     {
-        $ticket = Ticket::where('ticket', $ticket)
+        $ticket = Ticket::with('product')->where('ticket', $ticket)
             ->firstOrFail();
-        if($ticket->active == 0){
-            return $this->withResponse(__('words.ticket_not_active'));
+        if ($ticket->active == 0) {
+            return $this->withResponse(__('words.ticket_not_active'),data: $ticket);
         }
         // check if the ticket is valid for the current date
         if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
-            return $this->withResponse(__('words.to_early_to_scan'));
+            return $this->withResponse(__('words.to_early_to_scan'),data: $ticket);
         }
 
         // check if the ticket is valid for this zone
         if ($ticket->product->zones->doesntContain($zone)) {
-            return $this->withResponse(__('words.invalid_zone_error'));
+            return $this->withResponse(__('words.invalid_zone_error'),data: $ticket);
         }
 
         $isCheckedIn = $ticket->scanedBy()
@@ -31,7 +31,7 @@ class ZoneScannerController extends Controller
             ->exists();
 
         if ($ticket->product->one_time && $isCheckedIn) {
-            return $this->withResponse(__('words.one_time_usage'));
+            return $this->withResponse(__('words.one_time_usage'),data: $ticket);
         }
 
         $lastScan = $ticket->scanedBy()
@@ -44,7 +44,7 @@ class ZoneScannerController extends Controller
         $isCheckedIn = Str::of($lastScan?->pivot?->action)->lower()->exactly('checked in');
 
         if ($isCheckedIn) {
-            return $this->withResponse(__('words.ticket_already_scanned_error'));
+            return $this->withResponse(__('words.ticket_already_scanned_error'),data: $ticket);
         }
 
         $ticket->update([
@@ -65,12 +65,12 @@ class ZoneScannerController extends Controller
                 ['action' => 'Checked in', 'zone_id' => $zone->id]
             );
 
-        return $this->withResponse(__('words.ticket_checked_in'), 'success');
+        return $this->withResponse(__('words.ticket_checked_in'), 'success',data: $ticket);
     }
 
     public function checkOut(Zone $zone, $ticket)
     {
-        $ticket = Ticket::where('ticket', $ticket)
+        $ticket = Ticket::with('product')->where('ticket', $ticket)
             ->firstOrFail();
 
         $lastScan = $ticket->scanedBy()
@@ -83,7 +83,7 @@ class ZoneScannerController extends Controller
         $isCheckedOut = Str::of($lastScan?->pivot?->action)->lower()->exactly('checked out');
 
         if ($isCheckedOut || is_null($lastScan) || !$ticket->product->check_out || $ticket->product->one_time) {
-            return $this->withResponse(__('words.check_out_not_available'));
+            return $this->withResponse(__('words.check_out_not_available'), data: $ticket);
         }
 
         $ticket->update([
@@ -103,16 +103,17 @@ class ZoneScannerController extends Controller
                 auth()->user(),
                 ['action' => 'Checked Out', 'zone_id' => $zone->id]
             );
-        return $this->withResponse(__('words.ticket_checked_out'), 'success');
+        return $this->withResponse(__('words.ticket_checked_out'), 'success', data: $ticket);
     }
 
-    private function withResponse(string $msg, $mode = 'error')
+    private function withResponse(string $msg, $mode = 'error', $data = null)
     {
         if (request()->wantsJson()) {
 
             return response()->json([
                 'msg' => __($msg),
                 'hasError' => $mode === 'error',
+                'data' => $data
             ]);
         }
 

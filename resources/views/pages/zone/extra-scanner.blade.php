@@ -161,7 +161,7 @@
                     if (json.status == 'success') {
 
                         let rows = '';
-
+                        let hasExtra = false;
                         for (const key in json.ticket.extras) {
                             if (Object.prototype.hasOwnProperty.call(json.ticket.extras, key)) {
                                 const element = json.ticket.extras[key];
@@ -179,6 +179,10 @@
                                     </td>
                                     </tr>
                                 `
+
+                                if ((element.qty - element?.used) > 0) {
+                                    hasExtra = true
+                                }
                             }
                         }
                         document.getElementById('result').innerHTML = `<form method="post" action="{{ route('extras-used') }}">
@@ -202,7 +206,7 @@
                                 <tfoot class="bg-light">
                                      
                                     <td colspan="4">
-                                            <button type="submit" class="btn btn-outline-dark border border-dark" style="float:right">{{ __('words.give') }}</button>
+                                            ${hasExtra ? "<button type='submit' class='btn btn-outline-dark border border-dark' style='float:right'>{{ __('words.give') }}</button>" : ''}
                                     </td>    
                                     </tfoot>
                             </table>
@@ -280,7 +284,7 @@
                         Tap to read code
                     </h3>
                 </div>
-    
+
                 <div id="viewfinder" class="qr-box">
                     <div id="video-container">
                         <video id="qr-video"></video>

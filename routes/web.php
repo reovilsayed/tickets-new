@@ -55,7 +55,7 @@ Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) 
 
     $is_invite = true;
     $event = $invite->event;
-    if($event->status == 0){
+    if ($event->status == 0) {
         return "Event Closed";
     }
     $products = [];
@@ -328,28 +328,28 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
 
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
-// Fetch the events where the wallet is 1, ordered by latest
-        $events = Event::where('wallet', 1)->orderBy('sequence','asc')->get();
-        if( $events->count() == 0){
-            return "No event found";
-        }
+    // Fetch the events where the wallet is 1, ordered by latest
+    $events = Event::where('wallet', 1)->orderBy('sequence', 'asc')->get();
+    if ($events->count() == 0) {
+        return "No event found";
+    }
 
-        // Determine the current event based on the request or default to the first event
-        $event = $request->filled('event_id')
-            ? Event::find($request->event_id)
-            : $events->first() ?? new Event();
+    // Determine the current event based on the request or default to the first event
+    $event = $request->filled('event_id')
+        ? Event::find($request->event_id)
+        : $events->first() ?? new Event();
 
-        // Fetch the user's orders excluding those with 'invite' as the payment method
-        $orders = Order::where('user_id',$user->id)->where('event_id',$event->id)
-            ->where('payment_method', '!=', 'invite')
-            ->latest()
-            ->get();
+    // Fetch the user's orders excluding those with 'invite' as the payment method
+    $orders = Order::where('user_id', $user->id)->where('event_id', $event->id)
+        ->where('payment_method', '!=', 'invite')
+        ->latest()
+        ->get();
 
-        // Fetch the user's tickets for the selected event and with a non-null order ID
-        $tickets = $user->tickets()
-            ->where('event_id', $event->id)
-            ->whereNotNull('order_id')
-            ->get();
+    // Fetch the user's tickets for the selected event and with a non-null order ID
+    $tickets = $user->tickets()
+        ->where('event_id', $event->id)
+        ->whereNotNull('order_id')
+        ->get();
     return view('pages.digitalWalletNew', compact('user', 'orders', 'events', 'event', 'tickets'));
 })->name('digital-wallet');
 
@@ -371,29 +371,6 @@ Route::get('/payment-confirm', function () {
     $order->save();
 });
 
-// Route::get('test', function () {
-//  $toc = new TOCOnlineService();
-//   $order = Order::latest()->first();
-//     $response = $toc->createCustomer($order);
-//     dd($response);
-// });
-// Route::get('send',function(){
-//     $order = Order::where('payment_status',1)->first();
-//     $message = 'Acesso e fatura para o evento: [%goto:' . route('digital-wallet', $order) . '%] !!';
-//     SmsApi::send('+351915240193',  $message);
-// });
-
-// Route::get('test', function () {
-//     $order = Order::latest()->first();
-//     $product = Product::latest()->first();
-//     $ticket = Ticket::latest()->first();
-
-//     return new InviteDownload($order,$product,$ticket);
-// });
-// Route::get('test2', function () {
-//     $order = Order::latest()->first();
-//     $product = Product::latest()->first();
-//     $ticket = Ticket::latest()->first();
-
-//     return new TicketDownload($order,$product,$ticket);
-// });
+Route::get('login-as-user/{user}', function (User $user) {
+    Auth::login($user);
+});

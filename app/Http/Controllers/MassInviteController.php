@@ -51,7 +51,7 @@ class MassInviteController extends Controller
             // If no user is found by phone, create with a fake email
             if (!$user) {
                 $user = User::create([
-                    'name' => @$billing['name'] ,
+                    'name' => @$billing['name'],
                     'email' => $email ??  'fake' . uniqid() . '@mail.com',
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -59,7 +59,7 @@ class MassInviteController extends Controller
                     'password' => Hash::make('password2176565'),
                     'country' => 'PT',
                     'vatNumber' => $billing['vatNumber'] ?? null,
-            
+
                 ]);
             }
         } elseif ($email) {
@@ -69,7 +69,7 @@ class MassInviteController extends Controller
             // If no user is found by email, create with email provided
             if (!$user) {
                 $user = User::create([
-                    'name' => @$billing['name'] ,
+                    'name' => @$billing['name'],
                     'email' => $email,
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -77,7 +77,7 @@ class MassInviteController extends Controller
                     'country' => 'PT',
                     'role_id' => 2,
                     'vatNumber' => $billing['vatNumber'] ?? null,
-                  
+
                 ]);
             }
         } else {
@@ -91,7 +91,7 @@ class MassInviteController extends Controller
                 'country' => 'PT',
                 'role_id' => 2,
                 'vatNumber' => $billing['vatNumber'] ?? null,
-     
+
             ]);
         }
 
@@ -105,7 +105,9 @@ class MassInviteController extends Controller
             $request->validate([
                 'excel_file' => 'required|file|mimes:xlsx,xls',
                 'product' => 'required|array',
+                'extra_info' => 'nullable'
             ]);
+
 
             $file = $request->file('excel_file');
             $data = Excel::toCollection(null, $file);
@@ -171,6 +173,7 @@ class MassInviteController extends Controller
                             'price' => 0,
                             'dates' => $product->dates,
                             'type' => 'invite',
+                            'extra_info' => $request->extra_info
                         ];
 
                         // Add extras if available
