@@ -428,6 +428,4 @@
     </div>
 
   </div>
-
-
 @endsection

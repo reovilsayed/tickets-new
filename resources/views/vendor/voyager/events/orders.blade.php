@@ -61,6 +61,9 @@
       font-weight: bold;
       color: #000;
     }
+    .btn-sm{
+      padding: 0px 5px;
+    }
   </style>
   <link rel="stylesheet" href="{{ voyager_asset('lib/css/responsive.dataTables.min.css') }}">
 @endsection
@@ -107,7 +110,7 @@
                     <td>{{ $order->created_at->format(' d F, Y') }}</td>
                     <td class="align-center" style="display: flex">
                       @if ($order->status !== 3 || $order->status == 1)
-                        <a href="{{ route('order.refund', $order) }}" class="btn btn-dark pull-right" style="margin-right:7px;"><i class="voyager-wallet" style="margin-right:5px;"></i>Refund</a>
+                        <a href="{{ route('order.refund', $order) }}" class="btn btn-dark pull-right btn-sm" style="margin-right:7px;"><i class="voyager-wallet" style="margin-right:5px;"></i>Refund</a>
                       @endif
                       <a style="margin-right: 5px;"href="{{ route('voyager.orders.show', $order) }}" class="btn btn-sm btn-warning pull-right">
                         <i class="voyager-eye"></i> View
@@ -123,6 +126,11 @@
                         <a href="{{ route('order.sms', $order) }}" onclick="askForConfirmation(this)" class="btn btn-sm btn-success pull-left">
                           <i class="voyager-mail"></i> Send Sms
                         </a>
+                      @endif
+                      @if ($order->payment_status != 1)
+                      <br>
+                                <a href="{{route('order.mark.pay',$order)}}" class="btn btn-info pull-right btn-sm" style="margin-right:7px;"><i
+                                    class="voyager-wallet" style="margin-right:5px;"></i>Mark As Pay</a>
                       @endif
                     </td>
                   </tr>
