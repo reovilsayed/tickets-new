@@ -77,7 +77,7 @@ class CheckoutService
                         'ticket' => uniqid(),
                         'price' => $item->price,
                         'dates' => $item->dates,
-                        'type' => 'invite',
+                        'type' => $item->paid_invite ? 'paid_invite' : 'invite',
                         'active'=> $item->paid_invite ? 0 : 1
                     ];
 

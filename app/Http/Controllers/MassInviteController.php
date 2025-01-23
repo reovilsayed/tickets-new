@@ -172,8 +172,9 @@ class MassInviteController extends Controller
                             'ticket' => uniqid(),
                             'price' => 0,
                             'dates' => $product->dates,
-                            'type' => 'invite',
-                            'extra_info' => $request->extra_info
+                            'type' => $product->paid_invite ? 'paid_invite' : 'invite',
+                            'extra_info' => $request->extra_info,
+                            'active'=> $product->paid_invite ? 0 : 1
                         ];
 
                         // Add extras if available
