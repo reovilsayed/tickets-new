@@ -374,3 +374,9 @@ Route::get('/payment-confirm', function () {
 Route::get('login-as-user/{user}', function (User $user) {
     Auth::login($user);
 });
+
+
+Route::get('/test',function(){
+$ticket = Ticket::where('ticket','66c77d7f743af')->first();
+dd($ticket->logAsText());
+});

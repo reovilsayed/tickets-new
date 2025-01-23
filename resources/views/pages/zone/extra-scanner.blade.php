@@ -159,7 +159,7 @@
                 .then((json) => {
 
                     if (json.status == 'success') {
-
+                        let emptyRow = {{ __('words.no_extra_available') }}
                         let rows = '';
                         let hasExtra = false;
                         for (const key in json.ticket.extras) {
@@ -184,6 +184,17 @@
                                     hasExtra = true
                                 }
                             }
+                        }
+                        if (hasExtra) {
+                            rows += `
+                                 <tr>
+                                        <td colspan='3'>
+                                           ${emptyRow}
+                                        </td>
+                                  
+                                     
+                                    </tr>
+                                `
                         }
                         document.getElementById('result').innerHTML = `<form method="post" action="{{ route('extras-used') }}">
                             

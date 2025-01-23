@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 class Ticket extends Model
 {
@@ -134,5 +135,19 @@ class Ticket extends Model
             default:
                 return 'secondary';
         }
+    }
+
+    public function logAsText()
+    {
+        $log = '';
+
+        if ($this->logs) {
+            foreach ($this->logs as $data) {
+                $log .= $data['action'] . ' at the ' . $data['zone'] . ' on ' . Carbon::parse($data['time'])->format('d M, Y') . ' at ' . Carbon::parse($data['time'])->format('H:i');
+                $log .= ' <br> ';
+            }
+        }
+
+        return $log;
     }
 }

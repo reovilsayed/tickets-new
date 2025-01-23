@@ -253,7 +253,7 @@
         const video = document.getElementById('qr-video');
         const qrBox = document.querySelector('.qr-box');
         const viewfinder = document.getElementById('viewfinder');
-        
+
         const statusBox = document.getElementById('statusBox');
         const manualInput = document.getElementById('manual-input');
         const submitButton = document.getElementById('submit-manual-code');
@@ -278,7 +278,8 @@
                             <h5>${res.data.msg}</h5>
                     
                             <p>${res.data.data.product.name}</p>
-                            <p>${res.data.data.extra_info}</p>
+                            <p>${res.data.data.extra_info ?? ''}</p>
+                            <p>${res.data.log ?? ''}</p>
                         </div>`;
                         toastr.error(res.data.msg);
                         return;
@@ -290,7 +291,8 @@
                             <img src="{{ asset('assets/green-light.png') }}" alt="">
                             <h6>${res.data.msg}</h6>
                             <p>${res.data.data.product.name}</p>
-                            <p>${res.data.data.extra_info}</p>
+                            <p>${res.data.data.extra_info ?? ''}</p>
+                            <p>${res.data.log ?? ''}</p>
                         </div>`;
 
 
@@ -303,21 +305,6 @@
                     throw err;
                 });
 
-            // fetch("{{ route('api.scan-ticket') }}", {
-            //     method: "POST",
-            //     body: JSON.stringify({
-            //       ticket: result.data,
-            //       zone: "{{ $zone->id }}",
-            //       mode: document.getElementById('mode').value,
-            //       user: "{{ auth()->id() }}",
-            //       session: "{{ session()->get('enter-zone')['id'] }}",
-            //       checksum: "{{ Hash::make(env('SECURITY_KEY')) }}"
-            //     }),
-            //     headers: {
-            //       "Content-type": "application/json; charset=UTF-8"
-            //     }
-            //   }).then((response) => response.json())
-            //   .then((json) => {});
             qrBox.style.display = 'flex';
             viewfinder.style.display = 'none';
         }
