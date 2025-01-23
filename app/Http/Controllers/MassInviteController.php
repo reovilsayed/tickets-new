@@ -105,7 +105,6 @@ class MassInviteController extends Controller
             $request->validate([
                 'excel_file' => 'required|file|mimes:xlsx,xls',
                 'product' => 'required|array',
-                'extra_info' => 'nullable'
             ]);
 
 
@@ -125,6 +124,7 @@ class MassInviteController extends Controller
                     'name' => $row[0],
                     'email' => $row[1],
                     'phone' => @$row[2],
+                    'extra_info' => @$row[3],
                 ];
                 $order = Order::create([
                     'user_id' => null,
@@ -170,10 +170,10 @@ class MassInviteController extends Controller
                             'product_id' => $product->id,
                             'order_id' => $order->id,
                             'ticket' => uniqid(),
-                            'price' => 0,
+                            'price' => $product->price,
                             'dates' => $product->dates,
                             'type' => $product->paid_invite ? 'paid_invite' : 'invite',
-                            'extra_info' => $request->extra_info,
+                            'extra_info' => $row[3],
                             'active'=> $product->paid_invite ? 0 : 1
                         ];
 
@@ -199,7 +199,9 @@ class MassInviteController extends Controller
                 }
 
                 // Send email invite
-                Mail::to($row[1])->send(new InviteDownload($order, $product, null));
+                if( $request->send_email){
+                    Mail::to($row[1])->send(new InviteDownload($order, $product, null));
+                }
             }
 
             return redirect()->route('voyager.invites.index')->with([
