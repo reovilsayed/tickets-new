@@ -197,7 +197,7 @@
                                 <td class="text-center">{{ __('words.email') }}</td>
                                 <td class="text-center">{{ __('words.phone') }}</td>
                                 <td class="text-center">{{ __('words.id') }}</td>
-                                <td class="text-center">{{ __('words.usage') }}</td>
+                                <td class="text-center">{{ __('words.ticket_name') }}</td>
                                 <td class="text-center">{{ __('words.logs') }}</td>
                                 <td class="text-center">{{ __('words.action') }}</td>
                             </tr>

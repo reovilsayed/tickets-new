@@ -39,6 +39,7 @@ const ScannerPaymentModal = ({
         });
         return total;
     }, [ticket?.extras]);
+    
     const [formData, setFormData] = useState({
         name: "",
         email: "",

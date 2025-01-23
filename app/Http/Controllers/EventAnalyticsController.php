@@ -82,9 +82,7 @@ class EventAnalyticsController extends Controller
 
     public function orders(Event $event)
     {
-        $orders = Order::where('event_id', $event->id)
-            ->where('payment_status', 1)
-            ->paginate(40);
+        $orders = Order::where('event_id', $event->id)->paginate(40);
 
         return view('vendor.voyager.events.orders', [
             'event' => $event,

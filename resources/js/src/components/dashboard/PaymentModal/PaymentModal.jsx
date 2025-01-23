@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { calculateExtrasFeesForTotalCart } from "../../../lib/utils";
 
 const PaymentModal = ({ open }) => {
-    const { items, cartTotal, emptyCart } = useCart();
+    const { items, cartTotal, isEmpty: cartIsEmpty, emptyCart } = useCart();
 
     const [formData, setFormData] = useState({
         name: "",
@@ -537,7 +537,8 @@ const PaymentModal = ({ open }) => {
                                             ? false
                                             : true
                                         : false) ||
-                                    orderRequestProcessing
+                                    orderRequestProcessing ||
+                                    cartIsEmpty
                                 }
                             >
                                 {orderRequestProcessing

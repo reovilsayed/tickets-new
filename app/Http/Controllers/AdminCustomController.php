@@ -330,7 +330,7 @@ class AdminCustomController extends Controller
                     'ticket' => uniqid(),
                     'price' => $product->price,
                     'dates' => $product->dates,
-                    'type' => 'invite',
+                    'type' => $product->paid_invite ? 'paid_invite' : 'invite',
                     'active'=> $product->paid_invite ? 0 : 1
                 ];
 

@@ -38,7 +38,7 @@
 
                                 <div class="form-group ">
                                     <label class="control-label" for="file">Upload File <strong class="text-danger"
-                                            style="font-size: 10px; font-weight: 600">(Excel)</strong></label>
+                                            style="font-size: 10px; font-weight: 600"> (Excel)</strong></label> <a href="{{url('/excel/invite.xlsx')}}">Download</a>
                                     <input type="file" name="excel_file" id=""
                                         class="form-control @error('excel_file')
                                     is-invalid
@@ -47,10 +47,6 @@
                                         <span class="text-danger" style="font-size: 12px"
                                             role="alert"><strong>{{ $message }}</strong></span>
                                     @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="extra_info">Extra info</label>
-                                    <input type="text" name="extra_info" class="form-control">
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" name="send_message" type="checkbox" value="1"
