@@ -202,7 +202,7 @@
                     </div>
                 </form>`;
             } else {
-                document.getElementById('result').innerHTML = '<p>No product found</p>';
+                document.getElementById('result').innerHTML = '<p class="texr-center">Este acesso não tem produtos.</p>';
             }
         } else {
             toastr.error('O Acesso não foi ativado! Dirija-se à Bilheteira!');
