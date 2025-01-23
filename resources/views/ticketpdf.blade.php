@@ -232,6 +232,11 @@
 
                 </div>
             </div>
+            @if ($ticket->event->banner)
+            <div class="content">
+                <img src="{{Voyager::image($ticket->event->banner)}}" alt="" width="100%">
+            </div>
+            @endif
             <div class="content">
                 <h2>
                     {{ __('words.description') }}

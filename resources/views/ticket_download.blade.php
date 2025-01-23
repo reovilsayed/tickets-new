@@ -207,6 +207,11 @@
                     </table>
                 </div>
             </div>
+            {{-- @if ($ticket->event->banner)
+            <div class="content">
+                <img src="{{Voyager::image($ticket->event->banner)}}">
+            </div>
+            @endif --}}
             <div class="content">
                 <h2 style="font-size: 18px">
                     {{ __('words.description') }}
