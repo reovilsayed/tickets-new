@@ -153,15 +153,16 @@
             checksum: "{{ Hash::make(env('SECURITY_KEY')) }}",
         }),
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Accept": "application/json",
         }
     }).then((response) => response.json())
     .then((json) => {
         if (json.status == 'success') {
             let rows = '';
             let hasExtra = false;
-
-            if (json.ticket.extras.length > 0) {
+            let extrasCount = Object.keys(json.ticket.extras).length;
+            if (extrasCount > 0) {
                 for (const key in json.ticket.extras) {
                     if (Object.prototype.hasOwnProperty.call(json.ticket.extras, key)) {
                         const element = json.ticket.extras[key];
@@ -202,7 +203,7 @@
                     </div>
                 </form>`;
             } else {
-                document.getElementById('result').innerHTML = '<p class="texr-center">Este acesso não tem produtos.</p>';
+                document.getElementById('result').innerHTML = '<p class="text-center text-white fw-bold">Este acesso não tem produtos.</p>';
             }
         } else {
             toastr.error('O Acesso não foi ativado! Dirija-se à Bilheteira!');
