@@ -207,11 +207,12 @@
                     </table>
                 </div>
             </div>
-            {{-- @if ($ticket->event->banner)
+            @if ($ticket->event->banner)
             <div class="content">
-                <img src="{{Voyager::image($ticket->event->banner)}}">
+                <img src="{{public_path('storage/'.$ticket->event->banner)}}" alt="" style="width: 100%">
+                {{-- <img class="logo" src="D:/laragon/www/tickets-new/public/storage/events/January2025/8dbF18adCDeFJCjx2VOV.jpg" alt=""> --}}
             </div>
-            @endif --}}
+            @endif
             <div class="content">
                 <h2 style="font-size: 18px">
                     {{ __('words.description') }}
