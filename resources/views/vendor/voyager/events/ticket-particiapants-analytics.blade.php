@@ -53,14 +53,15 @@
 
       <div class="panel panel-body">
         <ul class="nav nav-pills">
-          <li class="active"><a data-toggle="pill" href="#byDate">{{ __('words.report_by_date') }}</a></li>
+          <li class="active"><a data-toggle="pill" href="#byChart">{{ __('words.report_by_chart') }}</a></li>
+          <li><a data-toggle="pill" href="#byDate">{{ __('words.report_by_date') }}</a></li>
           <li><a data-toggle="pill" href="#byReport">{{ __('words.report_by_type') }}</a></li>
 
         </ul>
 
         <div class="tab-content">
-          <div id="byDate" class="tab-pane fade in active">
-            <h3>{{ __('words.report_by_date_title') }}</h3>
+          <div id="byChart" class="tab-pane fade in active">
+            <h3>{{ __('words.report_by_date_chart') }}</h3>
             <br>
             <br>
             <div class="row">
@@ -68,6 +69,11 @@
                 {!! $ticketSoldChart->container() !!}
               </div>
             </div>
+          </div>
+          <div id="byDate" class="tab-pane fade">
+            <h3>{{ __('words.report_by_date_title') }}</h3>
+            <br>
+            <br>
             <div class="row ">
 
               @foreach ($report['by_dates'] as $date => $data)
