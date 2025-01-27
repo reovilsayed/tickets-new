@@ -1,6 +1,6 @@
 @extends('voyager::master')
 
-@section('page_title', $event->title . ' Participants')
+@section('page_title', "{$event->title} Participants")
 @section('css')
   <style>
     .card {
@@ -39,158 +39,7 @@
     }
   </style>
 @endsection
-@section('javascript')
-  <script>
-    [...document.querySelectorAll("[data-target='#myModal']")].forEach(element => {
-      element.addEventListener("click", function(e) {
-        document.getElementById('myModalBody').innerHTML = '';
-        let data = JSON.parse(e.target.dataset.json);
-        let html = `   <h3 class="text-center text-primary">
-                        {{ __('words.paid_ticket_and_invite') }}
-                    </h3>
 
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-4 text-center">
-                            <h4>
-                                {{ __('words.participants') }}
-                            </h4>
-                            <h2>
-                                ${data.participants}
-                            </h2>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <h4>
-                                {{ __('words.checked_in') }}
-                            </h4>
-                            <h2>
-                               ${data.checked_in}
-                            </h2>
-                        </div>
-                        <div class="col-4 text-center">
-
-                            <h4>
-                                {{ __('words.returned') }}
-                            </h4>
-                            <h2>
-                               ${data.returned}
-                            </h2>
-                        </div>
-                    </div>
-                    <h3 class="text-center text-primary">
-                        {{ __('words.paid_ticket') }}
-                    </h3>
-
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-4 text-center">
-                            <h4>
-                                {{ __('words.participants') }}
-                            </h4>
-                            <h2>
-                                 ${data.type.paid.participants}
-                            </h2>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <h4>
-                                {{ __('words.checked_in') }}
-                            </h4>
-                            <h2>
-                               ${data.type.paid.checked_in}
-                            </h2>
-                        </div>
-                        <div class="col-4 text-center">
-
-                            <h4>
-                                {{ __('words.returned') }}
-                            </h4>
-                            <h2>
-                                 ${data.type.paid.returned}
-                            </h2>
-                        </div>
-                    </div>
-                    <h3 class="text-center text-primary">
-                       {{ __('words.invite_ticket') }}
-                    </h3>
-
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-4 text-center">
-                            <h4>
-                                {{ __('words.participants') }}
-                            </h4>
-                            <h2>
-                                 ${data.type.invite.participants}
-                            </h2>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <h4>
-                                {{ __('words.checked_in') }}
-                            </h4>
-                            <h2>
-                                ${data.type.invite.checked_in}
-                            </h2>
-                        </div>
-                        <div class="col-4 text-center">
-
-                            <h4>
-                                {{ __('words.returned') }}
-                            </h4>
-                            <h2>
-                                ${data.type.invite.returned}
-                            </h2>
-                        </div>
-                    </div>`;
-
-        document.getElementById('myModalBody').innerHTML = html;
-        document.getElementById('myModalTitle').innerText = e.target.dataset.title;
-        console.log(data);
-      })
-    });
-    [...document.querySelectorAll("[data-target='#myModalType']")].forEach(element => {
-      element.addEventListener("click", function(e) {
-        document.getElementById('myModalTypeBody').innerHTML = '';
-        let data = JSON.parse(e.target.dataset.json);
-        let html = `
-
-                    <div class="row">
-                        <div class="col-md-4 text-center">
-                            <h4>
-                                {{ __('words.participants') }}
-                            </h4>
-                            <h2>
-                                ${data.participants}
-                            </h2>
-                        </div>
-                        <div class="col-md-4 text-center">
-                            <h4>
-                                {{ __('words.checked_in') }}
-                            </h4>
-                            <h2>
-                               ${data.checked_in}
-                            </h2>
-                        </div>
-                        <div class="col-4 text-center">
-
-                            <h4>
-                                {{ __('words.returned') }}
-                            </h4>
-                            <h2>
-                               ${data.returned}
-                            </h2>
-                        </div>
-                    </div>`;
-
-        document.getElementById('myModalTypeBody').innerHTML = html;
-        document.getElementById('myModalTypeTitle').innerText = e.target.dataset.title;
-        console.log(data);
-      })
-    });
-  </script>
-  {{-- <script src="{{ $ticketSoldChart->cdn() }}"></script> --}}
-  <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
-  {{-- {{ $ticketSoldChart->script() }} --}}
-@endsection
 @section('content')
   <div class="container">
     <h1>
@@ -214,11 +63,11 @@
             <h3>{{ __('words.report_by_date_title') }}</h3>
             <br>
             <br>
-            {{-- <div class="row">
+            <div class="row">
               <div class="col-12">
                 {!! $ticketSoldChart->container() !!}
               </div>
-            </div> --}}
+            </div>
             <div class="row ">
 
               @foreach ($report['by_dates'] as $date => $data)
@@ -428,4 +277,157 @@
     </div>
 
   </div>
+@endsection
+
+@section('javascript')
+  <script>
+    [...document.querySelectorAll("[data-target='#myModal']")].forEach(element => {
+      element.addEventListener("click", function(e) {
+        document.getElementById('myModalBody').innerHTML = '';
+        let data = JSON.parse(e.target.dataset.json);
+        let html = `   <h3 class="text-center text-primary">
+                        {{ __('words.paid_ticket_and_invite') }}
+                    </h3>
+
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <h4>
+                                {{ __('words.participants') }}
+                            </h4>
+                            <h2>
+                                ${data.participants}
+                            </h2>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h4>
+                                {{ __('words.checked_in') }}
+                            </h4>
+                            <h2>
+                               ${data.checked_in}
+                            </h2>
+                        </div>
+                        <div class="col-4 text-center">
+
+                            <h4>
+                                {{ __('words.returned') }}
+                            </h4>
+                            <h2>
+                               ${data.returned}
+                            </h2>
+                        </div>
+                    </div>
+                    <h3 class="text-center text-primary">
+                        {{ __('words.paid_ticket') }}
+                    </h3>
+
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <h4>
+                                {{ __('words.participants') }}
+                            </h4>
+                            <h2>
+                                 ${data.type.paid.participants}
+                            </h2>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h4>
+                                {{ __('words.checked_in') }}
+                            </h4>
+                            <h2>
+                               ${data.type.paid.checked_in}
+                            </h2>
+                        </div>
+                        <div class="col-4 text-center">
+
+                            <h4>
+                                {{ __('words.returned') }}
+                            </h4>
+                            <h2>
+                                 ${data.type.paid.returned}
+                            </h2>
+                        </div>
+                    </div>
+                    <h3 class="text-center text-primary">
+                       {{ __('words.invite_ticket') }}
+                    </h3>
+
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <h4>
+                                {{ __('words.participants') }}
+                            </h4>
+                            <h2>
+                                 ${data.type.invite.participants}
+                            </h2>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h4>
+                                {{ __('words.checked_in') }}
+                            </h4>
+                            <h2>
+                                ${data.type.invite.checked_in}
+                            </h2>
+                        </div>
+                        <div class="col-4 text-center">
+
+                            <h4>
+                                {{ __('words.returned') }}
+                            </h4>
+                            <h2>
+                                ${data.type.invite.returned}
+                            </h2>
+                        </div>
+                    </div>`;
+
+        document.getElementById('myModalBody').innerHTML = html;
+        document.getElementById('myModalTitle').innerText = e.target.dataset.title;
+        console.log(data);
+      })
+    });
+    [...document.querySelectorAll("[data-target='#myModalType']")].forEach(element => {
+      element.addEventListener("click", function(e) {
+        document.getElementById('myModalTypeBody').innerHTML = '';
+        let data = JSON.parse(e.target.dataset.json);
+        let html = `
+
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <h4>
+                                {{ __('words.participants') }}
+                            </h4>
+                            <h2>
+                                ${data.participants}
+                            </h2>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h4>
+                                {{ __('words.checked_in') }}
+                            </h4>
+                            <h2>
+                               ${data.checked_in}
+                            </h2>
+                        </div>
+                        <div class="col-4 text-center">
+
+                            <h4>
+                                {{ __('words.returned') }}
+                            </h4>
+                            <h2>
+                               ${data.returned}
+                            </h2>
+                        </div>
+                    </div>`;
+
+        document.getElementById('myModalTypeBody').innerHTML = html;
+        document.getElementById('myModalTypeTitle').innerText = e.target.dataset.title;
+        console.log(data);
+      })
+    });
+  </script>
+  <script src="{{ $ticketSoldChart->cdn() }}"></script>
+  <script src="{{ voyager_asset('lib/js/dataTables.responsive.min.js') }}"></script>
+  {{ $ticketSoldChart->script() }}
 @endsection
