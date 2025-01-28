@@ -491,6 +491,7 @@ class ApiController extends Controller
         $ticket->order_id = $order->id;
 
         $ticket->save();
+        $order->setRelation('tickets', collect([$ticket]));
         try {
             $toco = new TOCOnlineService;
             $response = $toco->createCommercialSalesDocument($order);
