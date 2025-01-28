@@ -71,58 +71,66 @@
             </div>
           </div>
           <div id="byDate" class="tab-pane fade">
-            <h3>{{ __('words.report_by_date_title') }}</h3>
-            <br>
-            <br>
-            <div class="row ">
+            <ul class="nav nav-pills">
+              <li class="active"><a data-toggle="pill" href="#date_paid">{{ __('words.paid_ticket') }}</a></li>
+              <li><a data-toggle="pill" href="#date_invite">{{ __('words.invite_ticket') }}</a></li>
+            </ul>
+            <div class="tab-content">
+              <div id="date_paid" class="tab-pane fade in active">
+                <div class="row ">
+                  <h3>{{ __('words.report_by_date_paid_title') }}</h3>
+                  <br>
+                  <br>
+                  @foreach ($report['by_dates'] as $date => $data)
+                    <div class="col-md-6">
+                      <div class="panel panel-bordered" style="box-shadow: 5px 5px 10px #0000005e">
+                        <div class="panel-body">
+                          <h3 class="text-center">
+                            {{-- {{ Carbon\Carbon::parse($date)->format('d M y') }} --}}
+                            {{ $date }}
+                          </h3>
+                          <p class="text-center text-primary">
+                            {{ $data['products']->pluck('name')->implode(', ') }}
+                          </p>
+                          <div class="row">
+                            <div class="col-md-6 text-center">
+                              <h4>
+                                {{ __('words.participants') }}
+                              </h4>
+                              <h2>
+                                {{ $data['type']['paid']['participants'] }}
+                              </h2>
+                            </div>
+                            <div class="col-md-6 text-center">
+                              <h4>
+                                {{ __('words.checked_in') }}
+                              </h4>
+                              <h2>
+                                {{ $data['type']['paid']['checked_in'] }}
+                              </h2>
+                            </div>
+                          </div>
+                          <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="{{ $data['participants'] ? round(($data['checked_in'] / $data['participants']) * 100) : 0 }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ $data['participants'] ? round(($data['checked_in'] / $data['participants']) * 100) : 0 }}%">
+                              <span class="sr-only">
+                                {{ $data['participants'] ? round(($data['checked_in'] / $data['participants']) * 100) : 0 }}%
+                                Complete
+                              </span>
+                            </div>
+                          </div>
 
-              @foreach ($report['by_dates'] as $date => $data)
-                <div class="col-md-6">
-                  <div class="panel panel-bordered" style="box-shadow: 5px 5px 10px #0000005e">
-                    <div class="panel-body">
-                      <h3 class="text-center">
-                        {{-- {{ Carbon\Carbon::parse($date)->format('d M y') }} --}}
-                        {{ $date }}
-                      </h3>
-                      <p class="text-center text-primary">
-                        {{ $data['products']->pluck('name')->implode(', ') }}
-                      </p>
-                      <div class="row">
-                        <div class="col-md-6 text-center">
-                          <h4>
-                            {{ __('words.participants') }}
-                          </h4>
-                          <h2>
-                            {{ $data['participants'] }}
-                          </h2>
+                          <button type="button" class="btn btn-info btn-lg" data-json="{{ json_encode($data) }}" data-title="{{ $date }}" data-toggle="modal" data-target="#myModal">View</button>
+                          {{-- <button type="button" class="btn btn-info btn-lg" data-json="{{ json_encode($data) }}" data-title="{{ $date }}" data-toggle="modal" data-target="#myModalType">View</button> --}}
                         </div>
-                        <div class="col-md-6 text-center">
-                          <h4>
-                            {{ __('words.checked_in') }}
-                          </h4>
-                          <h2>
-                            {{ $data['checked_in'] }}
-                          </h2>
-                        </div>
-                      </div>
-                      <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ $data['participants'] ? round(($data['checked_in'] / $data['participants']) * 100) : 0 }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ $data['participants'] ? round(($data['checked_in'] / $data['participants']) * 100) : 0 }}%">
-                          <span class="sr-only">
-                            {{ $data['participants'] ? round(($data['checked_in'] / $data['participants']) * 100) : 0 }}%
-                            Complete
-                          </span>
-                        </div>
-                      </div>
 
-                      <button type="button" class="btn btn-info btn-lg" data-json="{{ json_encode($data) }}" data-title="{{ $date }}" data-toggle="modal" data-target="#myModal">View</button>
+                      </div>
                     </div>
-
-                  </div>
+                  @endforeach
                 </div>
-              @endforeach
+              </div>
             </div>
-
           </div>
+
           <div id="byReport" class="tab-pane fade">
 
             <ul class="nav nav-pills">

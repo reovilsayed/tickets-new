@@ -61,6 +61,8 @@ class EventReport
             ->orderBy('ticket_date')
             ->get();
 
+            // dd($tickets, $tickets->where('type', 'invite'), $tickets->where('type', '!=','invite'));
+
         foreach ($tickets as  $ticket) {
             $data[$ticket->ticket_date] = $this->singleDayReport($ticket, $products);
         }
