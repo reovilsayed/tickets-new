@@ -42,7 +42,10 @@ class EventReport
             ->selectRaw("count(case when status = 3 then 1 end) as returned")
             ->selectRaw("count(case when type = 'invite' then 1 end) as invited_participants")
             ->selectRaw("count(case when type = 'invite' and status = 1 then 1 end) as invited_checked_in")
-            ->selectRaw("count(case when type = 'invite' and status = 3 then 1 end) as returned")
+            ->selectRaw("count(case when type = 'invite' and status = 3 then 1 end) as invited_returned")
+            ->selectRaw("count(case when type = 'physical' then 1 end) as physical_participants")
+            ->selectRaw("count(case when type = 'physical' and status = 1 then 1 end) as physical_checked_in")
+            ->selectRaw("count(case when type = 'physical' and status = 3 then 1 end) as physical_returned")
             ->join(
                 DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n'),
                 function ($join) {
@@ -54,9 +57,12 @@ class EventReport
             ->orderBy('ticket_date')
             ->get();
 
+
+
         foreach ($tickets as  $ticket) {
             $data[$ticket->ticket_date] = $this->singleDayReport($ticket, $products);
         }
+
 
         $this->report['by_dates'] = $data;
     }
@@ -73,6 +79,11 @@ class EventReport
                     'participants' => $ticket->invited_participants,
                     'checked_in' => $ticket->invited_checked_in,
                     'returned' => (int) $ticket->invited_returned,
+                ],
+                'physical' => [
+                    'participants' => $ticket->physical_participants,
+                    'checked_in' => $ticket->physical_checked_in,
+                    'returned' => (int) $ticket->physical_returned,
                 ],
                 'paid' => [
                     'participants' => $ticket->participants - $ticket->invited_participants,
@@ -91,9 +102,8 @@ class EventReport
             ->selectRaw("count(case when status = 1 then 1 end) as checked_in")
             ->selectRaw("count(case when status = 0 then 1 end) as returned")
             ->when(
-                $type === 'invite',
+                $type === 'invite' || $type === 'physical',
                 fn($query) => $query->where('type', $type),
-                fn($query) => $query->where('type', '!=', 'invite'),
             )
             ->where('event_id', $this->event->id)
             ->groupBy('product_id')
@@ -136,7 +146,7 @@ class EventReport
 
     protected function reportByTypes()
     {
-        $types = ['paid', 'invite'];
+        $types = ['paid', 'invite', 'physical'];
 
         $data = [];
 

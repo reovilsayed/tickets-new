@@ -58,16 +58,6 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="product_id">Products</label>
-                                        <select name="product_id[]" id="product_id" class="form-control">
-                                            @foreach ($products as $product)
-                                                <option value="{{ $product->id }}">{{ $product->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
                                         <label for="event_id">Events</label>
                                         <select name="event_id" id="event_id" class="form-control" required>
                                             @foreach ($events as $event)
@@ -76,6 +66,15 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="product_id">Products</label>
+                                        <select name="product_id[]" id="product_id" class="form-control">
+
+                                        </select>
+                                    </div>
+                                </div>
+
 
                                 <div class="col-md-4">
                                     <button type="submit" class="btn btn-primary">
@@ -90,3 +89,48 @@
             </div>
         </div>
     @endsection
+    @section('javascript')
+        <script>
+            function fetchEvent() {
+                var eventId = $('#event_id').val();
+
+                if (eventId) {
+                    $.ajax({
+                        url: '{{ route('ajax.getProduct', ':eventId') }}'.replace(':eventId',
+                            eventId),
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#product_id').empty();
+
+                            if (data.length > 0) {
+                                $.each(data, function(key, product) {
+
+                                    $('#product_id').append(`
+                <option value="${product.id}">${product.name}</option> 
+        `);
+                                });
+                            }else{
+                                $('#product_id').html(
+                                '<option value="">No product available</option> '
+                            );
+                            }
+                        },
+                        error: function() {
+                            $('#product_id').html(
+                                '<option value="">No product available</option> '
+                            );
+                        }
+                    });
+                } else {
+                    $('#productList').empty();
+                }
+            }
+            $(document).ready(function() {
+                $('#event_id').on('change', function() {
+                    fetchEvent();
+                });
+                fetchEvent();
+            });
+        </script>
+    @stop

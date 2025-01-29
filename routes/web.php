@@ -265,6 +265,7 @@ Route::post('extras-used', function (Request $request) {
         'withdraw' => 'required',
         'session' => 'required',
     ]);
+
     if (session()->get('enter-extra-zone')['id'] != $request->session) {
         throw new Exception(__('Unauthorized access'));
     }
@@ -274,19 +275,31 @@ Route::post('extras-used', function (Request $request) {
     $zone = session()->get('enter-extra-zone')['zone'];
     $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
 
-    foreach ($request->withdraw as $key => $qty) {
-        if ($qty) {
-            $extras[$key]['used'] += $qty;
-
-            $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $extras[$key]['name'];
+    // Normalize the extras array to ensure consistent structure
+    $normalizedExtras = [];
+    foreach ($extras as $key => $extra) {
+        if (is_array($extra) && isset($extra['id'])) {
+            $normalizedExtras[$extra['id']] = $extra;
+        } elseif (is_object($extra) && isset($extra->id)) {
+            $normalizedExtras[$extra->id] = (array) $extra;
         }
-    };
+    }
+
+    foreach ($request->withdraw as $key => $qty) {
+        if ($qty && isset($normalizedExtras[$key])) {
+            $normalizedExtras[$key]['used'] += $qty;
+
+            $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $normalizedExtras[$key]['name'];
+        }
+    }
+
     $data = $ticket->logs;
     array_push($data, $log);
-    $ticket->extras = $extras;
+    $ticket->extras = $normalizedExtras;
     $ticket->logs = $data;
     $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
     $ticket->save();
+
     return redirect()->back()->with('success_msg', __('words.extra_product_withdraw_success_message'));
 })->name('extras-used');
 
@@ -350,6 +363,7 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
         ->where('event_id', $event->id)
         ->whereNotNull('order_id')
         ->get();
+
     return view('pages.digitalWalletNew', compact('user', 'orders', 'events', 'event', 'tickets'));
 })->name('digital-wallet');
 
@@ -369,14 +383,4 @@ Route::get('/payment-confirm', function () {
         }
     }
     $order->save();
-});
-
-Route::get('login-as-user/{user}', function (User $user) {
-    Auth::login($user);
-});
-
-
-Route::get('/test',function(){
-$ticket = Ticket::where('ticket','66c77d7f743af')->first();
-dd($ticket->logAsText());
 });

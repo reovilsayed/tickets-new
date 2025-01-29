@@ -66,12 +66,9 @@ class EventAnalyticsController extends Controller
     }
 
     public function ticketParticipanReport(
-        Event $event,
-        // EventTicketSellChart $ticketSoldChart
+        Event $event
     ) {
         $report = EventReport::generate($event);
-
-        // $ticketSoldChart = $ticketSoldChart->build($event);
 
         return view('vendor.voyager.events.ticket-particiapants-analytics', [
             'event' => $event,
