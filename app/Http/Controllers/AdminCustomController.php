@@ -194,14 +194,18 @@ class AdminCustomController extends Controller
         ]);
 
         for ($i = 0; $i < $request->quantity; $i++) {
-            $coupon = Coupon::create([
-                'code' => uniqid(),
+            $coupon = Coupon::updateOrCreate(['id' => $request->coupon_id], [
+                'code' =>  $request->code ?? uniqid(),
                 'discount' => $request->discount,
                 'expire_at' => $request->expire_at,
                 'limit' => $request->limit,
                 'type' => $request->type,
                 'event_id' => $request->event_id,
             ]);
+
+            if ($request->coupon_id) {
+                $coupon->products()->detach();
+            }
 
             $coupon->products()->attach($request->product_id);
         }
@@ -229,7 +233,7 @@ class AdminCustomController extends Controller
             // If no user is found by phone, create with a fake email
             if (!$user) {
                 $user = User::create([
-                    'name' => @$billing['name'] ,
+                    'name' => @$billing['name'],
                     'email' => $email ?? 'fake' . uniqid() . '@mail.com',
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -246,7 +250,7 @@ class AdminCustomController extends Controller
             // If no user is found by email, create with email provided
             if (!$user) {
                 $user = User::create([
-                    'name' => @$billing['name'] ,
+                    'name' => @$billing['name'],
                     'email' => $email,
                     'contact_number' => $phone,
                     'email_verified_at' => now(),
@@ -254,13 +258,13 @@ class AdminCustomController extends Controller
                     'country' => 'PT',
                     'role_id' => 2,
                     'vatNumber' => $billing['vatNumber'] ?? null,
-             
+
                 ]);
             }
         } else {
             // Handle case when neither phone nor email is provided
             $user = User::create([
-                'name' => @$billing['name'] ,
+                'name' => @$billing['name'],
                 'email' => 'fake' . uniqid() . '@mail.com',
                 'contact_number' => null,
                 'email_verified_at' => now(),
@@ -268,7 +272,7 @@ class AdminCustomController extends Controller
                 'country' => 'PT',
                 'role_id' => 2,
                 'vatNumber' => $billing['vatNumber'] ?? null,
-     
+
             ]);
         }
 
@@ -294,7 +298,7 @@ class AdminCustomController extends Controller
             ];
             $orderData = [
                 'user_id' => $this->getUser($billing)->id,
-                'billing' => $billing ,
+                'billing' => $billing,
                 'subtotal' => 0,
                 'discount' => 0,
                 'discount_code' => 0,
@@ -331,7 +335,7 @@ class AdminCustomController extends Controller
                     'price' => $product->price,
                     'dates' => $product->dates,
                     'type' => $product->paid_invite ? 'paid_invite' : 'invite',
-                    'active'=> $product->paid_invite ? 0 : 1
+                    'active' => $product->paid_invite ? 0 : 1
                 ];
 
                 if ($product->extras && count($product->extras)) {
@@ -432,7 +436,6 @@ class AdminCustomController extends Controller
         ]);
 
         return Excel::download(new TicketExport($tickets), $name . '.xlsx');
-
     }
     public function ticketCreatePhysicalDestroy(Product $product, Request $request)
     {
@@ -444,18 +447,18 @@ class AdminCustomController extends Controller
     }
     public function orderMarkPay(Order $order)
     {
-       $order->payment_status = 1;
-       $order->status = 1;
-       $order->save();
+        $order->payment_status = 1;
+        $order->status = 1;
+        $order->save();
 
-   
-       $toco = new TOCOnlineService;
-       $response = $toco->createCommercialSalesDocument($order);
-       $order->invoice_id = $response['id'];
-       $order->invoice_url = $response['public_link'];
-       $order->invoice_body = json_encode($response);
-       $order->save();
-       $response = $toco->sendEmailDocument($order, $response['id']);
-       return redirect(url('admin/orders'));
+
+        $toco = new TOCOnlineService;
+        $response = $toco->createCommercialSalesDocument($order);
+        $order->invoice_id = $response['id'];
+        $order->invoice_url = $response['public_link'];
+        $order->invoice_body = json_encode($response);
+        $order->save();
+        $response = $toco->sendEmailDocument($order, $response['id']);
+        return redirect(url('admin/orders'));
     }
 }
