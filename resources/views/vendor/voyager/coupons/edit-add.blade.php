@@ -111,7 +111,7 @@
         <script>
             var selectedProduct = "{{ $edit ? $dataTypeContent->products()->first()->id : '' }}";
 
-            function fetchEvent() {
+            function fetchEvent() { 
                 var eventId = $('#event_id').val();
 
                 if (eventId) {
