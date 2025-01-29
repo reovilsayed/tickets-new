@@ -136,19 +136,16 @@ Route::post('/scan-ticket', function (Request $request) {
 
 Route::post('/extras-scan-ticker', function (Request $request) {
 
-    $ticket = Ticket::where('ticket', $request->ticket)->where('active', 1)->first();
+     $ticket = Ticket::where('ticket', $request->ticket)->where('active', 1)->first();
     if ($ticket) {
         $extras = [];
 
         foreach ($ticket->extras as $extra) {
-            if (Extra::find($extra['id'])->zone_id != $request->zone) {
-                continue;
-            }
+            // if (Extra::find($extra['id'])->zone_id != $request->zone) {
+            //     continue;
+            // }
             array_push($extras, $extra);
         }
-
-
-        $zone = Zone::find($request->zone);
         $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
         return response()->json($data);
     } else {

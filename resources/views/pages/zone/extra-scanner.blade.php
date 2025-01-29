@@ -143,98 +143,77 @@
         const submitButton = document.getElementById('submit-manual-code');
 
         function setResult(result) {
-            scanner.stop();
+    scanner.stop();
 
-            fetch("{{ route('api.extras-scan-ticket') }}", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        ticket: result.data,
-                        zone: "{{ $zone->id }}",
-                        checksum: "{{ Hash::make(env('SECURITY_KEY')) }}",
-                    }),
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8"
-                    }
-                }).then((response) => response.json())
-                .then((json) => {
-
-                    if (json.status == 'success') {
-                        let emptyRow = {{ __('words.no_extra_available') }}
-                        let rows = '';
-                        let hasExtra = false;
-                        for (const key in json.ticket.extras) {
-                            if (Object.prototype.hasOwnProperty.call(json.ticket.extras, key)) {
-                                const element = json.ticket.extras[key];
-                                rows += `
-                                 <tr>
-                                        <td>
-                                           ${element.name}
-                                        </td>
-                                  
-                                        <td>
-                                           ${element.qty - element?.used ?? 0}
-                                        </td>
-                                    <td>
-                                        <input class="form-control text-center" name="withdraw[${element.id}]" min="1" max="${element.qty - element?.used ?? 0}" type="number" value="${element.qty - element?.used}" required>
-                                    </td>
-                                    </tr>
-                                `
-
-                                if ((element.qty - element?.used) > 0) {
-                                    hasExtra = true
-                                }
-                            }
-                        }
-                        if (hasExtra) {
-                            rows += `
-                                 <tr>
-                                        <td colspan='3'>
-                                           ${emptyRow}
-                                        </td>
-                                  
-                                     
-                                    </tr>
-                                `
-                        }
-                        document.getElementById('result').innerHTML = `<form method="post" action="{{ route('extras-used') }}">
-                            
-                            <input type="hidden" value="{{ csrf_token() }}" name="_token" />
-                            <input type="hidden" value="${json.ticket.ticket}" name="ticket" />
-                            <input type="hidden" value="{{ session()->get('enter-extra-zone')['id'] }}" name="session"/>
-                            <div class="table-responsive">
-                             <table class="table text-light">
-                                <thead>
-                                    <tr class="text-center ">
-                                        <th>{{ __('words.extra_product_name') }}</th>
-                                      
-                                        <th>{{ __('words.extra_product_availvable') }}</th>
-                                        <th>{{ __('words.extra_product_withdraw') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-center">
-                                    ${rows}
-                                </tbody>
-                                <tfoot class="bg-light">
-                                     
-                                    <td colspan="4">
-                                            ${hasExtra ? "<button type='submit' class='btn btn-outline-dark border border-dark' style='float:right'>{{ __('words.give') }}</button>" : ''}
-                                    </td>    
-                                    </tfoot>
-                            </table>
-                            
-                        </div>
-                        
-                        </form>`;
-                    } else {
-                        toastr.error('O Acesso não foi ativado! Dirija-se à Bilheteira!')
-                    }
-
-                });
-            qrBox.style.display = 'flex';
-
-            viewfinder.style.display = 'none';
-
+    fetch("{{ route('api.extras-scan-ticket') }}", {
+        method: "POST",
+        body: JSON.stringify({
+            ticket: result.data,
+            zone: "{{ $zone->id }}",
+            checksum: "{{ Hash::make(env('SECURITY_KEY')) }}",
+        }),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            "Accept": "application/json",
         }
+    }).then((response) => response.json())
+    .then((json) => {
+        if (json.status == 'success') {
+            let rows = '';
+            let hasExtra = false;
+            let extrasCount = Object.keys(json.ticket.extras).length;
+            if (extrasCount > 0) {
+                for (const key in json.ticket.extras) {
+                    if (Object.prototype.hasOwnProperty.call(json.ticket.extras, key)) {
+                        const element = json.ticket.extras[key];
+                        rows += `
+                            <tr>
+                                <td>${element.name}</td>
+                                <td>${element.qty - element?.used ?? 0}</td>
+                                <td>
+                                    <input class="form-control text-center" name="withdraw[${element.id}]" min="1" max="${element.qty - element?.used ?? 0}" type="number" value="${element.qty - element?.used}" required>
+                                </td>
+                            </tr>
+                        `;
+
+                        if ((element.qty - element?.used) > 0) {
+                            hasExtra = true;
+                        }
+                    }
+                }
+
+                document.getElementById('result').innerHTML = `<form method="post" action="{{ route('extras-used') }}">
+                    <input type="hidden" value="{{ csrf_token() }}" name="_token" />
+                    <input type="hidden" value="${json.ticket.ticket}" name="ticket" />
+                    <input type="hidden" value="{{ session()->get('enter-extra-zone')['id'] }}" name="session"/>
+                    <div class="table-responsive">
+                        <table class="table text-light">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>{{ __('words.extra_product_name') }}</th>
+                                    <th>{{ __('words.extra_product_availvable') }}</th>
+                                    <th>{{ __('words.extra_product_withdraw') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">${rows}</tbody>
+                            <tfoot class="bg-light">
+                                <td colspan="4">${hasExtra ? "<button type='submit' class='btn btn-outline-dark border border-dark' style='float:right'>{{ __('words.give') }}</button>" : ''}</td>    
+                            </tfoot>
+                        </table>
+                    </div>
+                </form>`;
+            } else {
+                document.getElementById('result').innerHTML = '<p class="text-center text-white fw-bold">Este acesso não tem produtos.</p>';
+            }
+        } else {
+            toastr.error('O Acesso não foi ativado! Dirija-se à Bilheteira!');
+        }
+    });
+
+    qrBox.style.display = 'flex';
+    viewfinder.style.display = 'none';
+}
+
 
         const scanner = new QrScanner(video, result => setResult(result), {
             highlightScanRegion: true,

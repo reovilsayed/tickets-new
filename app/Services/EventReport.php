@@ -36,23 +36,30 @@ class EventReport
             ->groupBy('product_id')
             ->get();
 
-        $tickets = Ticket::selectRaw('JSON_UNQUOTE(JSON_EXTRACT(dates, CONCAT("$[", n.n, "]"))) AS ticket_date')
+        $tickets = Ticket::withoutGlobalScope('validTicket')
+            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(dates, CONCAT("$[", n.n, "]"))) AS ticket_date')
             ->selectRaw("count(*) as participants")
-            ->selectRaw("count(case when status = 1 then 1 end) as checked_in")
-            ->selectRaw("count(case when status = 3 then 1 end) as returned")
+            ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
+            ->selectRaw("count(case when orders.status = 3 then 1 end) as returned")
             ->selectRaw("count(case when type = 'invite' then 1 end) as invited_participants")
-            ->selectRaw("count(case when type = 'invite' and status = 1 then 1 end) as invited_checked_in")
-            ->selectRaw("count(case when type = 'invite' and status = 3 then 1 end) as invited_returned")
+            ->selectRaw("count(case when type = 'invite' and tickets.status = 1 then 1 end) as invited_checked_in")
+            ->selectRaw("count(case when type = 'invite' and orders.status = 3 then 1 end) as invited_returned")
             ->selectRaw("count(case when type = 'physical' then 1 end) as physical_participants")
-            ->selectRaw("count(case when type = 'physical' and status = 1 then 1 end) as physical_checked_in")
-            ->selectRaw("count(case when type = 'physical' and status = 3 then 1 end) as physical_returned")
+            ->selectRaw("count(case when type = 'physical' and tickets.status = 1 then 1 end) as physical_checked_in")
+            ->selectRaw("count(case when type = 'physical' and orders.status = 3 then 1 end) as physical_returned")
             ->join(
                 DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n'),
                 function ($join) {
                     $join->on(DB::raw('CHAR_LENGTH(dates) - CHAR_LENGTH(REPLACE(dates, ",", ""))'), '>=', DB::raw('n.n'));
                 }
             )
-            ->where('event_id', $this->event->id)
+            ->leftJoin('orders', 'tickets.order_id', '=', 'orders.id')
+            ->where('tickets.event_id', $this->event->id)
+            ->where(function ($query) {
+                return $query->whereIn('orders.status', [1, 3])
+                    ->where('orders.payment_status', 1)
+                    ->orWhereNull('tickets.order_id');
+            })
             ->groupBy(DB::raw('ticket_date'))
             ->orderBy('ticket_date')
             ->get();
@@ -86,9 +93,9 @@ class EventReport
                     'returned' => (int) $ticket->physical_returned,
                 ],
                 'paid' => [
-                    'participants' => $ticket->participants - $ticket->invited_participants,
-                    'checked_in' => $ticket->checked_in - $ticket->invited_checked_in,
-                    'returned' => $ticket->returned - $ticket->invited_returned,
+                    'participants' => $ticket->participants - ($ticket->invited_participants + $ticket->physical_participants),
+                    'checked_in' => $ticket->checked_in -  ($ticket->invited_checked_in + $ticket->physical_checked_in),
+                    'returned' => $ticket->returned - ($ticket->invited_returned + $ticket->physical_returned),
                 ]
             ]
         ];
@@ -96,20 +103,26 @@ class EventReport
 
     protected function reportBySingleType($type)
     {
-        $products = Ticket::with('product:id,name,start_date,end_date')
+        $products = Ticket::withoutGlobalScope('validTicket')
+            ->with('product:id,name,start_date,end_date')
             ->select('product_id')
             ->selectRaw("count(*) as participants")
-            ->selectRaw("count(case when status = 1 then 1 end) as checked_in")
-            ->selectRaw("count(case when status = 0 then 1 end) as returned")
+            ->join('orders', 'tickets.order_id', '=', 'orders.id')
+            ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
+            ->selectRaw("count(case when orders.status = 3 then 1 end) as returned")
             ->when(
                 $type === 'invite' || $type === 'physical',
-                fn($query) => $query->where('type', $type),
+                function ($query) use ($type) {
+                    
+                    return $query->where('type', $type);
+                }
             )
-            ->where('event_id', $this->event->id)
+            ->where('tickets.event_id', $this->event->id)
+            ->whereIn('orders.status', [1, 3])
+            ->where('orders.payment_status', 1)
             ->groupBy('product_id')
             ->get();
 
-        // dd($products->sum(fn($product) => $product->participants));
         $data = [];
 
         foreach ($products as $product) {
@@ -121,27 +134,7 @@ class EventReport
             ];
         }
 
-        return ['products' => $data, "participants" => 0, "checked_in" => 0];
-
-        $tickets = (clone $this->event)->tickets()->where('type', 'invite');
-
-        $products = (clone $tickets)->select('product_id')->distinct()->get()->pluck('product_id')->mapWithKeys(function ($product) {
-            $tickets = (clone $this->event)->tickets()->where('product_id', $product);
-            return  [
-                $product => [
-                    'product' => Product::find($product),
-                    'participants' => (clone $tickets)->count(),
-                    'checked_in' => (clone $tickets)->where('status', 1)->count(),
-                    'returned' => (clone $tickets)->where('status', 3)->count(),
-                ]
-
-            ];
-        })->toArray();
-        return [
-            'participants' => (clone $tickets)->count(),
-            'checked_in' => (clone $tickets)->where('status', 1)->count(),
-            'products' => $products
-        ];
+        return $data;
     }
 
     protected function reportByTypes()
@@ -154,6 +147,8 @@ class EventReport
             $data[$type] = $this->reportBySingleType($type);
         }
 
+        
+        
         $this->report['by_type'] = $data;
     }
 

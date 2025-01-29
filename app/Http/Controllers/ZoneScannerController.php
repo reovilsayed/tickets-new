@@ -56,7 +56,8 @@ class ZoneScannerController extends Controller
                     'zone' => $zone->name
                 ]
             ],
-            'check_in_zone' => $zone->id
+            'check_in_zone' => $zone->id,
+            'status' => 1
         ]);
 
         $ticket->scanedBy()
