@@ -37,7 +37,7 @@
                             <div class="form-group  col-md-6">
                                 <div style="margin-bottom: 10px !important;">
                                 <label class="control-label" for="file">Upload File <strong class="text-danger"
-                                        style="font-size: 10px; font-weight: 600">(Excel)</strong></label>  <a href="{{url('/excel/bulk_link_example.xlsx')}}">Download</a>
+                                        style="font-size: 10px; font-weight: 600">(Excel)</strong></label>  <a href="{{asset('/excel/bulk_link_example.xlsx')}}">Download</a>
                                 <input type="file" name="excel_file" id=""
                                     class="form-control @error('excel_file')
                                     is-invalid
