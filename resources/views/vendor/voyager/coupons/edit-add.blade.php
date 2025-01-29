@@ -34,7 +34,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Code</label>
-                                        <input type="text" name="code" value="{{ old('code', $dataTypeContent->id) }}"
+                                        <input type="text" name="code" value="{{ old('code', $dataTypeContent->code) }}"
                                             id="" class="form-control">
                                     </div>
                                 </div>
