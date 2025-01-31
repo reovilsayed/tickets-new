@@ -80,18 +80,22 @@
     <div class="container">
       <div class="panel">
         <div class="panel-body">
+          <div id="" class="">
+            <form action="">
+              <label>Search:<input type="search" class="form-control input-sm" placeholder="" name="search" value="{{request('search')}}"></label>
+            </form>
+          </div>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>
                 <tr class="text-center">
                   <th>Order Id</th>
+                  <th>Customer Name</th>
+                  <th>Customer Email</th>
                   <th style="width: 120px;">Status</th>
                   <th>Discount</th>
                   <th>Total</th>
                   <th>Tax</th>
-                  <th>Refund Amount</th>
-                  <th>Date Paid</th>
-                  <th>Date Completed</th>
                   <th>Created At</th>
                   <th>Action</th>
                 </tr>
@@ -100,13 +104,15 @@
                 @foreach ($orders as $order)
                   <tr>
                     <td scope="row">{{ $order->id }}</td>
+                    <td scope="row">{{ $order->user->name }} {{ $order->user->l_name }}</td>
+                    <td scope="row">{{ $order->user->email }} </td>
                     <td>{{ $order->getStatus() }}</td>
                     <td>{{ Sohoj::price($order->discount) }}</td>
                     <td>{{ Sohoj::price($order->total) }}</td>
                     <td>{{ Sohoj::price($order->tax) }}</td>
-                    <td>{{ Sohoj::price($order->refund_amount) }}</td>
+                    {{-- <td>{{ Sohoj::price($order->refund_amount) }}</td>
                     <td>{{ optional($order->date_paid)->format('d F, Y') ?? 'N/A' }}</td>
-                    <td>{{ optional($order->date_completed)->format('d F, Y') ?? 'N/A' }}</td>
+                    <td>{{ optional($order->date_completed)->format('d F, Y') ?? 'N/A' }}</td> --}}
                     <td>{{ $order->created_at->format(' d F, Y') }}</td>
                     <td class="align-center" style="display: flex">
                       @if ($order->status !== 3 || $order->status == 1)

@@ -82,7 +82,19 @@ class EventAnalyticsController extends Controller
 
     public function orders(Event $event)
     {
-        $orders = Order::where('event_id', $event->id)->paginate(40);
+        $orders = Order::where('event_id', $event->id)
+            ->when(request('search'), function ($query, $search) {
+                $query->whereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->where(function ($q) use ($search) {
+                        $q->where('name', 'LIKE', "%{$search}%")
+                            ->orWhere('l_name', 'LIKE', "%{$search}%")
+                            ->orWhere('email', 'LIKE', "%{$search}%")
+                            ->orWhereRaw("CONCAT(name, ' ', l_name) LIKE ?", ["%{$search}%"]);
+                    });
+                });
+            })
+            ->latest()
+            ->paginate(40);
 
         return view('vendor.voyager.events.orders', [
             'event' => $event,
