@@ -104,24 +104,36 @@ class EventReport
     protected function reportBySingleType($type)
     {
         $products = Ticket::withoutGlobalScope('validTicket')
-            ->with('product:id,name,start_date,end_date')
-            ->select('product_id')
-            ->selectRaw("count(*) as participants")
-            ->join('orders', 'tickets.order_id', '=', 'orders.id')
-            ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
-            ->selectRaw("count(case when orders.status = 3 then 1 end) as returned")
-            ->when(
-                $type === 'invite' || $type === 'physical',
-                function ($query) use ($type) {
-                    
-                    return $query->where('type', $type);
-                }
-            )
-            ->where('tickets.event_id', $this->event->id)
-            ->whereIn('orders.status', [1, 3])
-            ->where('orders.payment_status', 1)
-            ->groupBy('product_id')
-            ->get();
+        ->with('product:id,name,start_date,end_date')
+        ->select('product_id')
+        ->selectRaw("count(*) as participants")
+        ->leftJoin('orders', 'tickets.order_id', '=', 'orders.id') // Ensure physical tickets are included
+        ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
+        ->selectRaw("count(case when orders.status = 3 then 1 end) as returned")
+        ->when(
+            $type === 'invite',
+            function ($query) {
+                return $query->whereIn('tickets.type', ['invite', 'paid_invite']);
+            }
+        )
+        ->when(
+            $type === 'paid',
+            function ($query) {
+                return $query->whereIn('tickets.type', ['web', 'pos']);
+            }
+        )
+        ->when(
+            $type !== 'physical', // Only check orders for non-physical tickets
+            function ($query) {
+                return $query->whereIn('orders.status', [1, 3]) // Order must exist for paid & invite tickets
+                             ->where('orders.payment_status', 1); // Ensure payment is completed
+            }
+        )
+        ->where('tickets.event_id', $this->event->id)
+        ->groupBy('product_id')
+        ->get();
+    
+    
 
         $data = [];
 
@@ -146,9 +158,6 @@ class EventReport
         foreach ($types as $type) {
             $data[$type] = $this->reportBySingleType($type);
         }
-
-        
-        
         $this->report['by_type'] = $data;
     }
 

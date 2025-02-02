@@ -69,7 +69,7 @@ class EventAnalyticsController extends Controller
         Event $event,
         EventTicketSellChart $ticketSoldChart
     ) {
-        $report = EventReport::generate($event);
+         $report = EventReport::generate($event);
 
         $ticketSoldChart = $ticketSoldChart->build($event);
 
