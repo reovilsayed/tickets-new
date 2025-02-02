@@ -123,6 +123,12 @@ class EventReport
             }
         )
         ->when(
+            $type === 'physical',
+            function ($query) {
+                return $query->whereIn('tickets.type', ['physical']);
+            }
+        )
+        ->when(
             $type !== 'physical', // Only check orders for non-physical tickets
             function ($query) {
                 return $query->whereIn('orders.status', [1, 3]) // Order must exist for paid & invite tickets
