@@ -22,7 +22,8 @@ class EventTicketSellChart
             ->selectRaw("DATE(tickets.created_at) as date")
             ->selectRaw("count(case when tickets.type = 'physical' then 1 end) as physical")
             ->selectRaw("count(case when tickets.type = 'invite' then 1 end) as invited")
-            ->selectRaw("count(case when tickets.type not in ('invite', 'physical') then 1 end) as paid")
+            ->selectRaw("count(case when tickets.type = 'paid_invite' then 1 end) as paid_invited")
+            ->selectRaw("count(case when tickets.type not in ('invite', 'physical','paid_invite') then 1 end) as paid")
             ->leftJoin('orders', 'tickets.order_id', '=', 'orders.id')
             ->where('tickets.event_id', $event->id)
             ->where(function ($query) {
@@ -40,6 +41,7 @@ class EventTicketSellChart
             ->setXAxis($tickets->pluck('date')->toArray())
             ->addData('physical Tickets', $tickets->pluck('physical')->toArray())
             ->addData('Invited Tickets', $tickets->pluck('invited')->toArray())
+            ->addData('Paid Invite', $tickets->pluck('paid_invited')->toArray())
             ->addData('Paid Tickets', $tickets->pluck('paid')->toArray());
     }
 
