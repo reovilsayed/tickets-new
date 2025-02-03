@@ -199,9 +199,9 @@ class MassInviteController extends Controller
                 }
 
                 // Send email invite
-                if( $request->send_email){
-                    Mail::to($row[1])->send(new InviteDownload($order, $product, null));
-                }
+                // if( $request->send_email){
+                //     Mail::to($row[1])->send(new InviteDownload($order, $product, null));
+                // }
             }
 
             return redirect()->route('voyager.invites.index')->with([
