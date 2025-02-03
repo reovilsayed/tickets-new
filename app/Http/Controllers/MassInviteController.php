@@ -14,6 +14,7 @@ use Error;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
@@ -209,10 +210,7 @@ class MassInviteController extends Controller
                 'message' => 'Invites created successfully!',
             ]);
         } catch (Exception | Error $e) {
-            return back()->with([
-                'message' => $e->getMessage(),
-                'alert-type' => 'error',
-            ]);
+            Log::error($e->getMessage().' problem with this email account '.$row[1]);
         }
     }
 
