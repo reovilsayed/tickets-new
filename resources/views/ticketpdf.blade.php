@@ -197,9 +197,13 @@
                         <tr>
                             <td style="width: 25%">
                                 <div class="event-date-and-price">
+                                    @if ($ticket->product->start_date != $ticket->product->end_date) 
                                     <p class="date">{{ $ticket->product->start_date->format('M d, Y') }}</p>
                                     <p class="text-sub">{{ __('words.to') }}</p>
                                     <p class="date">{{ $ticket->product->end_date->format('M d, Y') }}</p>
+                                    @else
+                                    <p class="date">{{ $ticket->product->start_date->format('M d, Y') }}</p>
+                                    @endif
                                     <p class="country">{{ $ticket->event->city }}</p>
                                     <p class="price">{{ Sohoj::price($ticket->product->price) }}</p>
                                     <p class="text-main">

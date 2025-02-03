@@ -181,9 +181,14 @@
                         <tr>
                             <td style="width: 25%;">
                                 <div class="event-date-and-price">
+                                    @if ($ticket->product->start_date != $ticket->product->end_date)
                                     <p class="date"  style="font-size: 16px !important;">{{ $ticket->product->start_date->format('M d, Y') }}</p>
                                     <p class="text-sub"  style="font-size: 10px !important;">{{ __('words.to') }}</p>
                                     <p class="date"  style="font-size: 16px !important;">{{ $ticket->product->end_date->format('M d, Y') }}</p>
+                                    @else
+                                    <p class="date"  style="font-size: 16px !important;">{{ $ticket->product->start_date->format('M d, Y') }}</p>
+                                    @endif
+
                                     <p class="country" style="font-size: 16px !important;">{{ $ticket->event->city }}</p>
                                     <p class="price" style="font-size: 28px !important;">&#8364;{{ $ticket->product->price }}</p>
                                     <p class="text-main" style="font-size: 14px !important;">{{ __('words.final_price') }}</p>
