@@ -50,6 +50,7 @@ class EventAnalyticsController extends Controller
             'products',
             'products as invite_products' => fn($query) => $query->where('invite_only', 1),
             'extras',
+            'invites',
         ]);
 
         return view('vendor.voyager.events.analytics', [
