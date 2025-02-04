@@ -46,7 +46,11 @@ class EventAnalyticsController extends Controller
             ->where('type', 'physical')
             ->count();
 
-        $event->loadCount(['products', 'invites', 'extras']);
+        $event->loadCount([
+            'products',
+            'products as invite_products' => fn($query) => $query->where('invite_only', 1),
+            'extras',
+        ]);
 
         return view('vendor.voyager.events.analytics', [
             'event' => $event,
@@ -69,7 +73,7 @@ class EventAnalyticsController extends Controller
         Event $event,
         EventTicketSellChart $ticketSoldChart
     ) {
-         $report = EventReport::generate($event);
+        $report = EventReport::generate($event);
 
         $ticketSoldChart = $ticketSoldChart->build($event);
 
