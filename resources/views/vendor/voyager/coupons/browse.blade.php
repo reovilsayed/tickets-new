@@ -20,6 +20,9 @@
                 <i class="voyager-plus"></i> <span>Generate Coupon</span>
             </a>
         @endcan
+        <a href="{{ route('voyager.coupons.export') }}" class="btn btn-info btn-add-new">
+            <i class="voyager-download"></i> <span>Download Coupon</span>
+        </a>
         @can('edit', app($dataType->model_name))
             @if (!empty($dataType->order_column) && !empty($dataType->order_display_column))
                 <a href="{{ route('voyager.' . $dataType->slug . '.order') }}" class="btn btn-primary btn-add-new">

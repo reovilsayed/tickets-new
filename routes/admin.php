@@ -1,7 +1,9 @@
 <?php
 
+use App\Exports\CouponExport;
 use App\Http\Controllers\{AdminCustomController, EventAnalyticsController, ExportController, MassInviteController, PosUserReport};
 use App\Exports\CustomerExport;
+use App\Models\Coupon;
 use App\Models\Invite;
 use App\Models\Order;
 use App\Models\Product;
@@ -33,8 +35,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
             'events' => $user->events->unique()->pluck('name')->implode(', '),
         ]);
 
-        return Excel::download(new CustomerExport($users), 'customer_' . now()->format('dmyhi') . '.xlsx');
+        return Excel::download(new CustomerEpxport($users), 'customer_' . now()->format('dmyhi') . '.xlsx');
     })->name('voyager.customer.export');
+
 
     Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicateProduct'])->name('voyager.products.duplicate');
     Route::get('/users/{user}/staff', function (User $user) {
@@ -157,4 +160,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
         return response()->json($products);
     })->name('get.products');
+
+    Route::get('export/coupons', function () {
+        $coupons = Coupon::latest()->get()->map(fn($coupon) => [
+            'code' => $coupon->code,
+            'discount' => $coupon->discount,
+            'expire_at' => $coupon->expire_at,
+            'limit' => $coupon->limit,
+            'minimum_cart' => $coupon->minimum_cart,
+            'used' => $coupon->used,
+            'products' => $coupon->products->pluck('name')->implode(', '),
+            'created_at' => $coupon->created_at,
+        ]);
+
+        return Excel::download(new CouponExport($coupons), 'coupons_' . now()->format('dmyhi') . '.xlsx');
+    })->name('voyager.coupons.export');
 });
