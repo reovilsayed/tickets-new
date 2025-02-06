@@ -52,7 +52,7 @@
                                         <label for="type">Type</label>
                                         <select name="type" id="type" class="form-control" required>
                                             <option value="percentage">Percentage</option>
-                                            <option value="fixed">Fixed</option>
+                            
                                         </select>
                                     </div>
                                 </div>

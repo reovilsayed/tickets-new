@@ -17,7 +17,7 @@ class CouponExport implements FromCollection
     */
     public function collection()
     {
-        $headings = collect([['code','discount','expire_at', 'limit', 'minimum_cart', 'used','products','created_at']]);
+        $headings = collect([['code','discount','expire_at', 'limit', 'minimum_cart', 'used','type','event','products','created_at']]);
 
         return $headings->merge($this->data);
     }

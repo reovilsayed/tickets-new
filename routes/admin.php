@@ -169,6 +169,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
             'limit' => $coupon->limit,
             'minimum_cart' => $coupon->minimum_cart,
             'used' => $coupon->used,
+            'type' => $coupon->type,
+            'event' => $coupon->event->name,
             'products' => $coupon->products->pluck('name')->implode(', '),
             'created_at' => $coupon->created_at,
         ]);

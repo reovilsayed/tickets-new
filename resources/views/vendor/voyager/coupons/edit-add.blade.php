@@ -68,8 +68,7 @@
                                         <select name="type" id="type" class="form-control" required>
                                             <option @if ($dataTypeContent->type == 'percentage') selected @endif value="percentage">
                                                 Percentage</option>
-                                            <option @if ($dataTypeContent->type == 'fixed') selected @endif value="fixed">Fixed
-                                            </option>
+                                          
                                         </select>
                                     </div>
                                 </div>
