@@ -65,6 +65,7 @@
                                 font-size: 13px;color: white;background-color: indianred;padding: 0;margin-top: 15px;
                             ">Pending</span>
                                         @endif
+                                        
                                     </td>
                                     <td><span>{{ Sohoj::price($order->total) }}</span></td>
                                     <td><span>{{ $order->created_at->format('M-d-Y') }}</span></td>

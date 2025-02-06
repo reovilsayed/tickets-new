@@ -42,60 +42,26 @@ class MassInviteController extends Controller
 
     protected function getUser($billing)
     {
-        $email = $billing['email'] ?? null;
-        $phone = $billing['phone'] ?? null;
+        $email = isset($billing['email']) ? $billing['email'] : null;
+        $phone = isset($billing['phone']) ? $billing['phone'] : null;
 
-        if ($phone) {
-            // Attempt to find user by phone
-            $user = User::where('contact_number', $phone)->first();
-
-            // If no user is found by phone, create with a fake email
-            if (!$user) {
-                $user = User::create([
-                    'name' => @$billing['name'],
-                    'email' => $email ??  'fake' . uniqid() . '@mail.com',
-                    'contact_number' => $phone,
-                    'email_verified_at' => now(),
-                    'role_id' => 2,
-                    'password' => Hash::make('password2176565'),
-                    'country' => 'PT',
-                    'vatNumber' => $billing['vatNumber'] ?? null,
-
-                ]);
-            }
-        } elseif ($email) {
-            // Attempt to find user by email
-            $user = User::where('email', $email)->first();
-
-            // If no user is found by email, create with email provided
-            if (!$user) {
-                $user = User::create([
-                    'name' => @$billing['name'],
-                    'email' => $email,
-                    'contact_number' => $phone,
-                    'email_verified_at' => now(),
-                    'password' => Hash::make('password2176565'),
-                    'country' => 'PT',
-                    'role_id' => 2,
-                    'vatNumber' => $billing['vatNumber'] ?? null,
-
-                ]);
-            }
-        } else {
-            // Handle case when neither phone nor email is provided
-            $user = User::create([
-                'name' => $billing['name'] ?? 'fake user',
-                'email' => 'fake' . uniqid() . '@mail.com',
-                'contact_number' => null,
-                'email_verified_at' => now(),
-                'password' => Hash::make('password2176565'),
-                'country' => 'PT',
-                'role_id' => 2,
-                'vatNumber' => $billing['vatNumber'] ?? null,
-
-            ]);
+        $user = null;
+        if ($phone || $email) {
+            $user = User::where('contact_number', $phone)->orWhere('email', $email)->first();
         }
 
+        if (!$user) {
+            $user = User::create([
+                'name' => $billing['name'] ?? 'unkown user',
+                'email' => $email ?? strtolower(Str::slug($billing['name'] ?? 'user')) . '+' . uniqid() . '@mail.com',
+                'contact_number' => $phone,
+                'email_verified_at' => now(),
+                'role_id' => 2,
+                'password' => Hash::make('password2176565'),
+                'country' => 'PT',
+                'vatNumber' => $billing['vatNumber'] ?? null,
+            ]);
+        }
         return $user;
     }
 
@@ -107,20 +73,20 @@ class MassInviteController extends Controller
                 'excel_file' => 'required|file|mimes:xlsx,xls',
                 'product' => 'required|array',
             ]);
-    
+
             $file = $request->file('excel_file');
             $data = Excel::toCollection(null, $file);
-    
+
             $rows = $data[0];
             unset($rows[0]); // Remove header row if present
-    
+
             foreach ($rows as $row) {
                 try {
                     if (!isset($row[0], $row[1]) || !filter_var($row[1], FILTER_VALIDATE_EMAIL)) {
                         Log::warning("Skipping invalid email: {$row[1]}");
                         continue;
                     }
-    
+
                     // Create an order
                     $billing = [
                         'name' => $row[0],
@@ -128,13 +94,13 @@ class MassInviteController extends Controller
                         'phone' => $row[2] ?? null,
                         'extra_info' => $row[3] ?? null,
                     ];
-    
+
                     $user = $this->getUser($billing);
                     if (!$user) {
                         Log::error('Skipping invite due to user creation failure: ', $billing);
                         continue;
                     }
-    
+
                     $order = Order::create([
                         'user_id' => $user->id,
                         'billing' => $billing,
@@ -150,20 +116,20 @@ class MassInviteController extends Controller
                         'send_email' => $request->send_email ? true : false,
                         'event_id' => $request->event_name,
                     ]);
-    
+
                     $products = collect($request->product)
                         ->filter(fn($product) => isset($product['checked']))
                         ->mapWithKeys(fn($product, $key) => [$key => ['quantity' => $product['qty']]]);
-    
+
                     foreach ($products as $id => $d) {
                         $product = Product::find($id);
                         if (!$product || $product->quantity < $d['quantity']) {
                             Log::error("Skipping product {$id}: Not enough stock");
                             continue;
                         }
-    
+
                         $product->decrement('quantity', $d['quantity']);
-    
+
                         for ($i = 1; $i <= $d['quantity']; $i++) {
                             $ticketData = [
                                 'user_id' => $order->user_id,
@@ -182,7 +148,7 @@ class MassInviteController extends Controller
                                 'extra_info' => $row[3] ?? null,
                                 'active' => $product->paid_invite ? 0 : 1
                             ];
-    
+
                             if ($product->extras && count($product->extras)) {
                                 $ticketData['hasExtras'] = true;
                                 $ticketData['extras'] = collect($product->extras)
@@ -194,10 +160,10 @@ class MassInviteController extends Controller
                                     ])
                                     ->toArray();
                             }
-    
+
                             $order->tickets()->create($ticketData);
                         }
-    
+
                         $order->update([
                             'status' => 1,
                             'payment_status' => 1,
@@ -208,7 +174,7 @@ class MassInviteController extends Controller
                     continue; // Skip to the next invite
                 }
             }
-    
+
             return redirect()->route('voyager.invites.index')->with([
                 'alert-type' => 'success',
                 'message' => 'Invites created successfully!',
@@ -221,7 +187,7 @@ class MassInviteController extends Controller
             ]);
         }
     }
-    
+
 
     public function MassInvite(Request $request)
     {
