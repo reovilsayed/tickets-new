@@ -220,62 +220,28 @@ class AdminCustomController extends Controller
     {
         return view('vendor.voyager.products.invite', compact('product'));
     }
-
     protected function getUser($billing)
     {
-        $email = $billing['email'] ?? null;
-        $phone = $billing['phone'] ?? null;
+        $email = isset($billing['email']) ? $billing['email'] : null;
+        $phone = isset($billing['phone']) ? $billing['phone'] : null;
 
-        if ($phone) {
-            // Attempt to find user by phone
-            $user = User::where('contact_number', $phone)->first();
-
-            // If no user is found by phone, create with a fake email
-            if (!$user) {
-                $user = User::create([
-                    'name' => @$billing['name'],
-                    'email' => $email ?? 'fake' . uniqid() . '@mail.com',
-                    'contact_number' => $phone,
-                    'email_verified_at' => now(),
-                    'role_id' => 2,
-                    'password' => Hash::make('password2176565'),
-                    'country' => 'PT',
-                    'vatNumber' => $billing['vatNumber'] ?? null,
-                ]);
-            }
-        } elseif ($email) {
-            // Attempt to find user by email
-            $user = User::where('email', $email)->first();
-
-            // If no user is found by email, create with email provided
-            if (!$user) {
-                $user = User::create([
-                    'name' => @$billing['name'],
-                    'email' => $email,
-                    'contact_number' => $phone,
-                    'email_verified_at' => now(),
-                    'password' => Hash::make('password2176565'),
-                    'country' => 'PT',
-                    'role_id' => 2,
-                    'vatNumber' => $billing['vatNumber'] ?? null,
-
-                ]);
-            }
-        } else {
-            // Handle case when neither phone nor email is provided
-            $user = User::create([
-                'name' => @$billing['name'],
-                'email' => 'fake' . uniqid() . '@mail.com',
-                'contact_number' => null,
-                'email_verified_at' => now(),
-                'password' => Hash::make('password2176565'),
-                'country' => 'PT',
-                'role_id' => 2,
-                'vatNumber' => $billing['vatNumber'] ?? null,
-
-            ]);
+        $user = null;
+        if ($phone || $email) {
+            $user = User::where('contact_number', $phone)->orWhere('email', $email)->first();
         }
 
+        if (!$user) {
+            $user = User::create([
+                'name' => $billing['name'] ?? 'unkown user',
+                'email' => $email ?? strtolower(Str::slug($billing['name'] ?? 'user')) . '+' . uniqid() . '@mail.com',
+                'contact_number' => $phone,
+                'email_verified_at' => now(),
+                'role_id' => 2,
+                'password' => Hash::make('password2176565'),
+                'country' => 'PT',
+                'vatNumber' => $billing['vatNumber'] ?? null,
+            ]);
+        }
         return $user;
     }
     public function personalInvitePost(Request $request, Product $product)
