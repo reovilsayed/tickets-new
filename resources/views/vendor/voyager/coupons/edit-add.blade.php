@@ -28,14 +28,15 @@
                             <form action="{{ route('voyager.coupon.create') }}" method="POST">
                                 @if ($edit)
                                     <input type="hidden" name="coupon_id" value="{{ $dataTypeContent->id }}">
-                                    @endif
-                                    <input type="hidden" name="quantity" value="1">
+                                @endif
+                                <input type="hidden" name="quantity" value="1">
                                 @csrf
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="">Code</label>
-                                        <input type="text" name="code" value="{{ old('code', $dataTypeContent->code) }}"
-                                            id="" class="form-control">
+                                        <input type="text" name="code"
+                                            value="{{ old('code', $dataTypeContent->code) }}" id=""
+                                            class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -84,13 +85,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="product_id">Products</label>
-                                        <select name="product_id[]" id="product_id" class="form-control">
+                                 <div class="col-md-12">
+                                    <label for="product_id">Products</label>
+                                    <div id="productList"></div>
 
-                                        </select>
-                                    </div>
                                 </div>
 
 
@@ -106,39 +104,47 @@
                 </div>
             </div>
         </div>
+        
     @endsection
     @section('javascript')
         <script>
-            var selectedProduct = "{{ $edit ? $dataTypeContent->products()->first()->id : '' }}";
+            var selectedProduct =@json( $edit ? $dataTypeContent->products()->get()->pluck('id')->toArray() :[]);
 
-            function fetchEvent() { 
+            function fetchEvent() {
                 var eventId = $('#event_id').val();
 
                 if (eventId) {
                     $.ajax({
-                        url: '{{ route('ajax.getProduct', ':eventId') }}'.replace(':eventId',
+                        url: '{{ route('get.products', ':eventId') }}'.replace(':eventId',
                             eventId),
                         type: 'GET',
                         dataType: 'json',
                         success: function(data) {
-                            $('#product_id').empty();
+                            $('#productList').empty();
 
                             if (data.length > 0) {
                                 $.each(data, function(key, product) {
 
-                                    $('#product_id').append(`
-                <option ${selectedProduct == product.id ? 'selected' : '' }  value="${product.id}">${product.name}</option> 
+                                    $('#productList').append(`
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" ${selectedProduct.includes(product.id) ? 'checked' : ''} name="product_id[]" value="${product.id}" id="product_${product.id}">
+                                         
+                                            ${product.name}
+                                        </label>
+                                    </div>
+
         `);
                                 });
                             } else {
-                                $('#product_id').html(
-                                    '<option value="">No product available</option> '
+                                $('#productList').html(
+                                    '<p>No product available</p> '
                                 );
                             }
                         },
                         error: function() {
-                            $('#product_id').html(
-                                '<option value="">No product available</option> '
+                            $('#productList').html(
+                                '<p>No product available</p> '
                             );
                         }
                     });
@@ -146,6 +152,7 @@
                     $('#productList').empty();
                 }
             }
+
             $(document).ready(function() {
                 $('#event_id').on('change', function() {
                     fetchEvent();

@@ -66,71 +66,78 @@
                                         </select>
                                     </div>
                                 </div>
+
+
+
                                 <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="product_id">Products</label>
-                                        <select name="product_id[]" id="product_id" class="form-control">
+                                    <label for="product_id">Products</label>
+                                    <div id="productList"></div>
 
-                                        </select>
-                                    </div>
                                 </div>
-
-
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        Proccess
-                                    </button>
-                                </div>
-                            </form>
 
                         </div>
+
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary">
+                                Proccess
+                            </button>
+                        </div>
+                        </form>
+
                     </div>
                 </div>
             </div>
         </div>
-    @endsection
-    @section('javascript')
-        <script>
-            function fetchEvent() {
-                var eventId = $('#event_id').val();
+    </div>
+@endsection
+@section('javascript')
+    <script>
+        function fetchEvent() {
+            var eventId = $('#event_id').val();
 
-                if (eventId) {
-                    $.ajax({
-                        url: '{{ route('ajax.getProduct', ':eventId') }}'.replace(':eventId',
-                            eventId),
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(data) {
-                            $('#product_id').empty();
+            if (eventId) {
+                $.ajax({
+                    url: '{{ route('get.products', ':eventId') }}'.replace(':eventId',
+                        eventId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#productList').empty();
 
-                            if (data.length > 0) {
-                                $.each(data, function(key, product) {
+                        if (data.length > 0) {
+                            $.each(data, function(key, product) {
 
-                                    $('#product_id').append(`
-                <option value="${product.id}">${product.name}</option> 
+                                $('#productList').append(`
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="product_id[]" value="${product.id}" id="product_${product.id}">
+                                            ${product.name}
+                                        </label>
+                                    </div>
+
         `);
-                                });
-                            }else{
-                                $('#product_id').html(
-                                '<option value="">No product available</option> '
-                            );
-                            }
-                        },
-                        error: function() {
-                            $('#product_id').html(
-                                '<option value="">No product available</option> '
+                            });
+                        } else {
+                            $('#productList').html(
+                                '<p>No product available</p> '
                             );
                         }
-                    });
-                } else {
-                    $('#productList').empty();
-                }
-            }
-            $(document).ready(function() {
-                $('#event_id').on('change', function() {
-                    fetchEvent();
+                    },
+                    error: function() {
+                        $('#productList').html(
+                            '<p>No product available</p> '
+                        );
+                    }
                 });
+            } else {
+                $('#productList').empty();
+            }
+        }
+        $(document).ready(function() {
+            $('#event_id').on('change', function() {
                 fetchEvent();
             });
-        </script>
-    @stop
+            fetchEvent();
+        });
+    </script>
+@stop

@@ -4,6 +4,7 @@ use App\Http\Controllers\{AdminCustomController, EventAnalyticsController, Expor
 use App\Exports\CustomerExport;
 use App\Models\Invite;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -150,4 +151,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
     Route::get('/coupon-generate', [AdminCustomController::class, 'couponGenerate'])->name('voyager.coupon.generate');
     Route::post('/coupon-create', [AdminCustomController::class, 'couponCreate'])->name('voyager.coupon.create');
     Route::get('order/mark-as-pay/{order}', [AdminCustomController::class, 'orderMarkPay'])->name('order.mark.pay');
+
+    Route::get('/get/products/{eventId}', function ($eventId) {
+        $products = Product::where('event_id', $eventId)->where('invite_only', 0)->get();
+
+        return response()->json($products);
+    })->name('get.products');
 });

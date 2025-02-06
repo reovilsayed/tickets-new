@@ -36,30 +36,33 @@
                             </div>
                             <div class="form-group  col-md-6">
                                 <div style="margin-bottom: 10px !important;">
-                                <label class="control-label" for="file">Upload File <strong class="text-danger"
-                                        style="font-size: 10px; font-weight: 600">(Excel)</strong></label>  <a href="{{asset('/excel/bulk_link_example.xlsx')}}">Download</a>
-                                <input type="file" name="excel_file" id=""
-                                    class="form-control @error('excel_file')
+                                    <label class="control-label" for="file">Upload File <strong class="text-danger"
+                                            style="font-size: 10px; font-weight: 600">(Excel)</strong></label> <a
+                                        href="{{ asset('/excel/bulk_link_example.xlsx') }}">Download</a>
+                                    <input type="file" name="excel_file" id=""
+                                        class="form-control @error('excel_file')
                                     is-invalid
                                 @enderror">
-                                @error('excel_file')
-                                    <span class="text-danger" style="font-size: 12px"
-                                        role="alert"><strong>{{ $message }}</strong></span>
-                                @enderror
+                                    @error('excel_file')
+                                        <span class="text-danger" style="font-size: 12px"
+                                            role="alert"><strong>{{ $message }}</strong></span>
+                                    @enderror
+                                </div>
+                                <div class="form-check ">
+                                    <input class="form-check-input" type="checkbox" name="sent_email" value="1"
+                                        id="sent_email">
+                                    <label class="form-check-label" for="sent_email">
+                                        Sent Mail
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="sent_sms" value="1"
+                                        id="sent_sms">
+                                    <label class="form-check-label" for="sent_sms">
+                                        Sent SMS
+                                    </label>
+                                </div>
                             </div>
-                            <div class="form-check ">
-                                <input class="form-check-input" type="checkbox" name="sent_email" value="1" id="sent_email" >
-                                <label class="form-check-label" for="sent_email">
-                                    Sent Mail
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="sent_sms" value="1" id="sent_sms" >
-                                <label class="form-check-label" for="sent_sms">
-                                    Sent SMS
-                                </label>
-                            </div>
-                        </div>
 
                         </div><!-- panel-body -->
 
