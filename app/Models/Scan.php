@@ -22,4 +22,9 @@ class Scan extends Model
     {
         return $this->belongsTo(Ticket::class);
     }
+
+    public function zone(): BelongsTo
+    {
+        return $this->belongsTo(Zone::class)->withDefault();
+    }
 }

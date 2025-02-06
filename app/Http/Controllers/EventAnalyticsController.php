@@ -7,6 +7,7 @@ use App\Charts\OrderSalesByTicketChart;
 use App\Charts\OrderSalesChart;
 use App\Models\Event;
 use App\Models\Order;
+use App\Models\Scan;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Services\CheckoutService;
@@ -285,9 +286,23 @@ class EventAnalyticsController extends Controller
                         ->orWhere('email', 'LIKE', '%' . request()->q . '%')
                         ->orWhere('contact_number', 'LIKE', '%' . request()->q . '%')
                         ->orWhere('vatNumber', 'LIKE', '%' . request()->q . '%');
-                })->orWhere('ticket', 'LIKE', '%' . request()->q . '%');
+                })
+                    ->orWhere('ticket', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('extra_info', 'LIKE', '%' . request()->q . '%');
             })
             ->where('event_id', $event->id)
+            ->when(
+                request()->filled('status'),
+                function ($query) {
+                    if (request('status') === '1') {
+                        return $query->has('scans');
+                    }
+
+                    if (request('status') === '2') {
+                        return $query->doesntHave('scans');
+                    }
+                }
+            )
             ->where(function ($query) {
                 $query->when(request()->filled('ticket'), function ($query) {
                     return $query->where('product_id', request()->ticket);
@@ -315,26 +330,16 @@ class EventAnalyticsController extends Controller
             ->groupBy('tickets.product_id', 'products.name')
             ->get();
 
-        $zones = DB::table('zones')
-            ->select('zones.name')
-            ->selectRaw('count(*) as total')
-            ->join('ticket_user', 'zones.id', 'ticket_user.zone_id')
-            ->when(
-                $request->filled('staff'),
-                fn($query) => $query->where('ticket_user.user_id', $request->staff)
-            )
-            ->when(
-                $request->filled('date'),
-                fn($query) => $query->whereDate('ticket_user.created_at', $request->date)
-            )
-            ->where('zones.event_id', $event->id)
-            ->groupBy('zones.id', 'zones.name')
+        $zones = Scan::with('zone')
+            ->select('zone_id')
+            ->selectRaw("count(DISTINCT ticket_id) as total")
+            ->whereHas('ticket', fn($query) => $query->where('event_id', $event->id))
+            ->groupBy('zone_id')
             ->get();
-
-        $products = $zones->merge($products);
 
         return view('vendor.voyager.events.checkin', [
             'event' => $event,
+            'zones' => $zones,
             'staffs' => $staffs,
             'tickets' => $tickets,
             'products' => $products,

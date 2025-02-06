@@ -138,6 +138,14 @@
       <div class="panel-body">
         <div class="row">
 
+          @foreach ($zones as $zone)
+            <div class="col-md-4">
+              @include('vendor.voyager.events.partial.card', [
+                  'label' => $zone->zone->name,
+                  'value' => $zone->total,
+              ])
+            </div>
+          @endforeach
           @foreach ($products as $product)
             <div class="col-md-4">
               @include('vendor.voyager.events.partial.card', [
@@ -150,24 +158,31 @@
         <form action="{{ route('voyager.events.checkinReport.analytics', $event) }}" method="get">
 
           <div class="search-group">
-            <input type="text" name="q" placeholder="Search  customer " value="{{ request()->q }}">
+            <input type="text" name="q" placeholder="Search" value="{{ request()->q }}">
             <button class="btn btn-custom"><i class="voyager-search"></i></button>
           </div>
           <div class="row">
-            <div class="col-md-6">
-              <select name="ticket" id="" class="form-control">
+            <div class="col-md-4">
+              <select name="ticket" class="form-control">
                 <option value="">Select Ticket</option>
                 @foreach ($event->products as $product)
                   <option value="{{ $product->id }}" @if ($product->id == request()->ticket) selected @endif>{{ $product->internal_name ?? $product->name }}</option>
                 @endforeach
               </select>
             </div>
-            <div class="col-md-6">
-              <select name="zone" id="" class="form-control">
+            <div class="col-md-4">
+              <select name="zone" class="form-control">
                 <option value="">Select Zone</option>
                 @foreach ($event->zones as $zone)
                   <option value="{{ $zone->id }}" @if ($zone->id == request()->zone) selected @endif>{{ $zone->name }}</option>
                 @endforeach
+              </select>
+            </div>
+            <div class="col-md-4">
+              <select name="status" class="form-control">
+                <option value="">Select Status</option>
+                <option value="1" @selected(request('status') === '1')>Checked In</option>
+                <option value="2" @selected(request('status') === '2')>Not Checked In</option>
               </select>
             </div>
           </div>
@@ -181,6 +196,7 @@
                 <td class="text-center">Phone Number</td>
                 <td class="text-center">ID</td>
                 <td class="text-center">Ticket</td>
+                <td class="text-center">Extra</td>
                 <td class="text-center">Logs</td>
               </tr>
             </thead>
@@ -192,6 +208,7 @@
                   <td>{{ $ticket->user ? $ticket->user->contact_number : 'N/A' }}</td>
                   <td>{{ $ticket->ticket }}</td>
                   <td>{{ $ticket->product->name }}</td>
+                  <td>{{ $ticket->extra_info }}</td>
                   <td>
                     <div class="content-wrapper">
                       @foreach ($ticket->scans as $scan)
