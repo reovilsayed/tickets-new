@@ -207,12 +207,12 @@
 
                   <td>
                     @if (isset($ticket->owner->name))
-                      {{  $ticket?->owner?->name  : 'N/A' }}
+                      {{  $ticket?->owner?->name }}
                     @endif
                   </td>
                   <td>
                     @if (isset($ticket->owner->email))
-                      {{  $ticket?->owner->email  : 'N/A' }}
+                      {{  $ticket?->owner->email   }}
                     @endif
                   </td>
                   <td>{{ $ticket->user ? $ticket->user->contact_number : 'N/A' }}</td>
