@@ -204,10 +204,17 @@
             <tbody id="ticket-list">
               @foreach ($tickets as $ticket)
                 <tr class="text-center">
+
                   <td>
-                    {{ $ticket->owner ? $ticket?->owner?->name  : 'N/A' }}
+                    @if (isset($ticket->owner->name))
+                      {{  $ticket?->owner?->name  : 'N/A' }}
+                    @endif
                   </td>
-                  <td>{{ $ticket->owner ? $ticket?->owner?->email : 'N/A' }}</td>
+                  <td>
+                    @if (isset($ticket->owner->email))
+                      {{  $ticket?->owner->email  : 'N/A' }}
+                    @endif
+                  </td>
                   <td>{{ $ticket->user ? $ticket->user->contact_number : 'N/A' }}</td>
                   <td>{{ $ticket->ticket }}</td>
                   <td>{{ $ticket->product->name }}</td>
