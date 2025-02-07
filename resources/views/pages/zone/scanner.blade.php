@@ -197,6 +197,7 @@
                 <td class="text-center">{{ __('words.id') }}</td>
                 <td class="text-center">{{ __('words.ticket_name') }}</td>
                 <td class="text-center">{{ __('words.logs') }}</td>
+                <td class="text-center">{{ __('words.extra_info') }}</td>
                 <td class="text-center">{{ __('words.action') }}</td>
               </tr>
             </thead>
@@ -204,9 +205,9 @@
               @foreach ($tickets as $ticket)
                 <tr class="text-center">
                   <td>
-                    {{ $ticket->user ? $ticket->user->name . ' ' . $ticket->user->l_name : 'N/A' }}
+                    {{ $ticket->owner ? $ticket->owner->name  : 'N/A' }}
                   </td>
-                  <td>{{ $ticket->user ? $ticket->user->email : 'N/A' }}</td>
+                  <td>{{ $ticket->owner ? $ticket->owner->email : 'N/A' }}</td>
                   <td>{{ $ticket->user ? $ticket->user->contact_number : 'N/A' }}</td>
                   <td>{{ $ticket->ticket }}</td>
                   <td>{{ $ticket->product->name }}</td>
@@ -219,6 +220,7 @@
                       @endforeach
                     </div>
                   </td>
+                  <td>{{ $ticket->extra_info }}</td>
                   <td>
                     @if (!$ticket->is_checked_in)
                       <a href="{{ route('zone.checkin', [$zone, $ticket->ticket]) }}" class="btn btn-success ticket-action">{{ __('words.check_in') }}</a>
