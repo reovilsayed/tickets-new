@@ -96,16 +96,12 @@ class EnterzoneContoller extends Controller
             ->when(
                 request()->filled('q'),
                 fn(Builder $query) => $query->where(function (Builder $query) {
-                    return $query->whereHas('user', function (Builder $query) {
-                        $q = request()->q;
-                        $query->where('name', 'LIKE', "%{$q}%")
-                            ->orWhere('l_name', 'LIKE', "%{$q}%")
-                            ->orWhere('email', 'LIKE', "%{$q}%")
-                            ->orWhere('contact_number', 'LIKE', "%{$q}%")
-                            ->orWhere('vatNumber', 'LIKE', "%{$q}%");
-                    })->orWhere('ticket', 'LIKE', '%' . request()->q . '%')
+                    $searchTerm = '%' . request()->q . '%';
+                    return $query->orWhere('ticket', 'LIKE', '%' . request()->q . '%')
                     ->orWhere('extra_info', 'LIKE', '%' . request()->q . '%')
-                    ->orWhere('owner', 'LIKE', '%' . request()->q . '%');
+                    ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(owner, '$.name')) LIKE ?", [$searchTerm])
+                    ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(owner, '$.phone')) LIKE ?", [$searchTerm])
+                    ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(owner, '$.email')) LIKE ?", [$searchTerm]);
                 })
             )
             ->where('event_id', $event->id)
