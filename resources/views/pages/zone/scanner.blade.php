@@ -215,7 +215,11 @@
                       {{  $ticket?->owner->email   }}
                     @endif
                   </td>
-                  <td>{{ $ticket->user ? $ticket->user->contact_number : 'N/A' }}</td>
+                  <td>
+                    @if (isset($ticket->owner->phone))
+                      {{  $ticket?->owner->phone   }}
+                    @endif
+                  </td>
                   <td>{{ $ticket->ticket }}</td>
                   <td>{{ $ticket->product->name }}</td>
                   <td>
