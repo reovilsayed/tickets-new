@@ -103,7 +103,9 @@ class EnterzoneContoller extends Controller
                             ->orWhere('email', 'LIKE', "%{$q}%")
                             ->orWhere('contact_number', 'LIKE', "%{$q}%")
                             ->orWhere('vatNumber', 'LIKE', "%{$q}%");
-                    })->orWhere('ticket', 'LIKE', '%' . request()->q . '%')->orWhere('extra_info', 'LIKE', '%' . request()->q . '%');
+                    })->orWhere('ticket', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('extra_info', 'LIKE', '%' . request()->q . '%')
+                    ->orWhere('owner', 'LIKE', '%' . request()->q . '%');
                 })
             )
             ->where('event_id', $event->id)
