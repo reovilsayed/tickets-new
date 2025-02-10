@@ -46,8 +46,19 @@ class MassInviteController extends Controller
         $phone = isset($billing['phone']) ? $billing['phone'] : null;
 
         $user = null;
-        if ($phone || $email) {
-            $user = User::where('contact_number', $phone)->orWhere('email', $email)->first();
+        $user_by_phone = null;
+        $user_by_email = null;
+        if ($phone) {
+            $user_by_phone = User::where('contact_number', $phone)->first();
+        }
+        if ($email) {
+            $user_by_email = User::where('email', $email)->first();
+        }
+
+        if ($user_by_phone) {
+            $user = $user_by_phone;
+        } elseif ($user_by_email) {
+            $user = $user_by_email;
         }
 
         if (!$user) {
@@ -62,125 +73,127 @@ class MassInviteController extends Controller
                 'vatNumber' => $billing['vatNumber'] ?? null,
             ]);
         }
+        
         return $user;
     }
 
     public function PersonalMassInvite(Request $request)
     {
         try {
-        // Validate the request
-        $request->validate([
-            'excel_file' => 'required|file|mimes:xlsx,xls',
-            'product' => 'required|array',
-        ]);
-
-        $file = $request->file('excel_file');
-        $data = Excel::toCollection(null, $file);
-
-        $rows = $data[0];
-        unset($rows[0]); // Remove header row if present
-
-        foreach ($rows as $row) {
-            try {
-            if (isset($row[1])) {
-                if (!filter_var($row[1], FILTER_VALIDATE_EMAIL)) {
-                    Log::warning("Skipping invalid email: {$row[1]}");
-                    continue;
-                };
-            }
-
-            // Create an order
-            $billing = [
-                'name' => $row[0],
-                'email' => $row[1],
-                'phone' => $row[2] ?? null,
-                'extra_info' => $row[3] ?? null,
-            ];
-
-            $user = $this->getUser($billing);
-            if (!$user) {
-                Log::error('Skipping invite due to user creation failure: ', $billing);
-                continue;
-            }
-
-            $order = Order::create([
-                'user_id' => $user->id,
-                'billing' => $billing,
-                'subtotal' => 0,
-                'discount' => 0,
-                'discount_code' => 0,
-                'tax' => 0,
-                'total' => 0,
-                'payment_method' => 'invite',
-                'transaction_id' => Str::uuid(),
-                'security_key' => Str::uuid(),
-                'send_message' => $request->send_message ? true : false,
-                'send_email' => $request->send_email ? true : false,
-                'event_id' => $request->event_name,
+            // Validate the request
+            $request->validate([
+                'excel_file' => 'required|file|mimes:xlsx,xls',
+                'product' => 'required|array',
             ]);
 
-            $products = collect($request->product)
-                ->filter(fn($product) => isset($product['checked']))
-                ->mapWithKeys(fn($product, $key) => [$key => ['quantity' => $product['qty']]]);
+            $file = $request->file('excel_file');
+            $data = Excel::toCollection(null, $file);
 
-            foreach ($products as $id => $d) {
-                $product = Product::find($id);
-                if (!$product || $product->quantity < $d['quantity']) {
-                    Log::error("Skipping product {$id}: Not enough stock");
-                    continue;
-                }
+            $rows = $data[0];
+            unset($rows[0]); // Remove header row if present
 
-                $product->decrement('quantity', $d['quantity']);
-
-                for ($i = 1; $i <= $d['quantity']; $i++) {
-                    $ticketData = [
-                        'user_id' => $order->user_id,
-                        'owner' => [
-                            'name' => $row[0],
-                            'email' => $row[1],
-                            'phone' => $row[2] ?? null,
-                        ],
-                        'event_id' => $product->event->id,
-                        'product_id' => $product->id,
-                        'order_id' => $order->id,
-                        'ticket' => uniqid(),
-                        'price' => $product->price,
-                        'dates' => $product->dates,
-                        'type' => $product->paid_invite ? 'paid_invite' : 'invite',
+            foreach ($rows as $row) {
+                try {
+                    if (isset($row[1])) {
+                        if (!filter_var($row[1], FILTER_VALIDATE_EMAIL)) {
+                            
+                            Log::warning("Skipping invalid email: {$row[1]}");
+                            continue;
+                        };
+                    }
+                    // Create an order
+                    $billing = [
+                        'name' => $row[0],
+                        'email' => $row[1],
+                        'phone' => $row[2] ?? null,
                         'extra_info' => $row[3] ?? null,
-                        'active' => $product->paid_invite ? 0 : 1
                     ];
 
-                    if ($product->extras && count($product->extras)) {
-                        $ticketData['hasExtras'] = true;
-                        $ticketData['extras'] = collect($product->extras)
-                            ->map(fn($qty, $key) => [
-                                'id' => $key,
-                                'name' => Extra::find($key)->display_name,
-                                'qty' => $qty,
-                                'used' => 0,
-                            ])
-                            ->toArray();
+                    $user = $this->getUser($billing);
+                    
+                    if (!$user) {
+                        Log::error('Skipping invite due to user creation failure: ', $billing);
+                        continue;
                     }
 
-                    $order->tickets()->create($ticketData);
+                    $order = Order::create([
+                        'user_id' => $user->id,
+                        'billing' => $billing,
+                        'subtotal' => 0,
+                        'discount' => 0,
+                        'discount_code' => 0,
+                        'tax' => 0,
+                        'total' => 0,
+                        'payment_method' => 'invite',
+                        'transaction_id' => Str::uuid(),
+                        'security_key' => Str::uuid(),
+                        'send_message' => $request->send_message ? true : false,
+                        'send_email' => $request->send_email ? true : false,
+                        'event_id' => $request->event_name,
+                    ]);
+
+                    $products = collect($request->product)
+                        ->filter(fn($product) => isset($product['checked']))
+                        ->mapWithKeys(fn($product, $key) => [$key => ['quantity' => $product['qty']]]);
+
+                    foreach ($products as $id => $d) {
+                        $product = Product::find($id);
+                        if (!$product || $product->quantity < $d['quantity']) {
+                            Log::error("Skipping product {$id}: Not enough stock");
+                            continue;
+                        }
+
+                        $product->decrement('quantity', $d['quantity']);
+
+                        for ($i = 1; $i <= $d['quantity']; $i++) {
+                            $ticketData = [
+                                'user_id' => $order->user_id,
+                                'owner' => [
+                                    'name' => $row[0],
+                                    'email' => $row[1],
+                                    'phone' => $row[2] ?? null,
+                                ],
+                                'event_id' => $product->event->id,
+                                'product_id' => $product->id,
+                                'order_id' => $order->id,
+                                'ticket' => uniqid(),
+                                'price' => $product->price,
+                                'dates' => $product->dates,
+                                'type' => $product->paid_invite ? 'paid_invite' : 'invite',
+                                'extra_info' => $row[3] ?? null,
+                                'active' => $product->paid_invite ? 0 : 1
+                            ];
+
+                            if ($product->extras && count($product->extras)) {
+                                $ticketData['hasExtras'] = true;
+                                $ticketData['extras'] = collect($product->extras)
+                                    ->map(fn($qty, $key) => [
+                                        'id' => $key,
+                                        'name' => Extra::find($key)->display_name,
+                                        'qty' => $qty,
+                                        'used' => 0,
+                                    ])
+                                    ->toArray();
+                            }
+
+                            $order->tickets()->create($ticketData);
+                        }
+
+                        $order->update([
+                            'status' => 1,
+                            'payment_status' => 1,
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    Log::error("Error processing row: " . json_encode($row) . " - " . $e->getMessage());
+                    continue; // Skip to the next invite
                 }
-
-                $order->update([
-                    'status' => 1,
-                    'payment_status' => 1,
-                ]);
             }
-            } catch (\Exception $e) {
-                Log::error("Error processing row: " . json_encode($row) . " - " . $e->getMessage());
-                continue; // Skip to the next invite
-            }
-        }
 
-        return redirect()->route('voyager.invites.index')->with([
-            'alert-type' => 'success',
-            'message' => 'Invites created successfully!',
-        ]);
+            return redirect()->route('voyager.invites.index')->with([
+                'alert-type' => 'success',
+                'message' => 'Invites created successfully!',
+            ]);
         } catch (\Exception | \Error $e) {
             Log::error("Fatal error in invite processing: " . $e->getMessage());
             return back()->with([
