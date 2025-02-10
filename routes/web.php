@@ -380,4 +380,8 @@ Route::get('/toc-online-test/{order}', function ( $order) {
     $order->save();
     $response = $toco->sendEmailDocument($order, $response['id']);
     Log::info($response);
+    return back()->with([
+        'message'    => "Invoice Created",
+        'alert-type' => 'success',
+    ]);
 })->name('toc-online-test');
