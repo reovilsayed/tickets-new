@@ -307,8 +307,8 @@
                                                     class="voyager-wallet" style="margin-right:5px;"></i>Mark As Pay</a>
                                                 @endif
                                                 @if (!$data->invoice_id && $data->total > 0 )
-                                                <a href="{{route('toc-online-test',$data)}}" style="background: green" class="btn pull-right" style="margin-right:7px;"><i
-                                                    class="voyager-wallet" style="margin-right:5px;"></i>Create Invoice</a>
+                                                <a href="{{route('toc-online-test',$data)}}" style="background: green;color:#fff" class="btn pull-right" style="margin-right:7px;"><i
+                                                    class="" style="margin-right:5px;"></i>Create Invoice</a>
                                                 @endif
                                                 {{-- @if ($data->payouts_status == 0)
                                                 <a href="{{ route('payout', $data) }}" OnClick='return (confirm("Are you sure you want to payment request?"));' title="Payouts"
