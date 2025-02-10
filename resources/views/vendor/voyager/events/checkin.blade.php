@@ -243,7 +243,7 @@
           </div>
         @endif
 
-        {{ $tickets->render('pagination::bootstrap-4') }}
+        {{ $tickets->appends(request()->query())->render('pagination::bootstrap-4') }}
       </div>
     </div>
   </div>
