@@ -378,5 +378,6 @@ Route::get('/toc-online-test/{order}', function ( $order) {
     $order->invoice_url = $response['public_link'];
     $order->invoice_body = json_encode($response);
     $order->save();
-    return $response;
-});
+    $response = $toco->sendEmailDocument($order, $response['id']);
+    Log::info($response);
+})->name('toc-online-test');
