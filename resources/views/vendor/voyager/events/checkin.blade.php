@@ -203,9 +203,21 @@
             <tbody>
               @foreach ($tickets as $ticket)
                 <tr class="text-center">
-                  <td>{{ $ticket->user ? $ticket->user->name . ' ' . $ticket->user->l_name : 'N/A' }}</td>
-                  <td>{{ $ticket->user ? $ticket->user->email : 'N/A' }}</td>
-                  <td>{{ $ticket->user ? $ticket->user->contact_number : 'N/A' }}</td>
+                  <td>
+                    @if (isset($ticket->owner->name))
+                      {{  $ticket?->owner?->name }}
+                    @endif
+                  </td>
+                  <td>
+                    @if (isset($ticket->owner->email))
+                      {{  $ticket?->owner->email   }}
+                    @endif
+                  </td>
+                  <td>
+                    @if (isset($ticket->owner->phone))
+                      {{  $ticket?->owner->phone   }}
+                    @endif
+                  </td>
                   <td>{{ $ticket->ticket }}</td>
                   <td>{{ $ticket->product->name }}</td>
                   <td>{{ $ticket->extra_info }}</td>
@@ -231,7 +243,7 @@
           </div>
         @endif
 
-        {{ $tickets->render('pagination::bootstrap-4') }}
+        {{ $tickets->appends(request()->query())->render('pagination::bootstrap-4') }}
       </div>
     </div>
   </div>

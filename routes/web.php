@@ -369,18 +369,19 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 
 
 
-Route::get('/payment-confirm', function () {
-    $order = Order::latest()->first();
-    $order->payment_status = true;
-    $order->status = 1;
-    $products = $order->tickets->groupBy('product_id');
-
-    foreach ($products as $id => $data) {
-        $product = Product::find($id);
-        if ($product) {
-            $product->quantity = $product->quantity - count($data);
-            $product->save();
-        }
-    }
+Route::get('/toc-online-test/{order}', function ( $order) {
+    $order = Order::with('tickets')->where('id',$order )->first();
+    $toco = new TOCOnlineService;
+    $response = $toco->createCommercialSalesDocument($order);
+    Log::info($response);
+    $order->invoice_id = $response['id'];
+    $order->invoice_url = $response['public_link'];
+    $order->invoice_body = json_encode($response);
     $order->save();
-});
+    $response = $toco->sendEmailDocument($order, $response['id']);
+    Log::info($response);
+    return back()->with([
+        'message'    => "Invoice Created",
+        'alert-type' => 'success',
+    ]);
+})->name('toc-online-test');

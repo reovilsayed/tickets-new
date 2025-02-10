@@ -126,14 +126,18 @@ class TOCOnlineService
         }
 
         $res = $this->createCustomer($order);
-
-        return Customer::create([
-            'customer_id' => $res['data']['id'],
-            'tax_registration_number' => $order->billing->vatNumber,
-            'business_name' => $order->user->name,
-            'email' => $order->user->name,
-            'phone_number' => $order->user->contact_number,
-        ]);
+        if(isset($res['data']['id'])){
+            return Customer::create([
+                'customer_id' => $res['data']['id'],
+                'tax_registration_number' => $order->billing->vatNumber,
+                'business_name' => $order->user->name,
+                'email' => $order->user->name,
+                'phone_number' => $order->user->contact_number,
+            ]);
+        }else{
+            return new Customer();
+        }
+       
     }
 
     public function getCustomer()

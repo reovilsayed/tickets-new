@@ -280,15 +280,14 @@ class EventAnalyticsController extends Controller
                 'scans',
             ])
             ->when(request()->filled('q'), function ($query) {
-                return $query->whereHas('user', function ($query) {
-                    $query->where('name', 'LIKE', '%' . request()->q . '%')
-                        ->orWhere('l_name', 'LIKE', '%' . request()->q . '%')
-                        ->orWhere('email', 'LIKE', '%' . request()->q . '%')
-                        ->orWhere('contact_number', 'LIKE', '%' . request()->q . '%')
-                        ->orWhere('vatNumber', 'LIKE', '%' . request()->q . '%');
-                })
-                    ->orWhere('ticket', 'LIKE', '%' . request()->q . '%')
-                    ->orWhere('extra_info', 'LIKE', '%' . request()->q . '%');
+                $searchTerm = '%' . request()->q . '%';
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('ticket', 'LIKE', $searchTerm)
+                        ->orWhere('extra_info', 'LIKE', $searchTerm)
+                        ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(owner, '$.name')) LIKE ?", [$searchTerm])
+                        ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(owner, '$.phone')) LIKE ?", [$searchTerm])
+                        ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(owner, '$.email')) LIKE ?", [$searchTerm]);
+                });
             })
             ->where('event_id', $event->id)
             ->when(
