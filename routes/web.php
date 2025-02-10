@@ -372,13 +372,11 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 Route::get('/toc-online-test/{order}', function ( $order) {
     $order = Order::with('tickets')->where('id',$order )->first();
     $toco = new TOCOnlineService;
-    return $response = $toco->createCommercialSalesDocument($order);
+    $response = $toco->createCommercialSalesDocument($order);
     Log::info($response);
     $order->invoice_id = $response['id'];
     $order->invoice_url = $response['public_link'];
     $order->invoice_body = json_encode($response);
     $order->save();
-    $response = $toco->sendEmailDocument($order, $response['id']);
-    Log::info($response);
     return $response;
 });
