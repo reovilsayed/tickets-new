@@ -226,8 +226,19 @@ class AdminCustomController extends Controller
         $phone = isset($billing['phone']) ? $billing['phone'] : null;
 
         $user = null;
-        if ($phone || $email) {
-            $user = User::where('contact_number', $phone)->orWhere('email', $email)->first();
+        $user_by_phone = null;
+        $user_by_email = null;
+        if ($phone) {
+            $user_by_phone = User::where('contact_number', $phone)->first();
+        }
+        if ($email) {
+            $user_by_email = User::where('email', $email)->first();
+        }
+
+        if ($user_by_phone) {
+            $user = $user_by_phone;
+        } elseif ($user_by_email) {
+            $user = $user_by_email;
         }
 
         if (!$user) {
@@ -242,6 +253,7 @@ class AdminCustomController extends Controller
                 'vatNumber' => $billing['vatNumber'] ?? null,
             ]);
         }
+        
         return $user;
     }
     public function personalInvitePost(Request $request, Product $product)
