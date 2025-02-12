@@ -189,7 +189,7 @@ class TOCOnlineService
                     'description' => $extra->display_name,
                     'quantity' => $extra->purchase_quantity,
                     'unit_price' => $unitPrice,
-                    'tax_id' => 1,
+                    //'tax_id' => '',
                     'tax_country_region' => 'PT',
                     'tax_code' => 'INT',
                     'tax_percentage' => $extra->tax,
