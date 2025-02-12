@@ -191,7 +191,7 @@ class TOCOnlineService
                     'unit_price' => $unitPrice,
                     'tax_id' => 1,
                     'tax_country_region' => 'PT',
-                    'tax_code' => 'NOR',
+                    'tax_code' => 'INT',
                     'tax_percentage' => $extra->tax,
                     // 'settlement_expression' => number_format((($extra->price - $unitPrice) / $extra->price) * 100, 2),
                     'settlement_expression' => 0,
