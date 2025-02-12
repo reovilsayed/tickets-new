@@ -188,7 +188,7 @@ class TOCOnlineService
                 if ($tax_type == '23') {
                     $tax_percentage = 23;
                     $tax_code = 'NOR';
-                }else if($tax_type == '23') {
+                }else if($tax_type == '13') {
                     $tax_percentage = 13;
                     $tax_code = 'INT';
                 }else{
