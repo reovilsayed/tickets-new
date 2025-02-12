@@ -65,6 +65,7 @@ class Order extends Model
             $data = Extra::find($extra->id);
             $data->purchase_quantity =  $extra->qty;
             $data->purchase_price =  $extra->price;
+            $data->tax_type =  $extra->tax_type;
             return $data;
         });
     }
