@@ -29,7 +29,7 @@ class AddVerifyEmailAction extends AbstractAction
     public function getAttributes()
     {
         return [
-            'class' => 'btn btn-sm btn-primary pull-left edit',
+            'class' => 'btn btn-sm btn-danger pull-left edit',
             'onclick' => "return confirm('Are you sure?')",
         ];
     }

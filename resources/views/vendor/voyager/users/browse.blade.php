@@ -301,7 +301,7 @@
                                                     @endif
                                                 @endforeach
                                                 <a href="{{ route('digital-wallet', $data) }}"
-                                                    class="btn btn-primary">Wallet Link</a>
+                                                    class="btn btn-primary edit">Wallet Link</a>
                                                 @if ($data->role_id == 6)
                                                     <a href="{{ route('pos.user.report', $data) }}"
                                                         class="btn btn-primary">User Report</a>
