@@ -3,6 +3,7 @@
 use App\Exports\CouponExport;
 use App\Http\Controllers\{AdminCustomController, EventAnalyticsController, ExportController, MassInviteController, PosUserReport};
 use App\Exports\CustomerExport;
+use App\Http\Controllers\Admin\VerifyUserEmailAddressController;
 use App\Models\Coupon;
 use App\Models\Invite;
 use App\Models\Order;
@@ -17,6 +18,7 @@ use TCG\Voyager\Facades\Voyager;
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
+    Route::get('verify-email/{user}', VerifyUserEmailAddressController::class)->name('admin.email.verify');
     Route::get('/pos/{order}/mark', function (Order $order) {
 
         $order->update([

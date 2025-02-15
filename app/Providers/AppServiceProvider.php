@@ -32,8 +32,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
-    
         Paginator::useBootstrapThree();
         Schema::defaultStringLength(191);
         // Voyager::addAction(\App\Actions\ReplyAction::class);
@@ -43,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\StaffReportAction::class);
         Voyager::addAction(\App\Actions\InviteLinkAction::class);
         Voyager::addAction(\App\Actions\GeneratePhysicalTicketAction::class);
+        Voyager::addAction(\App\Actions\AddVerifyEmailAction::class);
         Voyager::addFormField(\App\FormFields\ArrayDateField::class);
     }
 }
