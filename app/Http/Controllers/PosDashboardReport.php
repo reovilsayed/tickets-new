@@ -68,7 +68,7 @@ class PosDashboardReport extends Controller
     {
         $attributes = $request->validate([
             'email' => ['required', 'string', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
         ]);
 
         $order->billing->phone = $attributes['phone'];
