@@ -61,7 +61,8 @@
       font-weight: bold;
       color: #000;
     }
-    .btn-sm{
+
+    .btn-sm {
       padding: 0px 5px;
     }
   </style>
@@ -82,7 +83,7 @@
         <div class="panel-body">
           <div id="" class="">
             <form action="">
-              <label>Search:<input type="search" class="form-control input-sm" placeholder="" name="search" value="{{request('search')}}"></label>
+              <label>Search:<input type="search" class="form-control input-sm" placeholder="" name="search" value="{{ request('search') }}"></label>
             </form>
           </div>
           <div class="table-responsive">
@@ -115,6 +116,12 @@
                     <td>{{ optional($order->date_completed)->format('d F, Y') ?? 'N/A' }}</td> --}}
                     <td>{{ $order->created_at->format(' d F, Y') }}</td>
                     <td class="align-center" style="display: flex">
+                      @if (!$order->invoice_id && $order->total > 0)
+                        <a href="{{ route('toc-online-test', $order) }}" class="btn btn-sm btn-success" style="margin-right:7px">
+                          <i class="" style="margin-right:5px;"></i>
+                          Create Invoice
+                        </a>
+                      @endif
                       @if ($order->status !== 3 || $order->status == 1)
                         <a href="{{ route('order.refund', $order) }}" class="btn btn-dark pull-right btn-sm" style="margin-right:7px;"><i class="voyager-wallet" style="margin-right:5px;"></i>Refund</a>
                       @endif
@@ -134,9 +141,8 @@
                         </a>
                       @endif
                       @if ($order->payment_status != 1)
-                      <br>
-                                <a href="{{route('order.mark.pay',$order)}}" class="btn btn-info pull-right btn-sm" style="margin-right:7px;"><i
-                                    class="voyager-wallet" style="margin-right:5px;"></i>Mark As Pay</a>
+                        <br>
+                        <a href="{{ route('order.mark.pay', $order) }}" class="btn btn-info pull-right btn-sm" style="margin-right:7px;"><i class="voyager-wallet" style="margin-right:5px;"></i>Mark As Pay</a>
                       @endif
                     </td>
                   </tr>
