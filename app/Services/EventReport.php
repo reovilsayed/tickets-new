@@ -41,12 +41,15 @@ class EventReport
             ->selectRaw("count(*) as participants")
             ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
             ->selectRaw("count(case when orders.status = 3 then 1 end) as returned")
+            ->selectRaw("count(case when type = 'web' then 1 end) as web_participants")
+            ->selectRaw("count(case when type = 'web' and tickets.status = 1 then 1 end) as web_checked_in")
+            ->selectRaw("count(case when type = 'web' and orders.status = 3 then 1 end) as web_returned")
             ->selectRaw("count(case when type = 'invite' then 1 end) as invited_participants")
             ->selectRaw("count(case when type = 'invite' and tickets.status = 1 then 1 end) as invited_checked_in")
             ->selectRaw("count(case when type = 'invite' and orders.status = 3 then 1 end) as invited_returned")
-            ->selectRaw("count(case when type = 'physical' then 1 end) as physical_participants")
-            ->selectRaw("count(case when type = 'physical' and tickets.status = 1 then 1 end) as physical_checked_in")
-            ->selectRaw("count(case when type = 'physical' and orders.status = 3 then 1 end) as physical_returned")
+            // ->selectRaw("count(case when type = 'physical' then 1 end) as physical_participants")
+            // ->selectRaw("count(case when type = 'physical' and tickets.status = 1 then 1 end) as physical_checked_in")
+            // ->selectRaw("count(case when type = 'physical' and orders.status = 3 then 1 end) as physical_returned")
             ->join(
                 DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n'),
                 function ($join) {
@@ -56,15 +59,28 @@ class EventReport
             ->leftJoin('orders', 'tickets.order_id', '=', 'orders.id')
             ->where('tickets.event_id', $this->event->id)
             ->where(function ($query) {
-                return $query->whereIn('orders.status', [1, 3])
-                    ->where('orders.payment_status', 1)
-                    ->orWhereNull('tickets.order_id');
+                return $query->whereIn('orders.status',[1,3])
+                    ->where('orders.payment_status', 1);
             })
             ->groupBy(DB::raw('ticket_date'))
             ->orderBy('ticket_date')
             ->get();
 
+        $tickets_physical = Ticket::withoutGlobalScope('validTicket')
+                                ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(dates, CONCAT("$[", n.n, "]"))) AS ticket_date')
+                                ->join(
+                                    DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n'),
+                                    function ($join) {
+                                        $join->on(DB::raw('CHAR_LENGTH(dates) - CHAR_LENGTH(REPLACE(dates, ",", ""))'), '>=', DB::raw('n.n'));
+                                    }
+                                )
 
+                                ->where('event_id', $this->event->id)
+                                ->where('type', 'physical')
+                                ->groupBy(DB::raw('ticket_date'))
+                                ->orderBy('ticket_date')
+                                ->get();
+                                dd($tickets );
 
         foreach ($tickets as  $ticket) {
             $data[$ticket->ticket_date] = $this->singleDayReport($ticket, $products);
@@ -87,15 +103,15 @@ class EventReport
                     'checked_in' => $ticket->invited_checked_in,
                     'returned' => (int) $ticket->invited_returned,
                 ],
-                'physical' => [
-                    'participants' => $ticket->physical_participants,
-                    'checked_in' => $ticket->physical_checked_in,
-                    'returned' => (int) $ticket->physical_returned,
-                ],
+                // 'physical' => [
+                //     'participants' => $ticket->physical_participants,
+                //     'checked_in' => $ticket->physical_checked_in,
+                //     'returned' => (int) $ticket->physical_returned,
+                // ],
                 'paid' => [
-                    'participants' => $ticket->participants - ($ticket->invited_participants + $ticket->physical_participants),
-                    'checked_in' => $ticket->checked_in -  ($ticket->invited_checked_in + $ticket->physical_checked_in),
-                    'returned' => $ticket->returned - ($ticket->invited_returned + $ticket->physical_returned),
+                    'participants' => $ticket->web_participants,
+                    'checked_in' => $ticket->web_checked_in,
+                    'returned' => $ticket->web_returned ,
                 ]
             ]
         ];
