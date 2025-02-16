@@ -258,16 +258,25 @@
 
           </div>
         </div>
-        <div class="accordin-item d-none d-md-block">
+        <div class="accordin-item">
           <div>
             <i class="fa fa-info-circle fa-2x"></i>
           </div>
           <div>
-            <h5>
+            {{-- <h5>
               {{ __('words.description') }}
             </h5>
-
-            {!! $event->description !!}
+            {!! $event->description !!} --}}
+            <div class="accordion-item">
+              <h5 id="event-terms-heading" role="button" data-bs-toggle="collapse" data-bs-target="#description_event" aria-expanded="true" aria-controls="description_event">
+                {{ __('words.description') }}
+              </h5>
+              <div id="description_event" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  {!! $event->description !!}
+                </div>
+              </div>
+            </div>
 
           </div>
 
@@ -277,11 +286,16 @@
             <i class="fa-solid fa-file-contract fa-2x"></i>
           </div>
           <div>
-            <h5>
-              {{ __('words.terms') }}
-            </h5>
-
-            {!! $event->terms !!}
+            <div class="accordion-item">
+              <h5 id="event-terms-heading" role="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                {{ __('words.terms') }}
+              </h5>
+              <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  {!! $event->terms !!}
+                </div>
+              </div>
+            </div>
 
           </div>
 
