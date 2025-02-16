@@ -181,7 +181,7 @@
                         </div>
 
                         @if ($product->status == 3)
-                          <div class="d-flex justify-content-end">
+                          <div class="d-flex justify-contenpt-end">
 
                             <a target="__blank" class=" custom-button d-lg-none mt-2" href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
                           </div>
