@@ -65,9 +65,10 @@ class EventReport
             ->groupBy(DB::raw('ticket_date'))
             ->orderBy('ticket_date')
             ->get();
-
         $tickets_physical = Ticket::withoutGlobalScope('validTicket')
                                 ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(dates, CONCAT("$[", n.n, "]"))) AS ticket_date')
+                                ->selectRaw("count(*) as participants")
+                                ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
                                 ->join(
                                     DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n'),
                                     function ($join) {
@@ -80,17 +81,16 @@ class EventReport
                                 ->groupBy(DB::raw('ticket_date'))
                                 ->orderBy('ticket_date')
                                 ->get();
-                                dd($tickets );
 
         foreach ($tickets as  $ticket) {
-            $data[$ticket->ticket_date] = $this->singleDayReport($ticket, $products);
+            $data[$ticket->ticket_date] = $this->singleDayReport($ticket, $products,$tickets_physical->where('ticket_date', $ticket->ticket_date)->first());
         }
 
 
         $this->report['by_dates'] = $data;
     }
 
-    private function singleDayReport($ticket, $products)
+    private function singleDayReport($ticket, $products, $physical_tickets)
     {
         return [
             'products' => $products->filter(fn($item) => in_array($ticket->ticket_date, $item->dates))->map(fn($item) => $item->product),
@@ -103,11 +103,11 @@ class EventReport
                     'checked_in' => $ticket->invited_checked_in,
                     'returned' => (int) $ticket->invited_returned,
                 ],
-                // 'physical' => [
-                //     'participants' => $ticket->physical_participants,
-                //     'checked_in' => $ticket->physical_checked_in,
-                //     'returned' => (int) $ticket->physical_returned,
-                // ],
+                'physical' => [
+                    'participants' => $physical_tickets->participants,
+                    'checked_in' => $physical_tickets->checked_in,
+                    'returned' => 0,
+                ],
                 'paid' => [
                     'participants' => $ticket->web_participants,
                     'checked_in' => $ticket->web_checked_in,
