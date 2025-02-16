@@ -59,31 +59,31 @@ class EventReport
             ->leftJoin('orders', 'tickets.order_id', '=', 'orders.id')
             ->where('tickets.event_id', $this->event->id)
             ->where(function ($query) {
-                return $query->whereIn('orders.status',[1,3])
+                return $query->whereIn('orders.status', [1, 3])
                     ->where('orders.payment_status', 1);
             })
             ->groupBy(DB::raw('ticket_date'))
             ->orderBy('ticket_date')
             ->get();
         $tickets_physical = Ticket::withoutGlobalScope('validTicket')
-                                ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(dates, CONCAT("$[", n.n, "]"))) AS ticket_date')
-                                ->selectRaw("count(*) as participants")
-                                ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
-                                ->join(
-                                    DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n'),
-                                    function ($join) {
-                                        $join->on(DB::raw('CHAR_LENGTH(dates) - CHAR_LENGTH(REPLACE(dates, ",", ""))'), '>=', DB::raw('n.n'));
-                                    }
-                                )
+            ->selectRaw('JSON_UNQUOTE(JSON_EXTRACT(dates, CONCAT("$[", n.n, "]"))) AS ticket_date')
+            ->selectRaw("count(*) as participants")
+            ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
+            ->join(
+                DB::raw('(SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) n'),
+                function ($join) {
+                    $join->on(DB::raw('CHAR_LENGTH(dates) - CHAR_LENGTH(REPLACE(dates, ",", ""))'), '>=', DB::raw('n.n'));
+                }
+            )
 
-                                ->where('event_id', $this->event->id)
-                                ->where('type', 'physical')
-                                ->groupBy(DB::raw('ticket_date'))
-                                ->orderBy('ticket_date')
-                                ->get();
+            ->where('event_id', $this->event->id)
+            ->where('type', 'physical')
+            ->groupBy(DB::raw('ticket_date'))
+            ->orderBy('ticket_date')
+            ->get();
 
         foreach ($tickets as  $ticket) {
-            $data[$ticket->ticket_date] = $this->singleDayReport($ticket, $products,$tickets_physical->where('ticket_date', $ticket->ticket_date)->first());
+            $data[$ticket->ticket_date] = $this->singleDayReport($ticket, $products, $tickets_physical->where('ticket_date', $ticket->ticket_date)->first());
         }
 
 
@@ -94,9 +94,9 @@ class EventReport
     {
         return [
             'products' => $products->filter(fn($item) => in_array($ticket->ticket_date, $item->dates))->map(fn($item) => $item->product),
-            'participants' => $ticket->participants,
-            'checked_in' => $ticket->checked_in,
-            'returned' => $ticket->returned,
+            'participants' => $ticket->invited_participants + $ticket->web_participants,
+            'checked_in' => $ticket->invited_checked_in + $ticket->web_checked_in,
+            'returned' => $ticket->invited_returned + $ticket->web_returned,
             'type' => [
                 'invite' => [
                     'participants' => $ticket->invited_participants,
@@ -111,7 +111,7 @@ class EventReport
                 'paid' => [
                     'participants' => $ticket->web_participants,
                     'checked_in' => $ticket->web_checked_in,
-                    'returned' => $ticket->web_returned ,
+                    'returned' => $ticket->web_returned,
                 ]
             ]
         ];
@@ -120,42 +120,42 @@ class EventReport
     protected function reportBySingleType($type)
     {
         $products = Ticket::withoutGlobalScope('validTicket')
-        ->with('product:id,name,start_date,end_date')
-        ->select('product_id')
-        ->selectRaw("count(*) as participants")
-        ->leftJoin('orders', 'tickets.order_id', '=', 'orders.id') // Ensure physical tickets are included
-        ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
-        ->selectRaw("count(case when orders.status = 3 then 1 end) as returned")
-        ->when(
-            $type === 'invite',
-            function ($query) {
-                return $query->whereIn('tickets.type', ['invite', 'paid_invite']);
-            }
-        )
-        ->when(
-            $type === 'paid',
-            function ($query) {
-                return $query->whereIn('tickets.type', ['web', 'pos']);
-            }
-        )
-        ->when(
-            $type === 'physical',
-            function ($query) {
-                return $query->whereIn('tickets.type', ['physical']);
-            }
-        )
-        ->when(
-            $type !== 'physical', // Only check orders for non-physical tickets
-            function ($query) {
-                return $query->whereIn('orders.status', [1, 3]) // Order must exist for paid & invite tickets
-                             ->where('orders.payment_status', 1); // Ensure payment is completed
-            }
-        )
-        ->where('tickets.event_id', $this->event->id)
-        ->groupBy('product_id')
-        ->get();
-    
-    
+            ->with('product:id,name,start_date,end_date')
+            ->select('product_id')
+            ->selectRaw("count(*) as participants")
+            ->leftJoin('orders', 'tickets.order_id', '=', 'orders.id') // Ensure physical tickets are included
+            ->selectRaw("count(case when tickets.status = 1 then 1 end) as checked_in")
+            ->selectRaw("count(case when orders.status = 3 then 1 end) as returned")
+            ->when(
+                $type === 'invite',
+                function ($query) {
+                    return $query->whereIn('tickets.type', ['invite', 'paid_invite']);
+                }
+            )
+            ->when(
+                $type === 'paid',
+                function ($query) {
+                    return $query->whereIn('tickets.type', ['web', 'pos']);
+                }
+            )
+            ->when(
+                $type === 'physical',
+                function ($query) {
+                    return $query->whereIn('tickets.type', ['physical']);
+                }
+            )
+            ->when(
+                $type !== 'physical', // Only check orders for non-physical tickets
+                function ($query) {
+                    return $query->whereIn('orders.status', [1, 3]) // Order must exist for paid & invite tickets
+                        ->where('orders.payment_status', 1); // Ensure payment is completed
+                }
+            )
+            ->where('tickets.event_id', $this->event->id)
+            ->groupBy('product_id')
+            ->get();
+
+
 
         $data = [];
 
