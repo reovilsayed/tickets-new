@@ -44,7 +44,9 @@
         <h1>
             {{ $event->name }} - Analytics
         </h1>
-
+        <hr>
+        @include('vendor.voyager.events.partial.buttons')
+        <hr>
         <div class="panel panel-body">
             <ul class="nav nav-pills">
 
