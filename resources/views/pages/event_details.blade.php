@@ -149,7 +149,7 @@
                               @if (!$is_invite)
                                 <span class="text-dark me-2 ticket-prize">{{ Sohoj::price($product->currentPrice()) }}</span>
                               @endif
-                              <a target="__blank" class="btn custom-button d-none d-lg-block" href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
+                              <a target="__blank" class=" custom-button d-none d-lg-block" href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
                             </div>
                           @else
                             <div class="t-prize">
@@ -179,7 +179,7 @@
                         @if ($product->status == 3)
                           <div class="d-flex justify-content-end">
 
-                            <a target="__blank" class="btn custom-button d-lg-none mt-2" href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
+                            <a target="__blank" class=" custom-button d-lg-none mt-2" href="{{ $product->website }}">{{ __('words.visit_here') }}</a>
                           </div>
                         @endif
                       </div>

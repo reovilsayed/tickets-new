@@ -181,7 +181,7 @@
 
                     </div>
                     <div class="text-center">
-                        {{ $tickets->links('pagination::bootstrap-4') }}
+                        
                     </div>
                 </div>
             </div>

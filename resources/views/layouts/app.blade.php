@@ -78,6 +78,13 @@
 
         
     </style>
+
+    <style>
+        .custom-button{
+            text-align: center;
+        }
+   
+    </style>
     @yield('css')
 
     <!-- Google Tag Manager -->
