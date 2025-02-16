@@ -76,7 +76,9 @@
               </div>
               <div class="terms" id="event-terms">
                 <div class="accordion-item">
-                  <h5 id="event-terms-heading" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">{{ __('words.terms') }}</h5>
+                  <h5 id="event-terms-heading" role="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    {{ __('words.terms') }}
+                  </h5>
                   <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                       {!! $event->terms !!}
@@ -91,18 +93,20 @@
         <div x-data="eventData" x-effect="calculateTotal()" class="col-md-7 event-box" id="mobile-device">
 
           <ul class="nav nav-pills sec-hd mb-3 sticky-sm-top" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-              <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
-                <div class="days">
-                  <p class="days-select">{{ __('words.all') }}</p>
-                  <p class="info-date">{{ __('words.date') }}</p>
-                  <span class="dot"></span>
-                </div>
-              </button>
-            </li>
+            @if (count($event->dates()) > 1)
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                  <div class="days">
+                    <p class="days-select">{{ __('words.all') }}</p>
+                    <p class="info-date">{{ __('words.date') }}</p>
+                    <span class="dot"></span>
+                  </div>
+                </button>
+              </li>
+            @endif
             @foreach ($event->dates() as $date)
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $date }}" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                <button class="nav-link @if(count($event->dates()) === 1) active @endif" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ $date }}" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
                   <div class="days">
                     <p class="days-select">{{ Carbon\Carbon::parse($date)->format('d') }}</p>
                     <p class="info-date">{{ Carbon\Carbon::parse($date)->format('M') }}</p>
