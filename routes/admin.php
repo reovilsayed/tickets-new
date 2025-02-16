@@ -1,8 +1,9 @@
 <?php
 
 use App\Exports\CouponExport;
-use App\Http\Controllers\{AdminCustomController, EventAnalyticsController, ExportController, MassInviteController, PosUserReport};
+use App\Http\Controllers\{AdminCustomController, AdminOrderController, EventAnalyticsController, ExportController, MassInviteController, PosUserReport};
 use App\Exports\CustomerExport;
+use App\Http\Controllers\Admin\SendOrderSmsController;
 use App\Http\Controllers\Admin\VerifyUserEmailAddressController;
 use App\Models\Coupon;
 use App\Models\Invite;
@@ -19,6 +20,8 @@ use TCG\Voyager\Facades\Voyager;
 Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
     Route::get('verify-email/{user}', VerifyUserEmailAddressController::class)->name('admin.email.verify');
+    Route::put('{order}/sms', SendOrderSmsController::class)->name('admin.order.sms');
+    Route::put('order/{order}', AdminOrderController::class)->name('admin.order.update');
     Route::get('/pos/{order}/mark', function (Order $order) {
 
         $order->update([

@@ -87,7 +87,7 @@
             </form>
           </div>
           <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover" id="order-table-body">
               <thead>
                 <tr class="text-center">
                   <th>Order Id</th>
@@ -106,7 +106,7 @@
                   <tr>
                     <td scope="row">{{ $order->id }}</td>
                     <td scope="row">{{ $order->user->name }} {{ $order->user->l_name }}</td>
-                    <td scope="row">{{ $order->user->email }} </td>
+                    <td scope="row">{{ $order->billing->email ?? $order->user->email }} </td>
                     <td>{{ $order->getStatus() }}</td>
                     <td>{{ Sohoj::price($order->discount) }}</td>
                     <td>{{ Sohoj::price($order->total) }}</td>
@@ -136,7 +136,7 @@
                         <i class="voyager-mail"></i> Send Mail
                       </a>
                       @if (isset($order->billing->phone) || $order->user?->contact_number)
-                        <a href="{{ route('order.sms', $order) }}" onclick="askForConfirmation(this)" class="btn btn-sm btn-success pull-left">
+                        <a href="{{ route('admin.order.sms', $order) }}" onclick="askForConfirmation(this)" class="btn btn-sm btn-success pull-left">
                           <i class="voyager-mail"></i> Send Sms
                         </a>
                       @endif
@@ -144,6 +144,9 @@
                         <br>
                         <a href="{{ route('order.mark.pay', $order) }}" class="btn btn-info pull-right btn-sm" style="margin-right:7px;"><i class="voyager-wallet" style="margin-right:5px;"></i>Mark As Pay</a>
                       @endif
+                      <button type="button" class="btn btn-sm btn-primary order-action-button" data-url="{{ route('admin.order.update', $order) }}" data-email="{{ $order->billing->email ?? $order->user->email }}" data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}" data-toggle="modal" data-target="#order-number-email-change-modal">
+                        Action
+                      </button>
                     </td>
                   </tr>
                 @endforeach
@@ -157,6 +160,9 @@
       </div>
     </div>
   </div>
+
+  @include('vendor.voyager.events.partial.email-number-edit-form')
+
   <form action="" method="post" id="send-sms-form">
     @csrf
     @method('put')

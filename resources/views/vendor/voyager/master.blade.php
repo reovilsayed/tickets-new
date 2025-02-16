@@ -141,6 +141,7 @@
 
 
     <script type="text/javascript" src="{{ voyager_asset('js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
         @if (Session::has('alerts'))

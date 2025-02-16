@@ -297,19 +297,32 @@
                                                         ])
                                                     @endif
                                                 @endforeach
+
                                                 @if($data->status !==3 || $data->status ==1 )
-                                                <a href="{{route('order.refund',$data)}}" class="btn btn-dark pull-right" style="margin-right:7px;"><i
-                                                        class="voyager-wallet" style="margin-right:5px;"></i>Refund</a>
+                                                  <a href="{{route('order.refund',$data)}}" class="btn edit btn-dark pull-right" style="margin-right:7px;"><i
+                                                    class="voyager-wallet" style="margin-right:5px;"></i>Refund</a>
                                                 @endif
+                                                <button type="button" class="btn btn-sm edit btn-primary pull-right order-action-button" data-url="{{ route('admin.order.update', $data) }}" data-email="{{ $data->billing->email ?? $data->user->email }}" data-phone="{{ $data->billing->phone ?? $data->user->contact_number }}" data-toggle="modal" data-target="#order-number-email-change-modal">
+                                                  Action
+                                                </button>
+                                                @if (isset($data->billing->phone) || $data->user?->contact_number)
+                                                  <a href="{{ route('admin.order.sms', $data) }}" onclick="askForConfirmation(this)" class="btn edit btn-sm btn-success pull-right">
+                                                    <i class="voyager-mail"></i> Send Sms
+                                                  </a>
+                                                @endif
+                                                <a href="{{ route('send.email', $data) }}" class="btn btn-sm btn-warning pull-right">
+                                                  <i class="voyager-mail"></i> Send Mail
+                                                </a>
 
                                                 @if ($data->payment_status != 1)
                                                 <a href="{{route('order.mark.pay',$data)}}" class="btn btn-info pull-right" style="margin-right:7px;"><i
                                                     class="voyager-wallet" style="margin-right:5px;"></i>Mark As Pay</a>
                                                 @endif
                                                 @if (!$data->invoice_id && $data->total > 0 )
-                                                <a href="{{route('toc-online-test',$data)}}" style="background: green;color:#fff" class="btn pull-right" style="margin-right:7px;"><i
+                                                <a href="{{route('toc-online-test',$data)}}" style="margin-right:5px; background: green;color:#fff" class="btn pull-right" style="margin-right:7px;"><i
                                                     class="" style="margin-right:5px;"></i>Create Invoice</a>
                                                 @endif
+
                                                 {{-- @if ($data->payouts_status == 0)
                                                 <a href="{{ route('payout', $data) }}" OnClick='return (confirm("Are you sure you want to payment request?"));' title="Payouts"
                                                     class="btn btn-sm btn-success pull-right">
@@ -373,6 +386,12 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <form action="" method="post" id="send-sms-form">
+      @csrf
+      @method('put')
+    </form>
+    @include('vendor.voyager.events.partial.email-number-edit-form', ['id' => 'dataTable'])
 @stop
 
 @section('css')
@@ -461,5 +480,21 @@
             });
             $('.selected_ids').val(ids);
         });
+
+        function askForConfirmation(el) {
+          const csk = confirm('Are you sure?');
+
+          event.preventDefault();
+
+          if (!csk) {
+            return;
+          }
+
+          const formEl = document.getElementById('send-sms-form');
+
+          formEl.action = el.href
+
+          formEl.submit();
+      }
     </script>
 @stop
