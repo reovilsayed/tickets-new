@@ -18,7 +18,6 @@ use App\Models\Rating;
 use App\Models\Shop;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Services\TOCOnlineService;
 use App\Slider;
 use Carbon\Carbon;
 use Exception;
@@ -277,11 +276,7 @@ class PageController extends Controller
     }
     public function toconlineCallback()
     {
-        Log::info(request('code'));
-        $toconile = new TOCOnlineService;
-        $token = $toconile->getAccessTokenFromAuthorizationCode(request()->code);
-        if (isset($token['error'])) throw new Exception('TOC oniline token genration failed');
-        Storage::disk('local')->put('token.json', json_encode((array) $token, JSON_PRETTY_PRINT));
+
     }
     public function interzone_1()
     {

@@ -27,25 +27,25 @@ class SyncCustomers extends Command
      */
     public function handle()
     {
-        $this->info('Starting customer sync...');
+        // $this->info('Starting customer sync...');
 
-        $toc = new TOCOnlineService();
-        $customersData = $toc->getCustomer();
+        // $toc = new TOCOnlineService();
+        // $customersData = $toc->getCustomer();
 
-        foreach ($customersData['data'] as $customer) {
-            $customerAttributes = [
-                'customer_id' => $customer['id'],
-                'business_name' => $customer['attributes']['business_name'],
-                'phone_number' => $customer['attributes']['phone_number'],
-                'email' => $customer['attributes']['email'],
-            ];
+        // foreach ($customersData['data'] as $customer) {
+        //     $customerAttributes = [
+        //         'customer_id' => $customer['id'],
+        //         'business_name' => $customer['attributes']['business_name'],
+        //         'phone_number' => $customer['attributes']['phone_number'],
+        //         'email' => $customer['attributes']['email'],
+        //     ];
 
-            Customer::updateOrCreate(
-                ['tax_registration_number' => $customer['attributes']['tax_registration_number']],
-                $customerAttributes
-            );
-        }
+        //     Customer::updateOrCreate(
+        //         ['tax_registration_number' => $customer['attributes']['tax_registration_number']],
+        //         $customerAttributes
+        //     );
+        // }
 
-        $this->info('Customer sync completed successfully.');
+        // $this->info('Customer sync completed successfully.');
     }
 }

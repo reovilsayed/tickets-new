@@ -13,7 +13,6 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Services\TOCOnlineService;
 use Error;
 use Exception;
 use Illuminate\Http\Request;
@@ -320,20 +319,6 @@ class ApiController extends Controller
             'payment_status' => 1
         ]);
 
-        try {
-            $toco = new TOCOnlineService;
-            $response = $toco->createCommercialSalesDocument($order);
-
-            $order->invoice_id = $response['id'];
-            $order->invoice_url = $response['public_link'];
-            $order->invoice_body = json_encode($response);
-
-            if ($sendInvoiceToMail || $sendTicketToMail) {
-                $toco->sendEmailDocument($order, $response['id']);
-            }
-        } catch (Exception | Error $e) {
-            Log::info($e->getMessage());
-        }
 
         $order->save();
 
@@ -464,21 +449,6 @@ class ApiController extends Controller
 
         $ticket->save();
         $order->setRelation('tickets', collect([$ticket]));
-        try {
-            $toco = new TOCOnlineService;
-            $response = $toco->createCommercialSalesDocument($order);
-
-            $order->invoice_id = $response['id'];
-            $order->invoice_url = $response['public_link'];
-            $order->invoice_body = json_encode($response);
-            $sendInvoiceToMail = $request->get('sendInvoiceToMail');
-            if ($sendInvoiceToMail) {
-                $toco->sendEmailDocument($order, $response['id']);
-            }
-            $order->save();
-        } catch (Exception | Error $e) {
-            Log::info($e->getMessage());
-        }
         $order->update([
             'status' => 1,
             'payment_status' => 1
