@@ -92,6 +92,7 @@ class EventReport
 
     private function singleDayReport($ticket, $products, $physical_tickets)
     {
+        
         return [
             'products' => $products->filter(fn($item) => in_array($ticket->ticket_date, $item->dates))->map(fn($item) => $item->product),
             'participants' => $ticket->invited_participants + $ticket->web_participants,
