@@ -43,20 +43,17 @@ const ExtraItem = ({ extra }) => {
                     </span>
 
                     <div className="card-header position-relative">
-                        {/* <img
-                            className="extra-item-img"
-                            src={
-                                extra?.image
-                                    ? extra?.image
-                                    : "/images/no-image.jpg"
-                            }
-                            alt={extra.display_name}
-                        />
-                         */}
-                        <div
-                            className="extra-item-img">
-                                            <i class="fas fa-cocktail fa-2x"></i>
-                                        </div>
+                        {extra?.thumbnail ? (
+                            <img
+                                className="extra-item-img"
+                                src={extra?.thumbnail ?? "/images/no-image.jpg"}
+                                alt={extra.display_name}
+                            />
+                        ) : (
+                            <div className="extra-item-img">
+                                <i class="fas fa-cocktail fa-2x"></i>
+                            </div>
+                        )}
                         {extra?.event?.name && (
                             <span className="extra-item-unit">
                                 {extra?.event?.name.length > 15
