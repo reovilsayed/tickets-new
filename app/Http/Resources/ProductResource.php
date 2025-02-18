@@ -42,6 +42,7 @@ class ProductResource extends JsonResource
             'extras' => $this->transformExtras(),
             'invite_only' => $this->invite_only,
             'event' => $this->event,
+            'thumbnail'=>$this->thumbnail
         ];
     }
 
