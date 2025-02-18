@@ -434,7 +434,9 @@
 
         function resetProductsScroll() {
             var products = document.getElementById('pills-tabContent');
+            var bodyElement = document.getElementsByTagName('body')[0];
             products.scrollTop = 0;
+            bodyElement.scrollTop = 0;
         }
     </script>
 @endsection

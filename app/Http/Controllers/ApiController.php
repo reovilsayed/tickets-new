@@ -181,7 +181,7 @@ class ApiController extends Controller
                 'vatNumber' => $billing['vatNumber'] ?? null,
             ]);
         }
-        
+
         return $user;
     }
 
@@ -489,6 +489,10 @@ class ApiController extends Controller
     public function getPosPermissions(Request $request)
     {
         $user = auth()->user();
-        return response()->json($user->pos->permission);
+        $permission = [];
+        if ($user?->pos != null) {
+            $permission = $user->pos->permission;
+        }
+        return response()->json($permission);
     }
 }
