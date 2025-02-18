@@ -4,7 +4,9 @@
 @section('keywords', $event->keywords)
 <style>
     @media only screen and (max-width: 480px) {
-
+        .navbar{
+            margin-top: 50px;
+        }
         #pills-tab {
             position: fixed;
             top: 0px;
