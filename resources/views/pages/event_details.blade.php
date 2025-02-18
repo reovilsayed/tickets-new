@@ -262,7 +262,7 @@
         </div>
     </section>
     <button class="btn btn-primary rounded-circle btn-sm p-2 d-md-none d-block "
-        style="position:fixed;bottom:30px;right:30px" type="button" data-bs-toggle="offcanvas"
+        style="position:fixed;bottom:120px;left:30px" type="button" data-bs-toggle="offcanvas"
         data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
         <i class="fa fa-info-circle fa-2x"></i>
     </button>
