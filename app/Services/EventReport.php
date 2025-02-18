@@ -104,8 +104,8 @@ class EventReport
                     'returned' => (int) $ticket->invited_returned,
                 ],
                 'physical' => [
-                    'participants' => $physical_tickets->participants,
-                    'checked_in' => $physical_tickets->checked_in,
+                    'participants' => $physical_tickets?->participants,
+                    'checked_in' => $physical_tickets?->checked_in,
                     'returned' => 0,
                 ],
                 'paid' => [

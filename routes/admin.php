@@ -64,7 +64,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
             ->join('ticket_user', 'tickets.id', 'ticket_user.ticket_id')
             ->join('products', 'products.id', 'tickets.product_id')
             ->where('ticket_user.user_id', $user->id)
-            ->groupBy('tickets.product_id')
+            ->groupBy('tickets.product_id', 'products.name')
             ->get();
 
         $zones = \DB::table('zones')
@@ -72,7 +72,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
             ->selectRaw('count(*) as total')
             ->join('ticket_user', 'zones.id', 'ticket_user.zone_id')
             ->where('ticket_user.user_id', $user->id)
-            ->groupBy('zones.id')
+            ->groupBy('zones.id', 'zones.name')
             ->get();
 
         $products = $products->merge($zones);
