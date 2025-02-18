@@ -47,20 +47,20 @@ $(function () {
     
     
     // Navbar scrolling background
-    wind.on("scroll", function () {
-        var bodyScroll = wind.scrollTop(),
-            navbar = $(".navbar"),
-            logo = $(".navbar .logo> img");
-        if (bodyScroll > 100) {
-            navbar.addClass("nav-scroll");
-            $("#dark-logo").show();
-            $("#light-logo").hide();
-        } else {
-            navbar.removeClass("nav-scroll");
-            $("#dark-logo").show();
-            $("#light-logo").hide();
-        }
-    });
+    // wind.on("scroll", function () {
+    //     var bodyScroll = wind.scrollTop(),
+    //         navbar = $(".navbar"),
+    //         logo = $(".navbar .logo> img");
+    //     if (bodyScroll > 100) {
+    //         navbar.addClass("nav-scroll");
+    //         $("#dark-logo").show();
+    //         $("#light-logo").hide();
+    //     } else {
+    //         navbar.removeClass("nav-scroll");
+    //         $("#dark-logo").show();
+    //         $("#light-logo").hide();
+    //     }
+    // });
     
     
     // Close navbar-collapse when a  clicked

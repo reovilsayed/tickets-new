@@ -7,7 +7,7 @@
 
         #pills-tab {
             position: fixed;
-            top: 78px;
+            top: 0px;
             width: 100%;
             z-index: 999;
         }
