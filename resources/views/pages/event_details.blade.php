@@ -4,6 +4,9 @@
 @section('keywords', $event->keywords)
 <style>
     @media only screen and (max-width: 480px) {
+        .navbar {
+            margin-top: 50px;
+        }
 
         #pills-tab {
             position: fixed;
@@ -135,7 +138,8 @@
                                 <button class="nav-link @if (count($event->dates()) === 1) active @endif"
                                     id="pills-profile-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-{{ $date }}" type="button" role="tab"
-                                    aria-controls="pills-profile" aria-selected="false">
+                                    aria-controls="pills-profile" aria-selected="false"
+                                    onclick="resetProductsScroll(event)">
                                     <div class="days">
                                         <p class="days-select">{{ Carbon\Carbon::parse($date)->format('d') }}</p>
                                         <p class="info-date">{{ Carbon\Carbon::parse($date)->format('M') }}</p>
@@ -262,7 +266,7 @@
         </div>
     </section>
     <button class="btn btn-primary rounded-circle btn-sm p-2 d-md-none d-block "
-        style="position:fixed;bottom:30px;right:30px" type="button" data-bs-toggle="offcanvas"
+        style="position:fixed;bottom:120px;left:30px;z-index:2" type="button" data-bs-toggle="offcanvas"
         data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
         <i class="fa fa-info-circle fa-2x"></i>
     </button>
@@ -426,6 +430,11 @@
                     this.$refs.total.innerText = 'Є' + total.toFixed(2);
                 }
             };
+        }
+
+        function resetProductsScroll() {
+            var products = document.getElementById('pills-tabContent');
+            products.scrollTop = 0;
         }
     </script>
 @endsection

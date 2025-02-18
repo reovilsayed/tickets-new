@@ -67,9 +67,7 @@ const TicketItem = ({ ticket }) => {
 
                     <div className="card-body ticket-item-body">
                         <p title={ticket.name} className="ticket-item-name">
-                            {ticket?.name.length > 15
-                                ? `${ticket.name.substring(0, 15)}...`
-                                : ticket.name}
+                            {ticket?.name ?? ""}
                         </p>
 
                         <small className="ticket-item-generic">
