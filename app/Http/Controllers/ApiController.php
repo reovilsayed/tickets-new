@@ -485,4 +485,10 @@ class ApiController extends Controller
         ]);
         return response()->json(['ticket' => $ticket]);
     }
+
+    public function getPosPermissions(Request $request)
+    {
+        $user = auth()->user();
+        return response()->json($user->pos->permission);
+    }
 }

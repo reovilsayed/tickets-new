@@ -23,6 +23,7 @@ export const navRoutes = [
     }, */
     {
         path: "/pos/extras",
+        permissionName: "extras",
         name: "Extras",
         icon: "fa fa-beer",
         layout: React.lazy(() =>
@@ -33,6 +34,7 @@ export const navRoutes = [
     {
         path: "/pos/scanner",
         name: "Scan",
+        permissionName: "scan",
         icon: "fa fa-qrcode",
         layout: React.lazy(() =>
             import("./components/layouts/DashboardLayout")

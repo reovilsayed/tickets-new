@@ -42,8 +42,9 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    
-    public function uniqueIds(){
+
+    public function uniqueIds()
+    {
         return ['uniqid'];
     }
     public function shops()
@@ -85,7 +86,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     {
         return $this->belongsToMany(Shop::class, 'shop_user', 'user_id', 'shop_id')->withTimestamps();
     }
-    
+
     public function follows(Shop $shop)
     {
         return $this->followedShops()->where('shop_id', $shop->id)->exists();
@@ -108,7 +109,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     {
         return $this->belongsToMany(Ticket::class, 'ticket_user', 'user_id', 'ticket_id', 'id', 'id')->withPivot('action')->withTimestamps();
     }
-    
+
     public function zones()
     {
         return $this->belongsToMany(Zone::class, 'ticket_user', 'user_id', 'zone_id', 'id', 'id')->withPivot('action')->withTimestamps();
@@ -155,7 +156,8 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         return $this->followedShops()->where('shop_id', $shopId)->exists();
     }
 
-    public function tickets(){
+    public function tickets()
+    {
         return $this->hasMany(Ticket::class);
     }
 
@@ -463,5 +465,10 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     public function role()
     {
         return $this->hasOne(Role::class, 'id', 'role_id');
+    }
+
+    public function pos()
+    {
+        return $this->belongsTo(Pos::class);
     }
 }
