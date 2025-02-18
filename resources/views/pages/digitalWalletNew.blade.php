@@ -202,6 +202,7 @@
                                             {{ $name }}
                                         </h4>
                                         <p>
+                                            
                                             {{ __('words.remaining') }} :
                                             {{ $extras->sum('qty') - $extras->sum('used') }}
                                         </p>
@@ -243,6 +244,7 @@
 
                 </div>
             @else
+            
                 <div class="cus-card-body p-2">
                     @foreach ($tickets->groupBy('order_id') as $orderId => $tickets)
                         @php
@@ -265,10 +267,11 @@
                                         aria-expanded="false" aria-controls="collapseExample">
                                         <i class="fa fa-chevron-down"></i>
                                     </a>
+
                                     <p class="fw-normal mb-1 fs-4">
                                         {{ $product->name }} &nbsp;<span style="font-size: 14px"
                                             class=" badge bg-secondary px-2 py-1 ">X
-                                            {{ $tickets->count() }}</span>
+                                            {{ $item->count() }}</span>
                                     </p>
                                     <p class=" text-secondary" style="font-size: 14px">
                                         <i class="far fa-calendar"></i> &nbsp;
