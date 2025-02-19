@@ -351,7 +351,7 @@ class EventAnalyticsController extends Controller
             ->where('role_id', 6)
             ->get();
 
-        return $order = Order::selectRaw('sum(total) as total')
+         $order = Order::selectRaw('sum(total) as total')
             ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
             ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
             // ->selectRaw('SUM(jt.qty) as extra_qty')
@@ -439,7 +439,13 @@ class EventAnalyticsController extends Controller
             ->latest()
             ->withCount('tickets')
             ->paginate(50);
-
+            $totalPaidInvite = Ticket::with('order') // Ensure 'order' is eager-loaded
+            ->where('tickets.event_id', $event->id)
+            ->when($request->filled('date'), fn($query) => $query->whereDate('tickets.created_at', $request->date))
+            ->when($request->filled('staff'), fn($query) => $query->where('tickets.pos_id', $request->staff))
+            ->whereType('pos')
+            ->get();
+        
         return view('vendor.voyager.events.pos', [
             'event' => $event,
             'order' => $order,
@@ -447,6 +453,7 @@ class EventAnalyticsController extends Controller
             'extras' => $extras,
             'tickets' => $tickets,
             'allOrders' => $allOrders,
+            'totalPaidInvite' => $totalPaidInvite,
         ]);
     }
 

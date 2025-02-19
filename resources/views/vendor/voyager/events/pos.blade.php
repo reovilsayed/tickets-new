@@ -186,6 +186,12 @@
                 'value' => Sohoj::price($order?->total - $order?->extra_total),
             ])
           </div>
+          <div class="col-md-4">
+            @include('vendor.voyager.events.partial.card', [
+                'label' => 'Total Paid Invite Amount',
+                'value' => Sohoj::price($totalPaidInvite->sum(fn($ticket) => $ticket->order->total ?? 0)),
+            ])
+          </div>
           @foreach ($tickets as $ticket)
             <div class="col-md-4">
               <div class="card">
