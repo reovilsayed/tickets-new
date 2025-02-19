@@ -46,7 +46,11 @@ function Extras() {
 
     return (
         <div className="overflow-y-scroll overflow-x-none pt-3">
-            {isLoading ? (
+            {!filterEvent ? (
+                <h4 className="text-info text-center">
+                    Please Select An Event
+                </h4>
+            ) : isLoading ? (
                 <div
                     style={{
                         width: "100%",

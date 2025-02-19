@@ -19,6 +19,7 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'event_thumbnail' => Voyager::image($this->event->thumbnail),
+            'thumbnail' => Voyager::image($this->thumbnail),
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
