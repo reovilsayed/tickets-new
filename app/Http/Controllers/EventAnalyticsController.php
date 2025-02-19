@@ -347,20 +347,20 @@ class EventAnalyticsController extends Controller
 
     public function POS(Event $event, Request $request)
     {
-        $staffs = User::select(['id', 'name', 'l_name'])
+         $staffs = User::select(['id', 'name', 'l_name'])
             ->where('role_id', 6)
             ->get();
 
-        $order = Order::selectRaw('sum(total) as total')
+        return $order = Order::selectRaw('sum(total) as total')
             ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
             ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
-            ->selectRaw('SUM(jt.qty) as extra_qty')
-            ->selectRaw('SUM(jt.qty * jt.price) as extra_total')
-            ->leftJoin(DB::raw('JSON_TABLE(orders.extras, \'$[*]\' COLUMNS (
-                        qty INT PATH \'$.qty\',
-                        price INT PATH \'$.price\')) AS jt'), function ($join) {
-                $join->on(DB::raw('1'), '=', DB::raw('1'));
-            })
+            // ->selectRaw('SUM(jt.qty) as extra_qty')
+            // ->selectRaw('SUM(jt.qty * jt.price) as extra_total')
+            // ->leftJoin(DB::raw('JSON_TABLE(orders.extras, \'$[*]\' COLUMNS (
+            //             qty INT PATH \'$.qty\',
+            //             price INT PATH \'$.price\')) AS jt'), function ($join) {
+            //     $join->on(DB::raw('1'), '=', DB::raw('1'));
+            // })
             ->when(
                 $request->filled('date'),
                 fn($query) => $query->whereDate('created_at', $request->date)
