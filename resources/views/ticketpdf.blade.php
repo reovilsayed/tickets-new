@@ -266,8 +266,8 @@
 
     @if(@$order)
         <form action="{{ route('downloadPdf.ticket',$order) }}" method="POST" class="">
-            <input type="text" name="p" value="{{request()->p}}">
-            <input type="text" name="t" value="{{request()->t}}">
+            <input type="hidden" name="p" value="{{request()->p}}">
+            <input type="hidden" name="t" value="{{request()->t}}">
             @csrf
             <button class="print-btn"  >{{ __('words.print') }}</button>
         </form>
