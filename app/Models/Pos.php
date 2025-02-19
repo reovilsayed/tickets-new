@@ -22,7 +22,7 @@ class Pos extends Model
     public function permission(): Attribute
     {
         return Attribute::make(
-            get: fn() => @$this->attributes['permission'] ? json_decode($this->attributes['permission'], true) : $this->defaultPermission,
+            get: fn() => @$this->attributes['permission'] ? array_merge($this->defaultPermission, json_decode($this->attributes['permission'], true))  : $this->defaultPermission,
             set: function ($value) {
 
                 return json_encode(array_merge($this->defaultPermission, $value));
