@@ -5,22 +5,21 @@ import Loading from "./components/Loading";
 export const navRoutes = [
     {
         path: "/pos/",
+        name: "Dashboard",
+        icon: "fas fa-home",
+        layout: React.lazy(() => import("./components/layouts/MainLayout")),
+        element: React.lazy(() => import("./App")),
+    },
+    {
+        path: "/pos/tickets",
         name: "Tickets",
         icon: "fas fa-ticket-alt",
+        permissionName: "tickets",
         layout: React.lazy(() =>
             import("./components/layouts/DashboardLayout")
         ),
         element: React.lazy(() => import("./pages/Tickets/Tickets")),
     },
-    /* {
-        path: "/pos/tickets",
-        name: "Tickets",
-        icon: "fas fa-ticket-alt",
-        layout: React.lazy(() =>
-            import("./components/layouts/DashboardLayout")
-        ),
-        element: React.lazy(() => import("./pages/Tickets/Tickets")),
-    }, */
     {
         path: "/pos/extras",
         permissionName: "extras",
