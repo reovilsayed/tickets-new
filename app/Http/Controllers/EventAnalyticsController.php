@@ -354,13 +354,27 @@ class EventAnalyticsController extends Controller
          $order = Order::selectRaw('sum(total) as total')
             ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
             ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
-            // ->selectRaw('SUM(jt.qty) as extra_qty')
-            // ->selectRaw('SUM(jt.qty * jt.price) as extra_total')
-            // ->leftJoin(DB::raw('JSON_TABLE(orders.extras, \'$[*]\' COLUMNS (
-            //             qty INT PATH \'$.qty\',
-            //             price INT PATH \'$.price\')) AS jt'), function ($join) {
-            //     $join->on(DB::raw('1'), '=', DB::raw('1'));
-            // })
+            ->selectRaw('SUM(jt.qty) as extra_qty')
+            ->selectRaw('SUM(jt.qty * jt.price) as extra_total')
+            ->leftJoin(DB::raw('JSON_TABLE(orders.extras, \'$[*]\' COLUMNS (
+                        qty INT PATH \'$.qty\',
+                        price INT PATH \'$.price\')) AS jt'), function ($join) {
+                $join->on(DB::raw('1'), '=', DB::raw('1'));
+            })
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )
+            ->where('orders.event_id', $event->id)
+            ->whereNotNull('orders.pos_id')
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('orders.pos_id', $request->staff)
+            )
+            ->first();
+         $order_total = Order::selectRaw('sum(total) as total')
+            ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
+            ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
             ->when(
                 $request->filled('date'),
                 fn($query) => $query->whereDate('created_at', $request->date)
@@ -416,7 +430,7 @@ class EventAnalyticsController extends Controller
             ->groupBy('product_id')
             ->get();
 
-        $allOrders = Order::with('user', 'tickets:id,product_id')
+        $allOrders = Order::with('user')
             ->where('event_id', $event->id)
             ->when(request()->filled('alert'), fn($query) => $query->where('alert', request()->alert))
             ->when(
@@ -445,7 +459,8 @@ class EventAnalyticsController extends Controller
             ->when($request->filled('staff'), fn($query) => $query->where('tickets.pos_id', $request->staff))
             ->whereType('pos')
             ->get();
-        
+         $order_test = Order::where('id',8540)->first();
+        //  return $order_test->getDescription();
         return view('vendor.voyager.events.pos', [
             'event' => $event,
             'order' => $order,
@@ -454,6 +469,7 @@ class EventAnalyticsController extends Controller
             'tickets' => $tickets,
             'allOrders' => $allOrders,
             'totalPaidInvite' => $totalPaidInvite,
+            'order_total' => $order_total,
         ]);
     }
 
