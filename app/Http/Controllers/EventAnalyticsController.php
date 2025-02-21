@@ -347,11 +347,11 @@ class EventAnalyticsController extends Controller
 
     public function POS(Event $event, Request $request)
     {
-        $staffs = User::select(['id', 'name', 'l_name'])
+         $staffs = User::select(['id', 'name', 'l_name'])
             ->where('role_id', 6)
             ->get();
 
-        $order = Order::selectRaw('sum(total) as total')
+         $order = Order::selectRaw('sum(total) as total')
             ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
             ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
             ->selectRaw('SUM(jt.qty) as extra_qty')
@@ -361,6 +361,20 @@ class EventAnalyticsController extends Controller
                         price INT PATH \'$.price\')) AS jt'), function ($join) {
                 $join->on(DB::raw('1'), '=', DB::raw('1'));
             })
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )
+            ->where('orders.event_id', $event->id)
+            ->whereNotNull('orders.pos_id')
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('orders.pos_id', $request->staff)
+            )
+            ->first();
+         $order_total = Order::selectRaw('sum(total) as total')
+            ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
+            ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
             ->when(
                 $request->filled('date'),
                 fn($query) => $query->whereDate('created_at', $request->date)
@@ -416,7 +430,7 @@ class EventAnalyticsController extends Controller
             ->groupBy('product_id')
             ->get();
 
-        $allOrders = Order::with('user', 'tickets:id,product_id')
+        $allOrders = Order::with('user')
             ->where('event_id', $event->id)
             ->when(request()->filled('alert'), fn($query) => $query->where('alert', request()->alert))
             ->when(
@@ -439,7 +453,14 @@ class EventAnalyticsController extends Controller
             ->latest()
             ->withCount('tickets')
             ->paginate(50);
-
+           return $totalPaidInvite = Ticket::where('event_id', $event->id)
+            ->when($request->filled('date'), fn($query) => $query->whereDate('created_at', $request->date))
+            ->when($request->filled('staff'), fn($query) => $query->where('pos_id', $request->staff))
+            ->whereType('paid_invite')
+            ->where('active',1)
+            ->whereNotNull('pos_id')
+            ->get();
+        //  return $order_test->getDescription();
         return view('vendor.voyager.events.pos', [
             'event' => $event,
             'order' => $order,
@@ -447,6 +468,8 @@ class EventAnalyticsController extends Controller
             'extras' => $extras,
             'tickets' => $tickets,
             'allOrders' => $allOrders,
+            'totalPaidInvite' => $totalPaidInvite,
+            'order_total' => $order_total,
         ]);
     }
 

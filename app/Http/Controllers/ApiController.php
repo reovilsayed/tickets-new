@@ -460,6 +460,7 @@ class ApiController extends Controller
         $order = Order::create($orderData);
 
         $ticket->active = 1;
+        $ticket->pos_id = auth()->id();
         $ticket->order_id = $order->id;
 
         $ticket->save();

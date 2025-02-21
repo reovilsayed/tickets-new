@@ -1,7 +1,5 @@
 function App() {
-    console.log('hello');
-    
-    return <h1>Home page</h1>;
+    return <></>;
 }
 
 export default App;
