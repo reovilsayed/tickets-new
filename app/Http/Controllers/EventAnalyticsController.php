@@ -453,13 +453,13 @@ class EventAnalyticsController extends Controller
             ->latest()
             ->withCount('tickets')
             ->paginate(50);
-            $totalPaidInvite = Ticket::with('order') // Ensure 'order' is eager-loaded
-            ->where('tickets.event_id', $event->id)
-            ->when($request->filled('date'), fn($query) => $query->whereDate('tickets.created_at', $request->date))
-            ->when($request->filled('staff'), fn($query) => $query->where('tickets.pos_id', $request->staff))
-            ->whereType('pos')
+           return $totalPaidInvite = Ticket::where('event_id', $event->id)
+            ->when($request->filled('date'), fn($query) => $query->whereDate('created_at', $request->date))
+            ->when($request->filled('staff'), fn($query) => $query->where('pos_id', $request->staff))
+            ->whereType('paid_invite')
+            ->where('active',1)
+            ->whereNotNull('pos_id')
             ->get();
-         $order_test = Order::where('id',8540)->first();
         //  return $order_test->getDescription();
         return view('vendor.voyager.events.pos', [
             'event' => $event,
