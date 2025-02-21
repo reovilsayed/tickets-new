@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Models\Extra;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 use TCG\Voyager\Facades\Voyager;
 
 class ProductResource extends JsonResource
@@ -42,7 +43,7 @@ class ProductResource extends JsonResource
             'extras' => $this->transformExtras(),
             'invite_only' => $this->invite_only,
             'event' => $this->event,
-            'thumbnail'=>$this->thumbnail
+            'thumbnail'=>Voyager::image($this->thumbnail)
         ];
     }
 
