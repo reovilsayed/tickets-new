@@ -314,7 +314,7 @@ class EventAnalyticsController extends Controller
 
         $products = DB::table('tickets')
             ->select('products.name')
-            ->selectRaw('count(*) as total')
+            ->selectRaw('count(DISTINCT tickets.id) as total')
             ->join('ticket_user', 'tickets.id', 'ticket_user.ticket_id')
             ->join('products', 'products.id', 'tickets.product_id')
             ->when(
