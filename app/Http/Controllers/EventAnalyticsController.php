@@ -333,6 +333,14 @@ class EventAnalyticsController extends Controller
             ->select('zone_id')
             ->selectRaw("count(DISTINCT ticket_id) as total")
             ->whereHas('ticket', fn($query) => $query->where('event_id', $event->id))
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('user_id', $request->staff)
+            )
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )
             ->groupBy('zone_id')
             ->get();
 
