@@ -14,6 +14,8 @@ class ExtraResoure extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        $data = parent::toArray($request);
+        $data['thumbnail'] = 'https://events.essenciacompany.com/storage/' . $data['thumbnail'];
+        return $data;
     }
 }

@@ -314,7 +314,7 @@ class EventAnalyticsController extends Controller
 
         $products = DB::table('tickets')
             ->select('products.name')
-            ->selectRaw('count(*) as total')
+            ->selectRaw('count(DISTINCT tickets.id) as total')
             ->join('ticket_user', 'tickets.id', 'ticket_user.ticket_id')
             ->join('products', 'products.id', 'tickets.product_id')
             ->when(
@@ -333,6 +333,14 @@ class EventAnalyticsController extends Controller
             ->select('zone_id')
             ->selectRaw("count(DISTINCT ticket_id) as total")
             ->whereHas('ticket', fn($query) => $query->where('event_id', $event->id))
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('user_id', $request->staff)
+            )
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )
             ->groupBy('zone_id')
             ->get();
 
@@ -453,8 +461,8 @@ class EventAnalyticsController extends Controller
             ->latest()
             ->withCount('tickets')
             ->paginate(50);
-           return $totalPaidInvite = Ticket::where('event_id', $event->id)
-            ->when($request->filled('date'), fn($query) => $query->whereDate('created_at', $request->date))
+            $totalPaidInvite = Ticket::where('event_id', $event->id)
+            ->when($request->filled('date'), fn($query) => $query->whereDate('activation_date', $request->date))
             ->when($request->filled('staff'), fn($query) => $query->where('pos_id', $request->staff))
             ->whereType('paid_invite')
             ->where('active',1)
