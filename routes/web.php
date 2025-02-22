@@ -331,6 +331,7 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::get('/pos/{page}', function () {
         return view('pos');
     });
+
     Route::get('asdasdasd/extras', [ApiController::class, 'extras']);
     Route::prefix('api')->group(function () {
         Route::get('/tickets', [ApiController::class, 'index']);
@@ -339,7 +340,7 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
         Route::get('/event-extras/{event}', [ApiController::class, 'eventExtras']);
     });
 });
-
+Route::get('aaspi/extrasasd', [ApiController::class, 'extras']);
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
     // Fetch the events where the wallet is 1, ordered by latest
