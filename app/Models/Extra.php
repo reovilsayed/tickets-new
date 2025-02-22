@@ -20,13 +20,13 @@ class Extra extends Model
     {
         return Attribute::make(
             set: fn($value) => json_encode($value),
-            get: fn($value) => json_decode($value,true) ?? [],
+            get: fn($value) => json_decode($value, true) ?? [],
         );
     }
     public function thumbnail(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => Voyager::image($this->attributes['thumbnail']),
+            get: fn($value) =>  @$this->attributes['thumbnail'] ? Voyager::image(@$this->attributes['thumbnail']) : null,
         );
     }
 
