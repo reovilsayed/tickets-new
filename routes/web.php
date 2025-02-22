@@ -332,7 +332,6 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
         return view('pos');
     });
 
-    Route::get('asdasdasd/extras', [ApiController::class, 'extras']);
     Route::prefix('api')->group(function () {
         Route::get('/tickets', [ApiController::class, 'index']);
         Route::get('/events', [ApiController::class, 'events']);
