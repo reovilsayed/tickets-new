@@ -462,7 +462,7 @@ class EventAnalyticsController extends Controller
             ->withCount('tickets')
             ->paginate(50);
             $totalPaidInvite = Ticket::where('event_id', $event->id)
-            ->when($request->filled('date'), fn($query) => $query->whereDate('created_at', $request->date))
+            ->when($request->filled('date'), fn($query) => $query->whereDate('activation_date', $request->date))
             ->when($request->filled('staff'), fn($query) => $query->where('pos_id', $request->staff))
             ->whereType('paid_invite')
             ->where('active',1)

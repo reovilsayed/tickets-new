@@ -461,6 +461,7 @@ class ApiController extends Controller
 
         $ticket->active = 1;
         $ticket->pos_id = auth()->id();
+        $ticket->activation_date = now();
         $ticket->order_id = $order->id;
 
         $ticket->save();
