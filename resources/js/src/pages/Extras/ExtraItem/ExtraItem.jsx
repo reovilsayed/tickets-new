@@ -68,9 +68,7 @@ const ExtraItem = ({ extra }) => {
                             title={extra.display_name}
                             className="extra-item-name"
                         >
-                            {extra?.display_name.length > 15
-                                ? `${extra.display_name.substring(0, 15)}...`
-                                : extra.display_name}
+                            {extra?.display_name}
                         </p>
                         {/* <button
                             onClick={openInfoModal}
