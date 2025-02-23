@@ -20,16 +20,10 @@ class Extra extends Model
     {
         return Attribute::make(
             set: fn($value) => json_encode($value),
-            get: fn($value) => json_decode($value,true) ?? [],
+            get: fn($value) => json_decode($value, true) ?? [],
         );
     }
-    public function thumbnail(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => Voyager::image($this->attributes['thumbnail']),
-        );
-    }
-
+   
     public function poses()
     {
         return $this->belongsToMany(Pos::class, 'extra_pos', 'extra_id', 'pos_id');

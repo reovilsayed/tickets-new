@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Sohoj;
 use Illuminate\Support\Str;
 use App\Http\Resources\EventCollection;
+use App\Http\Resources\ExtraResoure;
 use App\Http\Resources\ProductCollection;
 use App\Mail\TicketDownload;
 use App\Models\Event;
@@ -134,7 +135,7 @@ class ApiController extends Controller
 
         $extras = $extras->paginate(50);
 
-        return response()->json($extras);
+        return ExtraResoure::collection($extras);
     }
 
     public function eventExtras(Request $request, $event)
