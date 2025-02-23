@@ -132,7 +132,7 @@ class ApiController extends Controller
             $extras->where('event_id', $event_id);
         }
 
-        $extras = $extras->paginate($perPage);
+        $extras = $extras->paginate(50);
 
         return response()->json($extras);
     }
