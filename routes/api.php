@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\AppApiController;
 use App\Models\Extra;
 use App\Models\Ticket;
 use App\Models\Zone;
@@ -136,7 +137,7 @@ Route::post('/scan-ticket', function (Request $request) {
 
 Route::post('/extras-scan-ticker', function (Request $request) {
 
-     $ticket = Ticket::where('ticket', $request->ticket)->where('active', 1)->first();
+    $ticket = Ticket::where('ticket', $request->ticket)->where('active', 1)->first();
     if ($ticket) {
         $extras = [];
 
@@ -166,4 +167,14 @@ Route::get('/withdraw_checked', function () {
     return response()->json([
         'checked' => setting('admin.withdraw') == "1" ? true : false
     ]);
+});
+
+Route::group(['prefix' => 'app'], function () {
+    Route::post(('login'), [AppApiController::class, 'login']);
+
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('user', [AppApiController::class, 'user']);
+        Route::post('checkin', [AppApiController::class, 'checkin']);
+        Route::post('checkout', [AppApiController::class, 'checkout']);
+    });
 });
