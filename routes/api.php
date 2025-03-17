@@ -176,5 +176,7 @@ Route::group(['prefix' => 'app'], function () {
         Route::get('user', [AppApiController::class, 'user']);
         Route::post('checkin', [AppApiController::class, 'checkin']);
         Route::post('checkout', [AppApiController::class, 'checkout']);
+        Route::get('extras', [AppApiController::class, 'getExtras']);
+        Route::post('withdraw', [AppApiController::class, 'withdrawExtra']);
     });
 });

@@ -134,4 +134,68 @@ class AppApiController extends Controller
             );
         return response()->json(['error' => __('words.ticket_checked_out')], 200);
     }
+
+    public function getExtras(Request $request)
+    {
+        $ticket = Ticket::where('ticket', $request->ticket)->where('active', 1)->first();
+        if ($ticket) {
+            $extras = [];
+
+            foreach ($ticket->extras as $extra) {
+                // if (Extra::find($extra['id'])->zone_id != $request->zone) {
+                //     continue;
+                // }
+                array_push($extras, $extra);
+            }
+            $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
+            return response()->json($data);
+        } else {
+            return response()->json(['status' => 'error', 'message' => __('words.invalid_ticket_error')]);
+        }
+    }
+
+    public function withdrawExtra(Request $request)
+    {
+        $request->validate([
+            'ticket' => 'required',
+            'withdraw' => 'required',
+            'zone' => 'required',
+        ]);
+
+        // if (session()->get('enter-extra-zone')['id'] != $request->session) {
+        //     throw new Exception(__('Unauthorized access'));
+        // }
+
+        $ticket = Ticket::where('ticket', $request->ticket)->first();
+        $extras = $ticket->extras;
+        $zone = Zone::find($request->zone);
+        $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
+
+        // Normalize the extras array to ensure consistent structure
+        $normalizedExtras = [];
+        foreach ($extras as $key => $extra) {
+            if (is_array($extra) && isset($extra['id'])) {
+                $normalizedExtras[$extra['id']] = $extra;
+            } elseif (is_object($extra) && isset($extra->id)) {
+                $normalizedExtras[$extra->id] = (array) $extra;
+            }
+        }
+
+        foreach ($request->withdraw as $key => $qty) {
+            if ($qty && isset($normalizedExtras[$key])) {
+                $normalizedExtras[$key]['used'] += $qty;
+
+                $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $normalizedExtras[$key]['name'];
+            }
+        }
+
+        $data = $ticket->logs;
+        array_push($data, $log);
+        $ticket->extras = $normalizedExtras;
+        $ticket->logs = $data;
+        $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
+        $ticket->save();
+
+        return response()->json('success_msg', __('words.extra_product_withdraw_success_message'));
+    }
 }
