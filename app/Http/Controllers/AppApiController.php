@@ -169,7 +169,7 @@ class AppApiController extends Controller
         $ticket = Ticket::where('ticket', $request->ticket)->first();
         $extras = $ticket->extras;
         $zone = Zone::where("security_key", $request->zone)->first();
-        
+
         if ($ticket->active == 0) {
             return response()->json(['message' => __('words.ticket_not_active')]);
         }
@@ -207,6 +207,6 @@ class AppApiController extends Controller
         $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
         $ticket->save();
 
-        return response()->json(['message', __('words.extra_product_withdraw_success_message')]);
+        return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
     }
 }
