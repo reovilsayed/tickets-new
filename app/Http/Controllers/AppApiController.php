@@ -168,7 +168,7 @@ class AppApiController extends Controller
 
         $ticket = Ticket::where('ticket', $request->ticket)->first();
         $extras = $ticket->extras;
-        $zone = Zone::find($request->zone);
+        $zone = Zone::where("security_key", $request->zone)->first();
         $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
 
         // Normalize the extras array to ensure consistent structure
