@@ -21,10 +21,10 @@ class AppApiController extends Controller
                 $token = $user->createToken('authToken')->plainTextToken;
                 return response()->json(['token' => $token, 'user' => $user], 200);
             } else {
-                return response()->json(['error' => 'Unauthorised'], 401);
+                return response()->json(['error' => 'Invalid password'], 401);
             }
         } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
     }
 
@@ -167,7 +167,7 @@ class AppApiController extends Controller
         }
         $user = auth('sanctum')->user();
         if ($user) {
-            return response()->json($user->zones());
+            return response()->json($user->zones);
         }
 
         return response()->json(['food_zone' => $zone->type == 1]);
