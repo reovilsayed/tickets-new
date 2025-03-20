@@ -177,9 +177,9 @@ class AppApiController extends Controller
             return response()->json(['message' => __('words.to_early_to_scan')], 500);
         }
 
-        /* if ($ticket->product->zones->doesntContain($zone)) {
+        if ($zone == null) {
             return response()->json(['message' => __('words.invalid_zone_error')], 500);
-        } */
+        }
         $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
 
         // Normalize the extras array to ensure consistent structure
