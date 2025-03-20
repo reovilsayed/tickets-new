@@ -98,7 +98,7 @@ class AppApiController extends Controller
 
     public function checkOut(Request $request)
     {
-        $zone = Zone::find($request->zone_id);
+        $zone = Zone::where("security_key", $request->zone_id)->first();
         $ticket = Ticket::with('product')->where('ticket', $request->ticket)
             ->firstOrFail();
 
