@@ -42,9 +42,9 @@ class AppApiController extends Controller
             return response()->json(['error' => __('words.ticket_not_active')]);
         }
         // check if the ticket is valid for the current date
-        if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
+        /* if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
             return response()->json(['error' => __('words.to_early_to_scan')], 500);
-        }
+        } */
 
         // check if the ticket is valid for this zone
         if ($ticket->product->zones->doesntContain($zone)) {
