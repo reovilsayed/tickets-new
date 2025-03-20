@@ -36,7 +36,7 @@ class AppApiController extends Controller
     function checkin(Request $request)
     {
         $ticket = $request->ticket;
-        $zone = Zone::find($request->zone_id);
+        $zone = Zone::where("security_key", $request->zone_id)->first();
         $ticket = Ticket::where('ticket', $ticket)->with('product')->firstOrFail();
         if ($ticket->active == 0) {
             return response()->json(['error' => __('words.ticket_not_active')]);
