@@ -154,6 +154,16 @@ class AppApiController extends Controller
         }
     }
 
+    public function getZoneType(Request $request)
+    {
+        $zone_id = $request->zone;
+        $zone = Zone::where("security_key", $zone_id)->first();
+        if ($zone == null) {
+            return response()->json(['message' => __('words.invalid_zone_error')], 500);
+        }
+        return response()->json(['food_zone' => $zone->type == 1]);
+    }
+
     public function withdrawExtra(Request $request)
     {
         $request->validate([

@@ -178,5 +178,6 @@ Route::group(['prefix' => 'app'], function () {
         Route::post('checkout', [AppApiController::class, 'checkout']);
         Route::post('extras', [AppApiController::class, 'getExtras']);
         Route::post('withdraw', [AppApiController::class, 'withdrawExtra']);
+        Route::post('zone-type', [AppApiController::class, 'getZoneType']);
     });
 });
