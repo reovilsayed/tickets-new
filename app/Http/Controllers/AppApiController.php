@@ -101,6 +101,10 @@ class AppApiController extends Controller
         $zone = Zone::find($request->zone_id);
         $ticket = Ticket::with('product')->where('ticket', $request->ticket)
             ->firstOrFail();
+            
+        if ($zone == null) {
+            return response()->json(['message' => __('words.invalid_zone_error')], 500);
+        }
 
         $lastScan = $ticket->scanedBy()
             ->whereIn('action', ['Checked in', 'Checked Out'])
