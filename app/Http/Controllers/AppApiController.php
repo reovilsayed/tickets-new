@@ -165,6 +165,11 @@ class AppApiController extends Controller
         if ($zone == null) {
             return response()->json(['message' => __('words.invalid_zone_error')], 500);
         }
+        $user = auth('sanctum')->user();
+        if ($user) {
+            return response()->json($user->zones());
+        }
+
         return response()->json(['food_zone' => $zone->type == 1]);
     }
 
