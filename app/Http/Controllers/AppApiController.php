@@ -187,9 +187,9 @@ class AppApiController extends Controller
         if ($ticket->active == 0) {
             return response()->json(['message' => __('words.ticket_not_active')]);
         }
-        if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
+        /* if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
             return response()->json(['message' => __('words.to_early_to_scan')], 500);
-        }
+        } */
 
         if ($zone == null) {
             return response()->json(['message' => __('words.invalid_zone_error')], 500);
