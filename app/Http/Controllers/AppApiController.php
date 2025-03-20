@@ -167,7 +167,7 @@ class AppApiController extends Controller
         }
         $user = auth('sanctum')->user();
         if ($user) {
-            return response()->json(in_array($zone, $user->zones));
+            return response()->json(['zones' => $user->zones, 'contains_zone' => $user->zones->contains($zone)]);
         }
 
         return response()->json(['food_zone' => $zone->type == 1]);
