@@ -1,8 +1,5 @@
 <?php
 
-use App\Mail\InviteDownload;
-use App\Mail\InviteMail;
-use App\Mail\TicketDownload;
 use App\Models\Order;
 use App\Models\Coupon;
 use App\Models\Invite;
@@ -21,6 +18,8 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EnterzoneContoller;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\PosDashboardReport;
 use App\Http\Controllers\ZoneScannerController;
@@ -28,23 +27,15 @@ use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Vemcogroup\SmsApi\SmsApi;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
- */
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
-Route::get('event/{event:slug}', [PageController::class, 'event_details'])->name('product_details');
-Route::get('/invite/{invite:slug}', function (Invite $invite, Request $request) {
+
+Route::get('magazines', [MagazineController::class, 'index'])->name('magazines.index');
+Route::get('magazines/{magazine}', [MagazineController::class, 'show'])->name('magazines.show');
+
+Route::get('events', [EventController::class, 'index'])->name('events.index');
+Route::get('event/{event:slug}', [EventController::class, 'show'])->name('events.show');
+Route::get('invite/{invite:slug}', function (Invite $invite, Request $request) {
 
     $request->validate([
         'security' => 'required',
@@ -371,11 +362,11 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 
 
 
-Route::get('/toc-online-test/{order}', function ( $order) {
-    $order = Order::with('tickets')->where('id',$order )->first();
+Route::get('/toc-online-test/{order}', function ($order) {
+    $order = Order::with('tickets')->where('id', $order)->first();
     $toco = new TOCOnlineService;
     $response = $toco->createCommercialSalesDocument($order);
-    if (isset($response['id']) ) {
+    if (isset($response['id'])) {
         Log::info($response);
         $order->invoice_id = $response['id'];
         $order->invoice_url = $response['public_link'];
@@ -387,10 +378,9 @@ Route::get('/toc-online-test/{order}', function ( $order) {
             'message'    => "Invoice Created",
             'alert-type' => 'success',
         ]);
-    }else{
+    } else {
         return $response;
     }
-
 })->name('toc-online-test');
 
 

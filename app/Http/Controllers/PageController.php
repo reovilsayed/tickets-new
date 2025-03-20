@@ -35,16 +35,6 @@ class PageController extends Controller
         $events = Event::where('status', 1)->where('featured',1)->orderBy('sequence','asc')->get();
         return view('pages.home', compact('events'));
     }
-    public function event_details(Event $event)
-    {
-        $is_invite = false;
-        $products = [];
-        $products['all'] = $event->products()->whereIn('type', ['website','both'])->where('invite_only', 0)->get();
-        foreach ($event->dates() as $date) {
-            $products[$date] = $event->products()->whereIn('type', ['website','both'])->where('invite_only', 0)->get()->filter(fn($product) => in_array($date, $product->dates));
-        }
-        return view('pages.event_details', compact('event', 'products', 'is_invite'));
-    }
 
     public function shops()
     {

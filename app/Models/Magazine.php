@@ -10,4 +10,9 @@ class Magazine extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function path() : string
+    {
+        return route('magazines.show', $this);
+    }
 }

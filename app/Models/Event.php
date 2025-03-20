@@ -14,9 +14,10 @@ class Event extends Model
         'start_at' => 'datetime',
         'end_at' => 'datetime',
     ];
+
     public function path()
     {
-        return route('product_details', $this->slug);
+        return route('events.show', $this->slug);
     }
 
     public function products()

@@ -324,7 +324,7 @@
                                         <button type="submit"
                                             class="btn btn-primary mt-3">{{ __('words.proceed_to_payment') }}</button>
                                         <button class="">
-                                            <a href="{{ route('product_details', $event) }}" class="btn btn-primary mt-3">
+                                            <a href="{{ route('events.show', $event) }}" class="btn btn-primary mt-3">
                                                 <i class="fa-solid fa-chevron-left"></i> {{ __('words.go_back') }}</a>
                                         </button>
                                     </form>
