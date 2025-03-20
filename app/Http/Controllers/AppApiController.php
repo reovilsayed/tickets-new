@@ -163,11 +163,11 @@ class AppApiController extends Controller
         $zone_id = $request->zone;
         $zone = Zone::where("security_key", $zone_id)->first();
         if ($zone == null) {
-            return response()->json(['message' => __('words.invalid_zone_error')], 500);
+            return response()->json(['error' => __('words.invalid_zone_error')], 500);
         }
         $user = auth('sanctum')->user();
-        if ($user) {
-            return response()->json(['zones' => $user->zones, 'contains_zone' => $user->zones->contains($zone)]);
+        if ($user->zones->contains($zone)) {
+            return response()->json(['error' => "You are not authorised to access that zone"], 401);
         }
 
         return response()->json(['food_zone' => $zone->type == 1]);
