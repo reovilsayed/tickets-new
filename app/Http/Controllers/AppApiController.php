@@ -21,10 +21,10 @@ class AppApiController extends Controller
                 $token = $user->createToken('authToken')->plainTextToken;
                 return response()->json(['token' => $token, 'user' => $user], 200);
             } else {
-                return response()->json(['error' => 'Unauthorised'], 401);
+                return response()->json(['error' => 'Invalid password'], 401);
             }
         } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
     }
 
@@ -36,15 +36,15 @@ class AppApiController extends Controller
     function checkin(Request $request)
     {
         $ticket = $request->ticket;
-        $zone = Zone::find($request->zone_id);
+        $zone = Zone::where("security_key", $request->zone_id)->first();
         $ticket = Ticket::where('ticket', $ticket)->with('product')->firstOrFail();
         if ($ticket->active == 0) {
             return response()->json(['error' => __('words.ticket_not_active')]);
         }
         // check if the ticket is valid for the current date
-        if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
+        /* if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
             return response()->json(['error' => __('words.to_early_to_scan')], 500);
-        }
+        } */
 
         // check if the ticket is valid for this zone
         if ($ticket->product->zones->doesntContain($zone)) {
@@ -98,9 +98,13 @@ class AppApiController extends Controller
 
     public function checkOut(Request $request)
     {
-        $zone = Zone::find($request->zone_id);
+        $zone = Zone::where("security_key", $request->zone_id)->first();
         $ticket = Ticket::with('product')->where('ticket', $request->ticket)
             ->firstOrFail();
+
+        if ($zone == null) {
+            return response()->json(['error' => __('words.invalid_zone_error')], 500);
+        }
 
         $lastScan = $ticket->scanedBy()
             ->whereIn('action', ['Checked in', 'Checked Out'])
@@ -154,6 +158,21 @@ class AppApiController extends Controller
         }
     }
 
+    public function getZoneType(Request $request)
+    {
+        $zone_id = $request->zone;
+        $zone = Zone::where("security_key", $zone_id)->first();
+        if ($zone == null) {
+            return response()->json(['error' => __('words.invalid_zone_error')], 500);
+        }
+        $user = auth('sanctum')->user();
+        if (!$user->zones->contains($zone)) {
+            return response()->json(['error' => "You are not authorised to access that zone"], 401);
+        }
+
+        return response()->json(['food_zone' => $zone->type == 1]);
+    }
+
     public function withdrawExtra(Request $request)
     {
         $request->validate([
@@ -173,13 +192,13 @@ class AppApiController extends Controller
         if ($ticket->active == 0) {
             return response()->json(['message' => __('words.ticket_not_active')]);
         }
-        if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
+        /* if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
             return response()->json(['message' => __('words.to_early_to_scan')], 500);
-        }
-
-        /* if ($ticket->product->zones->doesntContain($zone)) {
-            return response()->json(['message' => __('words.invalid_zone_error')], 500);
         } */
+
+        if ($zone == null) {
+            return response()->json(['message' => __('words.invalid_zone_error')], 500);
+        }
         $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
 
         // Normalize the extras array to ensure consistent structure
