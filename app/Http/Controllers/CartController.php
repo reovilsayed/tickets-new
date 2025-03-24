@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Invite;
+use App\Models\Magazine;
 use App\Models\Offer;
 use Illuminate\Http\Request;
 use Cart;
@@ -27,6 +28,13 @@ class CartController extends Controller
 			}
 		}
 		return redirect()->route('checkout', $event);
+	}
+	public function magazineAdd(Magazine $magazine, Request $request)
+	{
+
+		
+	
+		return redirect()->route('magazine_checkout', $magazine);
 	}
 	public function inviteadd(Invite $invite, Request $request)
 	{

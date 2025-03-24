@@ -13,8 +13,9 @@ class MagazineController extends Controller
         return view('pages.magazines.index', ['magazines' => $magazines]);
     }
 
-    public function show(Magazine $magazine)
+    public function show($slug)
     {
+        $magazine = Magazine::where('slug', $slug)->firstOrFail();
         return view('pages.magazines.show', ['magazine' => $magazine, 'is_invite' => true]);
     }
 }
