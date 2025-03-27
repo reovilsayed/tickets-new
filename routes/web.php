@@ -243,6 +243,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
     Route::get('magazine/{magazine:slug}/checkout', [PageController::class, 'magazineCheckout'])->name('magazine_checkout');
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('magazine/{magazine:slug}/store-checkout', [CheckoutController::class, 'magazineStore'])->name('magazinecheckout.store');
 });
 
 Route::post('age-verification', function (Request $request) {

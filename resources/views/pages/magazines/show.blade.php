@@ -67,7 +67,7 @@
         border: 2px solid #28BADF !important;
     }
 
-    .nav-pills .nav-link .active{
+    .nav-pills .nav-link .active {
         color: #0a0402 !important;
     }
 </style>
@@ -77,21 +77,35 @@
         <section class="rooms1 section-padding">
             <div class="container">
                 <div class="row ">
-                    <div class="col-md-5 event-details d-none d-md-block">
+                    <div class="col-md-4 event-details d-none d-md-block">
 
-                        <div class="event_img d-none d-md-block">
-                            <img src=" {{ Storage::url($magazine->image) }}" alt="">
+                        <div class="event_img">
+                            <img src=" {{ Voyager::image($magazine->image) }}" alt="">
                         </div>
-
-                        <div class="text-center d-md-none">
-                            <a href="#mobile-device">
-                                <button class="custom-button back-button">{{ __('words.envent_list') }}</button>
-                            </a>
-                        </div>
+    
+                        <h2 class="events-title mt-2 px-3 text-center">{{ $magazine->name }}</h2>
                         <div class="accordins">
-                            <div class="accordin-item d-none d-md-block">
+                            <div class="accordin-item">
+                                {{-- <div>
+                                    <i class="fa fa-calendar fa-2x" style="color: #28BADF;"></i>
+                                </div> --}}
+                                {{-- <div>
+                                    <h5>
+                                        {{ __('words.start_at') }} {{ $magazine->start_at->diffForHumans() }}
+                                    </h5>
+                                    <h6>
+                                        {{ $magazine->start_at->format('d M') }}
+                                    </h6>
+                                    <h6>
+                                        {{ $magazine->start_at->format('H:i') }}
+    
+                                    </h6>
+                                </div> --}}
+                            </div>
+                         
+                            <div class="accordin-item">
                                 <div>
-                                    <i class="fa fa-info-circle fa-2x" style="color: #28BADF"></i>
+                                    <i class="fa fa-info-circle fa-2x" style="color: #28BADF;"></i>
                                 </div>
                                 <div>
                                     <h5>
@@ -101,7 +115,6 @@
                                         {!! $magazine->description !!}
                                     </p>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -144,30 +157,37 @@
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-onetime-purchase" role="tabpanel"
                                 aria-labelledby="pills-home-tab">
-                                <div class="card card-ticket active">
-                                    <div class="card-body tick">
-                                        <span class="text-danger sold-sm">{{ __('words.sold') }}</span>
-                                        <div class="ticket-info">
-                                            <div class="t-info">
-                                                <p class="t-title">{{ $magazine->name }}</p>
-                                                <p class="t-des">{!! $magazine->description !!}</p>
-                                                <span class="sold">{{ __('words.sold') }}</span>
-                                            </div>
-                                            <div class="t-prize">
-                                                <select name="" min="0" max="3" class="ticket-select"
-                                                    style="border: 2px solid #28BADF !important">
-                                                    <option value="0">0</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                </select>
+                                @foreach ($magazine->archives as $archive)
+                                    <div class="card card-ticket active">
+                                        <div class="card-body tick">
+                                            <span class="text-danger sold-sm">{{ __('words.sold') }}</span>
+                                            <div class="ticket-info">
+                                                <div class="t-info">
+                                                    <p class="t-title">{{ $archive->title }}</p>
+                                                    <p class="t-des">{{ $archive->description }}</p>
+                                                    <span class="sold">{{ __('words.sold') }}</span>
+                                                </div>
+                                                <div class="t-prize">
+                                                    <span
+                                                        class="text-dark me-2 ticket-prize">{{ Sohoj::price($archive->price) }}</span>
+
+                                                    <select name="archive[{{ $archive->id }}]" min="0"
+                                                        max="3" class="ticket-select"
+                                                        style="border: 2px solid #28BADF !important">
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
                             <div class="tab-pane fade" id="pills-annual-purchase" role="tabpanel"
                                 aria-labelledby="pills-home-tab">
+
                                 <div class="card card-ticket">
                                     <div class="card-body tick">
                                         <div class="ticket-info">
@@ -175,8 +195,8 @@
                                                 <p class="t-title">Digital Subscription</p>
                                                 <p class="t-des">Digital Subscription Description</p>
                                             </div>
-                                            <div class="t-prize">
-                                                <h4>$55</h4>
+                                            <div class="t-p">
+                                                <h4></h4>
                                             </div>
                                         </div>
                                     </div>
@@ -189,11 +209,12 @@
                                                 <p class="t-des">Physical Subscription Description</p>
                                             </div>
                                             <div class="t-prize">
-                                                <h4>$55</h4>
+                                                <h4></h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                             <div class="tab-pane fade" id="pills-bi-annual-purchase" role="tabpanel"
                                 aria-labelledby="pills-home-tab">
@@ -258,16 +279,7 @@
                             class="custom-button back-button">{{ __('words.envent_list') }}</button></a>
                 </div>
                 <div class="accordins">
-                    <div class="accordin-item">
-                        <div>
-                            <i class="fa fa-calendar fa-2x"></i>
-                        </div>
-                        <div>
-                            <h5>{{ __('words.start_in') }} 12/12/2026</h5>
-                            <h6>12/12/2026</h6>
-                            <h6>12/12/2026</h6>
-                        </div>
-                    </div>
+
                     <div class="accordin-item">
                         <div>
                             <i class="fa fa-location-pin fa-2x"></i>
@@ -281,10 +293,7 @@
                             <i class="fa fa-info-circle fa-2x"></i>
                         </div>
                         <div>
-                            {{-- <h5>
-              {{ __('words.description') }}
-            </h5>
-            {!! $event->description !!} --}}
+
                             <div class="accordion-item">
                                 <h5 id="event-terms-heading" role="button" data-bs-toggle="collapse"
                                     data-bs-target="#description_event" aria-expanded="true"
@@ -332,14 +341,14 @@
     <script>
         function eventData() {
             return {
-                tickets: {},
+                archive: {},
                 quantities: {},
                 updateTicket(id, price) {
-                    this.tickets[id] = price * this.quantities[id];
+                    this.archive[id] = price * this.quantities[id];
                     this.calculateTotal();
                 },
                 calculateTotal() {
-                    let total = Object.values(this.tickets).reduce((sum, value) => sum + value, 0);
+                    let total = Object.values(this.archive).reduce((sum, value) => sum + value, 0);
                     this.$refs.total.innerText = 'Є' + total.toFixed(2);
                 }
             };

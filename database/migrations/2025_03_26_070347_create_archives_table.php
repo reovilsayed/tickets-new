@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('archives', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('magazine_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('magazine_id'); 
+            $table->foreign('magazine_id')->references('id')->on('magazines')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();
             $table->integer('quantity')->default(0);
@@ -28,6 +29,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('archives');
+        Schema::table('archives', function (Blueprint $table) {
+            Schema::dropIfExists('archives');
+        });
     }
 };

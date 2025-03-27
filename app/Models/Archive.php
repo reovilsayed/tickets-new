@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Achive extends Model
+class Archive extends Model
 {
     use HasFactory;
 
@@ -15,4 +15,5 @@ class Achive extends Model
     {
         return $this->belongsTo(Magazine::class);
     }
+    
 }

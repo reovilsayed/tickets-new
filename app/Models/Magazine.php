@@ -17,6 +17,12 @@ class Magazine extends Model
     }
     public function archives()
     {
-        return $this->hasMany(Archive::class);
+        return $this->hasMany(Archive::class, 'magazine_id');
     }
+    public function magazineOrders()
+    {
+        return $this->belongsToMany(MagazineOrder::class, 'magazine_order_archive')->withPivot(['quantity', 'price']);
+    }
+
+    
 }
