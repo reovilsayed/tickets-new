@@ -9,6 +9,7 @@ use App\Models\Contact;
 use App\Models\Email;
 use App\Models\Event;
 use App\Models\Facility;
+use App\Models\Magazine;
 use App\Models\Offer;
 use App\Models\Order;
 use App\Models\Post;
@@ -32,8 +33,9 @@ class PageController extends Controller
 {
     public function home()
     {
-        $events = Event::where('status', 1)->where('featured',1)->orderBy('sequence','asc')->get();
-        return view('pages.home', compact('events'));
+        $events = Event::where('status', 1)->where('featured', 1)->orderBy('sequence', 'asc')->get();
+        $magazines = Magazine::where('status', 1)->paginate(10);
+        return view('pages.home', compact('events', 'magazines'));
     }
 
     public function shops()
@@ -112,6 +114,8 @@ class PageController extends Controller
 
         return view('pages.checkout', compact('event'));
     }
+
+    
     public function store_front($slug)
     {
         $shop = Shop::where('slug', $slug)->products()->firstOrFail();
@@ -280,5 +284,10 @@ class PageController extends Controller
     public function interzone_2()
     {
         return view('pages.interzone_2');
+    }
+
+    public function magazineCheckout(Magazine $magazine)
+    {
+        return view('pages.magazine_checkout', compact('magazine'));
     }
 }

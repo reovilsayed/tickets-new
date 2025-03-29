@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Hash;
 Route::get('/', [PageController::class, 'home'])->name('homepage');
 
 Route::get('magazines', [MagazineController::class, 'index'])->name('magazines.index');
-Route::get('magazines/{magazine}', [MagazineController::class, 'show'])->name('magazines.show');
+Route::get('magazines/{magazine:slug}', [MagazineController::class, 'show'])->name('magazines.show');
 
 Route::get('events', [EventController::class, 'index'])->name('events.index');
 Route::get('event/{event:slug}', [EventController::class, 'show'])->name('events.show');
@@ -152,6 +152,7 @@ Route::get('/thankyou', [PageController::class, 'thankyou'])->name('thankyou');
 
 //cart
 Route::post('event/{event:slug}/add-cart', [CartController::class, 'add'])->name('cart.store');
+Route::post('magazine/{magazine:slug}/add-cart', [CartController::class, 'magazineAdd'])->name('magazine.cart.store');
 
 //coupon routes
 Route::post('/event/{event:slug}/add-coupon', [CouponController::class, 'add'])->name('coupon');
@@ -240,7 +241,9 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
+    Route::get('magazine/{magazine:slug}/checkout', [PageController::class, 'magazineCheckout'])->name('magazine_checkout');
     Route::post('event/{event:slug}/store-checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('magazine/{magazine:slug}/store-checkout', [CheckoutController::class, 'magazineStore'])->name('magazinecheckout.store');
 });
 
 Route::post('age-verification', function (Request $request) {

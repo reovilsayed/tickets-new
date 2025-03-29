@@ -11,8 +11,18 @@ class Magazine extends Model
 
     protected $guarded = [];
 
-    public function path() : string
+    public function path(): string
     {
         return route('magazines.show', $this);
     }
+    public function archives()
+    {
+        return $this->hasMany(Archive::class, 'magazine_id');
+    }
+    public function magazineOrders()
+    {
+        return $this->belongsToMany(MagazineOrder::class, 'magazine_order_archive')->withPivot(['quantity', 'price']);
+    }
+
+    
 }

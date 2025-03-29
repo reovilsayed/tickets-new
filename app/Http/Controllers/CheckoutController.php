@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Magazine;
+use App\Models\MagazineOrder;
+use App\Models\MagazineOrderArchive;
 use App\Models\Product;
 use App\Services\CheckoutService;
 use Cart;
@@ -26,7 +29,7 @@ class CheckoutController extends Controller
             Cart::session($event->slug)->clear();
             session()->forget('discount');
             session()->forget('discount_code');
-            
+
             return redirect($order->payment_link)->with('success_msg', 'Order create successfull');
         } catch (Exception $e) {
             DB::rollBack();
@@ -37,6 +40,32 @@ class CheckoutController extends Controller
         }
     }
 
+    public function magazineStore(Magazine $magazine, Request $request)
+    {
+
+        $user = auth()->user();
+        $user->update($request->only('name','l_name', 'vatNumber', 'contact_number', 'address'));
+        $cart = Cart::session($magazine->slug)->getContent();
+
+        $magazine = MagazineOrder::create([
+            'user_id' => $user->id,
+            'subtotal' => Cart::getSubtotal(),
+            'total' => Cart::getTotal(),
+        ]);
+        foreach ($cart as $item) {
+            MagazineOrderArchive::create([
+                'magazine_order_id' => $magazine->id,
+                'archive_id' => $item->id,
+                'quantity' => $item->quantity,
+                'price' => $item->price,
+            ]);
+        }
+        Cart::clear();
+        return redirect()->route('magazines.index')
+            ->with('success_msg', 'Order created successfully.');
+
+    
+    }
 
     // protected function notification($user, $shop)
     // {
