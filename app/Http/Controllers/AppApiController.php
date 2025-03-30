@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ExtraResoure;
+use App\Models\Extra;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Zone;
@@ -227,5 +229,25 @@ class AppApiController extends Controller
         $ticket->save();
 
         return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
+    }
+    
+    public function getAllExtras(Request $request)
+    {
+        $perPage = $request->get('per_page', 10);
+
+        $query = $request->get('query');
+        $event_id = $request->get('event_id');
+
+        $extras = Extra::with('event')->whereHas('poses', function ($q) {
+            $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
+        })->where('name', 'like', "%{$query}%");
+
+        if ($event_id) {
+            $extras->where('event_id', $event_id);
+        }
+
+        $extras = $extras->paginate(50);
+
+        return ExtraResoure::collection($extras);
     }
 }
