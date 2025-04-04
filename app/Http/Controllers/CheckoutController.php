@@ -53,7 +53,6 @@ class CheckoutController extends Controller
             'total' => Cart::getTotal(),
         ]);
         foreach ($cart as $item) {
-            // dd($item->attributes['Subsciption']);
             MagazineOrderArchive::create([
                 'magazine_order_id' => $magazine->id,
                 'archive_id' => $item->id,
@@ -62,7 +61,7 @@ class CheckoutController extends Controller
 
             ]);
             $magazine->update([
-                'type' => $item->attributes['Subsciption'] . ' ' . 'subscription',
+                'type' => $item->attributes['subsciption'],
             ]);
         }
         Cart::clear();

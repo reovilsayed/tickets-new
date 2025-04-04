@@ -145,6 +145,9 @@ class TOCOnlineService
         $token = $this->getAccessTokenFromRefreshToken();
 
 
+        if($token['error']){
+            throw new \Exception($token['message']);
+        }
         $response = Http::withHeaders([
             'Content-Type' => 'application/vnd.api+json',
             'Accept' => 'application/json',

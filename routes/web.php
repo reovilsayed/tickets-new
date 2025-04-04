@@ -389,3 +389,5 @@ Route::get('/toc-online-test/{order}', function ($order) {
 
 
 Route::get('/api/user/pos-permission', [ApiController::class, 'getPosPermissions'])->middleware('auth');
+
+
