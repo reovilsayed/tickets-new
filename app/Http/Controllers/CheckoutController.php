@@ -44,7 +44,7 @@ class CheckoutController extends Controller
     {
 
         $user = auth()->user();
-        $user->update($request->only('name','l_name', 'vatNumber', 'contact_number', 'address'));
+        $user->update($request->only('name', 'l_name', 'vatNumber', 'contact_number', 'address'));
         $cart = Cart::session($magazine->slug)->getContent();
 
         $magazine = MagazineOrder::create([
@@ -53,18 +53,21 @@ class CheckoutController extends Controller
             'total' => Cart::getTotal(),
         ]);
         foreach ($cart as $item) {
+            // dd($item->attributes['Subsciption']);
             MagazineOrderArchive::create([
                 'magazine_order_id' => $magazine->id,
                 'archive_id' => $item->id,
                 'quantity' => $item->quantity,
                 'price' => $item->price,
+
+            ]);
+            $magazine->update([
+                'type' => $item->attributes['Subsciption'] . ' ' . 'subscription',
             ]);
         }
         Cart::clear();
         return redirect()->route('magazines.index')
             ->with('success_msg', 'Order created successfully.');
-
-    
     }
 
     // protected function notification($user, $shop)

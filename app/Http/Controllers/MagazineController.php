@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Magazine;
+use App\Models\MagazineSubscription;
+use App\Models\SubscriptionMagazineDetail;
 
 class MagazineController extends Controller
 {
@@ -15,7 +17,15 @@ class MagazineController extends Controller
 
     public function show($slug)
     {
-        $magazine = Magazine::with('archives')->where('slug', $slug)->firstOrFail();
-        return view('pages.magazines.show', ['magazine' => $magazine, 'is_invite' => true]);
+        $magazine = Magazine::with(['archives', 'subscriptions' => function ($query) {
+            $query->whereIn('recurring_period', ['annual', 'bi-annual'])
+                  ->whereIn('subscription_type', ['digital', 'physical']);
+        }])->where('slug', $slug)->firstOrFail();
+    
+        return view('pages.magazines.show', [
+            'magazine' => $magazine,
+            'subscriptions' => $magazine->subscriptions,
+            'is_invite' => true
+        ]);
     }
 }

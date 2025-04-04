@@ -157,6 +157,7 @@
                                             {{ __('words.total') }}
                                         </th>
                                     </tr>
+                                    
                                     @php
                                         // $coupon = App\Models\Coupon::where(
                                         //     'code',
@@ -176,7 +177,7 @@
                                         //     $discountPerUnit = 0;
                                         // }
                                     @endphp
-
+                                  
                                     @foreach ($items as $key => $cart)
                                         <tr>
                                             <th>

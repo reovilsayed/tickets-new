@@ -70,6 +70,15 @@
     .nav-pills .nav-link .active {
         color: #0a0402 !important;
     }
+
+    .card-ticket.selected {
+        border: 3px solid #28BADF !important;
+        background-color: rgba(40, 186, 223, 0.1);
+    }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
 </style>
 @section('content')
     <form action="{{ route('magazine.cart.store', $magazine->slug) }}" method="post">
@@ -82,7 +91,7 @@
                         <div class="event_img">
                             <img src=" {{ Voyager::image($magazine->image) }}" alt="">
                         </div>
-    
+
                         <h2 class="events-title mt-2 px-3 text-center">{{ $magazine->name }}</h2>
                         <div class="accordins">
                             <div class="accordin-item">
@@ -102,7 +111,7 @@
                                     </h6>
                                 </div> --}}
                             </div>
-                         
+
                             <div class="accordin-item">
                                 <div>
                                     <i class="fa fa-info-circle fa-2x" style="color: #28BADF;"></i>
@@ -120,6 +129,8 @@
                     </div>
 
                     <div x-data="eventData" x-effect="calculateTotal()" class="col-md-7 event-box" id="mobile-device">
+
+
 
                         <ul class="nav nav-pills sec-hd mb-3 sticky-sm-top" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
@@ -171,15 +182,22 @@
                                                     <span
                                                         class="text-dark me-2 ticket-prize">{{ Sohoj::price($archive->price) }}</span>
 
-                                                    <select name="archive[{{ $archive->id }}]" min="0"
+                                                    {{-- <select name="archive[{{ $archive->id }}]" min="0"
                                                         max="3" class="ticket-select"
                                                         style="border: 2px solid #28BADF !important">
                                                         <option value="0">0</option>
                                                         <option value="1">1</option>
                                                         <option value="2">2</option>
                                                         <option value="3">3</option>
-                                                    </select>
+                                                    </select> --}}
                                                 </div>
+                                                <select name="archive[{{ $archive->id }}]" min="0" max="3"
+                                                    class="ticket-select" style="border: 2px solid #28BADF !important">
+                                                    <option value="0">0</option>
+                                                    <option value="1">1</option>
+                                                    <option value="2">2</option>
+                                                    <option value="3">3</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -187,68 +205,83 @@
                             </div>
                             <div class="tab-pane fade" id="pills-annual-purchase" role="tabpanel"
                                 aria-labelledby="pills-home-tab">
+                                @foreach ($magazine->subscriptions->where('recurring_period', 'annual') as $subscription)
+                                    <div class="card card-ticket"
+                                        @click="updateSubscription('{{ $subscription->id }}', '{{ $subscription->price }}')">
+                                        <div class="card-body tick">
+                                            <div class="ticket-info">
+                                                <div class="t-info">
+                                                    <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
+                                                        Subscription</p>
+                                                    <p class="t-des">Annual subscription for 1 year</p>
+                                                </div>
+                                                <div class="t-prize">
+                                                    <h4>{{ Sohoj::price($subscription->price) }}</h4>
 
-                                <div class="card card-ticket">
-                                    <div class="card-body tick">
-                                        <div class="ticket-info">
-                                            <div class="t-info">
-                                                <p class="t-title">Digital Subscription</p>
-                                                <p class="t-des">Digital Subscription Description</p>
-                                            </div>
-                                            <div class="t-p">
-                                                <h4></h4>
+                                                </div>
+
+                                                <select name="subscription[{{ $subscription->id }}]" min="0"
+                                                    max="3" class="ticket-select"
+                                                    style="border: 2px solid #28BADF !important">
+                                                    @if ($subscription->subscription_type == 'physical')
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    @else
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                    @endif
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card card-ticket">
-                                    <div class="card-body tick">
-                                        <div class="ticket-info">
-                                            <div class="t-info">
-                                                <p class="t-title">Physical Subscription</p>
-                                                <p class="t-des">Physical Subscription Description</p>
-                                            </div>
-                                            <div class="t-prize">
-                                                <h4></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                @endforeach
                             </div>
+
+                            <!-- Bi-Annual Subscription Tab -->
                             <div class="tab-pane fade" id="pills-bi-annual-purchase" role="tabpanel"
                                 aria-labelledby="pills-home-tab">
-                                <div class="card card-ticket">
-                                    <div class="card-body tick">
-                                        <div class="ticket-info">
-                                            <div class="t-info">
-                                                <p class="t-title">Digital Subscription</p>
-                                                <p class="t-des">Digital Subscription Description</p>
-                                            </div>
-                                            <div class="t-prize">
-                                                <h4>$55</h4>
+                                @foreach ($magazine->subscriptions->where('recurring_period', 'bi-annual') as $subscription)
+                                    <div class="card card-ticket cursor-pointer"
+                                        :class="{
+                                            'selected': selectedSubscription === '{{ $subscription->id }}'
+                                        }"
+                                        @click="updateSubscription('{{ $subscription->id }}', '{{ $subscription->price }}')">
+                                        <div class="card-body tick">
+                                            <div class="ticket-info">
+                                                <div class="t-info">
+                                                    <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
+                                                        Subscription</p>
+                                                    <p class="t-des">Bi-Annual subscription for 2 years</p>
+                                                </div>
+                                                <div class="t-prize">
+                                                    <h4>{{ Sohoj::price($subscription->price) }}</h4>
+                                                </div>
+                                                <select name="subscription[{{ $subscription->id }}]" min="0"
+                                                    max="3" class="ticket-select"
+                                                    style="border: 2px solid #28BADF !important">
+                                                    @if ($subscription->subscription_type == 'physical')
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    @else
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                    @endif
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card card-ticket">
-                                    <div class="card-body tick">
-                                        <div class="ticket-info">
-                                            <div class="t-info">
-                                                <p class="t-title">Physical Subscription</p>
-                                                <p class="t-des">Physical Subscription Description</p>
-                                            </div>
-                                            <div class="t-prize">
-                                                <h4>$55</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                         <button class="event-buttton">
                             <span>{{ __('words.invite_confirmed') }}</span>
-                            <span id="totalPrice"> <i class="fa fa-arrow-right"></i></span>
+                            <span id="totalPrice" x-text="'Є ' + selectedPrice.toFixed(2)">
+                                <i class="fa fa-arrow-right"></i>
+                            </span>
                         </button>
 
                     </div>
@@ -343,13 +376,16 @@
             return {
                 archive: {},
                 quantities: {},
+
                 updateTicket(id, price) {
-                    this.archive[id] = price * this.quantities[id];
+                    this.archive[id] = price * (this.quantities[id]);
                     this.calculateTotal();
                 },
+
+
                 calculateTotal() {
-                    let total = Object.values(this.archive).reduce((sum, value) => sum + value, 0);
-                    this.$refs.total.innerText = 'Є' + total.toFixed(2);
+                    let archiveTotal = Object.values(this.archive).reduce((sum, value) => sum + value, 0);
+                    this.totalPrice = archiveTotal;
                 }
             };
         }
@@ -360,5 +396,26 @@
             products.scrollTop = 0;
             bodyElement.scrollTop = 0;
         }
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('eventData', () => ({
+                selectedSubscription: null,
+                selectedPrice: null,
+                subscriptions: {},
+
+                updateSubscription(id, price) {
+                    this.selectedSubscription = id;
+                    this.selectedPrice = parseFloat(price);
+                    this.subscriptions = {};
+                    this.subscriptions[id] = price;
+                    this.calculateTotal();
+                },
+
+                calculateTotal() {
+                    console.log('Total price:', this.selectedPrice);
+                }
+            }));
+        });
     </script>
+
 @endsection
