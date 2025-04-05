@@ -205,7 +205,7 @@ class TOCOnlineService
         $token = $this->getAccessTokenFromRefreshToken();
 
 
-        if ($token['error']) {
+        if (isset($token['error'])) {
             throw new \Exception($token['message']);
         }
         $response = Http::withHeaders([
