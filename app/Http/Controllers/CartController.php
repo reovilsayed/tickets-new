@@ -44,7 +44,7 @@ class CartController extends Controller
 			foreach ($request->archive as $archive => $quantity) {
 				if ($quantity > 0) {
 					$archive = Archive::find($archive);
-					Cart::session($magazine->slug)->add($archive->id, $archive->title, $archive->price, $quantity,['subsciption' => 'onetime'])->associate('App\Models\Archive');
+					Cart::session($magazine->slug)->add($archive->id, $archive->title, $archive->price, $quantity, ['type' => 'onetime'])->associate('App\Models\Archive');
 				}
 			}
 		}
@@ -55,7 +55,7 @@ class CartController extends Controller
 
 					$subscription = SubscriptionMagazineDetail::find($subscription);
 
-					Cart::session($magazine->slug)->add($subscription->id, ucfirst($subscription->subscription_type) . ' (' . ucfirst($subscription->recurring_period) . ') Subscription', $subscription->price, $quantity, ['subsciption' => $subscription->recurring_period])->associate('App\Models\SubscriptionMagazineDetail');
+					Cart::session($magazine->slug)->add($subscription->id, ucfirst($subscription->subscription_type) . ' (' . ucfirst($subscription->recurring_period) . ') Subscription', $subscription->price, $quantity, ['type' => 'subscription', 'subscription_type' => $subscription->type, 'subsciption' => $subscription->recurring_period])->associate('App\Models\SubscriptionMagazineDetail');
 				}
 			}
 		}

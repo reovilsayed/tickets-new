@@ -4,20 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Archive extends Model
+class MagazineOrderItem extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function magazine()
+    public function itemable(): MorphTo
     {
-        return $this->belongsTo(Magazine::class);
+        return $this->morphTo();
     }
-    
 
 
 
-    
+
 }

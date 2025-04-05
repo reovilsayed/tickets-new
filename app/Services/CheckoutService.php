@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class CheckoutService
+class   CheckoutService
 {
 
     protected $cart;

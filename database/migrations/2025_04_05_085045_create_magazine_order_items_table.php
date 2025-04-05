@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        Schema::create('magazine_order_archive', function (Blueprint $table) {
+        Schema::create('magazine_order_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('magazine_order_id')->constrained('magazine_orders')->cascadeOnDelete();
-            $table->foreignId('magazine_id')->constrained('archives')->cascadeOnDelete();
+            $table->foreignId('magazine_order_id')->constrained('magazine_orders','id')->cascadeOnDelete();
+            $table->string('itemable_type');
+            $table->integer('itemable_id');
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
+            $table->integer('unit_price');
+            $table->integer('total_price');
+            $table->json('details');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('magazine_order_archive');
+        Schema::dropIfExists('magazine_order_items');
     }
 };
