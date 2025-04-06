@@ -159,23 +159,9 @@
                                     </tr>
                                     
                                     @php
-                                        // $coupon = App\Models\Coupon::where(
-                                        //     'code',
-                                        //     session()->get('discount_code'),
-                                        // )->first();
+                                 
                                         $items = Cart::session($magazine->slug)->getContent();
-                                        // if ($coupon) {
-                                        //     $discountedProduct = $items->filter(
-                                        //         fn($item) => $coupon->getProducts()->contains($item->id),
-                                        //     );
-                                        //     $discountPerUnit = number_format(
-                                        //         session()->get('discount') / $discountedProduct->sum('quantity'),
-                                        //         4,
-                                        //     );
-                                        // } else {
-                                        //     $discountedProduct = collect([]);
-                                        //     $discountPerUnit = 0;
-                                        // }
+                                     
                                     @endphp
                                   
                                     @foreach ($items as $key => $cart)
@@ -207,40 +193,7 @@
 
 
                                     </tr>
-                                    {{-- <tr>
-                                        <th>
-                                            <span class="h6 uppercase">
-                                                {{ Cart::session($magazine->slug)->getTotalQuantity() }}
-                                            </span>
-                                        </th>
-                                        <th>
-
-                                            <span class="h6 uppercase"> {{ __('words.subtotal') }}:</span>
-                                        </th>
-                                        <th>
-                                            <span class="h6">
-                                                {{ Sohoj::price(Cart::getTotal()) }}
-                                            </span>
-                                        </th>
-                                    </tr> --}}
-
-                                    {{-- @if (session()->has('discount'))
-                                        <tr>
-                                            <th>
-
-                                            </th>
-                                            <th>
-                                                <span class="h6 uppercase"> {{ __('words.discount') }}:</span> <a
-                                                    class="text-danger" href="{{ route('coupon.destroy') }}">
-                                                    {{ __('words.remove_coupon') }}</a>
-                                            </th>
-                                            <th>
-                                                <span class="h6">
-                                                    {{ Sohoj::price(Sohoj::discount()) }}
-                                                </span>
-                                            </th>
-                                        </tr>
-                                    @endif --}}
+                                
                                     <tr>
                                         <th>
 
@@ -257,18 +210,7 @@
                                 </table>
 
                                 <form method="post" action="{{ route('magazinecheckout.store', $magazine) }}">
-                                    {{-- <div class="form-check">
-                                            <input class="form-check-input" checked  name="send_email" type="checkbox" value="1" id="send_email">
-                                            <label class="form-check-label" for="send_email">
-                                             {{__('words.send_email')}}
-                                            </label>
-                                          </div> --}}
-                                    {{-- <div class="form-check">
-                                            <input class="form-check-input"  name="send_message" type="checkbox" value="1" id="send_message">
-                                            <label class="form-check-label" for="send_message">
-                                             {{__('words.send_message')}}
-                                            </label>
-                                          </div> --}}
+                                 
                                     @csrf
 
                                     <div class="accordion" id="accordionExample">

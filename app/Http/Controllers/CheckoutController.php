@@ -8,11 +8,13 @@ use App\Models\MagazineOrder;
 use App\Models\MagazineOrderArchive;
 use App\Models\Product;
 use App\Services\CheckoutService;
+use App\Services\Payment\EasyPay;
 use Cart;
 use Error;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
@@ -42,32 +44,57 @@ class CheckoutController extends Controller
 
     public function magazineStore(Magazine $magazine, Request $request)
     {
+        try {
+            $user = auth()->user();
+           
+            $user->update($request->only('name', 'l_name', 'vatNumber', 'contact_number', 'address'));
 
-        $user = auth()->user();
-        $user->update($request->only('name', 'l_name', 'vatNumber', 'contact_number', 'address'));
-        $cart = Cart::session($magazine->slug)->getContent();
+            $cart = Cart::session($magazine->slug)->getContent();
 
-        $magazine = MagazineOrder::create([
-            'user_id' => $user->id,
-            'subtotal' => Cart::getSubtotal(),
-            'total' => Cart::getTotal(),
-        ]);
-        foreach ($cart as $item) {
-            // dd($item->attributes['Subsciption']);
-            MagazineOrderArchive::create([
-                'magazine_order_id' => $magazine->id,
-                'archive_id' => $item->id,
-                'quantity' => $item->quantity,
-                'price' => $item->price,
 
+
+            $order = MagazineOrder::create([
+                'user_id' => $user->id,
+                'transaction_id' => 'magazine_' . uniqid(),
+                'subtotal' => Cart::session($magazine->slug)->getSubtotal(),
+                'total' => Cart::session($magazine->slug)->getTotal(),
+                'billing'=>[
+                    'name' => request()->name.' '.request()->l_name,
+                    'vatNumber' => request()->vatNumber ?? '',
+                    'address' => request()->address,
+                    'phone' => request()->contact_number,
+                ]
             ]);
-            $magazine->update([
-                'type' => $item->attributes['Subsciption'] . ' ' . 'subscription',
-            ]);
+            foreach ($cart as $item) {
+
+                $order->items()->create([
+                    'itemable_id' => $item->id,
+                    'itemable_type' => get_class($item->model),
+                    'unit_price' => $item->model->price,
+                    'total_price' => $item->price,
+                    'quantity'=>$item->quantity,
+                    'details' => json_encode($item->model)
+                ]);
+
+                $order->update([
+                    'type' => $item->attributes['type'],
+                ]);
+            }
+
+            $payment = EasyPay::createMagazinePaymentLink($order);
+            Log::info('payment link created' . json_encode($payment));
+            $order->payment_link = $payment['url'];
+            $order->payment_id = $payment['id'];
+
+
+            $order->save();
+
+            Cart::session($magazine->slug)->clear();
+            return redirect($order->payment_link);
+        } catch (Exception | Error $e) {
+            return redirect()->route('magazines.index')
+                ->withErrors($e->getMessage());
         }
-        Cart::clear();
-        return redirect()->route('magazines.index')
-            ->with('success_msg', 'Order created successfully.');
     }
 
     // protected function notification($user, $shop)

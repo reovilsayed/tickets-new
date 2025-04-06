@@ -17,15 +17,15 @@ class MagazineController extends Controller
 
     public function show($slug)
     {
-        $magazine = Magazine::with(['archives', 'subscriptions' => function ($query) {
-            $query->whereIn('recurring_period', ['annual', 'bi-annual'])
-                  ->whereIn('subscription_type', ['digital', 'physical']);
-        }])->where('slug', $slug)->firstOrFail();
-    
+        $magazine = Magazine::where('slug', $slug)->firstOrFail();
+        $archives = $magazine->archives;
+        $annualSubscription = $magazine->annualSubscriptions;
+        $biAnnualSubscriptions = $magazine->biAnnualSubscriptions;
         return view('pages.magazines.show', [
             'magazine' => $magazine,
-            'subscriptions' => $magazine->subscriptions,
-            'is_invite' => true
+            'archives'=>$archives,
+            'annualSubscription' => $annualSubscription,
+            'biAnnualSubscriptions' => $biAnnualSubscriptions
         ]);
     }
 }
