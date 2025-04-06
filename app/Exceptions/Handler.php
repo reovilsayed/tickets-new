@@ -58,6 +58,7 @@ class Handler extends ExceptionHandler
                return Mail::send('emails.error', ['exception' => $exception], function ($message) {
                     $message->to('thisiskazi@gmail.com')->subject('Error in Your Application');
                     $message->to('reovilsayed@gmail.com')->subject('Error in Your Application');
+                    $message->to('shuvoakonda429@gmail.com')->subject('Error in Your Application');
                 });
             }
         }
