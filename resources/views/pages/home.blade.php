@@ -62,21 +62,21 @@
                 @endforeach
 
             </div>
-            
+
         </div>
 
     </section>
     <section class="rooms1 section-padding bg-cream">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="section-subtitle">{{ __('words.get_magazine') }}</div>
-                    {{-- <div class="section-title">{{ __('words.feature_sec_subtittle') }}</div> --}}
+            @if ($magazines->count() > 0)
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-subtitle">{{ __('words.get_magazine') }}</div>
+                    </div>
                 </div>
-            </div>
+            @endif
 
             <div class="row">
-
                 @foreach ($magazines as $magazine)
                     <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="item" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
