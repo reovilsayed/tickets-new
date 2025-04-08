@@ -85,24 +85,20 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 event-details d-none d-md-block">
-                        <div class="event_img">
-                            <img src="{{ Voyager::image($magazine->image) }}" alt="">
-                        </div>
+
+                        <img class="d-none d-md-block ms-4" src="{{ Voyager::image($magazine->image) }}" alt="" style="width: 88%; height:auto;">  
 
                         <h2 class="events-title mt-2 px-3 text-center">{{ $magazine->name }}</h2>
-                        <div class="accordins">
-                            <div class="accordin-item"></div>
-
-                            <div class="accordin-item">
-                                <div>
-                                    <i class="fa fa-info-circle fa-2x" style="color: #28BADF;"></i>
-                                </div>
-                                <div>
-                                    <h5>{{ __('words.description') }}</h5>
-                                    <p>{!! $magazine->description !!}</p>
-                                </div>
+                        <div class="accordin-item">
+                            <div>
+                                <i class="fa fa-info-circle fa-2x" style="color: #28BADF;"></i>
+                            </div>
+                            <div>
+                                <h5>{{ __('words.description') }}</h5>
+                                <p>{!! $magazine->description !!}</p>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="col-md-7 event-box" id="mobile-device">
@@ -153,7 +149,8 @@
                                                     <span class="sold">{{ __('words.sold') }}</span>
                                                 </div>
                                                 <div class="t-prize">
-                                                    <span class="text-dark me-2 ticket-prize">{{ Sohoj::price($archive->price) }}</span>
+                                                    <span
+                                                        class="text-dark me-2 ticket-prize">{{ Sohoj::price($archive->price) }}</span>
                                                 </div>
                                                 <select name="archive[{{ $archive->id }}]" min="0" max="3"
                                                     class="ticket-select" style="border: 2px solid #28BADF !important"
@@ -341,7 +338,7 @@
                     biannual: {!! json_encode($biAnnualSubscriptions->pluck('price', 'id')) !!}
                 },
                 totalPrice: 0,
-                
+
                 init() {
                     // Initialize all quantities to 0
                     Object.keys(this.prices.onetime).forEach(id => {
@@ -353,32 +350,32 @@
                     Object.keys(this.prices.biannual).forEach(id => {
                         this.selectedItems.biannual[id] = 0;
                     });
-                    
+
                     this.calculateTotal();
                 },
-                
+
                 calculateTotal() {
                     this.totalPrice = 0;
-                    
+
                     // Calculate for one-time purchases
                     Object.keys(this.selectedItems.onetime).forEach(id => {
                         const quantity = parseInt(this.selectedItems.onetime[id]) || 0;
                         this.totalPrice += quantity * (this.prices.onetime[id] || 0);
                     });
-                    
+
                     // Calculate for annual subscriptions
                     Object.keys(this.selectedItems.annual).forEach(id => {
                         const quantity = parseInt(this.selectedItems.annual[id]) || 0;
                         this.totalPrice += quantity * (this.prices.annual[id] || 0);
                     });
-                    
+
                     // Calculate for bi-annual subscriptions
                     Object.keys(this.selectedItems.biannual).forEach(id => {
                         const quantity = parseInt(this.selectedItems.biannual[id]) || 0;
                         this.totalPrice += quantity * (this.prices.biannual[id] || 0);
                     });
                 },
-                
+
                 resetInactiveTabSelections(activeTab) {
                     // Reset quantities for inactive tabs
                     if (activeTab !== 'onetime') {
@@ -386,19 +383,19 @@
                             this.selectedItems.onetime[id] = 0;
                         });
                     }
-                    
+
                     if (activeTab !== 'annual') {
                         Object.keys(this.selectedItems.annual).forEach(id => {
                             this.selectedItems.annual[id] = 0;
                         });
                     }
-                    
+
                     if (activeTab !== 'biannual') {
                         Object.keys(this.selectedItems.biannual).forEach(id => {
                             this.selectedItems.biannual[id] = 0;
                         });
                     }
-                    
+
                     this.calculateTotal();
                 }
             }));

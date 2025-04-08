@@ -84,7 +84,7 @@
                                 <img src="{{ Storage::url($magazine->image) }}" alt="" style="">
                             </a>
                             <div class="con">
-                                <h6>$100</h6>
+                                {{-- <h6>$100</h6> --}}
 
                                 <h5 style="height: 85px" class="product-title">
                                     <a href="{{ $magazine->path() }}" title="{{ $magazine->name }}"

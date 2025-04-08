@@ -10,7 +10,7 @@ class MagazineController extends Controller
 {
     public function index()
     {
-        $magazines = Magazine::latest()->paginate(10);
+        $magazines = Magazine::where('status', 1)->paginate(10);
 
         return view('pages.magazines.index', ['magazines' => $magazines]);
     }
@@ -23,7 +23,7 @@ class MagazineController extends Controller
         $biAnnualSubscriptions = $magazine->biAnnualSubscriptions;
         return view('pages.magazines.show', [
             'magazine' => $magazine,
-            'archives'=>$archives,
+            'archives' => $archives,
             'annualSubscription' => $annualSubscription,
             'biAnnualSubscriptions' => $biAnnualSubscriptions
         ]);
