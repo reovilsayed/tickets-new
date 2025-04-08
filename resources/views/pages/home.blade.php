@@ -93,7 +93,7 @@
                                 <div class="line"></div>
                                 <div class=" facilities">
                                     <a class="custom-button back-button"
-                                        href="{{ $magazine->path() }}">{{ __('words.book_ticket') }}</a>
+                                        href="{{ $magazine->path() }}">{{ __('words.view_magazine') }}</a>
                                 </div>
                             </div>
                         </div>
