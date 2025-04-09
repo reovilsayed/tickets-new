@@ -17,11 +17,13 @@ class AppApiController extends Controller
     {
         $email = $request->email;
         $password = $request->password;
-        $user = User::where('email', $email)->first()->with('pos');
+        $user = User::where('email', $email)->first();
         if ($user) {
             if (Hash::check($password, $user->password)) {
                 $token = $user->createToken('authToken')->plainTextToken;
-                return response()->json(['token' => $token, 'user' => $user], 200);
+                $data = $user;
+                $data['pos'] = $user->pos;
+                return response()->json(['token' => $token, 'user' => $data], 200);
             } else {
                 return response()->json(['error' => 'Invalid password'], 401);
             }
@@ -230,7 +232,7 @@ class AppApiController extends Controller
 
         return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
     }
-
+    
     public function getAllExtras(Request $request)
     {
         $perPage = $request->get('per_page', 10);
