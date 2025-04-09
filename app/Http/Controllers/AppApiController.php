@@ -17,7 +17,7 @@ class AppApiController extends Controller
     {
         $email = $request->email;
         $password = $request->password;
-        $user = User::where('email', $email)->first();
+        $user = User::where('email', $email)->first()->with('pos');
         if ($user) {
             if (Hash::check($password, $user->password)) {
                 $token = $user->createToken('authToken')->plainTextToken;
@@ -230,7 +230,7 @@ class AppApiController extends Controller
 
         return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
     }
-    
+
     public function getAllExtras(Request $request)
     {
         $perPage = $request->get('per_page', 10);
