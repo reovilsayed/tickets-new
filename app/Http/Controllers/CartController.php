@@ -6,10 +6,12 @@ use App\Models\Archive;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Magazine;
+use App\Models\MagazineSubscription;
 use App\Models\Offer;
 use Illuminate\Http\Request;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use App\Models\Product;
+use App\Models\SubscriptionMagazineDetail;
 use Darryldecode\Cart\Cart as CartCart;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -34,20 +36,33 @@ class CartController extends Controller
 	public function magazineAdd(Magazine $magazine, Request $request)
 	{
 
+
 		Cart::session($magazine->slug)->clear();
 		session()->forget('discount');
 		session()->forget('discount_code');
-		foreach ($request->archive as $archive => $quantity) {
+		if ($request->has('archive')) {
+			foreach ($request->archive as $archive => $quantity) {
+				if ($quantity > 0) {
+					$archive = Archive::find($archive);
+					Cart::session($magazine->slug)->add($archive->id, $archive->title, $archive->price, $quantity, ['type' => 'onetime'])->associate('App\Models\Archive');
+				}
+			}
+		}
 
-			
-			if ($quantity > 0) {
-				 $archive = Archive::find($archive);
-				Cart::session($magazine->slug)->add($archive->id, $archive->title, $archive->price, $quantity)->associate('App\Models\Archive');
+		if ($request->has('subscription')) {
+			foreach ($request->subscription as $subscription => $quantity) {
+				if ($quantity > 0) {
+
+					$subscription = SubscriptionMagazineDetail::find($subscription);
+
+					Cart::session($magazine->slug)->add($subscription->id, ucfirst($subscription->subscription_type) . ' (' . ucfirst($subscription->recurring_period) . ') Subscription', $subscription->price, $quantity, ['type' => 'subscription', 'subscription_type' => $subscription->type, 'subsciption' => $subscription->recurring_period])->associate('App\Models\SubscriptionMagazineDetail');
+				}
 			}
 		}
 
 		return redirect()->route('magazine_checkout', $magazine);
 	}
+
 	public function inviteadd(Invite $invite, Request $request)
 	{
 

@@ -5,19 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Archive extends Model
+class Subscription extends Model
 {
     use HasFactory;
-
     protected $guarded = [];
 
-    public function magazine()
+
+    public function subscriptionMagazines()
     {
-        return $this->belongsTo(Magazine::class);
+        return $this->hasMany(SubscriptionMagazine::class);
     }
-    
-
-
-
-    
 }

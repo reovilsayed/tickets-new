@@ -62,21 +62,21 @@
                 @endforeach
 
             </div>
-            
+
         </div>
 
     </section>
     <section class="rooms1 section-padding bg-cream">
         <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="section-subtitle">{{ __('words.get_magazine') }}</div>
-                    {{-- <div class="section-title">{{ __('words.feature_sec_subtittle') }}</div> --}}
+            @if ($magazines->count() > 0)
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-subtitle">{{ __('words.get_magazine') }}</div>
+                    </div>
                 </div>
-            </div>
+            @endif
 
             <div class="row">
-
                 @foreach ($magazines as $magazine)
                     <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
                         <div class="item" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
@@ -84,7 +84,7 @@
                                 <img src="{{ Storage::url($magazine->image) }}" alt="" style="">
                             </a>
                             <div class="con">
-                                <h6>$100</h6>
+                                {{-- <h6>$100</h6> --}}
 
                                 <h5 style="height: 85px" class="product-title">
                                     <a href="{{ $magazine->path() }}" title="{{ $magazine->name }}"
@@ -93,7 +93,7 @@
                                 <div class="line"></div>
                                 <div class=" facilities">
                                     <a class="custom-button back-button"
-                                        href="{{ $magazine->path() }}">{{ __('words.book_ticket') }}</a>
+                                        href="{{ $magazine->path() }}">{{ __('words.view_magazine') }}</a>
                                 </div>
                             </div>
                         </div>

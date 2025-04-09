@@ -23,6 +23,17 @@ class Magazine extends Model
     {
         return $this->belongsToMany(MagazineOrder::class, 'magazine_order_archive')->withPivot(['quantity', 'price']);
     }
+    public function subscriptions()
+    {
+        return $this->hasMany(SubscriptionMagazineDetail::class, 'magazine_id');
+    }
 
-    
+    public function biAnnualSubscriptions()
+    {
+        return $this->hasMany(SubscriptionMagazineDetail::class, 'magazine_id')->where('recurring_period', 'bi-annual');
+    }
+    public function annualSubscriptions()
+    {
+        return $this->hasMany(SubscriptionMagazineDetail::class, 'magazine_id')->where('recurring_period', 'annual');
+    }
 }

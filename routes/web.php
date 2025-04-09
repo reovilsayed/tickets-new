@@ -25,6 +25,9 @@ use App\Http\Controllers\PosDashboardReport;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
+use App\Models\Magazine;
+use App\Models\MagazineOrder;
+use App\Models\SubscriptionRecord;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -186,45 +189,74 @@ Route::post('t/{order:security_key}', [PdfDownloadController::class, 'download']
 Route::post('payment-callback/{type}', function ($type, Request $request) {
     Log::info('payment request: ' . json_encode($request->all()));
     if ($type == 'generic') {
-        $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
-        if ($order) {
-            if ($request->status == 'success') {
+        if (strpos($request->key, 'magazine_') === 0) {
+            $order = MagazineOrder::where('transaction_id', $request->key)->where('payment_status', 0)->first();
+            if ($order) {
+                if ($request->status == 'success') {
+                    $order->status = 1;
+                    $order->payment_status = 1;
+                    $order->date_paid = now();
+                    $order->save();
 
-                $order->status = 1;
-                $order->payment_status = 1;
-                $order->date_paid = now();
-                $order->save();
+                    $new_order = MagazineOrder::where('transaction_id', $request->key)->first();
 
-                $new_order = Order::where('transaction_id', $request->key)->first();
+                   
 
-                $products = $new_order->tickets->groupBy('product_id');
+                    $toco = new TOCOnlineService;
+                    $response = $toco->createMagazineCommercialSalesDocument($order);
+                    Log::info($response);
+                    $new_order->invoice_id = $response['id'];
+                    $new_order->invoice_url = $response['public_link'];
+                    $new_order->invoice_body = json_encode($response);
+                    $new_order->save();
+                    $response = $toco->sendEmailDocument($order, $response['id']);
+                    Log::info($response);
+                } else {
+                    $order->status = 2;
+                    $order->payment_status = 2;
+                    $order->save();
+                }
+            }
+        } else {
+            $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
+            if ($order) {
+                if ($request->status == 'success') {
+                    $order->status = 1;
+                    $order->payment_status = 1;
+                    $order->date_paid = now();
+                    $order->save();
 
-                foreach ($products as $id => $data) {
-                    $product = Product::find($id);
-                    if ($product) {
-                        $product->quantity = $product->quantity - count($data);
-                        $product->save();
+                    $new_order = Order::where('transaction_id', $request->key)->first();
+
+                    $products = $new_order->tickets->groupBy('product_id');
+
+                    foreach ($products as $id => $data) {
+                        $product = Product::find($id);
+                        if ($product) {
+                            $product->quantity = $product->quantity - count($data);
+                            $product->save();
+                        }
                     }
-                }
 
-                $coupon = Coupon::where('code', $order->discount_code)->first();
-                if ($coupon) {
-                    $coupon->increment('used', $new_order->tickets()->count());
-                }
+                    $coupon = Coupon::where('code', $order->discount_code)->first();
+                    if ($coupon) {
+                        $coupon->increment('used', $new_order->tickets()->count());
+                    }
 
-                $toco = new TOCOnlineService;
-                $response = $toco->createCommercialSalesDocument($order);
-                Log::info($response);
-                $new_order->invoice_id = $response['id'];
-                $new_order->invoice_url = $response['public_link'];
-                $new_order->invoice_body = json_encode($response);
-                $new_order->save();
-                $response = $toco->sendEmailDocument($order, $response['id']);
-                Log::info($response);
-            } else {
-                $order->status = 2;
-                $order->payment_status = 2;
-                $order->save();
+                    $toco = new TOCOnlineService;
+                    $response = $toco->createCommercialSalesDocument($order);
+                    Log::info($response);
+                    $new_order->invoice_id = $response['id'];
+                    $new_order->invoice_url = $response['public_link'];
+                    $new_order->invoice_body = json_encode($response);
+                    $new_order->save();
+                    $response = $toco->sendEmailDocument($order, $response['id']);
+                    Log::info($response);
+                } else {
+                    $order->status = 2;
+                    $order->payment_status = 2;
+                    $order->save();
+                }
             }
         }
     }
@@ -389,3 +421,20 @@ Route::get('/toc-online-test/{order}', function ($order) {
 
 
 Route::get('/api/user/pos-permission', [ApiController::class, 'getPosPermissions'])->middleware('auth');
+
+
+Route::get('test', function () {
+    $order = MagazineOrder::latest()->first();
+    $toco = new TOCOnlineService;
+    $response = $toco->createMagazineCommercialSalesDocument($order);
+});
+// Route::get('/test-subscription-create', function () {
+//     $order = MagazineOrder::find(4);
+
+//     if ($order) {
+//         $order->createSubscriptionRecords();
+//         return 'Subscription records created!';
+//     }
+
+//     return 'Order not found.';
+// });
