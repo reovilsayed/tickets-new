@@ -255,7 +255,7 @@ class AppApiController extends Controller
 
     public function getOrders()
     {
-        $orders = auth()->user()->orders; //
+        $orders = auth()->user()->orders;
         return response()->json($orders);
     }
 }
