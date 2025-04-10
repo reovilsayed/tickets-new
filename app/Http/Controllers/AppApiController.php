@@ -241,7 +241,7 @@ class AppApiController extends Controller
         $event_id = $request->get('event_id');
 
         $extras = Extra::with('event')->whereHas('poses', function ($q) {
-            $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
+            $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos id
         })->where('name', 'like', "%{$query}%");
 
         if ($event_id) {
