@@ -21,7 +21,9 @@ class AppApiController extends Controller
         if ($user) {
             if (Hash::check($password, $user->password)) {
                 $token = $user->createToken('authToken')->plainTextToken;
-                return response()->json(['token' => $token, 'user' => $user], 200);
+                $data = $user;
+                $data['pos'] = $user->pos;
+                return response()->json(['token' => $token, 'user' => $data], 200);
             } else {
                 return response()->json(['error' => 'Invalid password'], 401);
             }
