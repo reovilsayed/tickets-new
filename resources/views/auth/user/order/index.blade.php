@@ -53,7 +53,7 @@
                                             {{ __('words.paid') }}
                                         </td>
                                         <td>
-                                           {{$order->payment_method_title}}
+                                            {{ $order->payment_method_title }}
 
                                         </td>
                                         <td>
@@ -69,10 +69,10 @@
                             </table>
                         </div>
                         <a target="_blank" class="btn btn-primary btn-lg rounded me-2"
-                        href="{{ route('download.ticket', ['order' => $order, 'product' => $id]) }}">
-                        <i class="fa fa-download"></i>
-                        {{ __('words.download') }}
-                    </a>
+                            href="{{ route('download.ticket', ['order' => $order, 'product' => $id]) }}">
+                            <i class="fa fa-download"></i>
+                            {{ __('words.download') }}
+                        </a>
                     @endforeach
 
 
@@ -81,9 +81,8 @@
                 <div class="card-footer bg-transparent p-2 ">
                     <div class="row g-5">
                         <div class="col-md-6 col-12 d-flex align-items-center justify-content-center order-md-1 order-2 ">
-                           
-                            <a target="_blank" class="btn btn-primary btn-sm rounded"
-                                href="{{$order->invoice_url}}">
+
+                            <a target="_blank" class="btn btn-primary btn-sm rounded" href="{{ $order->invoice_url }}">
                                 {{ __('words.invoice') }}
                             </a>
 
@@ -134,6 +133,54 @@
                 </div>
             </div>
         @endforeach
+        @foreach ($latest_magazine_orders as $order)
+            <div class="ec-vendor-dashboard-card ec-vendor-setting-card mb-3">
+                <div class="ec-vendor-card-body">
+                    <h4 class="dashboard-title mt-2">
+                        {{ $order->magazine->name ?? '-' }}
+                    </h4>
+                  
+                    <br>
+
+                    <div class="table-responsive">
+                        <table class="order-table table mt-3">
+                            <tr>
+                                <th>{{ __('words.order_id') }}</th>
+                                <th>{{ __('words.magazine') }}</th>
+                                <th>{{ __('words.subscription_type') }}</th>
+                                <th>{{ __('words.recurring_period') }}</th>
+                                <th>{{ __('words.status') }}</th>
+                                <th>{{ __('words.start_date') }}</th>
+                                <th>{{ __('words.end_date') }}</th>
+                                <th>{{ __('words.price') }}</th>
+                                <th>{{ __('words.total_price') }}</th>
+                            </tr>
+
+                            <tr>
+                                <td>{{ $order->id }}</td>
+                                <td>{{ $order->magazine->name ?? '-' }}</td>
+                                <td>{{ ucfirst($order->subscription_type) }}</td>
+                                <td>{{ ucfirst($order->recurring_period) }}</td>
+                                <td>{{ ucfirst($order->status) }}</td>
+                                <td>{{ $order->start_date ?? '-' }}</td>
+                                <td>{{ $order->end_date ?? '-' }}</td>
+                                <td>{{ Sohoj::price($order->price) }}</td>
+                                <td>{{ Sohoj::price($order->total_price) }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    {{-- @if ($order->magazineOrderItem)
+                        <a target="_blank" class="btn btn-primary btn-lg rounded me-2"
+                            href="{{ route('download.ticket', ['order' => $order->magazineOrderItem->order_id, 'product' => $order->magazine_id]) }}">
+                            <i class="fa fa-download"></i>
+                            {{ __('words.download') }}
+                        </a>
+                    @endif --}}
+                </div>
+            </div>
+        @endforeach
+
     </div>
 
     <!-- modal feedback start -->

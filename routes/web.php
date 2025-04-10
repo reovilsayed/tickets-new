@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\BreadController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\CouponController;
@@ -200,7 +201,7 @@ Route::post('payment-callback/{type}', function ($type, Request $request) {
 
                     $new_order = MagazineOrder::where('transaction_id', $request->key)->first();
 
-                   
+
 
                     $toco = new TOCOnlineService;
                     $response = $toco->createMagazineCommercialSalesDocument($order);
@@ -438,3 +439,12 @@ Route::get('test', function () {
 
 //     return 'Order not found.';
 // });
+Route::post('/magazines/{magazine}/archives', [BreadController::class, 'store'])
+    ->name('magazines.archives.store');
+Route::get('/archives/{archive}/edit', [BreadController::class, 'edit']);
+Route::put('/archives/{archive}', [BreadController::class, 'update']);
+Route::delete('/admin/archives/{archive}', [BreadController::class, 'destroy']);
+Route::post('/magazines/{magazine}/subscriptions', [BreadController::class, 'subscriptionStore'])
+    ->name('magazines.subscriptions.store');
+Route::put('/subscriptions/{subscription}', [BreadController::class, 'update']);
+Route::delete('/subscriptions/{subscription}', [BreadController::class, 'destroy']);

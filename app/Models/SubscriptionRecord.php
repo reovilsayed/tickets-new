@@ -11,6 +11,10 @@ class SubscriptionRecord extends Model
 
     protected $guarded = [];
 
+    // const STATUS_ACTIVE = 'active';
+    // const STATUS_EXPIRED = 'expired';
+    // const STATUS_CANCELLED = 'cancelled';
+
     public function user()
     {
         return $this->belongsTo(User::class);

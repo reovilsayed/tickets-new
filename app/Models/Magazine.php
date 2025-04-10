@@ -36,4 +36,8 @@ class Magazine extends Model
     {
         return $this->hasMany(SubscriptionMagazineDetail::class, 'magazine_id')->where('recurring_period', 'annual');
     }
+    public function getStatusTextAttribute()
+    {
+        return $this->status == 1 ? 'active' : 'inactive';
+    }
 }

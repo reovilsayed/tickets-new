@@ -15,12 +15,9 @@ class SubscriptionMagazineDetail extends Model
     {
         return $this->belongsTo(Magazine::class);
     }
- 
-   public function magazineSubscription()
+
+    public function magazineSubscription()
     {
         return $this->belongsTo(MagazineSubscription::class,);
     }
-
-   
-    
 }

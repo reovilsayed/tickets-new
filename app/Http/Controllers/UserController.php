@@ -7,6 +7,7 @@ use App\Models\Address;
 use App\Models\Offer;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\SubscriptionRecord;
 use App\Models\User;
 use App\Rules\MatchOldPassword;
 use Illuminate\Http\Request;
@@ -81,7 +82,12 @@ class UserController extends Controller
     public function ordersIndex(Request $request)
     {
         $latest_orders = Order::where('user_id', auth()->user()->id)->where('payment_status', 1)->latest()->get();
-        return view('auth.user.order.index', compact('latest_orders'));
+        $latest_magazine_orders = SubscriptionRecord::where('user_id', auth()->id())
+            ->where('status', 'active') // string use korte hobe
+            ->latest()
+            ->get();
+            
+        return view('auth.user.order.index', compact('latest_orders', 'latest_magazine_orders'));
     }
     //-----order showing & filtering---- end//
     public function invoice(Order $order)

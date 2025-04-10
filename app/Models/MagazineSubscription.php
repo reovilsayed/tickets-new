@@ -13,11 +13,10 @@ class MagazineSubscription extends Model
 
     public function magazine()
     {
-        return $this->belongsTo(Magazine::class ,'magazine_id');
+        return $this->belongsTo(Magazine::class, 'magazine_id');
     }
     public function subscriptionMagazineDetails()
     {
-        return $this->belongsToMany(SubscriptionMagazineDetail::class,'magazine_subscription_id', 'subscription_magazine_detail_id');
+        return $this->hasMany(SubscriptionMagazineDetail::class, 'subscription_magazine_detail_id');
     }
-    
 }
