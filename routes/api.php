@@ -180,6 +180,7 @@ Route::group(['prefix' => 'app'], function () {
         Route::post('withdraw', [AppApiController::class, 'withdrawExtra']);
         Route::post('zone-type', [AppApiController::class, 'getZoneType']);
         Route::get('extras/all', [AppApiController::class, 'getAllExtras']);
+        
         Route::get('orders', [AppApiController::class, 'getOrders']);
     });
 });

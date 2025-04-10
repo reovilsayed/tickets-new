@@ -232,7 +232,7 @@ class AppApiController extends Controller
 
         return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
     }
-    
+
     public function getAllExtras(Request $request)
     {
         $perPage = $request->get('per_page', 10);
@@ -253,8 +253,9 @@ class AppApiController extends Controller
         return ExtraResoure::collection($extras);
     }
 
-    public function getOrders() {
-        $orders = auth()->user()->orders;
+    public function getOrders()
+    {
+        $orders = auth()->user()->orders; //
         return response()->json($orders);
     }
 }
