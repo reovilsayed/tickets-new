@@ -252,4 +252,9 @@ class AppApiController extends Controller
 
         return ExtraResoure::collection($extras);
     }
+
+    public function getOrders() {
+        $orders = auth()->user()->orders;
+        return response()->json($orders);
+    }
 }
