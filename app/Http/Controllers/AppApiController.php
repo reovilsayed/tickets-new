@@ -232,7 +232,7 @@ class AppApiController extends Controller
 
         return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
     }
-    
+
     public function getAllExtras(Request $request)
     {
         $perPage = $request->get('per_page', 10);
@@ -241,7 +241,7 @@ class AppApiController extends Controller
         $event_id = $request->get('event_id');
 
         $extras = Extra::with('event')->whereHas('poses', function ($q) {
-            $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos_id
+            $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos id
         })->where('name', 'like', "%{$query}%");
 
         if ($event_id) {
@@ -251,5 +251,11 @@ class AppApiController extends Controller
         $extras = $extras->paginate(50);
 
         return ExtraResoure::collection($extras);
+    }
+
+    public function getOrders()
+    {
+        $orders = auth()->user()->orders;
+        return response()->json($orders);
     }
 }
