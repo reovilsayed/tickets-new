@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Archive;
 use App\Models\Magazine;
-use App\Models\SubscriptionMagazineDetail;
+use App\Models\Archive;
 use App\Models\MagazineSubscription;
+use App\Models\SubscriptionMagazineDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -38,7 +38,7 @@ class BreadController extends Controller
         $archive->save();
 
         return redirect()->back()
-            ->with('success', 'Archive created successfully.');
+            ->with('message', 'Archive created successfully.');
     }
     public function edit(Archive $archive)
     {
@@ -52,6 +52,7 @@ class BreadController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
+            'shipping_cost' => 'required|numeric|min:0',
             'pdf_file' => 'nullable|file|mimes:pdf|max:2048',
         ]);
 
@@ -64,6 +65,7 @@ class BreadController extends Controller
         $archive->description = $request->description;
         $archive->price = $request->price;
         $archive->quantity = $request->quantity;
+        $archive->shipping_cost = $request->shipping_cost;
         $archive->save();
 
         return response()->json(['success' => true]);
@@ -91,7 +93,7 @@ class BreadController extends Controller
 
         DB::beginTransaction();
 
-       
+
         // Create the magazine subscription
         $magazineSubscription = MagazineSubscription::create([
             'name' => $validatedData['name'],
@@ -111,8 +113,65 @@ class BreadController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Subscription created successfully',
-            'data' => $subscriptionDetail
-        ], 201);
-      
+        ]);
+    }
+    public function subscriptionEdit(MagazineSubscription $subscription)
+    {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $subscription->id,
+                'name' => $subscription->name,
+                'subscription_type' => $subscription->details->subscription_type,
+                'price' => $subscription->details->price,
+                'recurring_period' => $subscription->details->recurring_period
+            ]
+        ]);
+    }
+    public function subscriptionUpdate(Request $request, MagazineSubscription $subscription)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'subscription_type' => 'required|in:physical,digital',
+            'price' => 'required|numeric|min:0',
+            'recurring_period' => 'required|in:annual,bi-annual'
+        ]);
+
+        DB::beginTransaction();
+
+
+        // Update the magazine subscription
+        $subscription->update([
+            'name' => $validatedData['name'],
+        ]);
+
+        // Update the subscription detail (assuming one-to-one relationship)
+        $subscription->details()->update([
+            'subscription_type' => $validatedData['subscription_type'],
+            'price' => $validatedData['price'],
+            'recurring_period' => $validatedData['recurring_period'],
+        ]);
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Subscription updated successfully',
+        ]);
+    }
+    public function subscriptionDestroy(MagazineSubscription $subscription)
+    {
+        $subscription->details()->delete();
+
+        // Then delete the subscription
+        $subscription->delete();
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Subscription deleted successfully'
+        ]);
     }
 }

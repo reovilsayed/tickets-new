@@ -283,8 +283,8 @@
         </div>
     </div>
     <!-- Edit Archive Modal -->
-    <div class="modal fade" id="editArchiveModal" tabindex="-1" role="dialog"
-        aria-labelledby="editArchiveModalLabel">
+    <div class="modal fade" id="editArchiveModal" tabindex="-1" role="dialog" aria-labelledby="editArchiveModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -308,8 +308,7 @@
                                 <label for="shipping_cost">Shipping Cost</label>
 
                                 <input type="number" step="0.01" class="form-control" id="shipping_cost"
-                                    name="shipping_cost"
-                                    value="{{ old('shipping_cost', $archive->shipping_cost ?? 0) }}">
+                                    name="shipping_cost" required>
 
                             </div>
                         </div>
@@ -332,7 +331,7 @@
                         </div>
                         <div class="form-group">
                             <label for="edit_description">Description</label>
-                            <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
+                            <textarea class="form-control" id="edit_description" name="description" required rows="3"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="edit_pdf_file">PDF File (Leave empty to keep current)</label>
@@ -350,20 +349,22 @@
     </div>
 
     <!-- Success Notification Toast -->
-    <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 9999; right: 0; bottom: 0;">
-        <div id="successToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true"
-            data-delay="5000">
-            <div class="toast-header bg-success text-white">
-                <strong class="mr-auto">Success</strong>
-                <button type="button" class="ml-2 mb-1 close text-white" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="toast-body">
-                Archive added successfully!
+    @if (session('success'))
+        <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 9999; right: 0; bottom: 0;">
+            <div id="successToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true"
+                data-delay="5000">
+                <div class="toast-header bg-success text-white">
+                    <strong class="mr-auto">Success</strong>
+                    <button type="button" class="ml-2 mb-1 close text-white" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    {{ session('success') }}
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
     <div class="page-content read container-fluid">
         <div class="panel panel-bordered" style="border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
@@ -543,7 +544,54 @@
     <!-- Edit Subscription Modal -->
     <div class="modal fade" id="editSubscriptionModal" tabindex="-1" role="dialog"
         aria-labelledby="editSubscriptionModalLabel">
-        <!-- Similar structure to add modal but for editing -->
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="editSubscriptionModalLabel">Edit Subscription</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editSubscriptionForm" method="POST">
+                    @method('PUT')
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" id="edit_subscription_id" name="subscription_id">
+
+                        <div class="form-group">
+                            <label for="edit_name">Subscription Name</label>
+                            <input type="text" class="form-control" id="edit_name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_subscription_type">Subscription Type</label>
+                            <select class="form-control" id="edit_subscription_type" name="subscription_type" required>
+                                <option value="physical">Physical</option>
+                                <option value="digital">Digital</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_price">Price</label>
+                            <input type="number" step="0.01" class="form-control" id="edit_price" name="price"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_recurring_period">Recurring Period</label>
+                            <select class="form-control" id="edit_recurring_period" name="recurring_period" required>
+                                <option value="annual">Annual</option>
+                                <option value="bi-annual">Bi-Annual</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Subscription</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
     {{-- Single delete modal --}}
     <div class="modal modal-danger fade" tabindex="-1" id="delete_modal" role="dialog">
@@ -602,82 +650,92 @@
             nextSibling.innerText = fileName;
         });
     </script>
+
     <script>
-        $(document).ready(function() {
-            // Edit Archive
-            $('.edit-archive').click(function(e) {
-                e.preventDefault();
-                var archiveId = $(this).data('id');
+        $(document).on('click', '.edit-archive', function(e) {
+            e.preventDefault();
 
-                // Fetch archive data
-                $.get('/admin/archives/' + archiveId + '/edit', function(data) {
-                    $('#edit_title').val(data.title);
-                    $('#edit_description').val(data.description);
-                    $('#edit_price').val(data.price);
-                    $('#edit_quantity').val(data.quantity);
+            var archiveId = $(this).data('id');
+            var $modal = $('#editArchiveModal');
+            $modal.modal('show');
 
-                    // Set form action
-                    $('#editArchiveForm').attr('action', '/admin/archives/' + archiveId);
+            $.get('/admin/archives/' + archiveId + '/edit')
+                .done(function(data) {
+                    $modal.find('#edit_title').val(data.title);
+                    $modal.find('#edit_description').val(data.description);
+                    $modal.find('#edit_price').val(data.price);
+                    $modal.find('#edit_quantity').val(data.quantity);
+                    $modal.find('#shipping_cost').val(data.shipping_cost);
 
-                    $('#editArchiveModal').modal('show');
+                    $modal.find('#editArchiveForm').attr('action', '/admin/archives/' + archiveId);
+                })
+                .fail(function() {
+                    $modal.modal('hide');
+                    toastr.error('Failed to load archive data');
                 });
-            });
+        });
 
-            // Delete Archive
-            $('.delete-archive').click(function(e) {
-                e.preventDefault();
-                var archiveId = $(this).data('id');
 
-                if (confirm('Are you sure you want to delete this archive?')) {
-                    $.ajax({
-                        url: '/admin/archives/' + archiveId,
-                        type: 'DELETE',
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                $('#archive-' + archiveId).fadeOut(300, function() {
-                                    $(this).remove();
-                                });
-                                toastr.success(response.message);
-                            }
-                        },
-                        error: function(xhr) {
-                            toastr.error('Error deleting archive');
-                        }
+
+        // Submit Edit Form
+        $('#editArchiveForm').submit(function(e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            formData.append('_method', 'PUT');
+
+            var url = $(this).attr('action');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $('#editArchiveModal').modal('hide');
+                    location.reload();
+                    toastr.success('Archive updated successfully!');
+
+                },
+                error: function(xhr) {
+                    var errors = xhr.responseJSON.errors;
+                    $.each(errors, function(key, value) {
+                        toastr.error(value[0]);
                     });
                 }
             });
+        });
+        // Delete Archive
+        $('.delete-archive').click(function(e) {
+            e.preventDefault();
+            var archiveId = $(this).data('id');
 
-            // Submit Edit Form
-            $('#editArchiveForm').submit(function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                var url = $(this).attr('action');
-
+            if (confirm('Are you sure you want to delete this archive?')) {
                 $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
+                    url: '/admin/archives/' + archiveId,
+                    type: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
                     success: function(response) {
-                        $('#editArchiveModal').modal('hide');
-                        location.reload();
+                        if (response.success) {
+                            $('#archive-' + archiveId).fadeOut(300, function() {
+                                $(this).remove();
+                            });
+                            toastr.success(response.message);
+                        }
                     },
                     error: function(xhr) {
-                        var errors = xhr.responseJSON.errors;
-                        $.each(errors, function(key, value) {
-                            toastr.error(value[0]);
-                        });
+                        toastr.error('Error deleting archive');
                     }
                 });
-            });
+            }
         });
     </script>
     <script>
         $(document).ready(function() {
+            // Add new subscription
             $('#subscriptionForm').on('submit', function(e) {
                 e.preventDefault();
 
@@ -687,34 +745,127 @@
                     data: $(this).serialize(),
                     success: function(response) {
                         $('#addSubscriptionModal').modal('hide');
+                        toastr.success(response.message);
                         location.reload();
                     },
                     error: function(xhr) {
-                        alert('Error: ' + xhr.responseJSON.message);
+                        if (xhr.status === 422) {
+                            // Validation errors
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                toastr.error(value[0]);
+                            });
+                        } else {
+                            toastr.error('Error: ' + (xhr.responseJSON.message ||
+                                'Something went wrong'));
+                        }
                     }
                 });
             });
 
-            // Edit subscription
-            $('.edit-subscription').click(function() {
+            // Edit subscription - fetch data and populate modal
+            $(document).on('click', '.edit-subscription', function() {
                 var subId = $(this).data('id');
-                // AJAX call to fetch subscription data
-                // Populate edit modal
-                $('#editSubscriptionModal').modal('show');
+                var $modal = $('#editSubscriptionModal');
+                $.ajax({
+                    url: '/subscriptions/' + subId + '/edit',
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.success) {
+                            // Populate form fields directly from response.data
+                            $('#edit_subscription_id').val(response.data.id);
+                            $('#edit_name').val(response.data.name);
+                            $('#edit_subscription_type').val(response.data.subscription_type);
+                            $('#edit_price').val(response.data.price);
+                            $('#edit_recurring_period').val(response.data.recurring_period);
+
+                            // Set form action
+                            $('#editSubscriptionForm').attr('action', '/subscriptions/' +
+                            subId);
+
+                            // Show modal
+                            $('#editSubscriptionModal').modal('show');
+                        } else {
+                            toastr.error('Failed to load subscription data');
+                        }
+                    },
+                    error: function(xhr) {
+                        toastr.error('Error: ' + (xhr.responseJSON.message ||
+                            'Failed to load data'));
+                    }
+                });
+            });
+
+            // Update subscription
+            $('#editSubscriptionForm').on('submit', function(e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var url = form.attr('action');
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: form.serialize() + '&_method=PUT',
+                    success: function(response) {
+                        if (response.success) {
+                            $('#editSubscriptionModal').modal('hide');
+                            toastr.success(response.message);
+                            location.reload();
+                        } else {
+                            toastr.error(response.message || 'Update failed');
+                        }
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            // Validation errors
+                            var errors = xhr.responseJSON.errors;
+                            $.each(errors, function(key, value) {
+                                toastr.error(value[0]);
+                            });
+                        } else {
+                            toastr.error('Error: ' + (xhr.responseJSON.message ||
+                                'Update failed'));
+                        }
+                    }
+                });
             });
 
             // Delete subscription
-            $('.delete-subscription').click(function() {
-                if (confirm('Are you sure you want to delete this subscription?')) {
+            $(document).on('click', '.delete-subscription', function(e) {
+                e.preventDefault();
+
+                if (confirm(
+                        'Are you sure you want to delete this subscription? This action cannot be undone.'
+                    )) {
                     var subId = $(this).data('id');
+                    var $row = $('#subscription-' + subId);
+
                     $.ajax({
                         url: '/subscriptions/' + subId,
-                        type: 'DELETE',
+                        type: 'POST',
                         data: {
-                            _token: '{{ csrf_token() }}'
+                            _token: '{{ csrf_token() }}',
+                            _method: 'DELETE'
                         },
-                        success: function() {
-                            $('#subscription-' + subId).fadeOut();
+                        beforeSend: function() {
+                            $row.css('opacity', '0.5');
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                toastr.success(response.message);
+                                $row.fadeOut('slow', function() {
+                                    $(this).remove();
+                                });
+                            } else {
+                                toastr.error(response.message || 'Delete failed');
+                                $row.css('opacity', '1');
+                            }
+                        },
+                        error: function(xhr) {
+                            toastr.error('Error: ' + (xhr.responseJSON.message ||
+                                'Delete failed'));
+                            $row.css('opacity', '1');
                         }
                     });
                 }

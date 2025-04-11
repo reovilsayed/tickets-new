@@ -439,12 +439,11 @@ Route::get('test', function () {
 
 //     return 'Order not found.';
 // });
-Route::post('/magazines/{magazine}/archives', [BreadController::class, 'store'])
-    ->name('magazines.archives.store');
-Route::get('/archives/{archive}/edit', [BreadController::class, 'edit']);
-Route::put('/archives/{archive}', [BreadController::class, 'update']);
+Route::post('/magazines/{magazine}/archives', [BreadController::class, 'store'])->name('magazines.archives.store');
+Route::get('/admin/archives/{archive}/edit', [BreadController::class, 'edit']);
+Route::put('/admin/archives/{archive}', [BreadController::class, 'update']);
 Route::delete('/admin/archives/{archive}', [BreadController::class, 'destroy']);
-Route::post('/magazines/{magazine}/subscriptions', [BreadController::class, 'subscriptionStore'])
-    ->name('magazines.subscriptions.store');
-Route::put('/subscriptions/{subscription}', [BreadController::class, 'update']);
-Route::delete('/subscriptions/{subscription}', [BreadController::class, 'destroy']);
+Route::post('/magazines/{magazine}/subscriptions', [BreadController::class, 'subscriptionStore'])->name('magazines.subscriptions.store');
+Route::get('/subscriptions/{subscription}/edit', [BreadController::class, 'subscriptionEdit']);
+Route::put('/subscriptions/{subscription}', [BreadController::class, 'subscriptionUpdate']);
+Route::delete('/subscriptions/{subscription}', [BreadController::class, 'subscriptionDestroy']);
