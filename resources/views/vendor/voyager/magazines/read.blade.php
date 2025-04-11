@@ -498,17 +498,23 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="subscription_name">Plan Name</label>
-                                    <input type="text" class="form-control" id="subscription_name" name="name"
-                                        required>
+                                    @php
+
+                                        $subscriptions = App\Models\MagazineSubscription::all();
+                                    @endphp
+                                    <select class="form-control" id="magazine_subscription_id"
+                                        name="magazine_subscription_id" required>
+                                        @foreach ($subscriptions as $subscription)
+                                            <option value="{{ $subscription->id }}">{{ $subscription->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="recurring_period">Billing Period</label>
-                                    <select class="form-control" id="recurring_period" name="recurring_period" required>
-                                        <option value="annual">Annual (12 months)</option>
-                                        <option value="bi-annual">Bi-Annual (24 months)</option>
-                                    </select>
+                                    <label for="recurring_period">Billing Period (month)</label>
+                                    <input type="number" class="form-control" id="recurring_period"
+                                        name="recurring_period" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -525,7 +531,7 @@
                                 <div class="form-group">
                                     <label for="subscription_price">Price</label>
                                     <div class="input-group">
-                                        <input type="number" step="0.01" class="form-control"
+                                        <input type="number" step="0.01" min="0" class="form-control"
                                             id="subscription_price" name="price" required>
                                     </div>
                                 </div>
@@ -781,7 +787,7 @@
 
                             // Set form action
                             $('#editSubscriptionForm').attr('action', '/subscriptions/' +
-                            subId);
+                                subId);
 
                             // Show modal
                             $('#editSubscriptionModal').modal('show');

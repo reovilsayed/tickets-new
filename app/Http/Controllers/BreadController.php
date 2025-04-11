@@ -85,23 +85,19 @@ class BreadController extends Controller
     {
         // Validate the request data
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'magazine_subscription_id' => 'required|exists:magazine_subscriptions,id',
             'subscription_type' => 'required|in:physical,digital',
             'price' => 'required|numeric|min:0',
-            'recurring_period' => 'required|in:annual,bi-annual,'
+            'recurring_period' => 'required'
         ]);
 
         DB::beginTransaction();
 
 
-        // Create the magazine subscription
-        $magazineSubscription = MagazineSubscription::create([
-            'name' => $validatedData['name'],
-        ]);
 
         // Create the subscription detail
         $subscriptionDetail = SubscriptionMagazineDetail::create([
-            'magazine_subscription_id' => $magazineSubscription->id,  // Fixed typo from maga->id
+            'magazine_subscription_id' => $validatedData['magazine_subscription_id'],  // Fixed typo from maga->id
             'magazine_id' => $magazine->id,
             'subscription_type' => $validatedData['subscription_type'],
             'price' => $validatedData['price'],
@@ -132,22 +128,20 @@ class BreadController extends Controller
     {
         // Validate the request data
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'magazine_subscription_id' => 'required|exists:magazine_subscriptions',
             'subscription_type' => 'required|in:physical,digital',
             'price' => 'required|numeric|min:0',
-            'recurring_period' => 'required|in:annual,bi-annual'
+            'recurring_period' => 'required'
         ]);
 
         DB::beginTransaction();
 
 
-        // Update the magazine subscription
-        $subscription->update([
-            'name' => $validatedData['name'],
-        ]);
+       
 
         // Update the subscription detail (assuming one-to-one relationship)
         $subscription->details()->update([
+            'magazine_subscription_id' => $validatedData['magazine_subscription_id'],
             'subscription_type' => $validatedData['subscription_type'],
             'price' => $validatedData['price'],
             'recurring_period' => $validatedData['recurring_period'],
