@@ -259,6 +259,43 @@ class AppApiController extends Controller
         return response()->json($orders);
     }
 
+    protected function getUser($billing)
+    {
+        $email = isset($billing['email']) ? $billing['email'] : null;
+        $phone = isset($billing['phone']) ? $billing['phone'] : null;
+
+        $user = null;
+        $user_by_phone = null;
+        $user_by_email = null;
+        if ($phone) {
+            $user_by_phone = User::where('contact_number', $phone)->first();
+        }
+        if ($email) {
+            $user_by_email = User::where('email', $email)->first();
+        }
+
+        if ($user_by_phone) {
+            $user = $user_by_phone;
+        } elseif ($user_by_email) {
+            $user = $user_by_email;
+        }
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $billing['name'] ?? 'unkown user',
+                'email' => $email ?? strtolower(Str::slug($billing['name'] ?? 'user')) . '+' . uniqid() . '@mail.com',
+                'contact_number' => $phone,
+                'email_verified_at' => now(),
+                'role_id' => 2,
+                'password' => Hash::make('password2176565'),
+                'country' => 'PT',
+                'vatNumber' => $billing['vatNumber'] ?? null,
+            ]);
+        }
+
+        return $user;
+    }
+
     public function createOrder(Request $request)
     {
         // Collect initial order data
@@ -267,11 +304,11 @@ class AppApiController extends Controller
         $extraProducts = $request->get('extras') ?? [];
 
         if (count($extraProducts) <= 0) throw new Exception('No products in cart');
-        
+
         $orderData = [
-            'billing' => request()->get('biling'),
-            'user_id' => $this->getUser(request()->get('biling'))->id,
-            'subtotal' => $request->get('subTotal'),
+            'billing' => request()->get('billing'),
+            'user_id' => $this->getUser(request()->get('billing'))->id,
+            'subtotal' => $request->get('sub_total'),
             'discount' => 0,
             'total' => $request->get('total'),
             // 'event_id' => $request->get('event_id'),
@@ -296,7 +333,7 @@ class AppApiController extends Controller
             $quantity = @$extra['quantity'] ?? @$extra['newQty'] ?? 0;
             $totalItems +=  $quantity;
         }
-        
+
         // Adjust extra product prices
         if (count($extraProducts)) {
             $orderExtras = collect($extraProducts)->map(function ($extra) {
