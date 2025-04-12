@@ -91,12 +91,8 @@ class BreadController extends Controller
             'recurring_period' => 'required'
         ]);
 
-        DB::beginTransaction();
-
-
-
         // Create the subscription detail
-        $subscriptionDetail = SubscriptionMagazineDetail::create([
+        SubscriptionMagazineDetail::create([
             'magazine_subscription_id' => $validatedData['magazine_subscription_id'],  // Fixed typo from maga->id
             'magazine_id' => $magazine->id,
             'subscription_type' => $validatedData['subscription_type'],
@@ -104,67 +100,48 @@ class BreadController extends Controller
             'recurring_period' => $validatedData['recurring_period'],
         ]);
 
-        DB::commit();
+
 
         return response()->json([
-            'success' => true,
             'message' => 'Subscription created successfully',
+
         ]);
     }
-    public function subscriptionEdit(MagazineSubscription $subscription)
+    public function subscriptionEdit($id)
     {
+        $subscription = SubscriptionMagazineDetail::findOrFail($id);
+
         return response()->json([
-            'success' => true,
-            'data' => [
-                'id' => $subscription->id,
-                'name' => $subscription->name,
-                'subscription_type' => $subscription->details->subscription_type,
-                'price' => $subscription->details->price,
-                'recurring_period' => $subscription->details->recurring_period
-            ]
+            'magazine_subscription_id' => $subscription->magazine_subscription_id,
+            'recurring_period' => $subscription->recurring_period,
+            'subscription_type' => $subscription->subscription_type,
+            'price' => $subscription->price
         ]);
     }
-    public function subscriptionUpdate(Request $request, MagazineSubscription $subscription)
+    public function subscriptionUpdate(Request $request, $id)
     {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'magazine_subscription_id' => 'required|exists:magazine_subscriptions',
-            'subscription_type' => 'required|in:physical,digital',
-            'price' => 'required|numeric|min:0',
-            'recurring_period' => 'required'
+        $subscription = SubscriptionMagazineDetail::findOrFail($id);
+
+        $validated = $request->validate([
+            'magazine_subscription_id' => 'required|exists:magazine_subscriptions,id',
+            'recurring_period' => 'required|integer|min:1',
+            'subscription_type' => 'required|in:digital,physical',
+            'price' => 'required|numeric|min:0'
         ]);
 
-        DB::beginTransaction();
-
-
-       
-
-        // Update the subscription detail (assuming one-to-one relationship)
-        $subscription->details()->update([
-            'magazine_subscription_id' => $validatedData['magazine_subscription_id'],
-            'subscription_type' => $validatedData['subscription_type'],
-            'price' => $validatedData['price'],
-            'recurring_period' => $validatedData['recurring_period'],
-        ]);
-
-        DB::commit();
+        $subscription->update($validated);
 
         return response()->json([
-            'success' => true,
             'message' => 'Subscription updated successfully',
+            'subscription' => $subscription
         ]);
     }
-    public function subscriptionDestroy(MagazineSubscription $subscription)
+    public function destroySubscription($id)
     {
-        $subscription->details()->delete();
-
-        // Then delete the subscription
+        $subscription = SubscriptionMagazineDetail::findOrFail($id);
         $subscription->delete();
 
-        DB::commit();
-
         return response()->json([
-            'success' => true,
             'message' => 'Subscription deleted successfully'
         ]);
     }

@@ -30,14 +30,18 @@ class Magazine extends Model
 
     public function biAnnualSubscriptions()
     {
-        return $this->hasMany(SubscriptionMagazineDetail::class, 'magazine_id')->where('recurring_period', 'bi-annual');
+        return $this->hasMany(SubscriptionMagazineDetail::class, 'magazine_subscription_id')->where('name', 'bi-annual');
     }
     public function annualSubscriptions()
     {
-        return $this->hasMany(SubscriptionMagazineDetail::class, 'magazine_id')->where('recurring_period', 'annual');
+        return $this->hasMany(SubscriptionMagazineDetail::class, 'magazine_subscription_id')->where('name', 'annual');
     }
     public function getStatusTextAttribute()
     {
         return $this->status == 1 ? 'active' : 'inactive';
+    }
+    public function magazineSubscriptions()
+    {
+        return $this->hasMany(MagazineSubscription::class, 'magazine_id');
     }
 }

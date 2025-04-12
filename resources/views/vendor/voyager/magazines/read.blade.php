@@ -70,24 +70,24 @@
         <div class="panel panel-bordered" style="border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
             <div class="panel-body" style="padding: 25px;">
                 <!-- Header Section -->
-                {{-- <div class="row" style="margin-bottom: 30px; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px;">
-                    <div class="col-md-3">
+                <div class="row" style="margin-bottom: 30px; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px;">
+                    {{-- <div class="col-md-3">
                         <img src="{{ Voyager::image($dataTypeContent->image) }}" alt="Magazine Cover"
                             style="max-height: 180px; border-radius: 4px; box-shadow: 0 3px 15px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
 
 
-                    </div>
+                    </div> --}}
                     <div class="col-md-3">
                         <h2 style="margin: 0; color: #2c3e50; font-weight: 700;">{{ $dataTypeContent->name }}</h2>
-                        <div style="margin-top: 10px;">
+                        {{-- <div style="margin-top: 10px;">
                             <span class="badge {{ $dataTypeContent->status == 1 ? 'badge-success' : 'badge-danger' }}"
                                 style="font-size: 12px; padding: 5px 10px; border-radius: 12px;">
                                 {{ $dataTypeContent->status_text }}
                             </span>
 
-                        </div>
+                        </div> --}}
                     </div>
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <h4 style="color: #7f8c8d; font-weight: 600; margin-bottom: 15px;">Description</h4>
                         <div class="description-box"
                             style="background: #f9f9f9; 
@@ -98,8 +98,8 @@
                                 font-size: 15px;">
                             {!! $dataTypeContent->description !!}
                         </div>
-                    </div>
-                </div> --}}
+                    </div> --}}
+                </div>
 
 
 
@@ -407,22 +407,34 @@
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-right"
                                                         aria-labelledby="subscriptionDropdown-{{ $subscription->id }}">
-                                                        <a class="dropdown-item edit-subscription" href="#"
-                                                            data-id="{{ $subscription->id }}" style="margin-left:10px;">
+
+                                                        <a class="dropdown-item edit-subscription"
+                                                            style="margin-left:10px;" href="#"
+                                                            id="edit-subscription-{{ $subscription->id }}"
+                                                            data-id="{{ $subscription->id }}">
                                                             <i class="icon voyager-edit"></i> Edit
                                                         </a>
-                                                        <a class="dropdown-item delete-subscription" href="#"
-                                                            data-id="{{ $subscription->id }}" style="margin-left:10px;">
+
+                                                        <a class="dropdown-item delete-subscription"
+                                                            style="margin-left:10px;" href="#"
+                                                            id="delete-subscription-{{ $subscription->id }}"
+                                                            data-id="{{ $subscription->id }}">
                                                             <i class="icon voyager-trash"></i> Delete
                                                         </a>
                                                     </div>
                                                 </div>
 
                                                 <h5 style="margin-top: 0; color: #2c3e50; font-weight: 600;">
-                                                    {{ $subscription->name }}
+                                                    @php
+                                                        $currentPlan = App\Models\MagazineSubscription::find(
+                                                            $subscription->magazine_subscription_id,
+                                                        );
+                                                    @endphp
+                                                    {{ ucfirst($currentPlan->name ?? 'Unknown Plan') }}
                                                     <span class="badge badge-primary">
-                                                        {{ ucfirst($subscription->subscription_type) }}
+                                                        {{ ucfirst($subscription->subscription_type ?? '-') }}
                                                     </span>
+                                                    Subscription
                                                 </h5>
 
                                                 <div style="margin: 15px 0;">
@@ -430,14 +442,15 @@
                                                         <div>
                                                             <span style="font-size: 13px; color: #7f8c8d;">Price:</span>
                                                             <span style="font-weight: 600; color: #27ae60;">
-                                                                ${{ number_format($subscription->price, 2) }}
+                                                                ${{ number_format($subscription->price ?? 0, 2) }}
                                                             </span>
                                                         </div>
                                                         <div>
                                                             <span style="font-size: 13px; color: #7f8c8d;">Billing
                                                                 Period:</span>
                                                             <span style="font-weight: 600; color: #3498db;">
-                                                                {{ $subscription->recurring_period == 'annual' ? 'Annual (12 months)' : 'Bi-Annual (24 months)' }}
+                                                                {{ $subscription->recurring_period ?? '-' }}
+                                                                month(s)
                                                             </span>
                                                         </div>
                                                     </div>
@@ -501,6 +514,7 @@
                                     @php
 
                                         $subscriptions = App\Models\MagazineSubscription::all();
+
                                     @endphp
                                     <select class="form-control" id="magazine_subscription_id"
                                         name="magazine_subscription_id" required>
@@ -564,35 +578,48 @@
                     <div class="modal-body">
                         <input type="hidden" id="edit_subscription_id" name="subscription_id">
 
-                        <div class="form-group">
-                            <label for="edit_name">Subscription Name</label>
-                            <input type="text" class="form-control" id="edit_name" name="name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="edit_subscription_type">Subscription Type</label>
-                            <select class="form-control" id="edit_subscription_type" name="subscription_type" required>
-                                <option value="physical">Physical</option>
-                                <option value="digital">Digital</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="edit_price">Price</label>
-                            <input type="number" step="0.01" class="form-control" id="edit_price" name="price"
-                                required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="edit_recurring_period">Recurring Period</label>
-                            <select class="form-control" id="edit_recurring_period" name="recurring_period" required>
-                                <option value="annual">Annual</option>
-                                <option value="bi-annual">Bi-Annual</option>
-                            </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_magazine_subscription_id">Plan Name</label>
+                                    <select class="form-control" id="edit_magazine_subscription_id"
+                                        name="magazine_subscription_id" required>
+                                        @foreach ($subscriptions as $subscription)
+                                            <option value="{{ $subscription->id }}">{{ $subscription->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_recurring_period">Billing Period (month)</label>
+                                    <input type="number" class="form-control" id="edit_recurring_period"
+                                        name="recurring_period" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_subscription_type">Subscription Type</label>
+                                    <select class="form-control" id="edit_subscription_type" name="subscription_type"
+                                        required>
+                                        <option value="digital">Digital</option>
+                                        <option value="physical">Physical</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_price">Price</label>
+                                    <div class="input-group">
+                                        <input type="number" step="0.01" min="0" class="form-control"
+                                            id="edit_price" name="price" required value="old('price')">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Update Subscription</button>
                     </div>
                 </form>
@@ -621,7 +648,8 @@
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    </div>
+    <!-- /.modal -->
 @stop
 
 @section('javascript')
@@ -725,12 +753,10 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        if (response.success) {
-                            $('#archive-' + archiveId).fadeOut(300, function() {
-                                $(this).remove();
-                            });
-                            toastr.success(response.message);
-                        }
+
+
+                        toastr.success(response.message);
+                        location.reload();
                     },
                     error: function(xhr) {
                         toastr.error('Error deleting archive');
@@ -741,141 +767,97 @@
     </script>
     <script>
         $(document).ready(function() {
-            // Add new subscription
+            // Add Subscription handler
             $('#subscriptionForm').on('submit', function(e) {
                 e.preventDefault();
+                const formData = $(this).serializeArray();
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        toastr.success(response.message);
+                        location.reload(); // Or update UI without refresh
+                    },
+                    error: function(xhr) {
+                        toastr.error(xhr.responseJSON?.message || 'Failed to add subscription');
+                    }
+                });
+            });
+        });
+        // Edit Subscription handler
+        $(document).ready(function() {
+            // Edit Subscription handler
+            $(document).on('click', '.edit-subscription', function(e) {
+                e.preventDefault();
+                const subscriptionId = $(this).data('id');
+
+                $.get(`/admin/subscription/magazine/details/${subscriptionId}/edit`, function(data) {
+                    $('#editSubscriptionModal').modal('show');
+
+                    // Set form values
+                    $('#edit_subscription_id').val(subscriptionId);
+                    $('#edit_magazine_subscription_id').val(data.magazine_subscription_id);
+                    $('#edit_recurring_period').val(data.recurring_period);
+                    $('#edit_subscription_type').val(data.subscription_type);
+                    $('#edit_price').val(data.price);
+
+                    // Set the form action
+                    $('#editSubscriptionForm').attr('action',
+                        `/admin/subscription/magazine/details/${subscriptionId}`);
+                });
+            });
+
+            // Update Subscription handler
+            $('#editSubscriptionForm').on('submit', function(e) {
+                e.preventDefault();
+                const subscriptionId = $('#edit_subscription_id').val();
 
                 $.ajax({
                     url: $(this).attr('action'),
                     type: 'POST',
                     data: $(this).serialize(),
+                    headers: {
+                        'X-HTTP-Method-Override': 'PUT'
+                    },
                     success: function(response) {
-                        $('#addSubscriptionModal').modal('hide');
                         toastr.success(response.message);
-                        location.reload();
+                        $('#editSubscriptionModal').modal('hide');
+                        location.reload(); // Or update UI without refresh
                     },
                     error: function(xhr) {
-                        if (xhr.status === 422) {
-                            // Validation errors
-                            var errors = xhr.responseJSON.errors;
-                            $.each(errors, function(key, value) {
-                                toastr.error(value[0]);
-                            });
-                        } else {
-                            toastr.error('Error: ' + (xhr.responseJSON.message ||
-                                'Something went wrong'));
-                        }
+                        toastr.error(xhr.responseJSON?.message ||
+                            'Failed to update subscription');
                     }
                 });
             });
+        });
 
-            // Edit subscription - fetch data and populate modal
-            $(document).on('click', '.edit-subscription', function() {
-                var subId = $(this).data('id');
-                var $modal = $('#editSubscriptionModal');
-                $.ajax({
-                    url: '/subscriptions/' + subId + '/edit',
-                    type: 'GET',
-                    success: function(response) {
-                        if (response.success) {
-                            // Populate form fields directly from response.data
-                            $('#edit_subscription_id').val(response.data.id);
-                            $('#edit_name').val(response.data.name);
-                            $('#edit_subscription_type').val(response.data.subscription_type);
-                            $('#edit_price').val(response.data.price);
-                            $('#edit_recurring_period').val(response.data.recurring_period);
-
-                            // Set form action
-                            $('#editSubscriptionForm').attr('action', '/subscriptions/' +
-                                subId);
-
-                            // Show modal
-                            $('#editSubscriptionModal').modal('show');
-                        } else {
-                            toastr.error('Failed to load subscription data');
-                        }
-                    },
-                    error: function(xhr) {
-                        toastr.error('Error: ' + (xhr.responseJSON.message ||
-                            'Failed to load data'));
-                    }
-                });
-            });
-
-            // Update subscription
-            $('#editSubscriptionForm').on('submit', function(e) {
-                e.preventDefault();
-
-                var form = $(this);
-                var url = form.attr('action');
-
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: form.serialize() + '&_method=PUT',
-                    success: function(response) {
-                        if (response.success) {
-                            $('#editSubscriptionModal').modal('hide');
-                            toastr.success(response.message);
-                            location.reload();
-                        } else {
-                            toastr.error(response.message || 'Update failed');
-                        }
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            // Validation errors
-                            var errors = xhr.responseJSON.errors;
-                            $.each(errors, function(key, value) {
-                                toastr.error(value[0]);
-                            });
-                        } else {
-                            toastr.error('Error: ' + (xhr.responseJSON.message ||
-                                'Update failed'));
-                        }
-                    }
-                });
-            });
-
-            // Delete subscription
+        $(document).ready(function() {
+            // Delete handler
             $(document).on('click', '.delete-subscription', function(e) {
                 e.preventDefault();
+                const subscriptionId = $(this).data('id');
 
-                if (confirm(
-                        'Are you sure you want to delete this subscription? This action cannot be undone.'
-                    )) {
-                    var subId = $(this).data('id');
-                    var $row = $('#subscription-' + subId);
-
+                if (confirm('Are you sure you want to delete this subscription?')) {
                     $.ajax({
-                        url: '/subscriptions/' + subId,
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            _method: 'DELETE'
-                        },
-                        beforeSend: function() {
-                            $row.css('opacity', '0.5');
+                        url: `/admin/subscription/magazine/details/${subscriptionId}`,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Accept': 'application/json'
                         },
                         success: function(response) {
-                            if (response.success) {
-                                toastr.success(response.message);
-                                $row.fadeOut('slow', function() {
-                                    $(this).remove();
-                                });
-                            } else {
-                                toastr.error(response.message || 'Delete failed');
-                                $row.css('opacity', '1');
-                            }
+                            toastr.success(response.message);
+                            location.reload(); // Or update UI without refresh
                         },
                         error: function(xhr) {
-                            toastr.error('Error: ' + (xhr.responseJSON.message ||
-                                'Delete failed'));
-                            $row.css('opacity', '1');
+                            toastr.error(xhr.responseJSON?.message || 'Deletion failed');
                         }
                     });
                 }
             });
         });
     </script>
+
 @stop
