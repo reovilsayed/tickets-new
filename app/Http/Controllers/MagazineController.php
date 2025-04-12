@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Magazine;
 use App\Models\MagazineSubscription;
 use App\Models\SubscriptionMagazineDetail;
+use Illuminate\Support\Facades\DB;
 
 class MagazineController extends Controller
 {
@@ -19,13 +20,23 @@ class MagazineController extends Controller
     {
         $magazine = Magazine::where('slug', $slug)->firstOrFail();
         $archives = $magazine->archives;
-        $annualSubscription = $magazine->annualSubscriptions;
-        $biAnnualSubscriptions = $magazine->biAnnualSubscriptions;
+        $subscriptionsDetails = SubscriptionMagazineDetail::with('magazineSubscription')
+            ->where('magazine_id', $magazine->id)
+            ->get();
+        $annualSubscriptions = $subscriptionsDetails->filter(function ($item) {
+            return $item->magazineSubscription && $item->magazineSubscription->name === 'annual';
+        });
+        $biAnnualSubscriptions = $subscriptionsDetails->filter(function ($item) {
+            return $item->magazineSubscription && $item->magazineSubscription->name === 'bi-annual';
+        });
+
+
+
         return view('pages.magazines.show', [
             'magazine' => $magazine,
             'archives' => $archives,
-            'annualSubscription' => $annualSubscription,
-            'biAnnualSubscriptions' => $biAnnualSubscriptions
+            'annualSubscriptions' => $annualSubscriptions,
+            'biAnnualSubscriptions' => $biAnnualSubscriptions,
         ]);
     }
 }

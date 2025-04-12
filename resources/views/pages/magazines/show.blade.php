@@ -86,7 +86,8 @@
                 <div class="row">
                     <div class="col-md-4 event-details d-none d-md-block">
 
-                        <img class="d-none d-md-block ms-4" src="{{ Voyager::image($magazine->image) }}" alt="" style="width: 88%; height:auto;">  
+                        <img class="d-none d-md-block ms-4" src="{{ Voyager::image($magazine->image) }}" alt=""
+                            style="width: 88%; height:auto;">
 
                         <h2 class="events-title mt-2 px-3 text-center">{{ $magazine->name }}</h2>
                         <div class="accordin-item">
@@ -114,6 +115,7 @@
                                     </div>
                                 </button>
                             </li>
+
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-annual-purchase"
                                     type="button" role="tab" aria-controls="pills-profile" aria-selected="false"
@@ -124,6 +126,8 @@
                                     </div>
                                 </button>
                             </li>
+
+                        
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-bi-annual-purchase"
                                     type="button" role="tab" aria-controls="pills-profile" aria-selected="false"
@@ -134,6 +138,7 @@
                                     </div>
                                 </button>
                             </li>
+
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
                             <div class="tab-pane fade show active" id="pills-onetime-purchase" role="tabpanel"
@@ -146,7 +151,7 @@
                                                 <div class="t-info">
                                                     <p class="t-title">{{ $archive->title }}</p>
                                                     <p class="t-des">{{ $archive->description }}</p>
-                                                    <span class="sold">{{ __('words.sold') }}</span>
+                                                    {{-- <span class="sold">{{ __('words.sold') }}</span> --}}
                                                 </div>
                                                 <div class="t-prize">
                                                     <span
@@ -168,14 +173,17 @@
                             </div>
                             <div class="tab-pane fade" id="pills-annual-purchase" role="tabpanel"
                                 aria-labelledby="pills-home-tab">
-                                @foreach ($annualSubscription as $subscription)
+
+                                @foreach ($annualSubscriptions as $subscription)
                                     <div class="card card-ticket">
                                         <div class="card-body tick">
                                             <div class="ticket-info">
                                                 <div class="t-info">
                                                     <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
-                                                        Subscription</p>
-                                                    <p class="t-des">Annual subscription for 1 year</p>
+                                                        Subscription
+                                                    </p>
+                                                    <p class="t-des">for {{ $subscription->recurring_period }} (Month)s
+                                                    </p>
                                                 </div>
                                                 <div class="t-prize">
                                                     <h4>{{ Sohoj::price($subscription->price) }}</h4>
@@ -185,7 +193,7 @@
                                                     style="border: 2px solid #28BADF !important"
                                                     x-model="selectedItems.annual[{{ $subscription->id }}]"
                                                     @change="calculateTotal">
-                                                    @if ($subscription->subscription_type == 'physical')
+                                                    @if ($subscription->subscription_type == 'digital')
                                                         <option value="0">0</option>
                                                         <option value="1">1</option>
                                                         <option value="2">2</option>
@@ -199,10 +207,12 @@
                                         </div>
                                     </div>
                                 @endforeach
+                              
                             </div>
 
                             <div class="tab-pane fade" id="pills-bi-annual-purchase" role="tabpanel"
                                 aria-labelledby="pills-home-tab">
+
                                 @foreach ($biAnnualSubscriptions as $subscription)
                                     <div class="card card-ticket cursor-pointer">
                                         <div class="card-body tick">
@@ -210,7 +220,8 @@
                                                 <div class="t-info">
                                                     <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
                                                         Subscription</p>
-                                                    <p class="t-des">Bi-Annual subscription for 2 years</p>
+                                                    <p class="t-des">for {{ $subscription->recurring_period }} (Month)s
+                                                    </p>
                                                 </div>
                                                 <div class="t-prize">
                                                     <h4>{{ Sohoj::price($subscription->price) }}</h4>
@@ -220,7 +231,7 @@
                                                     style="border: 2px solid #28BADF !important"
                                                     x-model="selectedItems.biannual[{{ $subscription->id }}]"
                                                     @change="calculateTotal">
-                                                    @if ($subscription->subscription_type == 'physical')
+                                                    @if ($subscription->subscription_type == 'digital')
                                                         <option value="0">0</option>
                                                         <option value="1">1</option>
                                                         <option value="2">2</option>
@@ -234,6 +245,7 @@
                                         </div>
                                     </div>
                                 @endforeach
+                              
                             </div>
                         </div>
                         <button class="event-buttton">
@@ -334,7 +346,7 @@
                 },
                 prices: {
                     onetime: {!! json_encode($archives->pluck('price', 'id')) !!},
-                    annual: {!! json_encode($annualSubscription->pluck('price', 'id')) !!},
+                    annual: {!! json_encode($annualSubscriptions->pluck('price', 'id')) !!},
                     biannual: {!! json_encode($biAnnualSubscriptions->pluck('price', 'id')) !!}
                 },
                 totalPrice: 0,
