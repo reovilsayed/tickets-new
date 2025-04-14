@@ -258,4 +258,153 @@ class AppApiController extends Controller
         $orders = auth()->user()->orders;
         return response()->json($orders);
     }
+
+    protected function getUser($billing)
+    {
+        $email = isset($billing['email']) ? $billing['email'] : null;
+        $phone = isset($billing['phone']) ? $billing['phone'] : null;
+
+        $user = null;
+        $user_by_phone = null;
+        $user_by_email = null;
+        if ($phone) {
+            $user_by_phone = User::where('contact_number', $phone)->first();
+        }
+        if ($email) {
+            $user_by_email = User::where('email', $email)->first();
+        }
+
+        if ($user_by_phone) {
+            $user = $user_by_phone;
+        } elseif ($user_by_email) {
+            $user = $user_by_email;
+        }
+
+        if (!$user) {
+            $user = User::create([
+                'name' => $billing['name'] ?? 'unkown user',
+                'email' => $email ?? strtolower(Str::slug($billing['name'] ?? 'user')) . '+' . uniqid() . '@mail.com',
+                'contact_number' => $phone,
+                'email_verified_at' => now(),
+                'role_id' => 2,
+                'password' => Hash::make('password2176565'),
+                'country' => 'PT',
+                'vatNumber' => $billing['vatNumber'] ?? null,
+            ]);
+        }
+
+        return $user;
+    }
+
+    public function createOrder(Request $request)
+    {
+        // Collect initial order data
+        // try {
+        DB::beginTransaction();
+        $extraProducts = $request->get('extras') ?? [];
+
+        if (count($extraProducts) <= 0) throw new Exception('No products in cart');
+
+        $orderData = [
+            'billing' => request()->get('billing'),
+            'user_id' => $this->getUser(request()->get('billing'))->id,
+            'subtotal' => $request->get('sub_total'),
+            'discount' => 0,
+            'total' => $request->get('total'),
+            // 'event_id' => $request->get('event_id'),
+            'payment_method' => $request->get('payment_method') ?? 'App',
+            'transaction_id' => Str::uuid(),
+            'security_key' => Str::uuid(),
+            'send_message' => $request->get('send_message') ? true : false,
+            'send_email' => $request->get('send_mail') ? true : false,
+            'pos_id' => auth()->id()
+        ];
+
+
+
+        $order = Order::create($orderData);
+
+
+        // Calculate total quantity of extras and tickets
+        $totalItems = 0;
+
+
+        foreach ($extraProducts as $extra) {
+            $quantity = @$extra['quantity'] ?? @$extra['newQty'] ?? 0;
+            $totalItems +=  $quantity;
+        }
+
+        // Adjust extra product prices
+        if (count($extraProducts)) {
+            $orderExtras = collect($extraProducts)->map(function ($extra) {
+                if (@$extra['id']) {
+
+
+                    if (@$extra['price']) {
+                        $extra['price'];
+                    }
+                    return [
+                        'id' => $extra['id'],
+                        'name' => Extra::find($extra['id'])->display_name,
+                        'qty' => @$extra['quantity'] ?? 0,
+                        'price' => max(0, @$extra['price'] ?? 0), // Ensure price doesn't go below zero
+                    ];
+                }
+            })->toArray();
+            $order['extras'] = json_encode($orderExtras);
+        }
+
+        // Handle invoice printing or emailing
+        // $printInvoice = $request->get('printInvoice');
+        $sendInvoiceToMail = $request->get('send_mail');
+        // if(env('APP_ENV') != 'local'){
+
+
+
+        $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
+
+        // Return the order with tickets
+
+        DB::commit();
+        $order->update([
+            'status' => 1,
+            'payment_status' => 1
+        ]);
+
+        try {
+            $toco = new TOCOnlineService;
+            $response = $toco->createCommercialSalesDocument($order);
+
+            $order->invoice_id = $response['id'];
+            $order->invoice_url = $response['public_link'];
+            $order->invoice_body = json_encode($response);
+
+            if ($sendInvoiceToMail) {
+                $toco->sendEmailDocument($order, $response['id']);
+            }
+        } catch (Exception | Error $e) {
+            Log::info($e->getMessage());
+        }
+
+        $order->save();
+
+        /* if ($printInvoice == false) {
+            $order->invoice_url = null;
+
+            // Add invoice creation logic if needed
+        } */
+
+
+        $data = [
+            'id' => $order->id,
+            // 'tickets' => $hollowTickets,
+            'invoice_url' => $order->invoice_url,
+        ];
+
+        return response()->json($data, 200);
+        // } catch (Exception | Error $e) {
+        //     DB::rollBack();
+        //     return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
+        // }
+    }
 }

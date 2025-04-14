@@ -181,5 +181,6 @@ Route::group(['prefix' => 'app'], function () {
         Route::post('zone-type', [AppApiController::class, 'getZoneType']);
         Route::get('extras/all', [AppApiController::class, 'getAllExtras']);
         Route::get('orders', [AppApiController::class, 'getOrders']);
+        Route::post('order/create', [AppApiController::class, 'createOrder']);
     });
 });
