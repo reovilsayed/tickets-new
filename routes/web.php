@@ -34,9 +34,10 @@ use Illuminate\Support\Facades\Hash;
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
 
-Route::get('magazines', [MagazineController::class, 'index'])->name('magazines.index');
-Route::get('magazines/{magazine:slug}', [MagazineController::class, 'show'])->name('magazines.show');
-
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('magazines', [MagazineController::class, 'index'])->name('magazines.index');
+    Route::get('magazines/{magazine:slug}', [MagazineController::class, 'show'])->name('magazines.show');
+});
 Route::get('events', [EventController::class, 'index'])->name('events.index');
 Route::get('event/{event:slug}', [EventController::class, 'show'])->name('events.show');
 Route::get('invite/{invite:slug}', function (Invite $invite, Request $request) {
@@ -429,16 +430,16 @@ Route::get('test', function () {
     $toco = new TOCOnlineService;
     $response = $toco->createMagazineCommercialSalesDocument($order);
 });
-// Route::get('/test-subscription-create', function () {
-//     $order = MagazineOrder::find(4);
+Route::get('/test-subscription-create', function () {
+    $order = MagazineOrder::find(4);
+    // dd($order);
+    if ($order) {
+        $order->createSubscriptionRecords();
+        return 'Subscription records created!';
+    }
 
-//     if ($order) {
-//         $order->createSubscriptionRecords();
-//         return 'Subscription records created!';
-//     }
-
-//     return 'Order not found.';
-// });
+    return 'Order not found.';
+});
 Route::post('/magazines/{magazine}/archives', [BreadController::class, 'store'])->name('magazines.archives.store');
 Route::get('/admin/archives/{archive}/edit', [BreadController::class, 'edit']);
 Route::put('/admin/archives/{archive}', [BreadController::class, 'update']);
