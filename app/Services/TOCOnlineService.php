@@ -356,12 +356,12 @@ class TOCOnlineService
 
 
             $lines  = $magazineOrder->items->map(function ($item) {
-                $name = $item->itemable->magazine->name . ' (' . $item->itemable->subscription_type . '-' . $item->itemable->recurring_period . ')';
+                $name = $item->name;
                 return [
                     'item_type' => 'Service',
                     'item_code' => 'Serv001',
                     'description' => $name,
-                    'quantity' => 1,
+                    'quantity' => $item->quantity,
                     'unit_price' => $item->unit_price,
                     'tax_id' => 1,
                     'tax_country_region' => 'PT',
@@ -370,9 +370,8 @@ class TOCOnlineService
                     'settlement_expression' => $item->total_price
                 ];
             })->toArray();
+        }
 
-        } 
-       
 
         $body = [
             'document_type' => 'FR',
@@ -392,7 +391,7 @@ class TOCOnlineService
             'operation_country' => 'PT',
             'currency_iso_code' => 'EUR',
             'notes' => '',
-            'external_reference' => 'MagazineOrder-'. $magazineOrder->id,
+            'external_reference' => 'MagazineOrder-' . $magazineOrder->id,
 
             'lines' => $lines,
         ];

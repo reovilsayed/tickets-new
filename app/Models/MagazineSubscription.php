@@ -27,4 +27,6 @@ class MagazineSubscription extends Model
     {
         return $this->hasMany(SubscriptionMagazineDetail::class, 'subscription_magazine_detail_id');
     }
+
+   
 }

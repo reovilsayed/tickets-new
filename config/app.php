@@ -2,6 +2,7 @@
 
 
 use App\Facade\SohojFacade;
+use App\Providers\BladeComponentServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -200,6 +201,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Darryldecode\Cart\CartServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        BladeComponentServiceProvider::class
 
     ],
 

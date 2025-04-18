@@ -35,62 +35,64 @@ class CartController extends Controller
 	}
 	public function magazineAdd(Magazine $magazine, Request $request)
 	{
-
-
+		// Clear previous cart and session data
 		Cart::session($magazine->slug)->clear();
+		Cart::session($magazine->slug)->clearCartConditions();
 		session()->forget(['discount', 'discount_code', 'coupon_id']);
+
+		$itemsAdded = 0;
+
+		// Handle Archives
 		if ($request->has('archive')) {
-			foreach ($request->archive as $archive => $quantity) {
+			foreach ($request->archive as $archiveId => $quantity) {
 				if ($quantity > 0) {
-					$archive = Archive::find($archive);
-					Cart::session($magazine->slug)->add($archive->id, $archive->title, $archive->price, $quantity, ['type' => 'onetime'])->associate('App\Models\Archive');
+					$archive = Archive::find($archiveId);
+					if ($archive) {
+						Cart::session($magazine->slug)->add(
+							$archive->id,
+							$archive->title,
+							$archive->price,
+							$quantity,
+							['type' => 'onetime']
+						)->associate(Archive::class);
+						$itemsAdded++;
+					}
 				}
 			}
 		}
 
+		// Handle Subscriptions
 		if ($request->has('subscription')) {
-			$subscriptionData = $request->subscription;
-
-	
-			if (!empty($subscriptionData['annual'])) {
-				$subscription = SubscriptionMagazineDetail::find($subscriptionData['annual']);
-
-				if ($subscription) {
-					Cart::session($magazine->slug)->add(
-						$subscription->id,
-						ucfirst($subscription->subscription_type) . ' (' . ucfirst($subscription->recurring_period) . ') Subscription',
-						$subscription->price,
-						1,
-						[
-							'type' => 'subscription',
-							'subscription_type' => $subscription->subscription_type,
-							'subscription' => $subscription->recurring_period,
-						]
-					)->associate('App\Models\SubscriptionMagazineDetail');
-				}
-			}
-
-			if (!empty($subscriptionData['biannual'])) {
-				$subscription = SubscriptionMagazineDetail::find($subscriptionData['biannual']);
-
-				if ($subscription) {
-					Cart::session($magazine->slug)->add(
-						$subscription->id,
-						ucfirst($subscription->subscription_type) . ' (' . ucfirst($subscription->recurring_period) . ') Subscription',
-						$subscription->price,
-						1, 
-						[
-							'type' => 'subscription',
-							'subscription_type' => $subscription->subscription_type,
-							'subscription' => $subscription->recurring_period,
-						]
-					)->associate('App\Models\SubscriptionMagazineDetail');
+			foreach (['annual', 'biannual'] as $type) {
+				if (!empty($request->subscription[$type])) {
+					$subscription = SubscriptionMagazineDetail::find($request->subscription[$type]);
+					if ($subscription) {
+						Cart::session($magazine->slug)->add(
+							$subscription->id,
+							ucfirst($subscription->subscription_type) . ' (' . ucfirst($subscription->recurring_period) . ') Subscription',
+							$subscription->price,
+							1,
+							[
+								'type' => 'subscription',
+								'subscription_type' => $subscription->subscription_type,
+								'subscription' => $subscription->recurring_period,
+							]
+						)->associate(SubscriptionMagazineDetail::class);
+						$itemsAdded++;
+					}
 				}
 			}
 		}
 
+		// If no items were added, redirect back with an error
+		if ($itemsAdded === 0) {
+			return back()->withErrors( 'Please select at least one archive or subscription.');
+		}
+
+		// Otherwise, proceed to checkout
 		return redirect()->route('magazine_checkout', $magazine);
 	}
+
 
 	public function inviteadd(Invite $invite, Request $request)
 	{

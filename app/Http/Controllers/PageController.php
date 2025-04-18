@@ -16,6 +16,7 @@ use App\Models\Post;
 use App\Models\Prodcat;
 use App\Models\Product;
 use App\Models\Rating;
+use App\Models\Shipping;
 use App\Models\Shop;
 use App\Models\Ticket;
 use App\Models\User;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use TCG\Voyager\Models\Page;
+use Cart;
 
 class PageController extends Controller
 {
@@ -115,7 +117,7 @@ class PageController extends Controller
         return view('pages.checkout', compact('event'));
     }
 
-    
+
     public function store_front($slug)
     {
         $shop = Shop::where('slug', $slug)->products()->firstOrFail();
@@ -288,6 +290,14 @@ class PageController extends Controller
 
     public function magazineCheckout(Magazine $magazine)
     {
-        return view('pages.magazine_checkout', compact('magazine'));
+        $cart = Cart::session($magazine->slug);
+        $coupon = Cart::session($magazine->slug)->getCondition('Coupon');
+        $shipping = Cart::session($magazine->slug)->getConditionsByType('shipping');
+
+
+        $shippings = Shipping::all();
+        // dd($shippings);
+
+        return view('pages.magazines.checkout.index', compact('magazine', 'cart', 'coupon', 'shippings', 'shipping'));
     }
 }

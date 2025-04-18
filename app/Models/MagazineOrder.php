@@ -55,7 +55,12 @@ class MagazineOrder extends Model
                 'details' => json_encode($details),
             ]);
         }
-      
+
         return back();
+    }
+
+    public function appliedCoupon()
+    {
+        return $this->belongsTo(MagazineCoupon::class, 'discount_code', 'id');
     }
 }

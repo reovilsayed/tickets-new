@@ -332,9 +332,10 @@
     </script>
 
     
-    @yield('js')
+
     <script src='https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js'></script>
-    <script>
+    @yield('js')
+   <script>
         $(document).ready(function() {
        
            
@@ -366,6 +367,8 @@
     </script>
     <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="8fc255b6-8403-4435-9842-852bd91ab47f"
         data-blockingmode="auto" type="text/javascript"></script>
+
+        
 </body>
 
 </html>

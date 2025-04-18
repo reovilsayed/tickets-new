@@ -90,42 +90,42 @@ class CouponController extends Controller
 
 		$coupon = MagazineCoupon::where('code', $request->coupon_code)
 			->where('magazine_id', $magazine->id)
-			->where('status', true)
+			// ->where('status', true)
 			->where('expire_at', '>=', now())
 			->where(function ($query) {
 				$query->where('limit', 0)
-					->orWhereRaw('used < limit');
+					->orWhereRaw('`used` < `limit`');
 			})
 			->first();
+
 
 		if (!$coupon) {
 			return back()->with('error', __('words.invalid_or_expired_coupon'));
 		}
 
-		$cartTotal = Cart::session($magazine->slug)->getTotal();
 
-		// Apply fixed discount
-		$discount = min($coupon->discount, $cartTotal);
 
-		// Increment usage
+		$condition = new \Darryldecode\Cart\CartCondition(array(
+			'name' => 'Coupon',
+			'type' => 'discount',
+			'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+			'value' => '-' . $coupon->discount,
+			'attributes' => array( // attributes field is optional
+				'description' => 'Coupon Discount :' . $coupon->code,
+				'code' =>  $coupon->code
+			)
+		));
+
+		Cart::session($magazine->slug)->condition($condition);
+
 		$coupon->increment('used');
-
-		session([
-			'discount' => $discount,
-			'discount_code' => $coupon->code,
-			'coupon_id' => $coupon->id
-		]);
 
 		return back()->with('success', __('words.coupon_applied_success'));
 	}
 
 	public function removeCoupon(Magazine $magazine)
 	{
-		if (session('coupon_id')) {
-			MagazineCoupon::where('id', session('coupon_id'))->decrement('used');
-		}
-
-		session()->forget(['discount', 'discount_code', 'coupon_id']);
+		Cart::session($magazine->slug)->removeCartCondition('Coupon');
 		return back()->with('success', __('words.coupon_removed'));
 	}
 }

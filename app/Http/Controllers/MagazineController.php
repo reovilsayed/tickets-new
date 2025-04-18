@@ -6,7 +6,7 @@ use App\Models\Magazine;
 use App\Models\MagazineCoupon;
 use App\Models\MagazineSubscription;
 use App\Models\SubscriptionMagazineDetail;
-use Darryldecode\Cart\Cart;
+use Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -22,6 +22,9 @@ class MagazineController extends Controller
     public function show($slug)
     {
         $magazine = Magazine::where('slug', $slug)->firstOrFail();
+
+        
+        
         $archives = $magazine->archives;
         $subscriptionNames = MagazineSubscription::whereIn('name', ['annual', 'bi-annual'])->get();
         $subscriptionsDetails = SubscriptionMagazineDetail::with('magazineSubscription')

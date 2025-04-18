@@ -19,4 +19,16 @@ class Archive extends Model
     {
         return $this->hasMany(SubscriptionRecord::class);
     }
+
+    public function needShipping(): bool
+    {
+        return true;
+    }
+
+
+
+    public function totalShipment()
+    {
+        return 1;
+    }
 }

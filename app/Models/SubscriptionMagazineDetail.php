@@ -28,4 +28,18 @@ class SubscriptionMagazineDetail extends Model
     {
         return $this->hasMany(SubscriptionRecord::class, 'subscription_megazine_details_id');
     }
+
+    public function needShipping()
+    {
+        if ($this->subscription_type == 'physical') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function totalShipment()
+    {
+        return 6;
+    }
 }

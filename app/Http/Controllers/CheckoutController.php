@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Magazine;
+use App\Models\MagazineCoupon;
 use App\Models\MagazineOrder;
 use App\Models\MagazineOrderArchive;
 use App\Models\Product;
@@ -15,6 +16,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Sohoj;
 
 class CheckoutController extends Controller
 {
@@ -45,25 +48,67 @@ class CheckoutController extends Controller
     public function magazineStore(Magazine $magazine, Request $request)
     {
         try {
-            $user = auth()->user();
-           
-            $user->update($request->only('name', 'l_name', 'vatNumber', 'contact_number', 'address'));
 
             $cart = Cart::session($magazine->slug)->getContent();
+
+            $validator = Validator::make($request->all(), [
+                'vatNumber' => 'required|numeric',
+                'name' => 'required|string|max:255',
+                'l_name' => 'required|string|max:255',
+                'contact_number' => 'required|string|max:20',
+                'address' => 'required|string|max:255',
+            ]);
+
+            // Conditionally add shipping validation if "shipping" exists
+            if ($request->has('shipping')) {
+                $validator->addRules([
+                    'shipping.recipient_name' => 'required|string|max:255',
+                    'shipping.company' => 'nullable|string|max:255',
+                    'shipping.street_address' => 'required|string|max:255',
+                    'shipping.apartment' => 'nullable|string|max:255',
+                    'shipping.city' => 'required|string|max:255',
+                    'shipping.state_province' => 'required|string|max:255',
+                    'shipping.postal_code' => 'required|string|max:20',
+                    'shipping.phone' => 'required|string|max:20',
+                    'shipping.email' => 'required|email|max:255',
+                    'shipping.special_instructions' => 'nullable|string|max:1000',
+                ]);
+            }
+
+
+            $validated = $validator->validate();
+
+            if (isset($validated['shipping'])) {
+                $code = Cart::session($magazine->slug)->getConditionsByType('shipping')->first()->getAttributes()['country_code'];
+                $validated['shipping']['country'] = Sohoj::getCountries()[$code];
+                $validated['shipping']['country_code'] = $code;
+            }
+
+
+
+            $user = auth()->user();
+
+            $user->update($request->only('name', 'l_name', 'vatNumber', 'contact_number', 'address'));
+
 
 
 
             $order = MagazineOrder::create([
                 'user_id' => $user->id,
                 'transaction_id' => 'magazine_' . uniqid(),
-                'subtotal' => Cart::session($magazine->slug)->getSubtotal(),
+                'subtotal' => Cart::session($magazine->slug)->getSubTotalWithoutConditions(),
                 'total' => Cart::session($magazine->slug)->getTotal(),
-                'billing'=>[
-                    'name' => request()->name.' '.request()->l_name,
-                    'vatNumber' => request()->vatNumber ?? '',
-                    'address' => request()->address,
-                    'phone' => request()->contact_number,
-                ]
+                'shipping' => Cart::session($magazine->slug)->getConditionsByType('shipping')?->sum(fn($condition) => $condition->getCalculatedValue(Cart::session($magazine->slug)->getSubtotal())),
+                'discount' => Cart::session($magazine->slug)->getCondition('Coupon')?->getCalculatedValue(Cart::session($magazine->slug)->getSubtotal()),
+                'discount_code' => MagazineCoupon::where('code', Cart::session($magazine->slug)->getCondition('Coupon')?->getAttributes()['code'])->value('id'),
+                'billing' => [
+                    'name' => $validated['name'] . ' ' . $validated['l_name'],
+                    'vatNumber' => $validated['vatNumber'] ?? '',
+                    'address' => $validated['address'],
+                    'phone' => $validated['contact_number'],
+                ],
+                'shipping_info' => json_encode($validated['shipping']),
+                'currency' => 'EUR',
             ]);
             foreach ($cart as $item) {
 
@@ -72,7 +117,7 @@ class CheckoutController extends Controller
                     'itemable_type' => get_class($item->model),
                     'unit_price' => $item->model->price,
                     'total_price' => $item->price,
-                    'quantity'=>$item->quantity,
+                    'quantity' => $item->quantity,
                     'details' => json_encode($item->model)
                 ]);
 
@@ -90,6 +135,7 @@ class CheckoutController extends Controller
             $order->save();
 
             Cart::session($magazine->slug)->clear();
+            Cart::session($magazine->slug)->clearCartConditions();
             return redirect($order->payment_link);
         } catch (Exception | Error $e) {
             return redirect()->route('magazines.index')

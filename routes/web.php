@@ -21,6 +21,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EnterzoneContoller;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\MagazineController;
+use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\PosDashboardReport;
 use App\Http\Controllers\ShippingController;
@@ -29,6 +30,7 @@ use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
 use App\Models\Magazine;
 use App\Models\MagazineOrder;
+use App\Models\Shipping;
 use App\Models\SubscriptionRecord;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -189,90 +191,92 @@ Route::get('t/{order:security_key}', function (Request $request, Order $order) {
 
 Route::post('t/{order:security_key}', [PdfDownloadController::class, 'download'])->name('downloadPdf.ticket');
 
-Route::post('payment-callback/{type}', function ($type, Request $request) {
-    Log::info('payment request: ' . json_encode($request->all()));
-    if ($type == 'generic') {
-        if (strpos($request->key, 'magazine_') === 0) {
-            $order = MagazineOrder::where('transaction_id', $request->key)->where('payment_status', 0)->first();
-            if ($order) {
-                if ($request->status == 'success') {
-                    $order->status = 1;
-                    $order->payment_status = 1;
-                    $order->date_paid = now();
-                    $order->save();
 
-                    $new_order = MagazineOrder::where('transaction_id', $request->key)->first();
+Route::post('payment-callback/{type}',PaymentCallbackController::class);
+// Route::post('payment-callback/{type}', function ($type, Request $request) {
+//     Log::info('payment request: ' . json_encode($request->all()));
+//     if ($type == 'generic') {
+//         if (strpos($request->key, 'magazine_') === 0) {
+//             $order = MagazineOrder::where('transaction_id', $request->key)->where('payment_status', 0)->first();
+//             if ($order) {
+//                 if ($request->status == 'success') {
+//                     $order->status = 1;
+//                     $order->payment_status = 1;
+//                     $order->date_paid = now();
+//                     $order->save();
+
+//                     $new_order = MagazineOrder::where('transaction_id', $request->key)->first();
 
 
 
-                    $toco = new TOCOnlineService;
-                    $response = $toco->createMagazineCommercialSalesDocument($order);
-                    Log::info($response);
-                    $new_order->invoice_id = $response['id'];
-                    $new_order->invoice_url = $response['public_link'];
-                    $new_order->invoice_body = json_encode($response);
-                    $new_order->save();
-                    $response = $toco->sendEmailDocument($order, $response['id']);
-                    Log::info($response);
-                } else {
-                    $order->status = 2;
-                    $order->payment_status = 2;
-                    $order->save();
-                }
-            }
-        } else {
-            $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
-            if ($order) {
-                if ($request->status == 'success') {
-                    $order->status = 1;
-                    $order->payment_status = 1;
-                    $order->date_paid = now();
-                    $order->save();
+//                     $toco = new TOCOnlineService;
+//                     $response = $toco->createMagazineCommercialSalesDocument($order);
+//                     Log::info($response);
+//                     $new_order->invoice_id = $response['id'];
+//                     $new_order->invoice_url = $response['public_link'];
+//                     $new_order->invoice_body = json_encode($response);
+//                     $new_order->save();
+//                     $response = $toco->sendEmailDocument($order, $response['id']);
+//                     Log::info($response);
+//                 } else {
+//                     $order->status = 2;
+//                     $order->payment_status = 2;
+//                     $order->save();
+//                 }
+//             }
+//         } else {
+//             $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
+//             if ($order) {
+//                 if ($request->status == 'success') {
+//                     $order->status = 1;
+//                     $order->payment_status = 1;
+//                     $order->date_paid = now();
+//                     $order->save();
 
-                    $new_order = Order::where('transaction_id', $request->key)->first();
+//                     $new_order = Order::where('transaction_id', $request->key)->first();
 
-                    $products = $new_order->tickets->groupBy('product_id');
+//                     $products = $new_order->tickets->groupBy('product_id');
 
-                    foreach ($products as $id => $data) {
-                        $product = Product::find($id);
-                        if ($product) {
-                            $product->quantity = $product->quantity - count($data);
-                            $product->save();
-                        }
-                    }
+//                     foreach ($products as $id => $data) {
+//                         $product = Product::find($id);
+//                         if ($product) {
+//                             $product->quantity = $product->quantity - count($data);
+//                             $product->save();
+//                         }
+//                     }
 
-                    $coupon = Coupon::where('code', $order->discount_code)->first();
-                    if ($coupon) {
-                        $coupon->increment('used', $new_order->tickets()->count());
-                    }
+//                     $coupon = Coupon::where('code', $order->discount_code)->first();
+//                     if ($coupon) {
+//                         $coupon->increment('used', $new_order->tickets()->count());
+//                     }
 
-                    $toco = new TOCOnlineService;
-                    $response = $toco->createCommercialSalesDocument($order);
-                    Log::info($response);
-                    $new_order->invoice_id = $response['id'];
-                    $new_order->invoice_url = $response['public_link'];
-                    $new_order->invoice_body = json_encode($response);
-                    $new_order->save();
-                    $response = $toco->sendEmailDocument($order, $response['id']);
-                    Log::info($response);
-                } else {
-                    $order->status = 2;
-                    $order->payment_status = 2;
-                    $order->save();
-                }
-            }
-        }
-    }
-    if ($type == 'payment') {
+//                     $toco = new TOCOnlineService;
+//                     $response = $toco->createCommercialSalesDocument($order);
+//                     Log::info($response);
+//                     $new_order->invoice_id = $response['id'];
+//                     $new_order->invoice_url = $response['public_link'];
+//                     $new_order->invoice_body = json_encode($response);
+//                     $new_order->save();
+//                     $response = $toco->sendEmailDocument($order, $response['id']);
+//                     Log::info($response);
+//                 } else {
+//                     $order->status = 2;
+//                     $order->payment_status = 2;
+//                     $order->save();
+//                 }
+//             }
+//         }
+//     }
+//     if ($type == 'payment') {
 
-        $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
-        if ($order) {
-            $order->currency = $request->currency;
-            $order->payment_method_title = $request->method;
-            $order->save();
-        }
-    }
-});
+//         $order = Order::where('transaction_id', $request->key)->where('payment_status', 0)->first();
+//         if ($order) {
+//             $order->currency = $request->currency;
+//             $order->payment_method_title = $request->method;
+//             $order->save();
+//         }
+//     }
+// });
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('event/{event:slug}/checkout', [PageController::class, 'checkout'])->name('checkout');
@@ -449,10 +453,50 @@ Route::post('/magazines/{magazine}/subscriptions', [BreadController::class, 'sub
 Route::get('admin/subscription/magazine/details/{id}/edit', [BreadController::class, 'subscriptionEdit'])->name('subscription.magazine.edit');
 Route::put('admin/subscription/magazine/details/{id}', [BreadController::class, 'subscriptionUpdate'])->name('subscription.magazine.update');
 Route::delete('admin/subscription/magazine/details/{id}', [BreadController::class, 'destroySubscription'])->name('subscription.magazine.details.destroy');
-Route::post('/magazine/{magazine}/coupon', [CouponController::class, 'applyCoupon'])
+Route::post('/magazine/{magazine:slug}/coupon', [CouponController::class, 'applyCoupon'])
     ->name('magazine.coupon');
+Route::post('/magazine/{magazine:slug}/shipping', function (Magazine $magazine, Request $request) {
+
+
+    $request->validate([
+        'country' => 'required'
+    ]);
+
+
+    $shipping = Shipping::where('country_code', $request->country)->orWhere('default', true)->first();
+
+    if ($shipping == false) {
+        throw new Exception('Shipping is not available');
+    }
+
+
+    $cart = Cart::session($magazine->slug)->getContent();
+
+    $order = 1;
+    foreach ($cart as $product) {
+
+        if ($product->model->needShipping()) {
+            $shippingCondition = new \Darryldecode\Cart\CartCondition(array(
+                'name' => 'Shipping ' . $product->name . ' to ' . $shipping->country_code,
+                'type' => 'shipping',
+                'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value' => '+' . $shipping->price * $product->model->totalShipment() * $product->quantity,
+                'order' => $order,
+                'attributes' => [
+                    'country_code' => $request->country
+                ]
+            ));
+            $order++;
+
+            Cart::session($magazine->slug)->condition($shippingCondition);
+        }
+    }
+
+    return redirect()->back();
+})
+    ->name('magazine.shipping');
 
 // Remove coupon
-Route::delete('/magazine/{magazine}/coupon', [CouponController::class, 'removeCoupon'])
+Route::delete('/magazine/{magazine:slug}/coupon', [CouponController::class, 'removeCoupon'])
     ->name('magazine.coupon.remove');
 Route::get('/get-shipping-price', [ShippingController::class, 'getPrice']);
