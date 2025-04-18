@@ -136,6 +136,7 @@
         @foreach ($latest_magazine_orders as $order)
             <div class="ec-vendor-dashboard-card ec-vendor-setting-card mb-3">
                 <div class="ec-vendor-card-body">
+                    {{-- @dd($order) --}}
                     <h4 class="dashboard-title mt-2">
                         {{ $order->magazine->name ?? '-' }}
                     </h4>
@@ -146,7 +147,7 @@
                         <table class="order-table table mt-3">
                             <tr>
                                 <th>{{ __('words.order_id') }}</th>
-                                <th>{{ __('words.magazine') }}</th>
+                                <th>{{ __('words.magazine_name') }}</th>
                                 <th>{{ __('words.subscription_type') }}</th>
                                 <th>{{ __('words.recurring_period') }}</th>
                                 <th>{{ __('words.status') }}</th>

@@ -15,9 +15,8 @@ class Archive extends Model
     {
         return $this->belongsTo(Magazine::class);
     }
-    
-
-
-
-    
+    public function subscriptionRecords()
+    {
+        return $this->hasMany(SubscriptionRecord::class);
+    }
 }

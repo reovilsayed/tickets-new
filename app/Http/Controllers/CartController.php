@@ -38,8 +38,7 @@ class CartController extends Controller
 
 
 		Cart::session($magazine->slug)->clear();
-		session()->forget('discount');
-		session()->forget('discount_code');
+		session()->forget(['discount', 'discount_code', 'coupon_id']);
 		if ($request->has('archive')) {
 			foreach ($request->archive as $archive => $quantity) {
 				if ($quantity > 0) {
@@ -50,12 +49,42 @@ class CartController extends Controller
 		}
 
 		if ($request->has('subscription')) {
-			foreach ($request->subscription as $subscription => $quantity) {
-				if ($quantity > 0) {
+			$subscriptionData = $request->subscription;
 
-					$subscription = SubscriptionMagazineDetail::find($subscription);
+	
+			if (!empty($subscriptionData['annual'])) {
+				$subscription = SubscriptionMagazineDetail::find($subscriptionData['annual']);
 
-					Cart::session($magazine->slug)->add($subscription->id, ucfirst($subscription->subscription_type) . ' (' . ucfirst($subscription->recurring_period) . ') Subscription', $subscription->price, $quantity, ['type' => 'subscription', 'subscription_type' => $subscription->type, 'subsciption' => $subscription->recurring_period])->associate('App\Models\SubscriptionMagazineDetail');
+				if ($subscription) {
+					Cart::session($magazine->slug)->add(
+						$subscription->id,
+						ucfirst($subscription->subscription_type) . ' (' . ucfirst($subscription->recurring_period) . ') Subscription',
+						$subscription->price,
+						1,
+						[
+							'type' => 'subscription',
+							'subscription_type' => $subscription->subscription_type,
+							'subscription' => $subscription->recurring_period,
+						]
+					)->associate('App\Models\SubscriptionMagazineDetail');
+				}
+			}
+
+			if (!empty($subscriptionData['biannual'])) {
+				$subscription = SubscriptionMagazineDetail::find($subscriptionData['biannual']);
+
+				if ($subscription) {
+					Cart::session($magazine->slug)->add(
+						$subscription->id,
+						ucfirst($subscription->subscription_type) . ' (' . ucfirst($subscription->recurring_period) . ') Subscription',
+						$subscription->price,
+						1, 
+						[
+							'type' => 'subscription',
+							'subscription_type' => $subscription->subscription_type,
+							'subscription' => $subscription->recurring_period,
+						]
+					)->associate('App\Models\SubscriptionMagazineDetail');
 				}
 			}
 		}

@@ -98,6 +98,7 @@ class BreadController extends Controller
             'subscription_type' => $validatedData['subscription_type'],
             'price' => $validatedData['price'],
             'recurring_period' => $validatedData['recurring_period'],
+            'description' => $request->subscription_description,    // Optional field
         ]);
 
 
@@ -115,7 +116,8 @@ class BreadController extends Controller
             'magazine_subscription_id' => $subscription->magazine_subscription_id,
             'recurring_period' => $subscription->recurring_period,
             'subscription_type' => $subscription->subscription_type,
-            'price' => $subscription->price
+            'price' => $subscription->price,
+            'description' => $subscription->description,
         ]);
     }
     public function subscriptionUpdate(Request $request, $id)
@@ -126,10 +128,12 @@ class BreadController extends Controller
             'magazine_subscription_id' => 'required|exists:magazine_subscriptions,id',
             'recurring_period' => 'required|integer|min:1',
             'subscription_type' => 'required|in:digital,physical',
-            'price' => 'required|numeric|min:0'
+            'price' => 'required|numeric|min:0',
         ]);
 
-        $subscription->update($validated);
+        $subscription->update(array_merge($validated, [
+            'description' => $request->subscription_description,
+        ]));
 
         return response()->json([
             'message' => 'Subscription updated successfully',

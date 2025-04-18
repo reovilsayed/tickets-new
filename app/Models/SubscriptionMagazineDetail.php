@@ -22,6 +22,10 @@ class SubscriptionMagazineDetail extends Model
     }
     public function subscription()
     {
-        return $this->belongsTo(SubscriptionMagazineDetail::class, ' subscription_magazine_detail_id', 'id');
+        return $this->belongsTo(SubscriptionMagazineDetail::class, 'subscription_magazine_detail_id');
+    }
+    public function subscriptionRecords()
+    {
+        return $this->hasMany(SubscriptionRecord::class, 'subscription_megazine_details_id');
     }
 }

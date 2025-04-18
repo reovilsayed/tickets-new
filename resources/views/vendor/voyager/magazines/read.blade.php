@@ -2,6 +2,8 @@
 
 @section('page_title', __('voyager::generic.view') . ' ' . $dataType->getTranslatedAttribute('display_name_singular'))
 @section('css')
+    <!-- Summernote CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css" rel="stylesheet">
 
     <style>
         .archive-card:hover {
@@ -135,7 +137,7 @@
                                             <!-- Action Dropdown -->
                                             <div class="dropdown archive-actions"
                                                 style="position: absolute; right: 15px; top: 15px;">
-                                                <button class="btn btn-sm btn-light dropdown-toggle" type="button"
+                                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button"
                                                     id="dropdownMenuButton-{{ $archive->id }}" data-toggle="dropdown"
                                                     aria-haspopup="true" aria-expanded="false">
                                                     <i class="icon voyager-settings"></i>
@@ -159,10 +161,11 @@
                                             @if ($archive->description)
                                                 <div style="margin: 10px 0; flex-grow: 1;">
                                                     <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 5px;">
-                                                        Description</div>
+                                                        Description
+                                                    </div>
                                                     <div
-                                                        style="font-size: 13px; color: #34495e; line-height: 1.5; max-height: 100px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; border-left: 2px solid #eee; padding-left: 10px;">
-                                                        {{ Str::limit(strip_tags($archive->description), 150) }}
+                                                        style="font-size: 13px; color: #34495e; line-height: 1.5; max-height: 120px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; border-left: 2px solid #eee; padding-left: 10px;">
+                                                        {!! Str::limit($archive->description, 300) !!}
                                                     </div>
                                                 </div>
                                             @endif
@@ -229,11 +232,9 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="shipping_cost">Shipping Cost</label>
-                                    <div class="input-group">
-                                        <input type="number" step="0.01" class="form-control" id="shipping_cost"
-                                            name="shipping_cost"
-                                            value="{{ old('shipping_cost', $archive->shipping_cost ?? 0) }}">
-                                    </div>
+                                    <input type="number" step="0.01" class="form-control" id="shipping_cost"
+                                        name="shipping_cost"
+                                        value="{{ old('shipping_cost', $archive->shipping_cost ?? 0) }}">
                                 </div>
                             </div>
                         </div>
@@ -241,19 +242,14 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="price">Price</label>
-                                    <div class="input-group">
-                                        <input type="number" step="0.01" class="form-control" id="price"
-                                            name="price" required>
-                                    </div>
+                                    <input type="number" step="0.01" class="form-control" id="price"
+                                        name="price" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="quantity">Quantity</label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="quantity" name="quantity"
-                                            required>
-                                    </div>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" required>
                                 </div>
                             </div>
                         </div>
@@ -262,8 +258,9 @@
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="3"
-                                style="min-height: 100px; resize: vertical;" placeholder="Enter archive description (optional)"></textarea>
+                                placeholder="Enter archive description (optional)"></textarea>
                         </div>
+
                         <div class="form-group">
                             <label for="pdf_file">PDF File</label>
                             <div class="custom-file">
@@ -330,8 +327,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="edit_description">Description</label>
-                            <textarea class="form-control" id="edit_description" name="description" required rows="3"></textarea>
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="edit_description" name="description" rows="3"
+                                placeholder="Enter archive description (optional)"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="edit_pdf_file">PDF File (Leave empty to keep current)</label>
@@ -372,22 +370,22 @@
                 <div class="row">
                     <div class="col-md-12">
                         <!-- Subscriptions Section -->
-                        <div>
-                            <div
-                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                <h4 style="color: #7f8c8d; font-weight: 600; margin: 0;">Subscription Plans</h4>
-                                <button type="button" class="btn btn-success" data-toggle="modal"
-                                    data-target="#addSubscriptionModal" style="border-radius: 4px; padding: 8px 16px;">
-                                    <i class="icon voyager-plus"></i> Add Subscription
-                                </button>
-                            </div>
 
-                            @if ($dataTypeContent->subscriptions && $dataTypeContent->subscriptions->count())
-                                <div class="row">
-                                    @foreach ($dataTypeContent->subscriptions as $subscription)
-                                        <div class="col-md-6" style="margin-bottom: 20px;">
-                                            <div class="subscription-card" id="subscription-{{ $subscription->id }}"
-                                                style="background: white; 
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h4 style="color: #7f8c8d; font-weight: 600; margin: 0;">Subscription Plans</h4>
+                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                data-target="#addSubscriptionModal" style="border-radius: 4px; padding: 8px 16px;">
+                                <i class="icon voyager-plus"></i> Add Subscription
+                            </button>
+                        </div>
+
+                        @if ($dataTypeContent->subscriptions && $dataTypeContent->subscriptions->count())
+                            <div class="row">
+                                @foreach ($dataTypeContent->subscriptions as $subscription)
+                                    <div class="col-md-6" style="margin-bottom: 20px;">
+                                        <div class="subscription-card" id="subscription-{{ $subscription->id }}"
+                                            style="background: white; 
                                             border-radius: 6px; 
                                             padding: 20px; 
                                             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -396,97 +394,93 @@
                                             position: relative;
                                             overflow: visible;">
 
-                                                <!-- Action Dropdown -->
-                                                <div class="dropdown subscription-actions"
-                                                    style="position: absolute; right: 15px; top: 15px;">
-                                                    <button class="btn btn-sm btn-light dropdown-toggle" type="button"
-                                                        id="subscriptionDropdown-{{ $subscription->id }}"
-                                                        data-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        <i class="icon voyager-settings"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-right"
-                                                        aria-labelledby="subscriptionDropdown-{{ $subscription->id }}">
+                                            <!-- Action Dropdown -->
+                                            <div class="dropdown subscription-actions"
+                                                style="position: absolute; right: 15px; top: 15px;">
+                                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button"
+                                                    id="subscriptionDropdown-{{ $subscription->id }}"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="icon voyager-settings"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right"
+                                                    aria-labelledby="subscriptionDropdown-{{ $subscription->id }}">
 
-                                                        <a class="dropdown-item edit-subscription"
-                                                            style="margin-left:10px;" href="#"
-                                                            id="edit-subscription-{{ $subscription->id }}"
-                                                            data-id="{{ $subscription->id }}">
-                                                            <i class="icon voyager-edit"></i> Edit
-                                                        </a>
+                                                    <a class="dropdown-item edit-subscription" style="margin-left:10px;"
+                                                        href="#" id="edit-subscription-{{ $subscription->id }}"
+                                                        data-id="{{ $subscription->id }}">
+                                                        <i class="icon voyager-edit"></i> Edit
+                                                    </a>
 
-                                                        <a class="dropdown-item delete-subscription"
-                                                            style="margin-left:10px;" href="#"
-                                                            id="delete-subscription-{{ $subscription->id }}"
-                                                            data-id="{{ $subscription->id }}">
-                                                            <i class="icon voyager-trash"></i> Delete
-                                                        </a>
-                                                    </div>
-                                                </div>
-
-                                                <h5 style="margin-top: 0; color: #2c3e50; font-weight: 600;">
-                                                    @php
-                                                        $currentPlan = App\Models\MagazineSubscription::find(
-                                                            $subscription->magazine_subscription_id,
-                                                        );
-                                                    @endphp
-                                                    {{ ucfirst($currentPlan->name ?? 'Unknown Plan') }}
-                                                    <span class="badge badge-primary">
-                                                        {{ ucfirst($subscription->subscription_type ?? '-') }}
-                                                    </span>
-                                                    Subscription
-                                                </h5>
-
-                                                <div style="margin: 15px 0;">
-                                                    <div style="display: flex; justify-content: space-between;">
-                                                        <div>
-                                                            <span style="font-size: 13px; color: #7f8c8d;">Price:</span>
-                                                            <span style="font-weight: 600; color: #27ae60;">
-                                                                ${{ number_format($subscription->price ?? 0, 2) }}
-                                                            </span>
-                                                        </div>
-                                                        <div>
-                                                            <span style="font-size: 13px; color: #7f8c8d;">Billing
-                                                                Period:</span>
-                                                            <span style="font-weight: 600; color: #3498db;">
-                                                                {{ $subscription->recurring_period ?? '-' }}
-                                                                month(s)
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div style="background: #f9f9f9; padding: 10px; border-radius: 4px;">
-                                                    <div style="font-size: 12px; color: #7f8c8d;">Includes:</div>
-                                                    <ul style="margin-bottom: 0; padding-left: 20px;">
-                                                        @if ($subscription->subscription_type == 'digital')
-                                                            <li>Full digital access to all archives</li>
-                                                            <li>Weekly email updates</li>
-                                                            <li>Mobile app access</li>
-                                                        @else
-                                                            <li>Physical magazine delivery</li>
-                                                            <li>Free shipping</li>
-                                                            <li>Digital access included</li>
-                                                        @endif
-                                                    </ul>
+                                                    <a class="dropdown-item delete-subscription" style="margin-left:10px;"
+                                                        href="#" id="delete-subscription-{{ $subscription->id }}"
+                                                        data-id="{{ $subscription->id }}">
+                                                        <i class="icon voyager-trash"></i> Delete
+                                                    </a>
                                                 </div>
                                             </div>
+
+                                            <h5 style="margin-top: 0; color: #2c3e50; font-weight: 600;">
+                                                @php
+                                                    $currentPlan = App\Models\MagazineSubscription::find(
+                                                        $subscription->magazine_subscription_id,
+                                                    );
+                                                @endphp
+                                                {{ ucfirst($currentPlan->name ?? 'Unknown Plan') }}
+                                                <span class="badge badge-primary">
+                                                    {{ ucfirst($subscription->subscription_type ?? '-') }}
+                                                </span>
+                                                Subscription
+                                            </h5>
+
+                                            <div style="margin: 15px 0;">
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <div>
+                                                        <span style="font-size: 13px; color: #7f8c8d;">Price:</span>
+                                                        <span style="font-weight: 600; color: #27ae60;">
+                                                            ${{ number_format($subscription->price ?? 0, 2) }}
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <span style="font-size: 13px; color: #7f8c8d;">Billing
+                                                            Period:</span>
+                                                        <span style="font-weight: 600; color: #3498db;">
+                                                            {{ $subscription->recurring_period ?? '-' }}
+                                                            month(s)
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div style="background: #f9f9f9; padding: 7px; border-radius: 4px;">
+
+                                                <div style="margin: 10px 0; flex-grow: 1;">
+                                                    <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 5px;">
+                                                        Description
+                                                    </div>
+                                                    <div
+                                                        style="font-size: 13px; color: #34495e;">
+                                                        {!! Str::limit($subscription->description, 300) !!}
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                         </div>
-                                    @endforeach
-                                </div>
-                            @else
-                                <div class="empty-state"
-                                    style="text-align: center; padding: 40px; background: #f9f9f9; border-radius: 6px;">
-                                    <i class="icon voyager-archive" style="font-size: 50px; color: #bdc3c7;"></i>
-                                    <h4 style="color: #7f8c8d; margin-top: 15px;">No Subscription Plans</h4>
-                                    <p style="color: #95a5a6;">This magazine doesn't have any subscription plans yet.</p>
-                                    <button type="button" class="btn btn-success" data-toggle="modal"
-                                        data-target="#addSubscriptionModal" style="margin-top: 10px;">
-                                        <i class="icon voyager-plus"></i> Add First Subscription
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="empty-state"
+                                style="text-align: center; padding: 40px; background: #f9f9f9; border-radius: 6px;">
+                                <i class="icon voyager-archive" style="font-size: 50px; color: #bdc3c7;"></i>
+                                <h4 style="color: #7f8c8d; margin-top: 15px;">No Subscription Plans</h4>
+                                <p style="color: #95a5a6;">This magazine doesn't have any subscription plans yet.</p>
+                                <button type="button" class="btn btn-success" data-toggle="modal"
+                                    data-target="#addSubscriptionModal" style="margin-top: 10px;">
+                                    <i class="icon voyager-plus"></i> Add First Subscription
+                                </button>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
             </div>
@@ -544,12 +538,19 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="subscription_price">Price</label>
-                                    <div class="input-group">
-                                        <input type="number" step="0.01" min="0" class="form-control"
-                                            id="subscription_price" name="price" required>
-                                    </div>
+                                    <input type="number" step="0.01" min="0" class="form-control"
+                                        id="subscription_price" name="price" required>
                                 </div>
                             </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="description">Subscription Description</label>
+                                    <textarea class="form-control" id="subscription_description" name="subscription_description" rows="3"
+                                        placeholder="Enter Subscription description (optional)"></textarea>
+                                </div>
+                            </div>
+
 
                         </div>
                     </div>
@@ -610,10 +611,16 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="edit_price">Price</label>
-                                    <div class="input-group">
-                                        <input type="number" step="0.01" min="0" class="form-control"
-                                            id="edit_price" name="price" required value="old('price')">
-                                    </div>
+                                    <input type="number" step="0.01" min="0" class="form-control"
+                                        id="Edit_price" name="price" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="description">Subscription Description</label>
+                                    <textarea class="form-control" id="Subscription_Description" name="subscription_description" rows="3"
+                                        placeholder="Enter Subscription description (optional)"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -653,6 +660,76 @@
 @stop
 
 @section('javascript')
+
+    <!-- Summernote JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#description').summernote({
+                placeholder: 'Enter archive description (optional)',
+                tabsize: 2,
+                height: 200,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['codeview']]
+                ]
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#edit_description').summernote({
+                placeholder: 'Enter archive description (optional)',
+                tabsize: 2,
+                height: 200,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['codeview']]
+                ]
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#subscription_description').summernote({
+                placeholder: 'Enter subscription description (optional)',
+                tabsize: 2,
+                height: 200,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['codeview']]
+                ]
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#Subscription_Description').summernote({
+                placeholder: 'Enter subscription description (optional)',
+                tabsize: 2,
+                height: 200,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['codeview']]
+                ]
+            });
+        });
+    </script>
+
     @if ($isModelTranslatable)
         <script>
             $(document).ready(function() {
@@ -696,11 +773,11 @@
             $.get('/admin/archives/' + archiveId + '/edit')
                 .done(function(data) {
                     $modal.find('#edit_title').val(data.title);
-                    $modal.find('#edit_description').val(data.description);
                     $modal.find('#edit_price').val(data.price);
                     $modal.find('#edit_quantity').val(data.quantity);
                     $modal.find('#shipping_cost').val(data.shipping_cost);
 
+                    $('#edit_description').summernote('code', data.description);
                     $modal.find('#editArchiveForm').attr('action', '/admin/archives/' + archiveId);
                 })
                 .fail(function() {
@@ -792,22 +869,22 @@
                 e.preventDefault();
                 const subscriptionId = $(this).data('id');
 
+
                 $.get(`/admin/subscription/magazine/details/${subscriptionId}/edit`, function(data) {
                     $('#editSubscriptionModal').modal('show');
-
                     // Set form values
                     $('#edit_subscription_id').val(subscriptionId);
                     $('#edit_magazine_subscription_id').val(data.magazine_subscription_id);
                     $('#edit_recurring_period').val(data.recurring_period);
                     $('#edit_subscription_type').val(data.subscription_type);
-                    $('#edit_price').val(data.price);
+                    $('#Edit_price').val(parseFloat(data.price).toFixed(2));
+                    $('#Subscription_Description').val(data.description);
 
                     // Set the form action
                     $('#editSubscriptionForm').attr('action',
                         `/admin/subscription/magazine/details/${subscriptionId}`);
                 });
             });
-
             // Update Subscription handler
             $('#editSubscriptionForm').on('submit', function(e) {
                 e.preventDefault();

@@ -110,34 +110,25 @@
                                     aria-controls="pills-profile" aria-selected="false"
                                     @click="resetInactiveTabSelections('onetime')">
                                     <div class="days">
-                                        One-time purchase
+                                        One-time Subscription
                                         <span class="dot"></span>
                                     </div>
                                 </button>
                             </li>
 
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-annual-purchase"
-                                    type="button" role="tab" aria-controls="pills-profile" aria-selected="false"
-                                    @click="resetInactiveTabSelections('annual')">
-                                    <div class="days">
-                                        Annual Subscription
-                                        <span class="dot"></span>
-                                    </div>
-                                </button>
-                            </li>
-
-                        
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#pills-bi-annual-purchase"
-                                    type="button" role="tab" aria-controls="pills-profile" aria-selected="false"
-                                    @click="resetInactiveTabSelections('biannual')">
-                                    <div class="days">
-                                        Bi-annual Subscription
-                                        <span class="dot"></span>
-                                    </div>
-                                </button>
-                            </li>
+                            @foreach ($subscriptionNames as $sub)
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" data-bs-toggle="pill"
+                                        data-bs-target="#pills-{{ Str::slug($sub->name) }}-purchase" type="button"
+                                        role="tab" aria-controls="pills-profile" aria-selected="false"
+                                        @click="resetInactiveTabSelections('{{ Str::slug($sub->name) }}')">
+                                        <div class="days">
+                                            {{ ucfirst($sub->name) }} Subscription
+                                            <span class="dot"></span>
+                                        </div>
+                                    </button>
+                                </li>
+                            @endforeach
 
                         </ul>
                         <div class="tab-content" id="pills-tabContent">
@@ -150,7 +141,7 @@
                                             <div class="ticket-info">
                                                 <div class="t-info">
                                                     <p class="t-title">{{ $archive->title }}</p>
-                                                    <p class="t-des">{{ $archive->description }}</p>
+                                                    <p class="t-des"> {!! $archive->description !!}</p>
                                                     {{-- <span class="sold">{{ __('words.sold') }}</span> --}}
                                                 </div>
                                                 <div class="t-prize">
@@ -161,10 +152,9 @@
                                                     class="ticket-select" style="border: 2px solid #28BADF !important"
                                                     x-model="selectedItems.onetime[{{ $archive->id }}]"
                                                     @change="calculateTotal">
-                                                    <option value="0">0</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
+                                                    @for ($i = 0; $i <= $archive->quantity; $i++)
+                                                        <option value="{{ $i }}">{{ $i }}</option>
+                                                    @endfor
                                                 </select>
                                             </div>
                                         </div>
@@ -172,86 +162,57 @@
                                 @endforeach
                             </div>
                             <div class="tab-pane fade" id="pills-annual-purchase" role="tabpanel"
-                                aria-labelledby="pills-home-tab">
-
-                                @foreach ($annualSubscriptions as $subscription)
-                                    <div class="card card-ticket">
-                                        <div class="card-body tick">
-                                            <div class="ticket-info">
-                                                <div class="t-info">
-                                                    <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
-                                                        Subscription
-                                                    </p>
-                                                    <p class="t-des">for {{ $subscription->recurring_period }} (Month)s
-                                                    </p>
-                                                </div>
-                                                <div class="t-prize">
-                                                    <h4>{{ Sohoj::price($subscription->price) }}</h4>
-                                                </div>
-                                                <select name="subscription[{{ $subscription->id }}]" min="0"
-                                                    max="3" class="ticket-select"
-                                                    style="border: 2px solid #28BADF !important"
-                                                    x-model="selectedItems.annual[{{ $subscription->id }}]"
-                                                    @change="calculateTotal">
-                                                    @if ($subscription->subscription_type == 'digital')
-                                                        <option value="0">0</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                    @else
-                                                        <option value="0">0</option>
-                                                        <option value="1">1</option>
-                                                    @endif
-                                                </select>
+                            aria-labelledby="pills-home-tab">
+                            @foreach ($annualSubscriptions as $subscription)
+                                <div class="card card-ticket cursor-pointer"
+                                    @click="selectSubscription('annual', {{ $subscription->id }})"
+                                    :class="{ 'selected': selectedItems.annual === {{ $subscription->id }} }">
+                                    <div class="card-body tick">
+                                        <div class="ticket-info">
+                                            <div class="t-info">
+                                                <p class="t-title">{{ ucfirst($subscription->subscription_type) }} Subscription</p>
+                                                <p class="t-des" style="color: #041c47 !important;">
+                                                    {!! $subscription->description !!}
+                                                </p>
                                             </div>
+                                            <div class="t-prize">
+                                                <h4>{{ Sohoj::price($subscription->price) }}</h4>
+                                            </div>
+                                            <input type="hidden" name="subscription[annual]" x-model="selectedItems.annual">
                                         </div>
                                     </div>
-                                @endforeach
-                              
-                            </div>
-
-                            <div class="tab-pane fade" id="pills-bi-annual-purchase" role="tabpanel"
-                                aria-labelledby="pills-home-tab">
-
-                                @foreach ($biAnnualSubscriptions as $subscription)
-                                    <div class="card card-ticket cursor-pointer">
-                                        <div class="card-body tick">
-                                            <div class="ticket-info">
-                                                <div class="t-info">
-                                                    <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
-                                                        Subscription</p>
-                                                    <p class="t-des">for {{ $subscription->recurring_period }} (Month)s
-                                                    </p>
-                                                </div>
-                                                <div class="t-prize">
-                                                    <h4>{{ Sohoj::price($subscription->price) }}</h4>
-                                                </div>
-                                                <select name="subscription[{{ $subscription->id }}]" min="0"
-                                                    max="3" class="ticket-select"
-                                                    style="border: 2px solid #28BADF !important"
-                                                    x-model="selectedItems.biannual[{{ $subscription->id }}]"
-                                                    @change="calculateTotal">
-                                                    @if ($subscription->subscription_type == 'digital')
-                                                        <option value="0">0</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                    @else
-                                                        <option value="0">0</option>
-                                                        <option value="1">1</option>
-                                                    @endif
-                                                </select>
+                                </div>
+                            @endforeach
+                        </div>
+                        
+                        <div class="tab-pane fade" id="pills-bi-annual-purchase" role="tabpanel"
+                            aria-labelledby="pills-home-tab">
+                            @foreach ($biAnnualSubscriptions as $subscription)
+                                <div class="card card-ticket cursor-pointer"
+                                    @click="selectSubscription('biannual', {{ $subscription->id }})"
+                                    :class="{ 'selected': selectedItems.biannual === {{ $subscription->id }} }">
+                                    <div class="card-body tick">
+                                        <div class="ticket-info">
+                                            <div class="t-info">
+                                                <p class="t-title">{{ ucfirst($subscription->subscription_type) }} Subscription</p>
+                                                <p class="t-des" style="color: #041c47 !important;">
+                                                    {!! $subscription->description !!}
+                                                </p>
                                             </div>
+                                            <div class="t-prize">
+                                                <h4>{{ Sohoj::price($subscription->price) }}</h4>
+                                            </div>
+                                            <input type="hidden" name="subscription[biannual]" x-model="selectedItems.biannual">
                                         </div>
                                     </div>
-                                @endforeach
-                              
-                            </div>
+                                </div>
+                            @endforeach
+                        </div>
                         </div>
                         <button class="event-buttton">
                             <span>{{ __('words.invite_confirmed') }}</span>
                             <span id="totalPrice">
-                                <span x-text="'$' + totalPrice.toFixed(2)"></span>
+                                <span x-text="'Є' + totalPrice.toFixed(2)"></span>
                                 <i class="fa fa-arrow-right"></i>
                             </span>
                         </button>
@@ -341,8 +302,8 @@
             Alpine.data('magazineCart', () => ({
                 selectedItems: {
                     onetime: {},
-                    annual: {},
-                    biannual: {}
+                    annual: null,
+                    biannual: null
                 },
                 prices: {
                     onetime: {!! json_encode($archives->pluck('price', 'id')) !!},
@@ -356,13 +317,7 @@
                     Object.keys(this.prices.onetime).forEach(id => {
                         this.selectedItems.onetime[id] = 0;
                     });
-                    Object.keys(this.prices.annual).forEach(id => {
-                        this.selectedItems.annual[id] = 0;
-                    });
-                    Object.keys(this.prices.biannual).forEach(id => {
-                        this.selectedItems.biannual[id] = 0;
-                    });
-
+                    
                     this.calculateTotal();
                 },
 
@@ -375,17 +330,33 @@
                         this.totalPrice += quantity * (this.prices.onetime[id] || 0);
                     });
 
-                    // Calculate for annual subscriptions
-                    Object.keys(this.selectedItems.annual).forEach(id => {
-                        const quantity = parseInt(this.selectedItems.annual[id]) || 0;
-                        this.totalPrice += quantity * (this.prices.annual[id] || 0);
-                    });
+                    // Calculate for annual subscription if selected
+                    if (this.selectedItems.annual) {
+                        this.totalPrice += parseFloat(this.prices.annual[this.selectedItems.annual] || 0);
+                    }
 
-                    // Calculate for bi-annual subscriptions
-                    Object.keys(this.selectedItems.biannual).forEach(id => {
-                        const quantity = parseInt(this.selectedItems.biannual[id]) || 0;
-                        this.totalPrice += quantity * (this.prices.biannual[id] || 0);
-                    });
+                    // Calculate for bi-annual subscription if selected
+                    if (this.selectedItems.biannual) {
+                        this.totalPrice += parseFloat(this.prices.biannual[this.selectedItems.biannual] || 0);
+                    }
+                },
+
+                selectSubscription(type, id) {
+                    // Reset other type if switching between annual/bi-annual
+                    if (type === 'annual') {
+                        this.selectedItems.biannual = null;
+                    } else if (type === 'biannual') {
+                        this.selectedItems.annual = null;
+                    }
+                    
+                    // Toggle selection
+                    if (this.selectedItems[type] === id) {
+                        this.selectedItems[type] = null; // Deselect if same item clicked
+                    } else {
+                        this.selectedItems[type] = id; // Select new item
+                    }
+                    
+                    this.calculateTotal();
                 },
 
                 resetInactiveTabSelections(activeTab) {
@@ -397,15 +368,11 @@
                     }
 
                     if (activeTab !== 'annual') {
-                        Object.keys(this.selectedItems.annual).forEach(id => {
-                            this.selectedItems.annual[id] = 0;
-                        });
+                        this.selectedItems.annual = null;
                     }
 
                     if (activeTab !== 'biannual') {
-                        Object.keys(this.selectedItems.biannual).forEach(id => {
-                            this.selectedItems.biannual[id] = 0;
-                        });
+                        this.selectedItems.biannual = null;
                     }
 
                     this.calculateTotal();
@@ -414,3 +381,5 @@
         });
     </script>
 @endsection
+
+

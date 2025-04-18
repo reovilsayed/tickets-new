@@ -20,18 +20,18 @@ class SubscriptionRecord extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function magazine()
+    public function archive()
     {
-        return $this->belongsTo(Magazine::class);
+        return $this->belongsTo(Archive::class);
     }
 
-    public function magazineSubscription()
+    public function subscriptionMagazineDetail()
     {
-        return $this->belongsTo(MagazineSubscription::class);
+        return $this->belongsTo(SubscriptionMagazineDetail::class, 'subscription_megazine_details_id');
     }
 
-    public function magazineOrderItem()
+    public function magazineOrder()
     {
-        return $this->belongsTo(MagazineOrderItem::class);
+        return $this->belongsTo(MagazineOrder::class, 'magazine_orders_id');
     }
 }

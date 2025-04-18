@@ -30,28 +30,32 @@ class MagazineOrder extends Model
             get: fn($value) =>  json_decode($value)
         );
     }
-    // public function createSubscriptionRecords()
-    // {
-    //     foreach ($this->items as $item) {
-    //         $details = json_decode($item->details, true);
-    //         if (is_null($details)) {
-    //             $details = json_decode($item->details, true);
-    //         }
- 
-    //         SubscriptionRecord::create([
-    //             'user_id' => $this->user_id,
-    //             'magazine_subscription_id' => $details['magazine_subscription_id'] ?? null,
-    //             'magazine_order_item_id' => $item->id,
-    //             'magazine_id' => $details['magazine_id'] ?? null,
-    //             'subscription_type' => $details['subscription_type'] ?? 'digital',
-    //             'recurring_period' => $details['recurring_period'] ?? 'annual',
-    //             'start_date' => now(),
-    //             'end_date' => now()->addMonths($details['recurring_period'] == 'bi-annual' ? 6 : 12),
-    //             'quantity' => $item->quantity,
-    //             'price' => $item->unit_price,
-    //             'total_price' => $item->unit_price * $item->quantity, 
-    //             'status' => 'active',
-    //         ]);
-    //     }
-    // }
+    public function subscriptionRecords()
+    {
+        return $this->hasMany(SubscriptionRecord::class, 'magazine_orders_id');
+    }
+    public function magazine()
+    {
+        return $this->belongsTo(Magazine::class);
+    }
+    public function createSubscriptionRecords()
+    {
+        foreach ($this->items as $item) {
+            $details = json_decode($item->details, true);
+
+            SubscriptionRecord::create([
+                'user_id' => $this->user_id,
+                'magazine_order_id' => $item->id,
+                'magazine_order_item_id' => $item->id,
+                'type' => $details['type'] ?? '',
+                'subscription_type' => $details['subscription_type'] ?? 'digital',
+                'recurring_period' => $details['recurring_period'] ?? null,
+                'start_date' => now(),
+                'end_date' => now()->addMonths((int) ($details['recurring_period'] ?? 0)),
+                'details' => json_encode($details),
+            ]);
+        }
+      
+        return back();
+    }
 }

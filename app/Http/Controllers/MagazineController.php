@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Magazine;
+use App\Models\MagazineCoupon;
 use App\Models\MagazineSubscription;
 use App\Models\SubscriptionMagazineDetail;
+use Darryldecode\Cart\Cart;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class MagazineController extends Controller
@@ -20,6 +23,7 @@ class MagazineController extends Controller
     {
         $magazine = Magazine::where('slug', $slug)->firstOrFail();
         $archives = $magazine->archives;
+        $subscriptionNames = MagazineSubscription::whereIn('name', ['annual', 'bi-annual'])->get();
         $subscriptionsDetails = SubscriptionMagazineDetail::with('magazineSubscription')
             ->where('magazine_id', $magazine->id)
             ->get();
@@ -35,8 +39,10 @@ class MagazineController extends Controller
         return view('pages.magazines.show', [
             'magazine' => $magazine,
             'archives' => $archives,
+            'subscriptionNames' => $subscriptionNames,
             'annualSubscriptions' => $annualSubscriptions,
             'biAnnualSubscriptions' => $biAnnualSubscriptions,
         ]);
     }
+   
 }

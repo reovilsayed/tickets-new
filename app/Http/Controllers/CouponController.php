@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Coupon;
 use App\Models\Event;
+use App\Models\Magazine;
+use App\Models\MagazineCoupon;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
@@ -80,5 +82,50 @@ class CouponController extends Controller
 		session()->forget('discount');
 		session()->forget('discount_code');
 		return back()->with('success_msg', 'Coupon removed successfully');
+	}
+
+	public function applyCoupon(Request $request, Magazine $magazine)
+	{
+		$request->validate(['coupon_code' => 'required|string']);
+
+		$coupon = MagazineCoupon::where('code', $request->coupon_code)
+			->where('magazine_id', $magazine->id)
+			->where('status', true)
+			->where('expire_at', '>=', now())
+			->where(function ($query) {
+				$query->where('limit', 0)
+					->orWhereRaw('used < limit');
+			})
+			->first();
+
+		if (!$coupon) {
+			return back()->with('error', __('words.invalid_or_expired_coupon'));
+		}
+
+		$cartTotal = Cart::session($magazine->slug)->getTotal();
+
+		// Apply fixed discount
+		$discount = min($coupon->discount, $cartTotal);
+
+		// Increment usage
+		$coupon->increment('used');
+
+		session([
+			'discount' => $discount,
+			'discount_code' => $coupon->code,
+			'coupon_id' => $coupon->id
+		]);
+
+		return back()->with('success', __('words.coupon_applied_success'));
+	}
+
+	public function removeCoupon(Magazine $magazine)
+	{
+		if (session('coupon_id')) {
+			MagazineCoupon::where('id', session('coupon_id'))->decrement('used');
+		}
+
+		session()->forget(['discount', 'discount_code', 'coupon_id']);
+		return back()->with('success', __('words.coupon_removed'));
 	}
 }

@@ -17,7 +17,6 @@
                         <div class="ec-vendor-block-profile">
                             <div class="ec-vendor-block-img space-bottom-30">
                                 <div>
-
                                     <h4 class="dashboard-title">
                                         {{ __('words.personal_information') }}
                                     </h4>
@@ -82,8 +81,6 @@
 
 
                             </div>
-
-
 
                         </div>
 

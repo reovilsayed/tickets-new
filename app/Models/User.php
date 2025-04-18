@@ -471,4 +471,8 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     {
         return $this->belongsTo(Pos::class);
     }
+    public function subscriptionRecords()
+    {
+        return $this->hasMany(SubscriptionRecord::class);
+    }
 }

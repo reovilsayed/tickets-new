@@ -23,6 +23,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\PosDashboardReport;
+use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
@@ -448,3 +449,10 @@ Route::post('/magazines/{magazine}/subscriptions', [BreadController::class, 'sub
 Route::get('admin/subscription/magazine/details/{id}/edit', [BreadController::class, 'subscriptionEdit'])->name('subscription.magazine.edit');
 Route::put('admin/subscription/magazine/details/{id}', [BreadController::class, 'subscriptionUpdate'])->name('subscription.magazine.update');
 Route::delete('admin/subscription/magazine/details/{id}', [BreadController::class, 'destroySubscription'])->name('subscription.magazine.details.destroy');
+Route::post('/magazine/{magazine}/coupon', [CouponController::class, 'applyCoupon'])
+    ->name('magazine.coupon');
+
+// Remove coupon
+Route::delete('/magazine/{magazine}/coupon', [CouponController::class, 'removeCoupon'])
+    ->name('magazine.coupon.remove');
+Route::get('/get-shipping-price', [ShippingController::class, 'getPrice']);
