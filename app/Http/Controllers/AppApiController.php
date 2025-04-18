@@ -43,12 +43,12 @@ class AppApiController extends Controller
         $zone = Zone::where("security_key", $request->zone_id)->first();
         $ticket = Ticket::where('ticket', $ticket)->with('product')->firstOrFail();
         if ($ticket->active == 0) {
-            return response()->json(['error' => __('words.ticket_not_active')]);
+            return response()->json(['error' => __('words.ticket_not_active')], 500);
         }
         // check if the ticket is valid for the current date
-        /* if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
+        if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
             return response()->json(['error' => __('words.to_early_to_scan')], 500);
-        } */
+        }
 
         // check if the ticket is valid for this zone
         if ($ticket->product->zones->doesntContain($zone)) {
@@ -140,7 +140,7 @@ class AppApiController extends Controller
                 auth()->user(),
                 ['action' => 'Checked Out', 'zone_id' => $zone->id]
             );
-        return response()->json(['error' => __('words.ticket_checked_out')], 200);
+        return response()->json(['message' => __('words.ticket_checked_out')], 200);
     }
 
     public function getExtras(Request $request)
@@ -158,7 +158,7 @@ class AppApiController extends Controller
             $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
             return response()->json($data);
         } else {
-            return response()->json(['status' => 'error', 'message' => __('words.invalid_ticket_error')]);
+            return response()->json(['error' => __('words.invalid_ticket_error')]);
         }
     }
 
@@ -194,14 +194,14 @@ class AppApiController extends Controller
         $zone = Zone::where("security_key", $request->zone)->first();
 
         if ($ticket->active == 0) {
-            return response()->json(['message' => __('words.ticket_not_active')]);
+            return response()->json(['error' => __('words.ticket_not_active')]);
         }
-        /* if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
-            return response()->json(['message' => __('words.to_early_to_scan')], 500);
-        } */
+        if (!in_array(now()->format('Y-m-d'), $ticket->dates)) {
+            return response()->json(['error' => __('words.to_early_to_scan')], 500);
+        }
 
         if ($zone == null) {
-            return response()->json(['message' => __('words.invalid_zone_error')], 500);
+            return response()->json(['error' => __('words.invalid_zone_error')], 500);
         }
         $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
 
