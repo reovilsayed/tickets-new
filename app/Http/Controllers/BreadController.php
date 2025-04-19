@@ -120,6 +120,7 @@ class BreadController extends Controller
             'subscription_type' => $subscription->subscription_type,
             'price' => $subscription->price,
             'description' => $subscription->description,
+            'total_shipment' => $subscription->total_shipment,
         ]);
     }
     public function subscriptionUpdate(Request $request, $id)
