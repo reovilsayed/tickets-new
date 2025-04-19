@@ -171,11 +171,11 @@ class PaymentCallbackController extends Controller
     protected function createSubscription($order)
     {
         foreach ($order->items as $item) {
-            // dd($order, $item, $item->itemable);
             SubscriptionRecord::create([
                 'user_id' => $order->user_id,
                 'magazine_order_id' => $order->id,
                 'magazine_order_item_id' => $item->id,
+                'magazine_id' => $item->itemable->magazine_id,
                 'subscription_id' => $item->itemable->id,
                 'subscription_type' => $item->itemable->subscription_type,
                 'recurring_period' => $item->itemable->recurring_period,

@@ -91,6 +91,7 @@ class UserController extends Controller
         $latest_magazine = SubscriptionRecord::where('user_id', auth()->id())
             ->latest()
             ->get();
+        
         return view('auth.user.magazine', compact('latest_magazine'));
     }
     //-----order showing & filtering---- end//
