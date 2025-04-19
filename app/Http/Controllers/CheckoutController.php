@@ -138,7 +138,7 @@ class CheckoutController extends Controller
             Cart::session($magazine->slug)->clearCartConditions();
             return redirect($order->payment_link);
         } catch (Exception | Error $e) {
-            return redirect()->route('magazines.index')
+            return redirect()->back()
                 ->withErrors($e->getMessage());
         }
     }
