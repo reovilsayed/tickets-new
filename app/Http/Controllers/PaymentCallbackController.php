@@ -7,6 +7,7 @@ use App\Models\Coupon;
 use App\Models\MagazineOrder;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\SubscriptionRecord;
 use App\Services\TOCOnlineService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -31,14 +32,14 @@ class PaymentCallbackController extends Controller
         $isMagazine = str_starts_with($key, 'magazine_');
 
         $order = $isMagazine
-        ? MagazineOrder::where('transaction_id', $key)->where('payment_status', 0)->first()
-        : Order::where('transaction_id', $key)->where('payment_status', 0)->first();
-        
+            ? MagazineOrder::where('transaction_id', $key)->where('payment_status', 0)->first()
+            : Order::where('transaction_id', $key)->where('payment_status', 0)->first();
+
 
         if (!$order) {
             return response()->json(['message' => 'Order not found or already processed'], 404);
         }
-   
+
         if ($request->status !== 'success') {
             $this->markAsFailed($order);
             return response()->json(['message' => 'Payment failed']);
@@ -54,21 +55,26 @@ class PaymentCallbackController extends Controller
             $this->updateProductQuantities($newOrder);
             $this->applyCoupon($order, $newOrder);
         } else {
+            if ($newOrder->type == 'subscription') {
+                $this->createSubscription($newOrder);
+            }
             $this->updateMagazineArchiveQuantites($newOrder);
             $this->applyMagazineCoupon($newOrder);
         }
 
-        $toc = new TOCOnlineService;
-        $response = $isMagazine
-            ? $toc->createMagazineCommercialSalesDocument($order)
-            : $toc->createCommercialSalesDocument($order);
 
-        Log::info("Invoice Response: " . json_encode($response));
+        if (env('APP_ENV') != 'local') {
+            $toc = new TOCOnlineService;
+            $response = $isMagazine
+                ? $toc->createMagazineCommercialSalesDocument($order)
+                : $toc->createCommercialSalesDocument($order);
 
-        $this->storeInvoice($newOrder, $response);
+            Log::info("Invoice Response: " . json_encode($response));
 
-        $emailResponse = $toc->sendEmailDocument($order, $response['id'] ?? null);
-        Log::info("Email Response: " . json_encode($emailResponse));
+            $this->storeInvoice($newOrder, $response);
+            $emailResponse = $toc->sendEmailDocument($order, $response['id'] ?? null);
+            Log::info("Email Response: " . json_encode($emailResponse));
+        }
 
         return response()->json(['message' => 'Payment processed successfully']);
     }
@@ -146,9 +152,9 @@ class PaymentCallbackController extends Controller
     {
 
         foreach ($order->items as $item) {
-         
+
             if ($item->itemable instanceof Archive) {
-                $item->itemable->quantity = $item->itemable->quantity-  $item->quantity;
+                $item->itemable->quantity = $item->itemable->quantity -  $item->quantity;
                 $item->itemable->save();
             }
         }
@@ -159,6 +165,25 @@ class PaymentCallbackController extends Controller
         if ($order->discount_code) {
             $order->appliedCoupon->increment('used');
             $order->appliedCoupon->save();
+        }
+    }
+
+    protected function createSubscription($order)
+    {
+        foreach ($order->items as $item) {
+            // dd($order, $item, $item->itemable);
+            SubscriptionRecord::create([
+                'user_id' => $order->user_id,
+                'magazine_order_id' => $order->id,
+                'magazine_order_item_id' => $item->id,
+                'subscription_id' => $item->itemable->id,
+                'subscription_type' => $item->itemable->subscription_type,
+                'recurring_period' => $item->itemable->recurring_period,
+                'details' => $item->details,
+                'start_date' => now(),
+                'end_date' => now()->addMonths($item->itemable->recurring_period),
+                'shipping_info' => $order->shipping_info
+            ]);
         }
     }
 }
