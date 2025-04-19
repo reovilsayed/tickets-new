@@ -12,6 +12,9 @@
                         <li class=" {{ Route::is('user.ordersIndex') ? 'active-class' : '' }}"><a
                                 href="{{ route('user.ordersIndex') }}"><i class="fa-solid fa-chart-simple fa-1x"></i>
                                 {{ __('words.orders') }}</a></li>
+                        <li class=" {{ Route::is('user.magazineIndex') ? 'active-class' : '' }}"><a
+                                href="{{ route('user.magazineIndex') }}"><i class="fa-solid fa-chart-simple fa-1x"></i>
+                                {{ __('words.magazine') }}</a></li>
 
 
                         <li class="{{ Route::is('user.change_password') ? 'active-class' : '' }}"><a

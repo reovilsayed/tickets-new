@@ -133,10 +133,10 @@
                 </div>
             </div>
         @endforeach
-        @foreach ($latest_magazine_orders as $order)
+        {{-- @foreach ($latest_magazine_orders as $order)
             <div class="ec-vendor-dashboard-card ec-vendor-setting-card mb-3">
                 <div class="ec-vendor-card-body">
-                    {{-- @dd($order) --}}
+             
                     <h4 class="dashboard-title mt-2">
                         {{ $order->magazine->name ?? '-' }}
                     </h4>
@@ -171,16 +171,10 @@
                         </table>
                     </div>
 
-                    {{-- @if ($order->magazineOrderItem)
-                        <a target="_blank" class="btn btn-primary btn-lg rounded me-2"
-                            href="{{ route('download.ticket', ['order' => $order->magazineOrderItem->order_id, 'product' => $order->magazine_id]) }}">
-                            <i class="fa fa-download"></i>
-                            {{ __('words.download') }}
-                        </a>
-                    @endif --}}
+                
                 </div>
             </div>
-        @endforeach
+        @endforeach --}}
 
     </div>
 

@@ -82,12 +82,16 @@ class UserController extends Controller
     public function ordersIndex(Request $request)
     {
         $latest_orders = Order::where('user_id', auth()->user()->id)->where('payment_status', 1)->latest()->get();
-        $latest_magazine_orders = SubscriptionRecord::where('user_id', auth()->id())
-            ->where('status', 'active') // string use korte hobe
+
+
+        return view('auth.user.order.index', compact('latest_orders'));
+    }
+    public function magazineIndex()
+    {
+        $latest_magazine = SubscriptionRecord::where('user_id', auth()->id())
             ->latest()
             ->get();
-            
-        return view('auth.user.order.index', compact('latest_orders', 'latest_magazine_orders'));
+        return view('auth.user.magazine', compact('latest_magazine'));
     }
     //-----order showing & filtering---- end//
     public function invoice(Order $order)

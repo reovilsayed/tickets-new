@@ -21,6 +21,7 @@ Route::group(
         Route::get('/track-shipping', [PageController::class, 'order_index'])->name('order_page');
 
         Route::get('/orders/index', [UserController::class, 'ordersIndex'])->name('ordersIndex');
+        Route::get('/magazine/index', [UserController::class, 'magazineIndex'])->name('magazineIndex');
 
 
         Route::get('/invoice/{order}', [UserController::class, 'invoice'])->name('invoice');
