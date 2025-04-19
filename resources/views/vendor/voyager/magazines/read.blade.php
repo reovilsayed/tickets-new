@@ -527,6 +527,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
+                                    <label for="recurring_period">Total Shipment</label>
+                                    <input type="number" class="form-control" id="total_shipment"
+                                        name="total_shipment" min="1"  required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
                                     <label for="subscription_type">Subscription Type</label>
                                     <select class="form-control" id="subscription_type" name="subscription_type"
                                         required>
@@ -596,6 +603,13 @@
                                     <label for="edit_recurring_period">Billing Period (month)</label>
                                     <input type="number" class="form-control" id="edit_recurring_period"
                                         name="recurring_period" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_total_shipment">Total Shipment</label>
+                                    <input type="number" class="form-control" id="edit_total_shipment"
+                                        name="total_shipment" required min="1">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -879,6 +893,7 @@
                     $('#edit_subscription_type').val(data.subscription_type);
                     $('#Edit_price').val(parseFloat(data.price).toFixed(2));
                     $('#Subscription_Description').val(data.description);
+                    $('#edit_total_shipment').val(data.total_shipment);
 
                     // Set the form action
                     $('#editSubscriptionForm').attr('action',

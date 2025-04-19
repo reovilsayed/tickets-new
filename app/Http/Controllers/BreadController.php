@@ -88,7 +88,8 @@ class BreadController extends Controller
             'magazine_subscription_id' => 'required|exists:magazine_subscriptions,id',
             'subscription_type' => 'required|in:physical,digital',
             'price' => 'required|numeric|min:0',
-            'recurring_period' => 'required'
+            'recurring_period' => 'required',
+            'total_shipment' => 'required',
         ]);
 
         // Create the subscription detail
@@ -98,6 +99,7 @@ class BreadController extends Controller
             'subscription_type' => $validatedData['subscription_type'],
             'price' => $validatedData['price'],
             'recurring_period' => $validatedData['recurring_period'],
+            'total_shipment' => $validatedData['total_shipment'],
             'description' => $request->subscription_description,    // Optional field
         ]);
 
@@ -129,6 +131,7 @@ class BreadController extends Controller
             'recurring_period' => 'required|integer|min:1',
             'subscription_type' => 'required|in:digital,physical',
             'price' => 'required|numeric|min:0',
+            'total_shipment' => 'required',
         ]);
 
         $subscription->update(array_merge($validated, [
