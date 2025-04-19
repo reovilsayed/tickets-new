@@ -40,6 +40,6 @@ class SubscriptionMagazineDetail extends Model
 
     public function totalShipment()
     {
-        return 6;
+        return $this->total_shipment;
     }
 }
