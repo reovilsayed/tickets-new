@@ -155,36 +155,20 @@
                         <div class="magazine-viewer-container">
                             <!-- Magazine List -->
                             <div class="magazine-list">
-                                <div class="magazine-item active" data-pdf="magazine1.pdf">
-                                    <div class="magazine-cover">
-                                        <img src="{{ asset('images/magazines/cover1.jpg') }}" alt="Tech Monthly">
-                                        <div class="magazine-badge">New</div>
+                                @foreach ($archives as $archive)
+                                    <div class="magazine-item @if ($loop->first) active @endif"
+                                        data-pdf="{{ Storage::url($archive->pdf_file) }}">
+                                        <div class="magazine-cover">
+                                            <img src="{{ Voyager::image($archive->magazine->image) }}" alt="Tech Monthly">
+                                            <div class="magazine-badge">New</div>
+                                        </div>
+                                        <div class="magazine-info">
+                                            <h5>{{ $archive->magazine->name }}</h5>
+                                            <p>{{ $archive->title }}</p>
+                                        </div>
                                     </div>
-                                    <div class="magazine-info">
-                                        <h5>Tech Monthly</h5>
-                                        <p>June 2023 Edition</p>
-                                    </div>
-                                </div>
-
-                                <div class="magazine-item" data-pdf="magazine2.pdf">
-                                    <div class="magazine-cover">
-                                        <img src="{{ asset('images/magazines/cover2.jpg') }}" alt="Business Insights">
-                                    </div>
-                                    <div class="magazine-info">
-                                        <h5>Business Insights</h5>
-                                        <p>May 2023 Edition</p>
-                                    </div>
-                                </div>
-
-                                <div class="magazine-item" data-pdf="magazine3.pdf">
-                                    <div class="magazine-cover">
-                                        <img src="{{ asset('images/magazines/cover3.jpg') }}" alt="Design World">
-                                    </div>
-                                    <div class="magazine-info">
-                                        <h5>Design World</h5>
-                                        <p>April 2023 Edition</p>
-                                    </div>
-                                </div>
+                                @endforeach
+                             
                             </div>
 
                             <!-- PDF Viewer -->
@@ -199,7 +183,7 @@
                                     <button class="btn-pdf-tool" title="Next Page"><i
                                             class="fa fa-arrow-right"></i></button>
                                     <button class="btn-pdf-tool" title="Fullscreen"><i class="fa fa-expand"></i></button>
-                                    
+
                                 </div>
                                 <div class="pdf-viewer">
                                     <img src="{{ asset('images/magazines/preview1.jpg') }}" alt="Magazine Preview"

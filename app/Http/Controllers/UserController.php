@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\VerifyEmail;
 use App\Models\Address;
+use App\Models\Archive;
 use App\Models\Offer;
 use App\Models\Order;
 use App\Models\OrderProduct;
@@ -89,10 +90,12 @@ class UserController extends Controller
     public function magazineIndex()
     {
         $latest_magazine = SubscriptionRecord::where('user_id', auth()->id())
+            ->where('subscription_type','digital')
             ->latest()
-            ->get();
-        
-        return view('auth.user.magazine', compact('latest_magazine'));
+            ->select('magazine_id')->get()->pluck('magazine_id');
+        $archives = Archive::whereIn('magazine_id',$latest_magazine)->get();
+     
+        return view('auth.user.magazine', compact('latest_magazine','archives'));
     }
     //-----order showing & filtering---- end//
     public function invoice(Order $order)
