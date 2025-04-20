@@ -22,6 +22,7 @@ Route::group(
 
         Route::get('/orders/index', [UserController::class, 'ordersIndex'])->name('ordersIndex');
         Route::get('/magazine/index', [UserController::class, 'magazineIndex'])->name('magazineIndex');
+        Route::get('/magazine/pdf/view/{archive}', [UserController::class, 'magazinePdfView'])->name('magazine.pdf.view');
 
 
         Route::get('/invoice/{order}', [UserController::class, 'invoice'])->name('invoice');

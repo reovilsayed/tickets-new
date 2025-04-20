@@ -477,5 +477,14 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         return $this->hasMany(SubscriptionRecord::class);
     }
 
+    public function mymagazines(){
+        return SubscriptionRecord::where('user_id', $this->id)
+            ->where('subscription_type','digital')
+            ->latest()
+            ->select('magazine_id')->get()->pluck('magazine_id')->toArray();
+
+
+    }
+
     
 }

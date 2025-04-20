@@ -500,3 +500,4 @@ Route::post('/magazine/{magazine:slug}/shipping', function (Magazine $magazine, 
 Route::delete('/magazine/{magazine:slug}/coupon', [CouponController::class, 'removeCoupon'])
     ->name('magazine.coupon.remove');
 Route::get('/get-shipping-price', [ShippingController::class, 'getPrice']);
+

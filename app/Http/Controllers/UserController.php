@@ -163,4 +163,9 @@ class UserController extends Controller
         auth()->user()->updateDefaultPaymentMethod($request->method);
         return redirect()->back();
     }
+    public function magazinePdfView(Archive $archive){
+
+        if(in_array($archive->magazine_id,auth()->user()->mymagazines()) == false) abort(403);
+         return view('auth.user.pdf_view',compact('archive'));
+    }
 }

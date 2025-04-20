@@ -36,7 +36,7 @@ class BreadController extends Controller
         ]);
 
         $archive->save();
-
+        
         return redirect()->back()
             ->with('message', 'Archive created successfully.');
     }
