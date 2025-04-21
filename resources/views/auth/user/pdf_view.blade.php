@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 
 @section('content')
@@ -10,7 +10,7 @@
             border: none;
         }
     </style>
-@endsection
+@endsection --}}
 {{-- <x-app.header /> --}}
 {{-- <x-app.breadcrumb /> --}}
 
