@@ -71,7 +71,10 @@
 
 <script>
     // URL of your PDF (make sure nid.pdf is in same folder)
-    const url = '{{Storage::url($archive->pdf_view)}}';
+    // const url = '{{Storage::url($archive->pdf_view)}}';
+
+    const url = '{{ asset("PDF.pdf") }}';
+
     console.log(url)
 
     // Setting worker
