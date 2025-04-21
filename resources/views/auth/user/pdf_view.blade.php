@@ -19,9 +19,9 @@
 <section class="ec-page-content ec-vendor-dashboard section-space-p">
     <div class="container">
         <div class="row">
-            <iframe class="pdf"
+            <embed class="pdf"
                 src="https://docs.google.com/gview?url={{ Storage::url($archive->pdf_file) }}&embedded=true">
-            </iframe>
+            </embed>
 
         </div>
     </div>

@@ -501,3 +501,7 @@ Route::delete('/magazine/{magazine:slug}/coupon', [CouponController::class, 'rem
     ->name('magazine.coupon.remove');
 Route::get('/get-shipping-price', [ShippingController::class, 'getPrice']);
 
+
+Route::get('test',function(){
+    return view('test_pdf');
+});
