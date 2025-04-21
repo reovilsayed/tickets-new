@@ -72,7 +72,7 @@
 
 <script>
     // URL of your PDF (make sure nid.pdf is in same folder)
-    const url = "'https://events.essenciacompany.com/'.{{Storage::url($archive->pdf_file)}}";
+    const url = 'https://events.essenciacompany.com/'+"{{Storage::url($archive->pdf_file)}}";
 
 
     console.log(url)
