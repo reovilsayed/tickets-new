@@ -60,7 +60,7 @@
 <body>
 
 <h1>PDF Viewer</h1>
-@dd(Storage::url($archive->pdf_view))
+@dd($archive)
 <canvas id="pdf-viewer"></canvas>
 
 <div id="navigation">
