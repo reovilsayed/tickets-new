@@ -32,7 +32,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PDF Viewer (No Download / No Print)</title>
+    <title>{{$archive->titl}}</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         body {
