@@ -60,7 +60,7 @@
 <body>
 
 <h1>PDF Viewer</h1>
-@dd('https://events.essenciacompany.com/'.Storage::url($archive->pdf_file))
+
 <canvas id="pdf-viewer"></canvas>
 
 <div id="navigation">
@@ -72,7 +72,7 @@
 
 <script>
     // URL of your PDF (make sure nid.pdf is in same folder)
-    const url = '{{ asset("storage/archives/" . $archive->pdf_view) }}';
+    const url = "'https://events.essenciacompany.com/'.{{Storage::url($archive->pdf_file)}}";
 
 
     console.log(url)
