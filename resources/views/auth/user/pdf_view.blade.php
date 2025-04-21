@@ -60,7 +60,7 @@
 <body>
 
 <h1>PDF Viewer</h1>
-
+@dd(Storage::url($archive->pdf_view))
 <canvas id="pdf-viewer"></canvas>
 
 <div id="navigation">
@@ -68,7 +68,7 @@
     <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
     <button id="next">Next Page</button>
 </div>
-@dd(Storage::url($archive->pdf_view))
+
 
 <script>
     // URL of your PDF (make sure nid.pdf is in same folder)
