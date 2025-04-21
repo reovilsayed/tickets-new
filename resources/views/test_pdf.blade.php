@@ -120,7 +120,7 @@
     });
 
 </script>
-<!-- 
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Disable right-click on the entire document, including the PDF
@@ -136,6 +136,6 @@
         });
       }
     });
-  </script> -->
+  </script> 
 </body>
 </html>
