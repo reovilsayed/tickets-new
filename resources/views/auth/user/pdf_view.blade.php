@@ -32,7 +32,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{$archive->titl}}</title>
+    <title>{{$archive->title}}</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
         body {
@@ -72,6 +72,7 @@
 <script>
     // URL of your PDF (make sure nid.pdf is in same folder)
     const url = "{{Storage::url($archive->pdf_view)}}";
+    console.log(url)
 
     // Setting worker
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -151,7 +152,7 @@
 
 </script>
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Disable right-click on the entire document, including the PDF
       document.addEventListener('contextmenu', function(event) {
@@ -166,7 +167,7 @@
         });
       }
     });
-  </script> 
+  </script>  --}}
 </body>
 </html>
 
