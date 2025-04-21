@@ -68,6 +68,7 @@
     <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
     <button id="next">Next Page</button>
 </div>
+@dd($archive->pdf_view)
 
 <script>
     // URL of your PDF (make sure nid.pdf is in same folder)
