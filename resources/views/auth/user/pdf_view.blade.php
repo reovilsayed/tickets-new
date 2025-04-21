@@ -60,7 +60,7 @@
 <body>
 
 <h1>PDF Viewer</h1>
-@dd($archive)
+@dd($archive->pdf_file)
 <canvas id="pdf-viewer"></canvas>
 
 <div id="navigation">
