@@ -60,7 +60,7 @@
 <body>
 
 <h1>PDF Viewer</h1>
-@dd(Storage::url($archive->pdf_file))
+@dd('https://events.essenciacompany.com/'.Storage::url($archive->pdf_file))
 <canvas id="pdf-viewer"></canvas>
 
 <div id="navigation">
