@@ -72,7 +72,7 @@
 <script>
     // URL of your PDF (make sure nid.pdf is in same folder)
     const url = '{{Storage::url($archive->pdf_view)}}';
-    console.log('url')
+    console.log(url)
 
     // Setting worker
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
