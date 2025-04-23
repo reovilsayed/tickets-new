@@ -1,26 +1,15 @@
 <?php
 
-use App\Models\Order;
-use App\Models\Coupon;
-use App\Models\Invite;
-use App\Models\Ticket;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Services\CheckoutService;
-use App\Services\TOCOnlineService;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use App\Facade\Sohoj;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\BreadController;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\CouponController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\EnterzoneContoller;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\MagazineController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\PosDashboardReport;
@@ -28,12 +17,21 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
+use App\Models\Invite;
 use App\Models\Magazine;
 use App\Models\MagazineOrder;
+use App\Models\Order;
 use App\Models\Shipping;
-use App\Models\SubscriptionRecord;
+use App\Models\Ticket;
 use App\Models\User;
+use App\Services\CheckoutService;
+use App\Services\TOCOnlineService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
 
@@ -53,11 +51,11 @@ Route::get('invite/{invite:slug}', function (Invite $invite, Request $request) {
     }
 
     $is_invite = true;
-    $event = $invite->event;
+    $event     = $invite->event;
     if ($event->status == 0) {
         return "Event Closed";
     }
-    $products = [];
+    $products        = [];
     $products['all'] = $invite->products;
     foreach ($event->dates() as $date) {
         $products[$date] = $invite->products->filter(fn($product) => in_array($date, $product->dates));
@@ -66,7 +64,6 @@ Route::get('invite/{invite:slug}', function (Invite $invite, Request $request) {
 })->name('invite.product_details')->excludedMiddleware(AgeVerification::class);
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
-
 
         $total = 0;
         foreach ($request->tickets as $ticket) {
@@ -89,16 +86,16 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
             $user = User::where('email', $email)->first();
 
             // If no user is found by email, create with email provided
-            if (!$user) {
+            if (! $user) {
                 $user = User::create([
-                    'name' => request()->name,
-                    'email' => $email,
-                    'contact_number' => $phone,
+                    'name'              => request()->name,
+                    'email'             => $email,
+                    'contact_number'    => $phone,
                     'email_verified_at' => now(),
-                    'password' => Hash::make('password2176565'),
-                    'country' => 'PT',
-                    'role_id' => 2,
-                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    'password'          => Hash::make('password2176565'),
+                    'country'           => 'PT',
+                    'role_id'           => 2,
+                    'vatNumber'         => $billing['vatNumber'] ?? null,
 
                 ]);
             }
@@ -107,39 +104,36 @@ Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $
             $user = User::where('contact_number', $phone)->first();
 
             // If no user is found by phone, create with a fake email
-            if (!$user) {
+            if (! $user) {
                 $user = User::create([
-                    'name' => request()->name,
-                    'email' => 'fake' . uniqid() . '@mail.com',
-                    'contact_number' => $phone,
+                    'name'              => request()->name,
+                    'email'             => 'fake' . uniqid() . '@mail.com',
+                    'contact_number'    => $phone,
                     'email_verified_at' => now(),
-                    'role_id' => 2,
-                    'password' => Hash::make('password2176565'),
-                    'country' => 'PT',
-                    'vatNumber' => $billing['vatNumber'] ?? null,
+                    'role_id'           => 2,
+                    'password'          => Hash::make('password2176565'),
+                    'country'           => 'PT',
+                    'vatNumber'         => $billing['vatNumber'] ?? null,
 
                 ]);
             }
         } else {
             // Handle case when neither phone nor email is provided
             $user = User::create([
-                'name' => request()->name ?? 'fake user',
-                'email' => 'fake' . uniqid() . '@mail.com',
-                'contact_number' => null,
+                'name'              => request()->name ?? 'fake user',
+                'email'             => 'fake' . uniqid() . '@mail.com',
+                'contact_number'    => null,
                 'email_verified_at' => now(),
-                'password' => Hash::make('password2176565'),
-                'country' => 'PT',
-                'role_id' => 2,
-                'vatNumber' => $billing['vatNumber'] ?? null,
+                'password'          => Hash::make('password2176565'),
+                'country'           => 'PT',
+                'role_id'           => 2,
+                'vatNumber'         => $billing['vatNumber'] ?? null,
 
             ]);
         }
 
-
         DB::commit();
         $order = CheckoutService::create($event, $request, isFree: true, invite: $invite, user: $user);
-
-
 
         return redirect()->back()->with('success_msg', 'ThankYou For Your Claim');
     } catch (Exception $e) {
@@ -166,11 +160,8 @@ Route::post('magazine/{magazine:slug}/add-cart', [CartController::class, 'magazi
 Route::post('/event/{event:slug}/add-coupon', [CouponController::class, 'add'])->name('coupon');
 Route::get('/delete-coupon', [CouponController::class, 'destroy'])->name('coupon.destroy');
 
-
-
 Auth::routes(['verify' => true]);
 Route::get('page/{slug}', [PageController::class, 'getPage']);
-
 
 Route::get('t/{order:security_key}', function (Request $request, Order $order) {
     $tickets = $order->tickets;
@@ -182,7 +173,7 @@ Route::get('t/{order:security_key}', function (Request $request, Order $order) {
 
         $tickets = $order->tickets()->where('ticket', $request->t)->get();
     }
-    if (!$tickets->count()) {
+    if (! $tickets->count()) {
         abort(403, 'No tickets found');
     }
 
@@ -191,8 +182,7 @@ Route::get('t/{order:security_key}', function (Request $request, Order $order) {
 
 Route::post('t/{order:security_key}', [PdfDownloadController::class, 'download'])->name('downloadPdf.ticket');
 
-
-Route::post('payment-callback/{type}',PaymentCallbackController::class);
+Route::post('payment-callback/{type}', PaymentCallbackController::class);
 // Route::post('payment-callback/{type}', function ($type, Request $request) {
 //     Log::info('payment request: ' . json_encode($request->all()));
 //     if ($type == 'generic') {
@@ -206,8 +196,6 @@ Route::post('payment-callback/{type}',PaymentCallbackController::class);
 //                     $order->save();
 
 //                     $new_order = MagazineOrder::where('transaction_id', $request->key)->first();
-
-
 
 //                     $toco = new TOCOnlineService;
 //                     $response = $toco->createMagazineCommercialSalesDocument($order);
@@ -294,9 +282,9 @@ Route::post('age-verification', function (Request $request) {
 Route::post('extras-used', function (Request $request) {
 
     $request->validate([
-        'ticket' => 'required',
+        'ticket'   => 'required',
         'withdraw' => 'required',
-        'session' => 'required',
+        'session'  => 'required',
     ]);
 
     if (session()->get('enter-extra-zone')['id'] != $request->session) {
@@ -305,8 +293,8 @@ Route::post('extras-used', function (Request $request) {
 
     $ticket = Ticket::where('ticket', $request->ticket)->first();
     $extras = $ticket->extras;
-    $zone = session()->get('enter-extra-zone')['zone'];
-    $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
+    $zone   = session()->get('enter-extra-zone')['zone'];
+    $log    = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
 
     // Normalize the extras array to ensure consistent structure
     $normalizedExtras = [];
@@ -329,7 +317,7 @@ Route::post('extras-used', function (Request $request) {
     $data = $ticket->logs;
     array_push($data, $log);
     $ticket->extras = $normalizedExtras;
-    $ticket->logs = $data;
+    $ticket->logs   = $data;
     $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
     $ticket->save();
 
@@ -383,8 +371,8 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 
     // Determine the current event based on the request or default to the first event
     $event = $request->filled('event_id')
-        ? Event::find($request->event_id)
-        : $events->first() ?? new Event();
+    ? Event::find($request->event_id)
+    : $events->first() ?? new Event();
 
     // Fetch the user's orders excluding those with 'invite' as the payment method
     $orders = Order::where('user_id', $user->id)->where('event_id', $event->id)
@@ -402,16 +390,14 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
     return view('pages.digitalWalletNew', compact('user', 'orders', 'events', 'event', 'tickets'));
 })->name('digital-wallet');
 
-
-
 Route::get('/toc-online-test/{order}', function ($order) {
-    $order = Order::with('tickets')->where('id', $order)->first();
-    $toco = new TOCOnlineService;
+    $order    = Order::with('tickets')->where('id', $order)->first();
+    $toco     = new TOCOnlineService;
     $response = $toco->createCommercialSalesDocument($order);
     if (isset($response['id'])) {
         Log::info($response);
-        $order->invoice_id = $response['id'];
-        $order->invoice_url = $response['public_link'];
+        $order->invoice_id   = $response['id'];
+        $order->invoice_url  = $response['public_link'];
         $order->invoice_body = json_encode($response);
         $order->save();
         $response = $toco->sendEmailDocument($order, $response['id']);
@@ -425,14 +411,11 @@ Route::get('/toc-online-test/{order}', function ($order) {
     }
 })->name('toc-online-test');
 
-
-
 Route::get('/api/user/pos-permission', [ApiController::class, 'getPosPermissions'])->middleware('auth');
 
-
 Route::get('test', function () {
-    $order = MagazineOrder::latest()->first();
-    $toco = new TOCOnlineService;
+    $order    = MagazineOrder::latest()->first();
+    $toco     = new TOCOnlineService;
     $response = $toco->createMagazineCommercialSalesDocument($order);
 });
 Route::get('/test-subscription-create', function () {
@@ -457,11 +440,9 @@ Route::post('/magazine/{magazine:slug}/coupon', [CouponController::class, 'apply
     ->name('magazine.coupon');
 Route::post('/magazine/{magazine:slug}/shipping', function (Magazine $magazine, Request $request) {
 
-
     $request->validate([
-        'country' => 'required'
+        'country' => 'required',
     ]);
-
 
     $shipping = Shipping::where('country_code', $request->country)->orWhere('default', true)->first();
 
@@ -469,23 +450,22 @@ Route::post('/magazine/{magazine:slug}/shipping', function (Magazine $magazine, 
         throw new Exception('Shipping is not available');
     }
 
-
     $cart = Cart::session($magazine->slug)->getContent();
 
     $order = 1;
     foreach ($cart as $product) {
 
         if ($product->model->needShipping()) {
-            $shippingCondition = new \Darryldecode\Cart\CartCondition(array(
-                'name' => 'Shipping ' . $product->name . ' to ' . $shipping->country_code,
-                'type' => 'shipping',
-                'target' => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
-                'value' => '+' . $shipping->price * $product->model->totalShipment() * $product->quantity,
-                'order' => $order,
+            $shippingCondition = new \Darryldecode\Cart\CartCondition([
+                'name'       => 'Shipping ' . $product->name . ' to ' . $shipping->country_code,
+                'type'       => 'shipping',
+                'target'     => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'value'      => '+' . $shipping->price * $product->model->totalShipment() * $product->quantity,
+                'order'      => $order,
                 'attributes' => [
-                    'country_code' => $request->country
-                ]
-            ));
+                    'country_code' => $request->country,
+                ],
+            ]);
             $order++;
 
             Cart::session($magazine->slug)->condition($shippingCondition);
@@ -501,7 +481,24 @@ Route::delete('/magazine/{magazine:slug}/coupon', [CouponController::class, 'rem
     ->name('magazine.coupon.remove');
 Route::get('/get-shipping-price', [ShippingController::class, 'getPrice']);
 
-
-Route::get('test',function(){
+Route::get('test', function () {
     return view('test_pdf');
 });
+// Route::get('/populate-shipping', function () {
+//     $sohoj     = new Sohoj();
+//     $countries = $sohoj->getCountries();
+
+//     $count = 0;
+//     foreach ($countries as $code => $name) {
+//         Shipping::updateOrCreate(
+//             ['country_code' => $code],
+//             [
+//                 'price'   => 0.00,
+//                 'default' => ($code === 'US'),
+//             ]
+//         );
+//         $count++;
+//     }
+
+//     return "Successfully populated $count countries!";
+// });
