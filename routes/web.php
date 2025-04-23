@@ -484,21 +484,21 @@ Route::get('/get-shipping-price', [ShippingController::class, 'getPrice']);
 Route::get('test', function () {
     return view('test_pdf');
 });
-// Route::get('/populate-shipping', function () {
-//     $sohoj     = new Sohoj();
-//     $countries = $sohoj->getCountries();
+Route::get('/populate-shipping', function () {
+    $sohoj     = new Sohoj();
+    $countries = $sohoj->getCountries();
 
-//     $count = 0;
-//     foreach ($countries as $code => $name) {
-//         Shipping::updateOrCreate(
-//             ['country_code' => $code],
-//             [
-//                 'price'   => 0.00,
-//                 'default' => ($code === 'US'),
-//             ]
-//         );
-//         $count++;
-//     }
+    $count = 0;
+    foreach ($countries as $code => $name) {
+        Shipping::updateOrCreate(
+            ['country_code' => $code],
+            [
+                'price'   => 0.00,
+                'default' => ($code === 'US'),
+            ]
+        );
+        $count++;
+    }
 
-//     return "Successfully populated $count countries!";
-// });
+    return "Successfully populated $count countries!";
+});
