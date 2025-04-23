@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="{{ asset('assets/frontend-old-assets/responsive.css') }}" />
     <link rel="stylesheet" id="bg-switcher-css" href="{{ asset('assets/frontend-old-assets/css/backgrounds/bg-4.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/seller.css') }}">
+    
+    
 
     <style>
         .navbar .navbar-nav .nav-link {

@@ -22,7 +22,7 @@ class SubscriptionMagazineDetail extends Model
     }
     public function subscription()
     {
-        return $this->belongsTo(SubscriptionMagazineDetail::class, 'subscription_magazine_detail_id');
+        return $this->belongsTo(SubscriptionMagazineDetail::class, 'subscription_magazine_details_id');
     }
     public function subscriptionRecords()
     {
