@@ -2,82 +2,106 @@
 @section('title', $magazine->name)
 @section('meta_description', 'magazine meta data')
 @section('keywords', 'meta keyword')
-<style>
-    .terms ul li {
-        list-style: disc;
-    }
+@section('css')
+    <style>
+        .terms ul li {
+                list-style: disc;
+            }
 
-    @media only screen and (max-width: 480px) {
-        .navbar {
-            margin-top: 50px;
+        .t-des u {
+            text-decoration: underline !important;
         }
 
-        #pills-tab {
-            position: fixed;
-            top: 0px;
-            width: 100%;
-            z-index: 999;
+        .t-des ul {
+            list-style-type: disc !important;
+            list-style-position: inside !important;
+            padding-left: 20px !important;
+            margin: 0 0 1rem 0;
         }
 
-        #pills-tabContent {
-            height: 100% !important;
+        .t-des ol {
+            list-style-type: decimal !important;
+            list-style-position: inside !important;
+            padding-left: 20px !important;
+            margin: 0 0 1rem 0;
+        }
+
+        .t-des li {
+            display: list-item !important;
+        }
+
+        @media only screen and (max-width: 480px) {
+            .navbar {
+                margin-top: 50px;
+            }
+
+            #pills-tab {
+                position: fixed;
+                top: 0px;
+                width: 100%;
+                z-index: 999;
+            }
+
+            #pills-tabContent {
+                height: 100% !important;
+            }
+
+            .event-buttton {
+                position: fixed;
+                bottom: 0;
+                background-color: #28BADF !important;
+                z-index: 999;
+            }
         }
 
         .event-buttton {
-            position: fixed;
-            bottom: 0;
             background-color: #28BADF !important;
-            z-index: 999;
+            /* Dark navbar */
         }
-    }
 
-    .event-buttton {
-        background-color: #28BADF !important;
-        /* Dark navbar */
-    }
+        .card-ticket {
+            background-color: #ffffff !important;
+            /* Light gray */
+            border: 1px solid #ffffff !important;
+            /* Add border */
+        }
 
-    .card-ticket {
-        background-color: #ffffff !important;
-        /* Light gray */
-        border: 1px solid #ffffff !important;
-        /* Add border */
-    }
+        .sec-hd {
+            background-color: #28BADF !important;
+        }
 
-    .sec-hd {
-        background-color: #28BADF !important;
-    }
+        .days {
+            color: #000000 !important;
+        }
 
-    .days {
-        color: #000000 !important;
-    }
+        .sold {
+            border: 2px solid #28BADF !important;
+            color: #28BADF !important;
+        }
 
-    .sold {
-        border: 2px solid #28BADF !important;
-        color: #28BADF !important;
-    }
+        .sold-sm {
+            border: 2px solid #28BADF !important;
+            color: #28BADF !important;
+        }
 
-    .sold-sm {
-        border: 2px solid #28BADF !important;
-        color: #28BADF !important;
-    }
+        .ticket-select {
+            border: 2px solid #28BADF !important;
+        }
 
-    .ticket-select {
-        border: 2px solid #28BADF !important;
-    }
+        .nav-pills .nav-link .active {
+            color: #0a0402 !important;
+        }
 
-    .nav-pills .nav-link .active {
-        color: #0a0402 !important;
-    }
+        .card-ticket.selected {
+            border: 3px solid #28BADF !important;
+            background-color: rgba(40, 186, 223, 0.1);
+        }
 
-    .card-ticket.selected {
-        border: 3px solid #28BADF !important;
-        background-color: rgba(40, 186, 223, 0.1);
-    }
-
-    .cursor-pointer {
-        cursor: pointer;
-    }
-</style>
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
+@endsection
 @section('content')
     <form action="{{ route('magazine.cart.store', $magazine->slug) }}" method="post" x-data="magazineCart">
         @csrf
@@ -177,9 +201,9 @@
                                                 <div class="t-info">
                                                     <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
                                                         Subscription</p>
-                                                    <p class="t-des" style="color: #041c47 !important;">
+                                                    <div class="t-des" style="color: #041c47 !important;">
                                                         {!! $subscription->description !!}
-                                                    </p>
+                                                    </div>
                                                 </div>
                                                 <div class="t-prize">
                                                     <h4>{{ Sohoj::price($subscription->price) }}</h4>
@@ -203,9 +227,9 @@
                                                 <div class="t-info">
                                                     <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
                                                         Subscription</p>
-                                                    <p class="t-des" style="color: #041c47 !important;">
+                                                    <div class="t-des" style="color: #041c47 !important;">
                                                         {!! $subscription->description !!}
-                                                    </p>
+                                                    </div>
                                                 </div>
                                                 <div class="t-prize">
                                                     <h4>{{ Sohoj::price($subscription->price) }}</h4>

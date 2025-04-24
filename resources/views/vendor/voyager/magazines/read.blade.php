@@ -73,12 +73,12 @@
             <div class="panel-body" style="padding: 25px;">
                 <!-- Header Section -->
                 <div class="row" style="margin-bottom: 30px; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px;">
-                   
+
                     <div class="col-md-3">
                         <h2 style="margin: 0; color: #2c3e50; font-weight: 700;">{{ $dataTypeContent->name }}</h2>
-                      
+
                     </div>
-                   
+
                 </div>
 
 
@@ -345,7 +345,7 @@
     <div class="page-content read container-fluid">
         <div class="panel panel-bordered" style="border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
             <div class="panel-body" style="padding: 25px;">
-                <div class="row">
+                {{-- <div class="row">
                     <div class="col-md-12">
                         <!-- Subscriptions Section -->
 
@@ -418,6 +418,14 @@
                                                             ${{ number_format($subscription->price ?? 0, 2) }}
                                                         </span>
                                                     </div>
+
+                                                    <div>
+                                                        <span style="font-size: 13px; color: #7f8c8d;">Edition Per
+                                                            Year:</span>
+                                                        <span style="font-weight: 600; color: #3498db;">
+                                                            {{ $subscription->total_shipment ?? '-' }}
+                                                        </span>
+                                                    </div>
                                                     <div>
                                                         <span style="font-size: 13px; color: #7f8c8d;">Billing
                                                             Period:</span>
@@ -435,8 +443,7 @@
                                                     <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 5px;">
                                                         Description
                                                     </div>
-                                                    <div
-                                                        style="font-size: 13px; color: #34495e;">
+                                                    <div style="font-size: 13px; color: #34495e;">
                                                         {!! Str::limit($subscription->description, 300) !!}
                                                     </div>
                                                 </div>
@@ -460,6 +467,244 @@
                         @endif
 
                     </div>
+                </div> --}}
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h4 style="color: #7f8c8d; font-weight: 600; margin: 0;">Subscription Plans</h4>
+                            <button type="button" class="btn btn-success" data-toggle="modal"
+                                data-target="#addSubscriptionModal" style="border-radius: 4px; padding: 8px 16px;">
+                                <i class="icon voyager-plus"></i> Add Subscription
+                            </button>
+                        </div>
+
+                        @if ($dataTypeContent->subscriptions && $dataTypeContent->subscriptions->count())
+                            <div class="row">
+                                <!-- Annual Subscriptions Column -->
+                                <div class="col-md-6">
+                                    <h5
+                                        style="color: #2c3e50; font-weight: 600; margin-bottom: 20px; padding-bottom: 10px; margin-left:15px;">
+                                        Annual Subscriptions
+                                        <span class="badge badge-info" style="font-size: 12px; vertical-align: middle;">12
+                                            months</span>
+                                    </h5>
+
+                                    @php
+                                        $annualSubscriptions = $dataTypeContent->subscriptions->filter(function (
+                                            $subscription,
+                                        ) {
+                                            $currentPlan = App\Models\MagazineSubscription::find(
+                                                $subscription->magazine_subscription_id,
+                                            );
+                                            return $currentPlan && $currentPlan->name === 'annual';
+                                        });
+                                    @endphp
+
+                                    @foreach ($annualSubscriptions as $subscription)
+                                        <div class="col-md-12" style="margin-bottom: 20px;">
+                                            <div class="subscription-card" id="subscription-{{ $subscription->id }}"
+                                                style="background: white; 
+                                                border-radius: 6px; 
+                                                padding: 20px; 
+                                                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                                                border: 1px solid #eee;
+                                                height: 100%;
+                                                position: relative;
+                                                overflow: visible;">
+
+                                                <!-- Action Dropdown -->
+                                                <div class="dropdown subscription-actions"
+                                                    style="position: absolute; right: 10px; top: 10px;">
+                                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button"
+                                                        id="subscriptionDropdown-{{ $subscription->id }}"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                        <i class="icon voyager-settings"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-right"
+                                                        aria-labelledby="subscriptionDropdown-{{ $subscription->id }}">
+                                                        <a class="dropdown-item edit-subscription"
+                                                            style="margin-left:15px;" href="#"
+                                                            id="edit-subscription-{{ $subscription->id }}"
+                                                            data-id="{{ $subscription->id }}">
+                                                            <i class="icon voyager-edit"></i> Edit
+                                                        </a>
+                                                        <a class="dropdown-item delete-subscription"
+                                                            style="margin-left:10px;" href="#"
+                                                            id="delete-subscription-{{ $subscription->id }}"
+                                                            data-id="{{ $subscription->id }}">
+                                                            <i class="icon voyager-trash"></i> Delete
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <h5 style="margin-top: 0; color: #2c3e50; font-weight: 600;">
+                                                    <span class="badge badge-primary">
+                                                        {{ $subscription->subscription_type === 'digital' ? 'Digital' : 'Physical' }}
+                                                    </span>
+
+                                                </h5>
+
+                                                <div style="margin: 15px 0;">
+                                                    <div style="display: flex; justify-content: space-evenly;">
+                                                        <div>
+                                                            <span style="font-size: 13px; color: #7f8c8d;">Price:</span>
+                                                            <span style="font-weight: 600; color: #27ae60;">
+                                                                ${{ number_format($subscription->price ?? 0, 2) }}
+                                                            </span>
+                                                        </div>
+
+                                                        <div>
+                                                            <span style="font-size: 13px; color: #7f8c8d;">Edition Per
+                                                                Year:</span>
+                                                            <span style="font-weight: 600; color: #db3434;">
+                                                                {{ $subscription->total_shipment ?? '-' }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span style="font-size: 12px; color: #7f8c8d;">
+                                                    Description:
+                                                </span>
+                                                <div style="background: #f9f9f9; padding: 5px; border-radius: 4px;">
+                                                    <div style="font-size: 13px; color: #34495e;">
+                                                        {!! Str::limit($subscription->description, 300) !!}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                    @if ($annualSubscriptions->count() == 0)
+                                        <div
+                                            style="text-align: center; padding: 20px; background: #f9f9f9; border-radius: 6px;">
+                                            <i class="icon voyager-archive" style="font-size: 30px; color: #bdc3c7;"></i>
+                                            <p style="color: #95a5a6;">No Annual subscription plans yet.</p>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <!-- Bi-Annual Subscriptions Column -->
+                                <div class="col-md-6">
+                                    <h5
+                                        style="color: #2c3e50; font-weight: 600; margin-bottom: 20px; padding-bottom: 10px; margin-left:10px">
+                                        Bi-Annual Subscriptions
+                                        <span class="badge badge-info" style="font-size: 12px; vertical-align: middle;">24
+                                            months</span>
+                                    </h5>
+
+                                    @php
+                                        $biAnnualSubscriptions = $dataTypeContent->subscriptions->filter(function (
+                                            $subscription,
+                                        ) {
+                                            $currentPlan = App\Models\MagazineSubscription::find(
+                                                $subscription->magazine_subscription_id,
+                                            );
+                                            return $currentPlan && $currentPlan->name === 'bi-annual';
+                                        });
+                                    @endphp
+
+                                    @foreach ($biAnnualSubscriptions as $subscription)
+                                        <div class="col-md-12" style="margin-bottom: 20px;">
+                                            <div class="subscription-card" id="subscription-{{ $subscription->id }}"
+                                                style="background: white; 
+                                                border-radius: 6px; 
+                                                padding: 20px; 
+                                                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                                                border: 1px solid #eee;
+                                                height: 100%;
+                                                position: relative;
+                                                overflow: visible;">
+
+                                                <!-- Action Dropdown -->
+                                                <div class="dropdown subscription-actions"
+                                                    style="position: absolute; right: 15px; top: 15px;">
+                                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button"
+                                                        id="subscriptionDropdown-{{ $subscription->id }}"
+                                                        data-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
+                                                        <i class="icon voyager-settings"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-right"
+                                                        aria-labelledby="subscriptionDropdown-{{ $subscription->id }}">
+                                                        <a class="dropdown-item edit-subscription"
+                                                            style="margin-left:15px;" href="#"
+                                                            id="edit-subscription-{{ $subscription->id }}"
+                                                            data-id="{{ $subscription->id }}">
+                                                            <i class="icon voyager-edit"></i> Edit
+                                                        </a>
+                                                        <a class="dropdown-item delete-subscription"
+                                                            style="margin-left:10px;" href="#"
+                                                            id="delete-subscription-{{ $subscription->id }}"
+                                                            data-id="{{ $subscription->id }}">
+                                                            <i class="icon voyager-trash"></i> Delete
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                <h5 style="margin-top: 0; color: #2c3e50; font-weight: 600;">
+
+                                                    <span class="badge badge-primary">
+                                                        {{ $subscription->subscription_type === 'digital' ? 'Digital' : 'Physical' }}
+                                                    </span>
+                                                </h5>
+
+                                                <div style="margin: 15px 0;">
+                                                    <div style="display: flex; justify-content: space-evenly;">
+                                                        <div>
+                                                            <span style="font-size: 13px; color: #7f8c8d;">Price:</span>
+                                                            <span style="font-weight: 600; color: #27ae60;">
+                                                                ${{ number_format($subscription->price ?? 0, 2) }}
+                                                            </span>
+                                                        </div>
+
+                                                        <div>
+                                                            <span style="font-size: 13px; color: #7f8c8d;">Edition Per
+                                                                Year:</span>
+                                                            <span style="font-weight: 600; color: #db3434;">
+                                                                {{ $subscription->total_shipment ?? '-' }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span style="font-size: 12px; color: #7f8c8d;">
+                                                    Description:
+                                                </span>
+                                                <div style="background: #f9f9f9; padding: 5px; border-radius: 4px;">
+                                                    <div style="font-size: 13px; color: #34495e;">
+                                                        {!! Str::limit($subscription->description, 300) !!}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                    @if ($biAnnualSubscriptions->count() == 0)
+                                        <div
+                                            style="text-align: center; padding: 20px; background: #f9f9f9; border-radius: 6px;">
+                                            <i class="icon voyager-archive" style="font-size: 30px; color: #bdc3c7;"></i>
+                                            <p style="color: #95a5a6;">No Bi-Annual subscription plans yet.</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <div class="empty-state"
+                                style="text-align: center; padding: 40px; background: #f9f9f9; border-radius: 6px;">
+                                <i class="icon voyager-archive" style="font-size: 50px; color: #bdc3c7;"></i>
+                                <h4 style="color: #7f8c8d; margin-top: 15px;">No Subscription Plans</h4>
+                                <p style="color: #95a5a6;">This magazine doesn't have any subscription plans yet.</p>
+                                <button type="button" class="btn btn-success" data-toggle="modal"
+                                    data-target="#addSubscriptionModal" style="margin-top: 10px;">
+                                    <i class="icon voyager-plus"></i> Add First Subscription
+                                </button>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
@@ -478,6 +723,7 @@
                 <form id="subscriptionForm" action="{{ route('magazines.subscriptions.store', $dataTypeContent->id) }}"
                     method="POST">
                     @csrf
+
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -506,8 +752,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="total_shipment">Total Shipment</label>
-                                    <input type="number" class="form-control" id="total_shipment"
-                                        name="total_shipment" min="1"  required>
+                                    <input type="number" class="form-control" id="total_shipment" name="total_shipment"
+                                        min="1" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -870,7 +1116,7 @@
                     $('#edit_recurring_period').val(data.recurring_period);
                     $('#edit_subscription_type').val(data.subscription_type);
                     $('#Edit_price').val(parseFloat(data.price).toFixed(2));
-                    $('#Subscription_Description').val(data.description);
+                    $('#Subscription_Description').summernote('code', data.description);
                     $('#edit_total_shipment').val(data.total_shipment);
 
                     // Set the form action
