@@ -5,8 +5,8 @@
 @section('css')
     <style>
         .terms ul li {
-                list-style: disc;
-            }
+            list-style: disc;
+        }
 
         .t-des u {
             text-decoration: underline !important;
@@ -28,6 +28,7 @@
 
         .t-des li {
             display: list-item !important;
+            list-style: disc !important;
         }
 
         @media only screen and (max-width: 480px) {
