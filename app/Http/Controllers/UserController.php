@@ -83,7 +83,7 @@ class UserController extends Controller
 
         return view('auth.user.order.index', compact('latest_orders', 'latest_magazine_orders'));
     }
-    public function magazineIndex()
+    public function magazineIndex(Request $request)
     {
         $latest_magazine = SubscriptionRecord::where('user_id', auth()->id())
             ->where('subscription_type', 'digital')

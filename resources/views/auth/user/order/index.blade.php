@@ -291,7 +291,7 @@
                             <i class="fa fa-book fa-3x text-muted mb-3"></i>
                             <h5>No magazine subscriptions</h5>
                             <p class="text-muted">You haven't subscribed to any magazines yet.</p>
-                            <a href="{{ route('magazines') }}" class="btn btn-primary rounded-pill">Browse Magazines</a>
+                            <a href="{{ route('magazines.index') }}" class="btn btn-primary rounded-pill">Browse Magazines</a>
                         </div>
                     @endif
                 </div>
