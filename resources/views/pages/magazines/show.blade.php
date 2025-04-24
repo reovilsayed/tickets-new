@@ -91,10 +91,10 @@
 
                         <h2 class="events-title mt-2 px-3 text-center">{{ $magazine->name }}</h2>
                         <div class="accordin-item">
-                            <div>
+                            <div class="ms-2">
                                 <i class="fa fa-info-circle fa-2x" style="color: #28BADF;"></i>
                             </div>
-                            <div>
+                            <div class="me-3">
                                 <h5>{{ __('words.description') }}</h5>
                                 <p>{!! $magazine->description !!}</p>
                             </div>
@@ -102,7 +102,7 @@
 
                     </div>
 
-                    <div class="col-md-7 event-box" id="mobile-device">
+                    <div class="col-md-8 event-box" id="mobile-device">
                         <ul class="nav nav-pills sec-hd mb-3 sticky-sm-top" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="pills-profile-tab" data-bs-toggle="pill"
@@ -137,77 +137,86 @@
                                 @foreach ($archives as $archive)
                                     <div class="card card-ticket active">
                                         <div class="card-body tick">
-                                            <span class="text-danger sold-sm">{{ __('words.sold') }}</span>
+                                            @if ($archive->quantity <= 0)
+                                                <span class="text-danger sold-sm">{{ __('words.sold') }}</span>
+                                            @endif
                                             <div class="ticket-info">
                                                 <div class="t-info">
                                                     <p class="t-title">{{ $archive->title }}</p>
                                                     <p class="t-des"> {!! $archive->description !!}</p>
-                                                    {{-- <span class="sold">{{ __('words.sold') }}</span> --}}
                                                 </div>
                                                 <div class="t-prize">
                                                     <span
                                                         class="text-dark me-2 ticket-prize">{{ Sohoj::price($archive->price) }}</span>
                                                 </div>
-                                                <select name="archive[{{ $archive->id }}]" min="0" max="3"
-                                                    class="ticket-select" style="border: 2px solid #28BADF !important"
-                                                    x-model="selectedItems.onetime[{{ $archive->id }}]"
-                                                    @change="calculateTotal">
-                                                    @for ($i = 0; $i <= $archive->quantity; $i++)
-                                                        <option value="{{ $i }}">{{ $i }}</option>
-                                                    @endfor
-                                                </select>
+                                                @if ($archive->quantity > 0)
+                                                    <select name="archive[{{ $archive->id }}]" min="0"
+                                                        max="3" class="ticket-select"
+                                                        style="border: 2px solid #28BADF !important"
+                                                        x-model="selectedItems.onetime[{{ $archive->id }}]"
+                                                        @change="calculateTotal">
+                                                        @for ($i = 0; $i <= $archive->quantity; $i++)
+                                                            <option value="{{ $i }}">{{ $i }}
+                                                            </option>
+                                                        @endfor
+                                                    </select>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
                             <div class="tab-pane fade" id="pills-annual-purchase" role="tabpanel"
-                            aria-labelledby="pills-home-tab">
-                            @foreach ($annualSubscriptions as $subscription)
-                                <div class="card card-ticket cursor-pointer"
-                                    @click="selectSubscription('annual', {{ $subscription->id }})"
-                                    :class="{ 'selected': selectedItems.annual === {{ $subscription->id }} }">
-                                    <div class="card-body tick">
-                                        <div class="ticket-info">
-                                            <div class="t-info">
-                                                <p class="t-title">{{ ucfirst($subscription->subscription_type) }} Subscription</p>
-                                                <p class="t-des" style="color: #041c47 !important;">
-                                                    {!! $subscription->description !!}
-                                                </p>
+                                aria-labelledby="pills-home-tab">
+                                @foreach ($annualSubscriptions as $subscription)
+                                    <div class="card card-ticket cursor-pointer"
+                                        @click="selectSubscription('annual', {{ $subscription->id }})"
+                                        :class="{ 'selected': selectedItems.annual === {{ $subscription->id }} }">
+                                        <div class="card-body tick">
+                                            <div class="ticket-info">
+                                                <div class="t-info">
+                                                    <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
+                                                        Subscription</p>
+                                                    <p class="t-des" style="color: #041c47 !important;">
+                                                        {!! $subscription->description !!}
+                                                    </p>
+                                                </div>
+                                                <div class="t-prize">
+                                                    <h4>{{ Sohoj::price($subscription->price) }}</h4>
+                                                </div>
+                                                <input type="hidden" name="subscription[annual]"
+                                                    x-model="selectedItems.annual">
                                             </div>
-                                            <div class="t-prize">
-                                                <h4>{{ Sohoj::price($subscription->price) }}</h4>
-                                            </div>
-                                            <input type="hidden" name="subscription[annual]" x-model="selectedItems.annual">
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        
-                        <div class="tab-pane fade" id="pills-bi-annual-purchase" role="tabpanel"
-                            aria-labelledby="pills-home-tab">
-                            @foreach ($biAnnualSubscriptions as $subscription)
-                                <div class="card card-ticket cursor-pointer"
-                                    @click="selectSubscription('biannual', {{ $subscription->id }})"
-                                    :class="{ 'selected': selectedItems.biannual === {{ $subscription->id }} }">
-                                    <div class="card-body tick">
-                                        <div class="ticket-info">
-                                            <div class="t-info">
-                                                <p class="t-title">{{ ucfirst($subscription->subscription_type) }} Subscription</p>
-                                                <p class="t-des" style="color: #041c47 !important;">
-                                                    {!! $subscription->description !!}
-                                                </p>
+                                @endforeach
+                            </div>
+
+                            <div class="tab-pane fade" id="pills-bi-annual-purchase" role="tabpanel"
+                                aria-labelledby="pills-home-tab">
+                                @foreach ($biAnnualSubscriptions as $subscription)
+                                    <div class="card card-ticket cursor-pointer"
+                                        @click="selectSubscription('biannual', {{ $subscription->id }})"
+                                        :class="{ 'selected': selectedItems.biannual === {{ $subscription->id }} }">
+                                        <div class="card-body tick">
+                                            <div class="ticket-info">
+                                                <div class="t-info">
+                                                    <p class="t-title">{{ ucfirst($subscription->subscription_type) }}
+                                                        Subscription</p>
+                                                    <p class="t-des" style="color: #041c47 !important;">
+                                                        {!! $subscription->description !!}
+                                                    </p>
+                                                </div>
+                                                <div class="t-prize">
+                                                    <h4>{{ Sohoj::price($subscription->price) }}</h4>
+                                                </div>
+                                                <input type="hidden" name="subscription[biannual]"
+                                                    x-model="selectedItems.biannual">
                                             </div>
-                                            <div class="t-prize">
-                                                <h4>{{ Sohoj::price($subscription->price) }}</h4>
-                                            </div>
-                                            <input type="hidden" name="subscription[biannual]" x-model="selectedItems.biannual">
                                         </div>
                                     </div>
-                                </div>
-                            @endforeach
-                        </div>
+                                @endforeach
+                            </div>
                         </div>
                         <button class="event-buttton">
                             <span>{{ __('words.invite_confirmed') }}</span>
@@ -317,7 +326,7 @@
                     Object.keys(this.prices.onetime).forEach(id => {
                         this.selectedItems.onetime[id] = 0;
                     });
-                    
+
                     this.calculateTotal();
                 },
 
@@ -332,12 +341,14 @@
 
                     // Calculate for annual subscription if selected
                     if (this.selectedItems.annual) {
-                        this.totalPrice += parseFloat(this.prices.annual[this.selectedItems.annual] || 0);
+                        this.totalPrice += parseFloat(this.prices.annual[this.selectedItems.annual] ||
+                            0);
                     }
 
                     // Calculate for bi-annual subscription if selected
                     if (this.selectedItems.biannual) {
-                        this.totalPrice += parseFloat(this.prices.biannual[this.selectedItems.biannual] || 0);
+                        this.totalPrice += parseFloat(this.prices.biannual[this.selectedItems
+                            .biannual] || 0);
                     }
                 },
 
@@ -348,14 +359,14 @@
                     } else if (type === 'biannual') {
                         this.selectedItems.annual = null;
                     }
-                    
+
                     // Toggle selection
                     if (this.selectedItems[type] === id) {
                         this.selectedItems[type] = null; // Deselect if same item clicked
                     } else {
                         this.selectedItems[type] = id; // Select new item
                     }
-                    
+
                     this.calculateTotal();
                 },
 
@@ -381,5 +392,3 @@
         });
     </script>
 @endsection
-
-

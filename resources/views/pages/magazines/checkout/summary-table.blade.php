@@ -1,5 +1,5 @@
 <div>
-    <h3 class="dashboard-title mb-3" style="color: #28BADF">
+    <h3 class="dashboard-title mb-3" style="color: #28BADF !important">
         {{ __('words.order_summary') }}
     </h3>
 

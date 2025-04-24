@@ -73,34 +73,12 @@
             <div class="panel-body" style="padding: 25px;">
                 <!-- Header Section -->
                 <div class="row" style="margin-bottom: 30px; border-bottom: 1px solid #f0f0f0; padding-bottom: 20px;">
-                    {{-- <div class="col-md-3">
-                        <img src="{{ Voyager::image($dataTypeContent->image) }}" alt="Magazine Cover"
-                            style="max-height: 180px; border-radius: 4px; box-shadow: 0 3px 15px rgba(0,0,0,0.1); border: 1px solid #eaeaea;">
-
-
-                    </div> --}}
+                   
                     <div class="col-md-3">
                         <h2 style="margin: 0; color: #2c3e50; font-weight: 700;">{{ $dataTypeContent->name }}</h2>
-                        {{-- <div style="margin-top: 10px;">
-                            <span class="badge {{ $dataTypeContent->status == 1 ? 'badge-success' : 'badge-danger' }}"
-                                style="font-size: 12px; padding: 5px 10px; border-radius: 12px;">
-                                {{ $dataTypeContent->status_text }}
-                            </span>
-
-                        </div> --}}
+                      
                     </div>
-                    {{-- <div class="col-md-6">
-                        <h4 style="color: #7f8c8d; font-weight: 600; margin-bottom: 15px;">Description</h4>
-                        <div class="description-box"
-                            style="background: #f9f9f9; 
-                                padding: 20px; 
-                                border-radius: 6px; 
-                                border-left: 4px solid #3498db;
-                                line-height: 1.6;
-                                font-size: 15px;">
-                            {!! $dataTypeContent->description !!}
-                        </div>
-                    </div> --}}
+                   
                 </div>
 
 
@@ -527,7 +505,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="recurring_period">Total Shipment</label>
+                                    <label for="total_shipment">Total Shipment</label>
                                     <input type="number" class="form-control" id="total_shipment"
                                         name="total_shipment" min="1"  required>
                                 </div>

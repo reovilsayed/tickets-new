@@ -19,25 +19,27 @@
         @if ($showBillingInfo && $shipping->count() == 0)
             <div class="card-body">
 
-                <h3 class="text-center">
+                <h3 class="text-center" style="color: #28BADF !important">
                     {{ __('words.need_country_title') }}
                 </h3>
-                <p class="text-center">
+                <p class="text-center" style="color: #28BADF !important">
                     {{ __('words.need_country_message') }}
                 </p>
 
-                <div class="col-md-6 mx-auto">
+                <div class="col-md-8 mx-auto">
                     <form method="post" action="{{ route('magazine.shipping', $magazine) }}">
                         <div class="input-group mb-3">
                             @csrf
                             <select name="country" class="form-control m-0" id="country" required>
+                                <option value="" selected>Select your country</option>
                                 @foreach (Sohoj::getCountries() as $code => $country)
                                     <option value="{{ $code }}">{{ $country }}
                                     </option>
                                 @endforeach
                             </select>
-                            <button class="btn btn-outline-primary" type="submit">
+                            <button class="btn" style="background-color: #28badfd5; color: #ffff" type="submit">
                                 <i class="fa fa-check"></i>
+                                {{ __('words.confirmed') }}
                             </button>
                         </div>
                     </form>
@@ -45,6 +47,14 @@
 
 
                 <x-magazine-checkout-summary-table :cart="$cart" :coupon="$coupon" :shipping="$shipping" />
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{{ route('magazines.show', $magazine) }}" class="btn"
+                        style="background-color: #28badfce; color: #ffff">
+                        <i class="fa-solid fa-chevron-left"></i>
+                        {{ __('words.go_back') }}
+                    </a>
+
+                </div>
 
             </div>
         @else
@@ -63,7 +73,6 @@
 
                 <form method="post" action="{{ route('magazinecheckout.store', $magazine) }}">
                     @csrf
-
 
                     <div class="accordion" id="accordionExample">
                         <div class="accordion-item bg-transparent">
@@ -114,7 +123,7 @@
                         </div>
 
                         @if ($showBillingInfo)
-                            <div class="accordion-item bg-transparent">
+                            <div class="accordion-item bg-transparent mt-2">
                                 <h2 class="accordion-header" id="headingTwo">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"
@@ -130,7 +139,8 @@
                                                 <label for="recipient_name"
                                                     class="form-label">{{ __('words.recipient_name') }}</label>
                                                 <input type="text" name="shipping[recipient_name]"
-                                                    class="form-control" value="{{auth()->user()->fullName()}}" id="recipient_name"
+                                                    class="form-control" value="{{ auth()->user()->fullName() }}"
+                                                    id="recipient_name"
                                                     placeholder="{{ __('words.recipient_name') }}" required>
                                             </div>
                                             <div class="col-md-6">
@@ -191,13 +201,15 @@
                                                 <label for="intl-phone2"
                                                     class="form-label">{{ __('words.phone') }}</label>
                                                 <input type="tel" name="shipping[phone]" class="form-control"
-                                                    id="intl-phone2" value="{{auth()->user()->contact_number}}" placeholder="{{ __('words.phone') }}" required>
+                                                    id="intl-phone2" value="{{ auth()->user()->contact_number }}"
+                                                    placeholder="{{ __('words.phone') }}" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="email"
                                                     class="form-label">{{ __('words.email') }}</label>
-                                                <input type="email" value="{{auth()->user()->email}}" name="shipping[email]" class="form-control"
-                                                    id="email" placeholder="{{ __('words.email') }}" required>
+                                                <input type="email" value="{{ auth()->user()->email }}"
+                                                    name="shipping[email]" class="form-control" id="email"
+                                                    placeholder="{{ __('words.email') }}" required>
                                             </div>
                                         </div>
 
@@ -215,9 +227,8 @@
                             </div>
                         @endif
                     </div>
-
                     <div class="d-flex justify-content-between mt-4">
-                        <a href="{{ url()->previous() }}" class="btn"
+                        <a href="{{ route('magazines.show', $magazine) }}" class="btn"
                             style="background-color: #28BADF; color: #ffff">
                             <i class="fa-solid fa-chevron-left"></i>
                             {{ __('words.go_back') }}
