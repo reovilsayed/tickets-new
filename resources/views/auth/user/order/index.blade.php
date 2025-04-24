@@ -202,14 +202,20 @@
                 <div class="tab-pane fade" id="magazines" role="tabpanel" aria-labelledby="magazines-tab">
                     @if ($latest_magazine_orders->count() > 0)
                         @foreach ($latest_magazine_orders as $order)
+                            @php
+                                $magazine = \App\Models\Magazine::find($order->details['magazine_id']);
+                            @endphp
+
+
                             <div class="ec-vendor-setting-card mb-3 mt-3">
                                 <div class="ec-vendor-card-body">
                                     <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                                        {{-- @dd($order->details['magazine_id']) --}}
                                         <div>
                                             <h4 class="dashboard-title mb-1">
-                                                {{ $order->magazine->name ?? '-' }}
+                                                <p>{{ $magazine->name ?? '#' . $order->details['magazine_id'] }}</p>
                                             </h4>
-                                          
+
                                             @if ($order->magazineOrder)
                                                 <span
                                                     class="badge bg-{{ $order->magazineOrder->status == 1 ? 'success' : 'secondary' }}">
@@ -291,7 +297,8 @@
                             <i class="fa fa-book fa-3x text-muted mb-3"></i>
                             <h5>No magazine subscriptions</h5>
                             <p class="text-muted">You haven't subscribed to any magazines yet.</p>
-                            <a href="{{ route('magazines.index') }}" class="btn btn-primary rounded-pill">Browse Magazines</a>
+                            <a href="{{ route('magazines.index') }}" class="btn btn-primary rounded-pill">Browse
+                                Magazines</a>
                         </div>
                     @endif
                 </div>

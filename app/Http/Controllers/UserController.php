@@ -76,7 +76,7 @@ class UserController extends Controller
     public function ordersIndex(Request $request)
     {
         $latest_orders          = Order::where('user_id', auth()->user()->id)->where('payment_status', 1)->latest()->get();
-        $latest_magazine_orders = SubscriptionRecord::with(['magazine', 'magazineOrder'])
+        $latest_magazine_orders = SubscriptionRecord::with('magazineOrder')
             ->where('user_id', auth()->user()->id)
             ->latest()
             ->get();
