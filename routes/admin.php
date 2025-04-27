@@ -182,4 +182,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
         return Excel::download(new CouponExport($coupons), 'coupons_' . now()->format('dmyhi') . '.xlsx');
     })->name('voyager.coupons.export');
+    Route::post('/export-magazine-orders', [ExportController::class, 'exportMagazineOrders'])->name('export.magazine-orders');
+
 });

@@ -18,7 +18,6 @@ class BreadController extends Controller
             'title' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
-            'shipping_cost' => 'required|numeric|min:0',
             'description' => 'required|string|max:1000',
             'pdf_file' => 'required|file|mimes:pdf|max:2048',
         ]);
@@ -29,7 +28,6 @@ class BreadController extends Controller
             'title' => $request->title,
             'price' => $request->price,
             'quantity' => $request->quantity,
-            'shipping_cost' => $request->shipping_cost ?? 0,
             'description' => $request->description,
             'pdf_file' => $pdfPath,
             'magazine_id' => $magazine->id,

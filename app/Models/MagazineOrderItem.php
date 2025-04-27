@@ -17,7 +17,4 @@ class MagazineOrderItem extends Model
         return $this->morphTo();
     }
 
-
-
-
 }

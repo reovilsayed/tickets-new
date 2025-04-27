@@ -155,11 +155,7 @@
                                                     <span
                                                         style="font-weight: 600; color: #3498db;">{{ $archive->quantity }}</span>
                                                 </div>
-                                                <div>
-                                                    <span style="font-size: 13px; color: #7f8c8d;">Shipping:</span>
-                                                    <span
-                                                        style="font-weight: 600; color: #e67e22;">${{ number_format($archive->shipping_cost, 2) }}</span>
-                                                </div>
+                                              
                                                 <div>
                                                     <span style="font-size: 13px; color: #7f8c8d;">Price:</span>
                                                     <span
@@ -207,16 +203,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="shipping_cost">Shipping Cost</label>
-                                    <input type="number" step="0.01" class="form-control" id="shipping_cost"
-                                        name="shipping_cost"
-                                        value="{{ old('shipping_cost', $archive->shipping_cost ?? 0) }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="price">Price</label>
@@ -272,23 +259,14 @@
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="edit_title">Title</label>
-                                <input type="text" class="form-control" id="edit_title" name="title" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="shipping_cost">Shipping Cost</label>
-
-                                <input type="number" step="0.01" class="form-control" id="shipping_cost"
-                                    name="shipping_cost" required>
-
-                            </div>
-                        </div>
-
                         <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_title">Title</label>
+                                    <input type="text" class="form-control" id="edit_title" name="title" required>
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="edit_price">Price</label>
@@ -1013,7 +991,7 @@
                     $modal.find('#edit_title').val(data.title);
                     $modal.find('#edit_price').val(data.price);
                     $modal.find('#edit_quantity').val(data.quantity);
-                    $modal.find('#shipping_cost').val(data.shipping_cost);
+                    // $modal.find('#shipping_cost').val(data.shipping_cost);
 
                     $('#edit_description').summernote('code', data.description);
                     $modal.find('#editArchiveForm').attr('action', '/admin/archives/' + archiveId);
