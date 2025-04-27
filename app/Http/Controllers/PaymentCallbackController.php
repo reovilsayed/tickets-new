@@ -173,8 +173,8 @@ class PaymentCallbackController extends Controller
         foreach ($order->items as $item) {
             SubscriptionRecord::create([
                 'user_id' => $order->user_id,
-                'magazine_order_id' => $order->id,
-                'magazine_order_item_id' => $item->id,
+                'recordable_id' => get_class($order),
+                'recordable_type' => $order->id,
                 'magazine_id' => $item->itemable->magazine_id,
                 'subscription_id' => $item->itemable->id,
                 'subscription_type' => $item->itemable->subscription_type,
