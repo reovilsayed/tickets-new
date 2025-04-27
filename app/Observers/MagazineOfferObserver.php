@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\MagazineOffer;
 use App\Models\SubscriptionRecord;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class MagazineOfferObserver
@@ -22,20 +23,19 @@ class MagazineOfferObserver
 
         if (!$user) {
 
-            $magazineOffer->user()->create([
+
+            $data = [
                 'name' => $magazineOffer->receiver_name,
                 'email' => $magazineOffer->receiver_email,
                 'contact_number' => $magazineOffer->receiver_phone,
                 'password' => Hash::make($password),
-            ]);
-
-            
-        }{
-            $magazineOffer->update([
-                'user_id'=> $user->id,
-            ]);
+            ];
+            DB::table('users')->insert($data);
+            $user = User::where('email', $magazineOffer->receiver_email)->first();
         }
-
+        $magazineOffer->update([
+            'user_id' => $user->id,
+        ]);
 
 
         // ✅ Make sure subscription relation is loaded
