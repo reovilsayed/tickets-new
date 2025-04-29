@@ -1,43 +1,7 @@
 @extends('voyager::master')
 
 @section('page_title', __('voyager::generic.viewing') . ' ' . $dataType->getTranslatedAttribute('display_name_plural'))
-@section('css')
-    <style>
-        .form-search {
-            margin-bottom: 20px;
-        }
 
-        .form-search .input-group {
-            width: 100%;
-            display: flex;
-            flex-wrap: nowrap;
-        }
-
-        .form-search select {
-            width: 150px;
-            margin-right: 5px;
-        }
-
-        .form-search .date-range {
-            width: auto;
-            margin-right: 5px;
-        }
-
-        .form-search .input-group-text {
-            background-color: #f8f9fa;
-            border-left: 0;
-            border-right: 0;
-        }
-
-        .search-btn {
-            margin-left: 5px;
-        }
-
-        .form-search .select2 {
-            width: 150px !important;
-        }
-    </style>
-@stop
 @section('page_header')
     <div class="container-fluid">
         <h1 class="page-title">
@@ -50,35 +14,10 @@
         @endcan
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
+            <a href="{{ route('subscription-records.export') }}" class="btn btn-success">
+                <i class="voyager-download"></i> Export
+            </a>
         @endcan
-
-        <form method="post" action="{{ route('export.magazine-orders') }}" class="form-search">
-            @csrf
-            <div class="input-group">
-                <select name="subscription_type" class="form-control select2">
-                    <option value="">All Types</option>
-                    <option value="digital">Digital</option>
-                    <option value="physical">Physical</option>
-                </select>
-
-                <div class="input-group date-range">
-                    <input type="date" name="start_date" class="form-control" placeholder="Start Date">
-                    <span class="input-group-text">to</span>
-                    <input type="date" name="end_date" class="form-control" placeholder="End Date">
-                </div>
-
-                <div class="input-group-append">
-                    {{-- <button type="button" class="btn btn-success search-btn" id="search-btn">
-                        <i class="voyager-search"></i> <span>Search</span>
-                    </button> --}}
-                    <button type="submit" class="btn btn-primary search-btn">
-                        <i class="voyager-download"></i> <span>Export</span>
-                    </button>
-                </div>
-            </div>
-        </form>
-
-
         @can('edit', app($dataType->model_name))
             @if (!empty($dataType->order_column) && !empty($dataType->order_display_column))
                 <a href="{{ route('voyager.' . $dataType->slug . '.order') }}" class="btn btn-primary btn-add-new">
@@ -485,11 +424,11 @@
                     if ($(this).prop('checked')) {
                         $('#dataTable').before(
                             '<a id="redir" href="{{ route('voyager.' . $dataType->slug . '.index', array_merge($params, ['showSoftDeleted' => 1]), true) }}"></a>'
-                        );
+                            );
                     } else {
                         $('#dataTable').before(
                             '<a id="redir" href="{{ route('voyager.' . $dataType->slug . '.index', array_merge($params, ['showSoftDeleted' => 0]), true) }}"></a>'
-                        );
+                            );
                     }
 
                     $('#redir')[0].click();
@@ -504,22 +443,6 @@
                 }
             });
             $('.selected_ids').val(ids);
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize select2 if available
-            if (typeof $.fn.select2 === 'function') {
-                $('.select2').select2({
-                    theme: 'bootstrap'
-                });
-            }
-
-            // Search button functionality
-            document.getElementById('search-btn').addEventListener('click', function() {
-                // You would implement your search logic here
-                alert('Search functionality would be implemented here');
-            });
         });
     </script>
 @stop

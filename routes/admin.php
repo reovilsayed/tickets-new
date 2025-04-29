@@ -1,10 +1,15 @@
 <?php
 
 use App\Exports\CouponExport;
-use App\Http\Controllers\{AdminCustomController, AdminOrderController, EventAnalyticsController, ExportController, MassInviteController, PosUserReport};
-use App\Exports\CustomerExport;
-use App\Http\Controllers\Admin\SendOrderSmsController;
-use App\Http\Controllers\Admin\VerifyUserEmailAddressController;
+use App\Http\Controllers\AdminCustomController;
+use App\Http\Controllers\AdminOrderController;use App\Http\Controllers\Admin\SendOrderSmsController;use App\Http\Controllers\Admin\VerifyUserEmailAddressController;
+use App\Http\Controllers\EventAnalyticsController;
+
+use App\Http\Controllers\ExportController;
+
+use App\Http\Controllers\MassInviteController;
+
+use App\Http\Controllers\PosUserReport;
 use App\Models\Coupon;
 use App\Models\Invite;
 use App\Models\Order;
@@ -14,7 +19,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
-
 use TCG\Voyager\Facades\Voyager;
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
@@ -25,24 +29,23 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
     Route::get('/pos/{order}/mark', function (Order $order) {
 
         $order->update([
-            'alert' => 'resolved'
+            'alert' => 'resolved',
         ]);
         return redirect()->back()->with('sucess', 'Order marked');
     })->name('admin.order.marked');
     Voyager::routes();
     Route::get('customer/export', function () {
         $users = User::all()->map(fn($user) => [
-            'first_name' => $user->name,
-            'last_name' => $user->l_name,
-            'email' => $user->email,
+            'first_name'    => $user->name,
+            'last_name'     => $user->l_name,
+            'email'         => $user->email,
             'contactNumber' => $user->contact_number,
-            'vatNumber' => $user->vatNumber,
-            'events' => $user->events->unique()->pluck('name')->implode(', '),
+            'vatNumber'     => $user->vatNumber,
+            'events'        => $user->events->unique()->pluck('name')->implode(', '),
         ]);
 
         return Excel::download(new CustomerEpxport($users), 'customer_' . now()->format('dmyhi') . '.xlsx');
     })->name('voyager.customer.export');
-
 
     Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicateProduct'])->name('voyager.products.duplicate');
     Route::get('/users/{user}/staff', function (User $user) {
@@ -80,11 +83,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
         return view('vendor.voyager.user.staff', compact('user', 'logs', 'products'));
     })->name('voyager.users.staff');
 
-
     Route::get('/tickets/{id}', function ($id) {
 
         $tickets = Ticket::where('id', $id)->get();
-
 
         return view('ticketpdf', compact('tickets'));
     })->name('voyager.tickets.show');
@@ -93,7 +94,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
     Route::group([
         'prefix' => '/products/{product}',
-        'as' => 'voyager.products.'
+        'as'     => 'voyager.products.',
     ], function () {
         Route::get('create-physical', [AdminCustomController::class, 'ticketCreatePhysical'])->name('ticketCreatePhysical');
         Route::post('create-physical', [AdminCustomController::class, 'ticketCreatePhysicalPost'])->name('ticketCreatePhysical.post');
@@ -106,12 +107,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
     Route::group([
         'prefix' => '/invites/{invite}',
-        'as' => 'voyager.invites.'
+        'as'     => 'voyager.invites.',
     ], function () {
         Route::get('add-product', [AdminCustomController::class, 'inviteAddProduct'])->name('add-product');
         Route::post('store-product', [AdminCustomController::class, 'inviteAddProductStore'])->name('store-product');
     });
-
 
     // mass invite route
     Route::get('bulk/invites', [MassInviteController::class, 'MassInvitePage'])->name('massInvitePage');
@@ -144,7 +144,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
         Route::post('/customer-report/{user}/tickets/access-ticket', [EventAnalyticsController::class, 'giveAccessSubmit'])->name('voyager.events.customer.analytics.tickets.access-ticket-submit');
     });
 
-
     Route::get('invites/{id}', function ($id, Request $request) {
         $invite = Invite::find($id);
         // dd($invite->id);
@@ -168,20 +167,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
     Route::get('export/coupons', function () {
         $coupons = Coupon::latest()->get()->map(fn($coupon) => [
-            'code' => $coupon->code,
-            'discount' => $coupon->discount,
-            'expire_at' => $coupon->expire_at,
-            'limit' => $coupon->limit,
+            'code'         => $coupon->code,
+            'discount'     => $coupon->discount,
+            'expire_at'    => $coupon->expire_at,
+            'limit'        => $coupon->limit,
             'minimum_cart' => $coupon->minimum_cart,
-            'used' => $coupon->used,
-            'type' => $coupon->type,
-            'event' => $coupon->event->name,
-            'products' => $coupon->products->pluck('name')->implode(', '),
-            'created_at' => $coupon->created_at,
+            'used'         => $coupon->used,
+            'type'         => $coupon->type,
+            'event'        => $coupon->event->name,
+            'products'     => $coupon->products->pluck('name')->implode(', '),
+            'created_at'   => $coupon->created_at,
         ]);
 
         return Excel::download(new CouponExport($coupons), 'coupons_' . now()->format('dmyhi') . '.xlsx');
     })->name('voyager.coupons.export');
-    Route::post('/export-magazine-orders', [ExportController::class, 'exportMagazineOrders'])->name('export.magazine-orders');
+   
+    Route::get('admin/subscription-records/export', [ExportController::class, 'export'])->name('subscription-records.export');
 
 });

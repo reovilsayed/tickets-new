@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\InviteExport;
 use App\Exports\MagazineOrdersExport;
+use App\Exports\SubscriptionRecordsExport;
 use App\Models\Invite;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -28,7 +29,12 @@ class ExportController extends Controller
 
     public function exportMagazineOrders(Request $request)
     {
-      
+
         return Excel::download(new MagazineOrdersExport($request), 'magazine_orders.xlsx');
     }
+    public function export()
+    {
+        return Excel::download(new SubscriptionRecordsExport, 'subscription_records.xlsx');
+    }
+
 }

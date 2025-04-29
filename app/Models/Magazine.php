@@ -44,4 +44,8 @@ class Magazine extends Model
     {
         return $this->hasMany(MagazineSubscription::class, 'magazine_id');
     }
+    public function subscriptionRecords()
+    {
+        return $this->hasMany(SubscriptionRecord::class, 'magazine_id');
+    }
 }
