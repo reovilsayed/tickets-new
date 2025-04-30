@@ -5,10 +5,12 @@ namespace App\Providers;
 use App\Events\OrderIsPaid;
 use App\Listeners\SendEmailToCustomer;
 use App\Listeners\SendMessageToCustomer;
+use App\Models\Extra;
 use App\Models\Invite;
 use App\Models\Magazine;
 use App\Models\MagazineOffer;
 use App\Models\Order;
+use App\Observers\ExtraObserver;
 use App\Observers\InviteObserver;
 use App\Observers\MagazineOfferObserver;
 use App\Observers\OrderObserver;
@@ -44,6 +46,7 @@ class EventServiceProvider extends ServiceProvider
         Invite::observe(InviteObserver::class);
         Order::observe(OrderObserver::class);
         MagazineOffer::observe(MagazineOfferObserver::class);
+        Extra::observe(ExtraObserver::class);
     }
 
     /**
