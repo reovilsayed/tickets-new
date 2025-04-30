@@ -84,7 +84,7 @@ class TOCOnlineService
     {
         $accessToken = $this->getAccessTokenFromRefreshToken();
 
-
+        
         if (isset($accessToken['error'])) {
             return $accessToken;
         }

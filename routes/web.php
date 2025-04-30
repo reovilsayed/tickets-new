@@ -428,12 +428,17 @@ Route::get('get/magazine-subscriptions', function (Request $request) {
 })->name('get.magazine.subscriptions');
 
 
-// Route::group(['prefix' => 'voyager', 'middleware' => ['auth', 'role:admin'], 'as' => 'voyager'], function () {
-//     Route::post('magazine-offers/store', function (Request $request) {
-//         dd($request->all());
-//     })->name('magazine-offers.store');
-//     Route::post('magazine-offers/update', function (Request $request) {
-//         dd($request->all());
-//     })->name('magazine-offers.update');
-// });
+Route::get('test',function(){
+    $tocOnline = new TOCOnlineService();
+
+   $data = $tocOnline->createProduct(
+        type: 'product',
+        code: 'TEST-123',
+        description: 'Test Product',
+        price: 10.00,
+        vat:true
+    );
+
+    dd($data);
+});
 
