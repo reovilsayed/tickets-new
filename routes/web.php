@@ -436,3 +436,4 @@ Route::get('get/magazine-subscriptions', function (Request $request) {
 //         dd($request->all());
 //     })->name('magazine-offers.update');
 // });
+

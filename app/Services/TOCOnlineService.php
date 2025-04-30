@@ -28,6 +28,8 @@ class TOCOnlineService
 
     // this url will give you a code. by using that code we need to generate access_token and refresh_token. bys using refresh token use can generate access token again. and each request we have to send access token
 
+
+
     public function getAccessTokenFromAuthorizationCode($code)
     {
         $identifier = $this->identifier;
@@ -437,5 +439,55 @@ class TOCOnlineService
         ]);
 
         return $response->json();
+    }
+
+
+    public function createProduct(string $type = 'product', string $code, string $description = '', float $price, bool $vat = false, $taxCode = 'NOR')
+    {
+
+        $accessToken = $this->getAccessTokenFromRefreshToken();
+
+        $endpoint =  match ($type) {
+            'product' => "https://api15.toconline.pt/api/products",
+            'service' => "https://api15.toconline.pt/api/services",
+        };
+
+
+        if (isset($accessToken['error'])) {
+            return $accessToken;
+        }
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $accessToken
+        ])->post($endpoint, [
+            'data' => [
+                'type' => match ($type) {
+                    'product' => 'products',
+                    'service' => 'services',
+                },
+                'attributes' => [
+                    'type' => match ($type) {
+                        'product' => 'Product',
+                        'service' => 'Service',
+                    },
+                    'item_code' => $code,
+                    'item_description' => $description,
+                    'sales_price' => $price,
+                    'sales_price_includes_vat' => $vat,
+                    'tax_code' => $taxCode,
+                ],
+            ],
+        ]);
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return [
+            'error' => $response->status(),
+            'message' => $response->body(),
+        ];
     }
 }
