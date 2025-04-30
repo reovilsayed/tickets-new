@@ -181,7 +181,7 @@ class Order extends Model
 
     public function getDescription()
     {
-        dd('hello');
+    
         $products = [];
         if ($this->tickets) {
             foreach ($this->tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $ticket) {

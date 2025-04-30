@@ -15,41 +15,50 @@
             margin-bottom: 15px;
             transition: all 0.3s ease;
         }
+
         .subscription-card:hover {
             border-color: #3490dc;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .subscription-card.selected {
             border-color: #3490dc;
             background-color: #f8fafc;
         }
+
         .subscription-radio {
             position: absolute;
             opacity: 0;
         }
-        .subscription-radio:checked + label .subscription-card {
+
+        .subscription-radio:checked+label .subscription-card {
             border-color: #3490dc;
             background-color: #f0f7ff;
         }
+
         .subscription-label {
             cursor: pointer;
             width: 100%;
             margin-bottom: 0;
         }
+
         .subscription-details {
             margin-left: 30px;
         }
+
         .no-subscriptions {
             padding: 20px;
             text-align: center;
             color: #6c757d;
             font-style: italic;
         }
+
         .form-section {
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 1px solid #eee;
         }
+
         .form-section-title {
             font-size: 1.1rem;
             color: #3490dc;
@@ -95,6 +104,26 @@
                                 <h3 class="form-section-title">Receiver Information</h3>
                                 <div class="row">
                                     <div class="form-group col-md-4">
+                                        <label for="user_id">User Name</label>
+                                        <div class="input-group">
+                                            <select class="form-control" id="user_id" name="user_id">
+                                                <option value="">-- Select User --</option>
+                                                @foreach (\App\Models\User::where('role_id', 2)->get() as $user)
+                                                    <option value="{{ $user->id }}" data-name="{{ $user->name }}"
+                                                        data-email="{{ $user->email }}"
+                                                        data-phone="{{ $user->contact_number }}"
+                                                        @if (old('user_id', $dataTypeContent->user_id ?? '') == $user->id) selected @endif>
+                                                        {{ $user->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="button"
+                                                    id="clear-user-btn">Clear</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
                                         <label for="receiver_name">Receiver Name</label>
                                         <input type="text" class="form-control" id="receiver_name" name="receiver_name"
                                             placeholder="Enter receiver's name"
@@ -130,7 +159,8 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <small class="form-text text-muted">Select a magazine to view available subscriptions</small>
+                                    <small class="form-text text-muted">Select a magazine to view available
+                                        subscriptions</small>
                                 </div>
                             </div>
 
@@ -161,6 +191,41 @@
 
 @section('javascript')
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userSelect = document.getElementById('user_id');
+            const clearBtn = document.getElementById('clear-user-btn');
+
+            userSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+
+                if (selectedOption.value) {
+                    // User selected -> Fill values
+                    const name = selectedOption.getAttribute('data-name') || '';
+                    const email = selectedOption.getAttribute('data-email') || '';
+                    const phone = selectedOption.getAttribute('data-phone') || '';
+
+                    document.getElementById('receiver_name').value = name;
+                    document.getElementById('receiver_email').value = email;
+                    document.getElementById('receiver_phone').value = phone;
+                } else {
+                    // No user selected -> Clear fields
+                    clearFields();
+                }
+            });
+
+            clearBtn.addEventListener('click', function() {
+                userSelect.value = '';
+                clearFields();
+            });
+
+            function clearFields() {
+                document.getElementById('receiver_name').value = '';
+                document.getElementById('receiver_email').value = '';
+                document.getElementById('receiver_phone').value = '';
+            }
+        });
+    </script>
+    <script>
         $(document).ready(function() {
             $('.select2').select2({
                 theme: 'bootstrap',
@@ -168,39 +233,45 @@
             });
 
             $('#magazine_id').on('change', function() {
-    var magazineId = $(this).val();
-    var subscriptionList = $('#subscriptionList');
+                var magazineId = $(this).val();
+                var subscriptionList = $('#subscriptionList');
 
-    if (magazineId) {
-        subscriptionList.html('<div class="text-center py-4"><i class="voyager-loading voyager-refresh-animate"></i> Loading subscriptions...</div>');
-        
-        $.ajax({
-            url: '{{ url('get/magazine-subscriptions') }}' + '?id=' + magazineId,
-            type: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                subscriptionList.empty();
+                if (magazineId) {
+                    subscriptionList.html(
+                        '<div class="text-center py-4"><i class="voyager-loading voyager-refresh-animate"></i> Loading subscriptions...</div>'
+                    );
 
-                if (data.length > 0) {
-                    $.each(data, function(key, subscription) {
-                        // Format text to capitalize first letter
-                        const formatText = (text) => {
-                            if (!text) return '';
-                            return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-                        };
+                    $.ajax({
+                        url: '{{ url('get/magazine-subscriptions') }}' + '?id=' + magazineId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            subscriptionList.empty();
 
-                        const subscriptionType = formatText(subscription.subscription_type);
-                        const recurringPeriod = formatText(subscription.recurring_period);
-                        const description = subscription.description ? formatText(subscription.description) : '';
+                            if (data.length > 0) {
+                                $.each(data, function(key, subscription) {
+                                    // Format text to capitalize first letter
+                                    const formatText = (text) => {
+                                        if (!text) return '';
+                                        return text.charAt(0).toUpperCase() + text
+                                            .slice(1).toLowerCase();
+                                    };
 
-                        subscriptionList.append(`
+                                    const subscriptionType = formatText(subscription
+                                        .subscription_type);
+                                    const recurringPeriod = formatText(subscription
+                                        .recurring_period);
+                                    const description = subscription.description ?
+                                        formatText(subscription.description) : '';
+
+                                    subscriptionList.append(`
                             <div class="mb-3">
                                 <input type="radio" 
                                        class="subscription-radio" 
                                        name="subscription_magazine_details_id" 
                                        value="${subscription.id}" 
                                        id="subscription_${subscription.id}"
-                                       ${'{{ old("subscription_magazine_details_id", $dataTypeContent->subscription_magazine_details_id ?? "") }}' == subscription.id ? 'checked' : ''}>
+                                       ${'{{ old('subscription_magazine_details_id', $dataTypeContent->subscription_magazine_details_id ?? '') }}' == subscription.id ? 'checked' : ''}>
                                 <label class="subscription-label" for="subscription_${subscription.id}">
                                     <div class="subscription-card">
                                         <div class="d-flex align-items-center">
@@ -217,21 +288,27 @@
                                 </label>
                             </div>
                         `);
+                                });
+                            } else {
+                                subscriptionList.html(
+                                    '<div class="no-subscriptions">No subscriptions available for this magazine.</div>'
+                                );
+                            }
+                        },
+                        error: function() {
+                            subscriptionList.html(
+                                '<div class="alert alert-danger">Error loading subscriptions. Please try again later.</div>'
+                            );
+                        }
                     });
                 } else {
-                    subscriptionList.html('<div class="no-subscriptions">No subscriptions available for this magazine.</div>');
+                    subscriptionList.html(
+                        '<div class="no-subscriptions">Please select a magazine first to view available subscriptions</div>'
+                    );
                 }
-            },
-            error: function() {
-                subscriptionList.html('<div class="alert alert-danger">Error loading subscriptions. Please try again later.</div>');
-            }
-        });
-    } else {
-        subscriptionList.html('<div class="no-subscriptions">Please select a magazine first to view available subscriptions</div>');
-    }
-});
+            });
             // Trigger change if magazine is pre-selected (edit mode)
-            @if(old('magazine_id', $dataTypeContent->magazine_id ?? false))
+            @if (old('magazine_id', $dataTypeContent->magazine_id ?? false))
                 $('#magazine_id').trigger('change');
             @endif
         });
