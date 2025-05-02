@@ -10,10 +10,12 @@ use App\Models\Invite;
 use App\Models\Magazine;
 use App\Models\MagazineOffer;
 use App\Models\Order;
+use App\Models\Ticket;
 use App\Observers\ExtraObserver;
 use App\Observers\InviteObserver;
 use App\Observers\MagazineOfferObserver;
 use App\Observers\OrderObserver;
+use App\Observers\TicketObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -47,6 +49,7 @@ class EventServiceProvider extends ServiceProvider
         Order::observe(OrderObserver::class);
         MagazineOffer::observe(MagazineOfferObserver::class);
         Extra::observe(ExtraObserver::class);
+        Ticket::observe(TicketObserver::class);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Extra;
 use App\Services\TOCOnlineService;
+use Illuminate\Support\Facades\Log;
 
 class ExtraObserver
 {
@@ -21,6 +22,15 @@ class ExtraObserver
             price: 1.00,
             vat: true
         );
+
+        if (isset($data['error'])) {
+            Log::error('TOCOnlineService: ' . $data['message']);
+            return;
+        }
+
+        $extra->update([
+            'toconline_item_code' => 'EXTRA_' . $extra->id
+        ]);
     }
 
     /**
