@@ -24,6 +24,7 @@ class ProductObserver
         );
 
         if (isset($data['error'])) {
+            dd($data['message']);
             Log::error('TOCOnlineService: ' . $data['message']);
             return;
         }
