@@ -15,10 +15,10 @@ class ExtraObserver
         $tocOnline = new TOCOnlineService();
 
         $data = $tocOnline->createProduct(
-            type: 'product',
-            code: 'TEST-123',
-            description: 'Test Product',
-            price: 10.00,
+            type: $extra->type,
+            code: 'EXTRA_' . $extra->id,
+            description: $extra->display_name,
+            price: 1.00,
             vat: true
         );
     }
