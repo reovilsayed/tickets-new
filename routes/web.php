@@ -429,16 +429,7 @@ Route::get('get/magazine-subscriptions', function (Request $request) {
 
 
 Route::get('test',function(){
-    $tocOnline = new TOCOnlineService();
-
-   $data = $tocOnline->createProduct(
-        type: 'product',
-        code: 'TEST-123',
-        description: 'Test Product',
-        price: 10.00,
-        vat:true
-    );
-
+ 
     dd($data);
 });
 

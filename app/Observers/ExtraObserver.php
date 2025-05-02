@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Extra;
+use App\Services\TOCOnlineService;
 
 class ExtraObserver
 {
@@ -11,8 +12,15 @@ class ExtraObserver
      */
     public function created(Extra $extra): void
     {
-       
-         
+        $tocOnline = new TOCOnlineService();
+
+        $data = $tocOnline->createProduct(
+            type: 'product',
+            code: 'TEST-123',
+            description: 'Test Product',
+            price: 10.00,
+            vat: true
+        );
     }
 
     /**
