@@ -266,6 +266,7 @@ class TOCOnlineService
                     'quantity' => $extra->purchase_quantity,
                     'unit_price' => $unitPrice,
                     //'tax_id' => '',
+                    'item_code'=> 'EXTRA_' . $extra->id,
                     'tax_country_region' => 'PT',
                     'tax_code' => $tax_code,
                     'tax_percentage' => $tax_percentage,
