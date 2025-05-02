@@ -232,7 +232,7 @@ class TOCOnlineService
                 $name = $ticket->product->name;
                 return [
                     'item_type' => 'Service',
-                    'item_code' => $ticket->toconline_item_code ?? 'Serv001',
+                    'item_code' => $ticket->product->toconline_item_code ?? 'Serv001',
                     'description' => $name . ' for ' . $ticket?->event?->name,
                     'quantity' => 1,
                     'unit_price' => $ticket->product->price,

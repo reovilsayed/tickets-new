@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Observers;
+
+use App\Models\Product;
+use App\Services\TOCOnlineService;
+use Illuminate\Support\Facades\Log;
+
+class ProductObserver
+{
+    /**
+     * Handle the Product "created" event.
+     */
+    public function created(Product $product): void
+    {
+        $tocOnline = new TOCOnlineService();
+
+        $data = $tocOnline->createProduct(
+            type: 'service',
+            code: 'TICKET_' . $product->id,
+            description: $product->name,
+            price: $product->currentPrice(),
+            vat: true
+        );
+
+        if (isset($data['error'])) {
+            Log::error('TOCOnlineService: ' . $data['message']);
+            return;
+        }
+
+        $product->update([
+            'toconline_item_code' => 'TICKET_' . $product->id
+        ]);
+    }
+
+    /**
+     * Handle the Product "updated" event.
+     */
+    public function updated(Product $product): void
+    {
+        //
+    }
+
+    /**
+     * Handle the Product "deleted" event.
+     */
+    public function deleted(Product $product): void
+    {
+        //
+    }
+
+    /**
+     * Handle the Product "restored" event.
+     */
+    public function restored(Product $product): void
+    {
+        //
+    }
+
+    /**
+     * Handle the Product "force deleted" event.
+     */
+    public function forceDeleted(Product $product): void
+    {
+        //
+    }
+}
