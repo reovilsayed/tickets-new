@@ -84,7 +84,7 @@ class TOCOnlineService
     {
         $accessToken = $this->getAccessTokenFromRefreshToken();
 
-        
+
         if (isset($accessToken['error'])) {
             return $accessToken;
         }
@@ -232,7 +232,7 @@ class TOCOnlineService
                 $name = $ticket->product->name;
                 return [
                     'item_type' => 'Service',
-                    'item_code' => 'Serv001',
+                    'item_code' => $ticket->toconline_item_code ?? 'Serv001',
                     'description' => $name . ' for ' . $ticket?->event?->name,
                     'quantity' => 1,
                     'unit_price' => $ticket->product->price,
@@ -261,12 +261,16 @@ class TOCOnlineService
                     $tax_code = 'RED';
                 }
                 return [
-                    'item_type' => 'Product',
+                    'item_type' => match ($extra->type) {
+                        'product' => 'Product',
+                        'service' => 'Service',
+                    },
+                    'item_code' => $extra->toconline_item_code,
                     'description' => $extra->display_name,
                     'quantity' => $extra->purchase_quantity,
                     'unit_price' => $unitPrice,
                     //'tax_id' => '',
-                    'item_code'=> 'EXTRA_' . $extra->id,
+                    'item_code' => 'EXTRA_' . $extra->id,
                     'tax_country_region' => 'PT',
                     'tax_code' => $tax_code,
                     'tax_percentage' => $tax_percentage,
