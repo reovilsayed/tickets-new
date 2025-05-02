@@ -18,8 +18,8 @@ class ExtraObserver
         $data = $tocOnline->createProduct(
             type: $extra->type,
             code: 'EXTRA_' . $extra->id,
-            description: $extra->display_name,
-            price: 1.00,
+            description: $extra->name,
+            price: $extra->price,
             vat: true
         );
 
