@@ -28,9 +28,14 @@ class ProductObserver
             return;
         }
 
-        $product->update([
-            'toconline_item_code' => 'TICKET_' . $product->id
-        ]);
+        if (isset($data['data']['id'])) {
+            $product->update([
+                'toconline_item_code' => 'TICKET_' . $product->id,
+                'toconline_item_id' => $data['data']['id'],
+            ]);
+        } else {
+            Log::error('TOCOnlineService: ' . json_encode($data));
+        }
     }
 
     /**
