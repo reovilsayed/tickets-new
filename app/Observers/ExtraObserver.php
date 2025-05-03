@@ -14,13 +14,21 @@ class ExtraObserver
     public function created(Extra $extra): void
     {
         $tocOnline = new TOCOnlineService();
-
+        $tax_type = $extra->tax_type;
+        if ($tax_type == '23') {
+            $tax_code = 'NOR';
+        } else if ($tax_type == '13') {
+            $tax_code = 'INT';
+        } else {
+            $tax_code = 'RED';
+        }
         $data = $tocOnline->createProduct(
             type: $extra->type,
             code: 'EXTRA_' . $extra->id,
             description: $extra->name,
             price: $extra->price,
-            vat: true
+            vat: true,
+            taxCode:$tax_code,
         );
 
         if (isset($data['error'])) {

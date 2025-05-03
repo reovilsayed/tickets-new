@@ -14,13 +14,21 @@ class ProductObserver
     public function created(Product $product): void
     {
         $tocOnline = new TOCOnlineService();
-
+        $tax_type = $product->tax_type;
+        if ($tax_type == '23') {
+            $tax_code = 'NOR';
+        } else if ($tax_type == '13') {
+            $tax_code = 'INT';
+        } else {
+            $tax_code = 'RED';
+        }
         $data = $tocOnline->createProduct(
             type: 'service',
             code: 'TICKET_' . $product->id,
             description: $product->name,
             price: $product->currentPrice(),
-            vat: true
+            vat: true,
+            taxCode:$tax_code,
         );
 
         if (isset($data['error'])) {
