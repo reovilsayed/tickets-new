@@ -441,4 +441,10 @@ Route::get('test',function(){
 
     dd($data);
 });
+Route::get('toco/{type}',function($type){
+    $tocOnline = new TOCOnlineService();
+
+   $data = $tocOnline->getProductService($type);
+   dd($data);
+});
 

@@ -230,6 +230,17 @@ class TOCOnlineService
 
             $tickets  = $order->tickets->map(function ($ticket) {
                 $name = $ticket->product->name;
+                $tax_type = $ticket->product->tax_type;
+                if ($tax_type == '23') {
+                    $tax_percentage = 23;
+                    $tax_code = 'NOR';
+                } else if ($tax_type == '13') {
+                    $tax_percentage = 13;
+                    $tax_code = 'INT';
+                } else {
+                    $tax_percentage = 6;
+                    $tax_code = 'RED';
+                }
                 return [
                     'item_type' => 'Service',
                     'item_code' => $ticket->product->toconline_item_code ?? 'Serv001',
@@ -238,8 +249,8 @@ class TOCOnlineService
                     'unit_price' => $ticket->product->price,
                     'tax_id' => 1,
                     'tax_country_region' => 'PT',
-                    'tax_code' => 'NOR',
-                    'tax_percentage' => $ticket->product->tax,
+                    'tax_code' => $tax_code,
+                    'tax_percentage' => $tax_percentage,
                     'settlement_expression' => number_format((($ticket->product->price - $ticket->price) / $ticket->product->price) * 100, 2)
                 ];
             })->toArray();
@@ -485,6 +496,36 @@ class TOCOnlineService
                 ],
             ],
         ]);
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        return [
+            'error' => $response->status(),
+            'message' => $response->body(),
+        ];
+    }
+    public function getProductService($type='product')
+    {
+
+        $accessToken = $this->getAccessTokenFromRefreshToken();
+
+        $endpoint =  match ($type) {
+            'product' => "https://api15.toconline.pt/api/products",
+            'service' => "https://api15.toconline.pt/api/services",
+        };
+
+
+        if (isset($accessToken['error'])) {
+            return $accessToken;
+        }
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/vnd.api+json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $accessToken
+        ])->get($endpoint);
 
         if ($response->successful()) {
             return $response->json();
