@@ -27,10 +27,14 @@ class ExtraObserver
             Log::error('TOCOnlineService: ' . $data['message']);
             return;
         }
-
-        $extra->update([
-            'toconline_item_code' => 'EXTRA_' . $extra->id
-        ]);
+        if (isset($data['data']['id'])) {
+            $extra->update([
+                'toconline_item_code' => 'EXTRA_' . $extra->id,
+                'toconline_item_id' => $data['data']['id'],
+            ]);
+        } else {
+            Log::error('TOCOnlineService: ' . json_encode($data));
+        }
     }
 
     /**
