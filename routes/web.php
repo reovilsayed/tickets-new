@@ -448,3 +448,8 @@ Route::get('toco/{type}',function($type){
    dd($data);
 });
 
+
+Route::get('/wallet/pay/{event_id}/{user_uniqid}', [PageController::class, 'payWithWalletViaQr'])->name('wallet.pay.qr');
+
+
+

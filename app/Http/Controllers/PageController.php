@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\City;
@@ -10,7 +9,6 @@ use App\Models\Email;
 use App\Models\Event;
 use App\Models\Facility;
 use App\Models\Magazine;
-use App\Models\Offer;
 use App\Models\Order;
 use App\Models\Post;
 use App\Models\Prodcat;
@@ -18,38 +16,35 @@ use App\Models\Product;
 use App\Models\Rating;
 use App\Models\Shipping;
 use App\Models\Shop;
-use App\Models\Ticket;
 use App\Models\User;
 use App\Services\TOCOnlineService;
-use App\Slider;
-use Carbon\Carbon;
+use Cart;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use TCG\Voyager\Models\Page;
-use Cart;
 
 class PageController extends Controller
 {
     public function home()
     {
-        $events = Event::where('status', 1)->where('featured', 1)->orderBy('sequence', 'asc')->get();
+        $events    = Event::where('status', 1)->where('featured', 1)->orderBy('sequence', 'asc')->get();
         $magazines = Magazine::where('status', 1)->paginate(10);
         return view('pages.home', compact('events', 'magazines'));
     }
 
     public function shops()
     {
-        $products = Product::where("status", 1)->limit(12)->filter()->paginate(10);
+        $products   = Product::where("status", 1)->limit(12)->filter()->paginate(10);
         $categories = Prodcat::has('products')->latest()->get();
-        $cities = City::all();
+        $cities     = City::all();
         return view('pages.shops', compact('products', 'categories', 'cities'));
     }
     public function about()
     {
-        $ratings = Rating::latest()->get();
+        $ratings    = Rating::latest()->get();
         $facilities = Facility::latest()->get();
         return view('pages.about', compact('ratings', 'facilities'));
     }
@@ -59,11 +54,10 @@ class PageController extends Controller
     }
     public function product_details($slug)
     {
-        $product = Product::where('slug', $slug)->firstOrFail();
+        $product          = Product::where('slug', $slug)->firstOrFail();
         $related_products = Product::whereNull('parent_id')->limit(16)->get();
-        $amenities = explode(',', $product->amenities);
+        $amenities        = explode(',', $product->amenities);
         // $product->increment('views');
-
 
         // $recommand = session()->get('recommand', []);
 
@@ -82,7 +76,6 @@ class PageController extends Controller
         return view('pages.cart', compact('latest_shops'));
     }
 
-
     public function dashboard()
     {
 
@@ -100,16 +93,13 @@ class PageController extends Controller
         return back()->with('success_msg', 'Address has been removed!');
     }
 
-
-
     public function order_index()
     {
         $latest_orders = Order::where('user_id', auth()->user()->id)->where('status', 0)->orWhere('status', 3)->latest()->get();
-        $past_orders = Order::where('user_id', auth()->user()->id)->where('status', 1)->latest()->get();
+        $past_orders   = Order::where('user_id', auth()->user()->id)->where('status', 1)->latest()->get();
 
         return view('auth.user.order.index', compact('latest_orders', 'past_orders'));
     }
-
 
     public function checkout(Event $event)
     {
@@ -117,16 +107,12 @@ class PageController extends Controller
         return view('pages.checkout', compact('event'));
     }
 
-
     public function store_front($slug)
     {
         $shop = Shop::where('slug', $slug)->products()->firstOrFail();
 
-
-
         return view('pages.store_front', compact('shop'));
     }
-
 
     // public function order_page()
     // {
@@ -141,13 +127,13 @@ class PageController extends Controller
     {
         $product = Product::find($request->product_id);
         Rating::create([
-            "name" => $request->name,
-            "email" => $request->email,
-            "rating" => $request->rating,
-            "review" => $request->comment,
+            "name"       => $request->name,
+            "email"      => $request->email,
+            "rating"     => $request->rating,
+            "review"     => $request->comment,
             "product_id" => $product->id,
-            'user_id' => Auth()->id(),
-            'shop_id' => $product->shop->id,
+            'user_id'    => Auth()->id(),
+            'shop_id'    => $product->shop->id,
         ]);
         return back()->with('success_msg', 'Thanks for your review');
     }
@@ -156,7 +142,7 @@ class PageController extends Controller
         $request->validate([
             'email' => ['required', 'unique:emails,email'],
         ], [
-            'email.unique' => 'You already subscribed'
+            'email.unique' => 'You already subscribed',
         ]);
         Email::create([
             "email" => $request->email,
@@ -181,7 +167,7 @@ class PageController extends Controller
                 $query->whereHas('prodcats', function ($query) {
                     $query->where('slug', request()->category);
                 });
-            }
+            },
         ])
             ->when($request->filled('category'), function ($query) {
                 $query->whereHas('products', function ($query) {
@@ -219,11 +205,11 @@ class PageController extends Controller
     }
     public function setLocation(Request $request)
     {
-        $postcodes = $request->input('postcodes');
-        $lng = $request->input('lng');
-        $lat = $request->input('lat');
-        $radius = $request->input('radius');
-        $state = $request->input('state');
+        $postcodes       = $request->input('postcodes');
+        $lng             = $request->input('lng');
+        $lat             = $request->input('lat');
+        $radius          = $request->input('radius');
+        $state           = $request->input('state');
         $uniquePostcodes = array_unique($postcodes);
 
         // Process the data as needed
@@ -231,10 +217,10 @@ class PageController extends Controller
         // Return the response
         $response = [
             'postcode' => $uniquePostcodes,
-            'lng' => $lng,
-            'lat' => $lat,
-            'radius' => $radius,
-            'state' => $state,
+            'lng'      => $lng,
+            'lat'      => $lat,
+            'radius'   => $radius,
+            'state'    => $state,
         ];
         Session::put('location', $response);
 
@@ -250,9 +236,9 @@ class PageController extends Controller
     {
         // dd($request->all());
         $contact = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
+            'name'    => 'required',
+            'email'   => 'required|email',
+            'phone'   => 'required',
             'subject' => 'required',
             'message' => 'required',
         ]);
@@ -266,17 +252,20 @@ class PageController extends Controller
     }
     public function post($slug)
     {
-        $post = Post::where('slug', $slug)->firstOrFail();
+        $post        = Post::where('slug', $slug)->firstOrFail();
         $recentPosts = Post::where('id', '!=', $post->id)->published()->latest()->limit(5)->get();
-        $categories = Category::all();
+        $categories  = Category::all();
         return view('pages.post_details', compact('post', 'recentPosts', 'categories'));
     }
     public function toconlineCallback()
     {
         Log::info(request('code'));
         $toconile = new TOCOnlineService;
-        $token = $toconile->getAccessTokenFromAuthorizationCode(request()->code);
-        if (isset($token['error'])) throw new Exception('TOC oniline token genration failed');
+        $token    = $toconile->getAccessTokenFromAuthorizationCode(request()->code);
+        if (isset($token['error'])) {
+            throw new Exception('TOC oniline token genration failed');
+        }
+
         Storage::disk('local')->put('token.json', json_encode((array) $token, JSON_PRETTY_PRINT));
     }
     public function interzone_1()
@@ -290,14 +279,22 @@ class PageController extends Controller
 
     public function magazineCheckout(Magazine $magazine)
     {
-        $cart = Cart::session($magazine->slug);
-        $coupon = Cart::session($magazine->slug)->getCondition('Coupon');
+        $cart     = Cart::session($magazine->slug);
+        $coupon   = Cart::session($magazine->slug)->getCondition('Coupon');
         $shipping = Cart::session($magazine->slug)->getConditionsByType('shipping');
-
 
         $shippings = Shipping::all();
         // dd($shippings);
 
         return view('pages.magazines.checkout.index', compact('magazine', 'cart', 'coupon', 'shippings', 'shipping'));
     }
+
+    public function payWithWalletViaQr($event_id, $user_uniqid)
+    {
+        // Validate the user and event IDs
+        $user  = User::where('uniqid', $user_uniqid)->firstOrFail();
+        $event = Event::findOrFail($event_id);
+        dd($user, $event);
+    }
+
 }

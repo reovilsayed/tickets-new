@@ -119,20 +119,28 @@
                     {{ $event->name }}
                 </h3>
                 <div class="cus-btn-bar">
-                    <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user ,'event_id'=>request('event_id')]) }}"><i class="fa-solid fa-qrcode"></i>
+                    <a class="cus-btn"
+                        href="{{ route('digital-wallet', ['user' => $user, 'event_id' => request('event_id')]) }}"><i
+                            class="fa-solid fa-qrcode"></i>
                         {{ __('words.tickets') }}</a>
                     @if ($orders->count())
                         <a class="cus-btn"
-                            href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'invoice' ,'event_id'=>request('event_id')]) }}"><i
+                            href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'invoice', 'event_id' => request('event_id')]) }}"><i
                                 class="fa-solid fa-file-invoice"></i>
                             {{ __('words.invoice') }}</a>
                     @endif
-                    <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'info' ,'event_id'=>request('event_id')]) }}"><i
+                    <a class="cus-btn"
+                        href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'info', 'event_id' => request('event_id')]) }}"><i
                             class="fa-solid fa-circle-info"></i>
                         {{ __('words.information') }}</a>
-                    <a class="cus-btn" href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'products','event_id'=>request('event_id')]) }}"><i
+                    <a class="cus-btn"
+                        href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'products', 'event_id' => request('event_id')]) }}"><i
                             class="fa-solid fa-box"></i>
                         {{ __('words.products') }}</a>
+                    <a class="cus-btn"
+                        href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'qr_payment', 'event_id' => request('event_id')]) }}"><i
+                            class="fa-solid fa-box"></i>
+                        {{ __('words.qr-payment') }}</a>
                 </div>
             </div>
 
@@ -162,7 +170,8 @@
                     </div>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <a style="color: #f3510b" target="_blank" href="{{ $event->website }}" style="text-decoration: none" class="p-0 m-0 fs-4">
+                            <a style="color: #f3510b" target="_blank" href="{{ $event->website }}"
+                                style="text-decoration: none" class="p-0 m-0 fs-4">
                                 {{ __('words.website') }}
                             </a>
 
@@ -170,7 +179,8 @@
                     </div>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <a style="color: #f3510b" target="_blank" href="{{ $event->program }}" style="text-decoration: none" class="p-0 m-0 fs-4">
+                            <a style="color: #f3510b" target="_blank" href="{{ $event->program }}"
+                                style="text-decoration: none" class="p-0 m-0 fs-4">
                                 {{ __('words.website_program') }}
                             </a>
 
@@ -202,7 +212,7 @@
                                             {{ $name }}
                                         </h4>
                                         <p>
-                                            
+
                                             {{ __('words.remaining') }} :
                                             {{ $extras->sum('qty') - $extras->sum('used') }}
                                         </p>
@@ -222,7 +232,7 @@
                     @foreach ($orders as $order)
                         <div class="card">
                             <div class="card-body">
-                                {{$order->id}}
+                                {{ $order->id }}
                                 <p class="fw-light fs-6 mb-0">
                                     {{ __('words.toc_online_id') }} :
                                 </p>
@@ -243,8 +253,38 @@
 
 
                 </div>
+            @elseif(request()->tab == 'qr_payment')
+                <div class="cus-card-body p-2">
+                    <div class="card mb-3 shadow-sm" style="border:1px solid #f3510b;">
+                        <div class="card-body text-center">
+                            <h4 class="mb-3">{{ __('words.qr_payment') }}</h4>
+                            @php
+                                $qrData = route('wallet.pay.qr', ['event_id' => $event->id, 'user_uniqid' => auth()->user()->uniqid]);
+                            @endphp
+                            <!-- QR Code Container -->
+                            <div class="mb-3" id="">
+                                <div class="event-qr-code">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ urlencode($qrData) }}&color=ef5927" alt="QR Code">
+                                    <p></p>
+                                </div>
+                            </div>
+
+                            <!-- Payment Instructions -->
+                            <div class="mb-3">
+                                <p class="fw-bold">{{ __('words.payment_instructions') }}:</p>
+                                <ol class="text-start">
+                                    <p>My Wallet Balance <strong class="ms-3">{{ Sohoj::price(auth()->user()->balance) }}</strong></p>
+                                </ol>
+                            </div>
+
+                            <!-- Payment Details -->
+                            <div class="border-top pt-3" id="payment-details">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             @else
-            
                 <div class="cus-card-body p-2">
                     @foreach ($tickets->groupBy('order_id') as $orderId => $tickets)
                         @php
@@ -301,7 +341,7 @@
 
 
     </main>
-    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
     </script>
@@ -316,6 +356,7 @@
             window.location.href = currentUrl;
         });
     </script>
+
 
 </body>
 
