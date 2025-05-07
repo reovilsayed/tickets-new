@@ -4,6 +4,14 @@
 
 @section('title', 'Privacy Policy')
 
+@section('css')
+<style>
+    p, ul, li {
+        color: white;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container py-5">
     <h1 class="mb-4">Privacy Policy</h1>
