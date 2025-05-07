@@ -434,3 +434,33 @@ Route::group(['middleware' => ['auth', 'role:walletzone']], function () {
     Route::get('/wallet/dashboard', [WalletController::class, 'index'])->name('wallet.dashboard');
     Route::post('wallet/withdraw-or-refund',[WalletController::class,'withdrawRefund'])->name('wallet.withdrawRefund');
 });
+
+Route::view('/privacy-policy', 'pages/privacy-policy')->name('privacy.policy');
+
+Route::get('/delete-account', function () {
+    return view('pages.account-delete');
+})->name('account.delete.form');
+Route::middleware(['auth'])->group(function () {
+    Route::delete('/delete-account', function (Request $request) {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Unauthorized request.');
+        }
+        $request->validate([
+            'password' => 'required',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->password, $user->password)) {
+            return back()->withErrors(['password' => 'Incorrect password.']);
+        }
+
+        Auth::logout();
+
+        // Optionally delete related data here
+
+        $user->delete();
+
+        return redirect('/')->with('status', 'Your account has been deleted.');
+    })->name('account.delete');
+});
