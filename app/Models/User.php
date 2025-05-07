@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasWallet;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -12,7 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUlids;
+    use HasApiTokens, HasFactory, Notifiable, HasUlids, HasWallet;
 
     /**
      * The attributes that are mass assignable.
@@ -117,13 +118,13 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     }
 
     public function subscriptionStatus()
-{
-    $subscription = $this->getSubscription();
-    if (!$subscription || $subscription->stripe_status !== 'active' || $subscription->ends_at !== null) {
-        return false;
+    {
+        $subscription = $this->getSubscription();
+        if (!$subscription || $subscription->stripe_status !== 'active' || $subscription->ends_at !== null) {
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
     public function getCard()
     {
@@ -147,7 +148,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     }
 
 
-  
+
     public function isFollowingShop($shopId)
     {
         return $this->followedShops()->where('shop_id', $shopId)->exists();
@@ -208,14 +209,11 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         return $this->hasMany(SubscriptionRecord::class);
     }
 
-    public function mymagazines(){
+    public function mymagazines()
+    {
         return SubscriptionRecord::where('user_id', $this->id)
-            ->where('subscription_type','digital')
+            ->where('subscription_type', 'digital')
             ->latest()
             ->select('magazine_id')->get()->pluck('magazine_id')->toArray();
-
-
     }
-
-    
 }

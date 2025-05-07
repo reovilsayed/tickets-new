@@ -423,33 +423,16 @@ Route::get('/populate-shipping', function () {
 
 
 Route::get('get/magazine-subscriptions', function (Request $request) {
-    $subscriptions = Magazine::find($request->id)->subscriptions()->where('subscription_type','digital')->get();
+    $subscriptions = Magazine::find($request->id)->subscriptions()->where('subscription_type', 'digital')->get();
     return response()->json($subscriptions);
 })->name('get.magazine.subscriptions');
 
 
-Route::get('test',function(){
-    $tocOnline = new TOCOnlineService();
+// Route::get('/wallet/pay/{event_id}/{user_uniqid}', [PageController::class, 'payWithWalletViaQr'])->name('wallet.pay.qr');
 
-   $data = $tocOnline->createProduct(
-        type: 'product',
-        code: 'TEST-123',
-        description: 'Test Product',
-        price: 10.00,
-        vat:true
-    );
 
-    dd($data);
+
+Route::get('test/user', function () {
+    $user = User::latest()->first();
+    return $user->spend(50);
 });
-Route::get('toco/{type}',function($type){
-    $tocOnline = new TOCOnlineService();
-
-   $data = $tocOnline->getProductService($type);
-   dd($data);
-});
-
-
-Route::get('/wallet/pay/{event_id}/{user_uniqid}', [PageController::class, 'payWithWalletViaQr'])->name('wallet.pay.qr');
-
-
-

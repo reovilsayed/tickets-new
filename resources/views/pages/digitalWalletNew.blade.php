@@ -258,26 +258,46 @@
                     <div class="card mb-3 shadow-sm" style="border:1px solid #f3510b;">
                         <div class="card-body text-center">
                             <h4 class="mb-3">{{ __('words.qr_payment') }}</h4>
-                            @php
-                                $qrData = route('wallet.pay.qr', ['event_id' => $event->id, 'user_uniqid' => auth()->user()->uniqid]);
-                            @endphp
+
                             <!-- QR Code Container -->
                             <div class="mb-3" id="">
                                 <div class="event-qr-code">
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data={{ urlencode($qrData) }}&color=ef5927" alt="QR Code">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ $user->uniqid }}&color=ef5927"
+                                        alt="QR Code">
                                     <p></p>
                                 </div>
                             </div>
 
-                            <!-- Payment Instructions -->
-                            <div class="mb-3">
-                                <p class="fw-bold">{{ __('words.payment_instructions') }}:</p>
-                                <ol class="text-start">
-                                    <p>My Wallet Balance <strong class="ms-3">{{ Sohoj::price(auth()->user()->balance) }}</strong></p>
-                                </ol>
+                            <p class="p-0">
+                                {{ __('words.balance') }}
+                            </p>
+                            <h1 style="font-size: 50px">
+                                {{ Sohoj::price($user->balance) }}
+                            </h1>
+
+                            <div class="table-responsive">
+                                <table class="table" style="text-align: left;width:150%">
+                                    @foreach ($user->transactions as $transaction)
+                                        <tr>
+                                            <td>
+                                                <small>
+                                                    {{ $transaction->created_at->format('d M, Y h:i A') }}
+
+                                                </small>
+                                            </td>
+                                            <td>
+                                                {{ $transaction->type == 'debit' ? '+' : '-' }}
+                                                {{ Sohoj::price($transaction->amount) }}
+                                            </td>
+                                            <td>
+                                                {{ $transaction->description }}
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    @endforeach
+                                </table>
                             </div>
 
-                            <!-- Payment Details -->
                             <div class="border-top pt-3" id="payment-details">
                                 <!-- Will be populated by JavaScript -->
                             </div>
