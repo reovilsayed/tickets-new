@@ -7,7 +7,7 @@
 @section('css')
 <style>
     p, ul, li {
-        color: white;
+        color: white !important;
     }
 </style>
 @endsection
