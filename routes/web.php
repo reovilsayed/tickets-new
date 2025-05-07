@@ -452,3 +452,5 @@ Route::get('/wallet/pay/{event_id}/{user_uniqid}', [PageController::class, 'payW
 Route::group(['middleware' => ['auth', 'role:walletzone']], function () {
     Route::get('/wallet/dashboard', [WalletController::class, 'index'])->name('wallet.dashboard');
 });
+
+Route::view('/privacy-policy', 'pages/privacy-policy')->name('privacy.policy');
