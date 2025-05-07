@@ -14,6 +14,7 @@ use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\PosDashboardReport;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
@@ -421,18 +422,15 @@ Route::get('/populate-shipping', function () {
     return "Successfully populated $count countries!";
 });
 
-
 Route::get('get/magazine-subscriptions', function (Request $request) {
     $subscriptions = Magazine::find($request->id)->subscriptions()->where('subscription_type', 'digital')->get();
     return response()->json($subscriptions);
 })->name('get.magazine.subscriptions');
 
 
-// Route::get('/wallet/pay/{event_id}/{user_uniqid}', [PageController::class, 'payWithWalletViaQr'])->name('wallet.pay.qr');
+Route::get('/wallet/pay/{event_id}/{user_uniqid}', [PageController::class, 'payWithWalletViaQr'])->name('wallet.pay.qr');
 
-
-
-Route::get('test/user', function () {
-    $user = User::latest()->first();
-    return $user->spend(50);
+Route::group(['middleware' => ['auth', 'role:walletzone']], function () {
+    Route::get('/wallet/dashboard', [WalletController::class, 'index'])->name('wallet.dashboard');
+    Route::post('wallet/withdraw-or-refund',[WalletController::class,'withdrawRefund'])->name('wallet.withdrawRefund');
 });

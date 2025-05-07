@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('key')->nullable();
             $table->string('description')->nullable();
             $table->integer('amount')->default(0);
+            $table->foreignId('agent_id')->nullable();
             $table->timestamps();
         });
     }

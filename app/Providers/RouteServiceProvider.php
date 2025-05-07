@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
@@ -17,10 +16,11 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/';
-    public const USER = '/user/dashboard';
-    public const ADMIN = '/admin';
+    public const HOME   = '/';
+    public const USER   = '/user/dashboard';
+    public const ADMIN  = '/admin';
     public const VENDOR = '/vendor/dashboard';
+    public const WALLET = '/wallet/dashboard';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
@@ -43,7 +43,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/user.php'));
 
             Route::middleware('web', 'auth')
-                ->group(base_path('routes/admin.php'));
+                ->group(base_path('routes/admin.php'));        
         });
     }
 

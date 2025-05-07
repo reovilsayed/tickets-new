@@ -28,7 +28,7 @@ trait HasWallet
         if ($this->balance >= $amount) {
             $this->balance -= $amount;
             $this->save();
-            return    $this->createTranscation($amount, 'debit', 'Refund', 'balance_refund');
+            return    $this->createTranscation($amount, 'credit', 'Refund', 'balance_refund');
         } else {
             throw new \Exception("Insufficient balance.");
         }
@@ -41,11 +41,12 @@ trait HasWallet
             'type' => $type,
             'key' => $key,
             'description' => $description,
+            'agent_id' => auth()->id()
         ]);
     }
 
     public function transactions()
     {
-        return $this->morphMany(Transaction::class, 'transactionalbe');
+        return $this->morphMany(Transaction::class, 'transactionalbe')->latest();
     }
 }
