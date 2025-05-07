@@ -14,6 +14,7 @@ use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\PosDashboardReport;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
 use App\Models\Event;
@@ -289,8 +290,8 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 
     // Determine the current event based on the request or default to the first event
     $event = $request->filled('event_id')
-        ? Event::find($request->event_id)
-        : $events->first() ?? new Event();
+    ? Event::find($request->event_id)
+    : $events->first() ?? new Event();
 
     // Fetch the user's orders excluding those with 'invite' as the payment method
     $orders = Order::where('user_id', $user->id)->where('event_id', $event->id)
@@ -421,35 +422,33 @@ Route::get('/populate-shipping', function () {
     return "Successfully populated $count countries!";
 });
 
-
 Route::get('get/magazine-subscriptions', function (Request $request) {
-    $subscriptions = Magazine::find($request->id)->subscriptions()->where('subscription_type','digital')->get();
+    $subscriptions = Magazine::find($request->id)->subscriptions()->where('subscription_type', 'digital')->get();
     return response()->json($subscriptions);
 })->name('get.magazine.subscriptions');
 
-
-Route::get('test',function(){
+Route::get('test', function () {
     $tocOnline = new TOCOnlineService();
 
-   $data = $tocOnline->createProduct(
+    $data = $tocOnline->createProduct(
         type: 'product',
         code: 'TEST-123',
         description: 'Test Product',
         price: 10.00,
-        vat:true
+        vat: true
     );
 
     dd($data);
 });
-Route::get('toco/{type}',function($type){
+Route::get('toco/{type}', function ($type) {
     $tocOnline = new TOCOnlineService();
 
-   $data = $tocOnline->getProductService($type);
-   dd($data);
+    $data = $tocOnline->getProductService($type);
+    dd($data);
 });
-
 
 Route::get('/wallet/pay/{event_id}/{user_uniqid}', [PageController::class, 'payWithWalletViaQr'])->name('wallet.pay.qr');
 
-
-
+Route::group(['middleware' => ['auth', 'role:walletzone']], function () {
+    Route::get('/wallet/dashboard', [WalletController::class, 'index'])->name('wallet.dashboard');
+});
