@@ -1,6 +1,6 @@
 <?php
 
-use App\Exports\CouponExport;
+use App\Exports\CustomerExport;
 use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\AdminOrderController;use App\Http\Controllers\Admin\SendOrderSmsController;use App\Http\Controllers\Admin\VerifyUserEmailAddressController;
 use App\Http\Controllers\EventAnalyticsController;
@@ -43,8 +43,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
             'vatNumber'     => $user->vatNumber,
             'events'        => $user->events->unique()->pluck('name')->implode(', '),
         ]);
-
-        return Excel::download(new CustomerEpxport($users), 'customer_' . now()->format('dmyhi') . '.xlsx');
+        return Excel::download(new CustomerExport($users), 'customer_' . now()->format('dmyhi') . '.xlsx');
     })->name('voyager.customer.export');
 
     Route::get('/products/{product}/duplicate', [AdminCustomController::class, 'duplicateProduct'])->name('voyager.products.duplicate');
