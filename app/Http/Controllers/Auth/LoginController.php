@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -54,53 +53,59 @@ class LoginController extends Controller
             // case 3:
             //     return RouteServiceProvider::VENDOR;
             //     break;
-
+            case 8:
+                return RouteServiceProvider::WALLET;
+                break;
             default:
                 return RouteServiceProvider::HOME;
                 break;
         }
     }
-    public function redirectToGoogle()  {
+    public function redirectToGoogle()
+    {
         return Socialite::driver('google')->redirect();
     }
-    public function handleGoogleCallback() {
+    public function handleGoogleCallback()
+    {
         try {
             $user = Socialite::driver('google')->user();
             $this->_registerOrLoginUser($user);
             return redirect()->route('user.dashboard');
         } catch (\Exception $e) {
-    
+
             return redirect('/login')->withErrors('Unable to fetch user data from Google');
         }
-        
-        
+
     }
     // facebook login
-    public function redirectToFacebook()  {
+    public function redirectToFacebook()
+    {
         return Socialite::driver('facebook')->redirect();
     }
-    public function handleFacebookCallback() {
+    public function handleFacebookCallback()
+    {
 
         try {
             $user = Socialite::driver('facebook')->user();
             $this->_registerOrLoginUser($user);
             return redirect()->route('user.dashboard');
         } catch (\Exception $e) {
-    
+
             return redirect('/login')->withErrors('Unable to fetch user data from Google');
         }
     }
 
-    protected function _registerOrLoginUser($data)  {
-        $user=User::where('email',$data->email)->first();
-        if(!$user){
-           $user= User::create([
-            'name'=>$data->name,
-            'email'=>$data->email,
-            'avatar'=>$data->avatar,
-            'provider_id'=>$data->id,
-           ]);
+    protected function _registerOrLoginUser($data)
+    {
+        $user = User::where('email', $data->email)->first();
+        if (! $user) {
+            $user = User::create([
+                'name'        => $data->name,
+                'email'       => $data->email,
+                'avatar'      => $data->avatar,
+                'provider_id' => $data->id,
+            ]);
         }
-       Auth::login($user);
+        Auth::login($user);
     }
 }
