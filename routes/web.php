@@ -455,11 +455,14 @@ Route::group(['middleware' => ['auth', 'role:walletzone']], function () {
 
 Route::view('/privacy-policy', 'pages/privacy-policy')->name('privacy.policy');
 
+Route::get('/delete-account', function () {
+    return view('pages.account-delete');
+})->name('account.delete.form');
 Route::middleware(['auth'])->group(function () {
-    Route::get('/delete-account', function () {
-        return view('pages.account-delete');
-    })->name('account.delete.form');
     Route::delete('/delete-account', function (Request $request) {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Unauthorized request.');
+        }
         $request->validate([
             'password' => 'required',
         ]);
