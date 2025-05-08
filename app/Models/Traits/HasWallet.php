@@ -41,7 +41,7 @@ trait HasWallet
             'type' => $type,
             'key' => $key,
             'description' => $description,
-            'agent_id' => auth()->id()
+            'agent_id' => auth()->id() ?? auth('sanctum')->id()
         ]);
     }
 
