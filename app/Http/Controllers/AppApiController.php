@@ -420,7 +420,7 @@ class AppApiController extends Controller
     function getWalletCustomer()
     {
         $customer = null;
-        return dd(request()->qr);
+        return dd(request()->filled('qr'));
         if (request()->filled('user')) {
             $customer = User::where(function ($query) {
                 $query->where('email', request()->user)->orWhere('contact_number', request()->user);
