@@ -428,6 +428,7 @@ class AppApiController extends Controller
         if (request()->qr) {
             $customer = User::where('uniqid', request()->qr)->where('role_id', 2)->first();
         }
+        return dd($customer);
         return response()->json($customer);
     }
 
