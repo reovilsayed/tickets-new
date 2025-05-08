@@ -420,7 +420,6 @@ class AppApiController extends Controller
     function getWalletCustomer()
     {
         $customer = null;
-        return dd(request()->filled('user'));
         if (request()->filled('user')) {
             $customer = User::where(function ($query) {
                 $query->where('email', request()->user)->orWhere('contact_number', request()->user);
@@ -429,7 +428,8 @@ class AppApiController extends Controller
         if (request()->filled('qr')) {
             $customer = User::where('uniqid', request()->qr)->where('role_id', 2)->first();
         }
-        return response()->json($customer);
+        return dd($customer);
+        return response()->json([$customer]);
     }
 
     public function withdrawRefund(Request $request)
