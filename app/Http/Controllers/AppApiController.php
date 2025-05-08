@@ -416,4 +416,18 @@ class AppApiController extends Controller
         $todayRefund = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Refund')->sum('amount');
         return response()->json(['transactions' => $transactions, 'deposit' => (int)($todayDeposit), 'refund' => (int)($todayRefund)]);
     }
+
+    function getWalletCustomer()
+    {
+        $customer = null;
+        if (request()->user) {
+            $customer = User::where(function ($query) {
+                $query->where('email', request()->user)->orWhere('contact_number', request()->user);
+            })->where('role_id', 2)->first();
+        }
+        if (request()->qr) {
+            $customer = User::where('uniqid', request()->qr)->where('role_id', 2)->first();
+        }
+        return response()->json($customer);
+    }
 }
