@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ExtraResoure;
 use App\Models\Extra;
 use App\Models\Ticket;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Zone;
 use Illuminate\Http\Request;
@@ -406,5 +407,13 @@ class AppApiController extends Controller
         //     DB::rollBack();
         //     return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
         // }
+    }
+
+    function getMyWallet()
+    {
+        $transactions = Transaction::where('agent_id', auth('sanctum')->id())->latest()->paginate(20);
+        $todayDeposit = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Deposit')->sum('amount');
+        $todayRefund = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Refund')->sum('amount');
+        return response()->json(['transactions' => $transactions, 'deposit' => $todayDeposit, 'refund' => $todayRefund]);
     }
 }
