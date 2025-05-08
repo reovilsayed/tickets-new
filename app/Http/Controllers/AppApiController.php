@@ -414,6 +414,6 @@ class AppApiController extends Controller
         $transactions = Transaction::where('agent_id', auth('sanctum')->id())->latest()->paginate(20);
         $todayDeposit = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Deposit')->sum('amount');
         $todayRefund = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Refund')->sum('amount');
-        return response()->json(['transactions' => $transactions, 'deposit' => $todayDeposit, 'refund' => $todayRefund]);
+        return response()->json(['transactions' => $transactions, 'deposit' => (int)($todayDeposit), 'refund' => (int)($todayRefund)]);
     }
 }
