@@ -447,6 +447,6 @@ class AppApiController extends Controller
             $user->deposit($request->amount);
         }
 
-        return response()->json($user);
+        return response()->json(['user' => $user]);
     }
 }
