@@ -430,4 +430,23 @@ class AppApiController extends Controller
         }
         return response()->json($customer);
     }
+
+    public function withdrawRefund(Request $request)
+    {
+        $request->validate([
+            'amount' => 'required',
+            'user' => 'required',
+            'type' => 'required'
+        ]);
+
+        $user = User::find($request->user);
+
+        if ($request->type == 'refund') {
+            $user->refund($request->amount);
+        } else {
+            $user->deposit($request->amount);
+        }
+
+        return response()->json($user);
+    }
 }
