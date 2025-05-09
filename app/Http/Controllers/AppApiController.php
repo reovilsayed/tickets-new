@@ -8,6 +8,7 @@ use App\Models\Ticket;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Zone;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -300,113 +301,117 @@ class AppApiController extends Controller
     public function createOrder(Request $request)
     {
         // Collect initial order data
-        // try {
-        DB::beginTransaction();
-        $extraProducts = $request->get('extras') ?? [];
-
-        if (count($extraProducts) <= 0) throw new Exception('No products in cart');
-
-        $orderData = [
-            'billing' => request()->get('billing'),
-            'user_id' => $this->getUser(request()->get('billing'))->id,
-            'subtotal' => $request->get('sub_total'),
-            'discount' => 0,
-            'total' => $request->get('total'),
-            // 'event_id' => $request->get('event_id'),
-            'payment_method' => $request->get('payment_method') ?? 'App',
-            'transaction_id' => Str::uuid(),
-            'security_key' => Str::uuid(),
-            'send_message' => $request->get('send_message') ? true : false,
-            'send_email' => $request->get('send_mail') ? true : false,
-            'pos_id' => auth()->id()
-        ];
-
-
-
-        $order = Order::create($orderData);
-
-
-        // Calculate total quantity of extras and tickets
-        $totalItems = 0;
-
-
-        foreach ($extraProducts as $extra) {
-            $quantity = @$extra['quantity'] ?? @$extra['newQty'] ?? 0;
-            $totalItems +=  $quantity;
-        }
-
-        // Adjust extra product prices
-        if (count($extraProducts)) {
-            $orderExtras = collect($extraProducts)->map(function ($extra) {
-                if (@$extra['id']) {
-
-
-                    if (@$extra['price']) {
-                        $extra['price'];
-                    }
-                    return [
-                        'id' => $extra['id'],
-                        'name' => Extra::find($extra['id'])->display_name,
-                        'qty' => @$extra['quantity'] ?? 0,
-                        'price' => max(0, @$extra['price'] ?? 0), // Ensure price doesn't go below zero
-                    ];
-                }
-            })->toArray();
-            $order['extras'] = json_encode($orderExtras);
-        }
-
-        // Handle invoice printing or emailing
-        // $printInvoice = $request->get('printInvoice');
-        $sendInvoiceToMail = $request->get('send_mail');
-        // if(env('APP_ENV') != 'local'){
-
-
-
-        $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
-
-        // Return the order with tickets
-
-        DB::commit();
-        $order->update([
-            'status' => 1,
-            'payment_status' => 1
-        ]);
-
         try {
-            $toco = new TOCOnlineService;
-            $response = $toco->createCommercialSalesDocument($order);
+            DB::beginTransaction();
+            $extraProducts = $request->get('extras') ?? [];
 
-            $order->invoice_id = $response['id'];
-            $order->invoice_url = $response['public_link'];
-            $order->invoice_body = json_encode($response);
+            if (count($extraProducts) <= 0) throw new Exception('No products in cart');
 
-            if ($sendInvoiceToMail) {
-                $toco->sendEmailDocument($order, $response['id']);
+            $orderData = [
+                'billing' => request()->get('billing'),
+                'user_id' => $this->getUser(request()->get('billing'))->id,
+                'subtotal' => $request->get('sub_total'),
+                'discount' => 0,
+                'total' => $request->get('total'),
+                // 'event_id' => $request->get('event_id'),
+                'payment_method' => $request->get('payment_method') ?? 'App',
+                'transaction_id' => Str::uuid(),
+                'security_key' => Str::uuid(),
+                'send_message' => $request->get('send_message') ? true : false,
+                'send_email' => $request->get('send_mail') ? true : false,
+                'pos_id' => auth()->id()
+            ];
+
+            $order = Order::create($orderData);
+
+            if ($request->get('payment_method') == 'Wallet' && $request->has('user_id')) {
+                $user = User::find($request->user_id);
+                $user->spend($request->get('total'), 'Order number - ' . $order->id);
             }
-        } catch (Exception | Error $e) {
-            Log::info($e->getMessage());
-        }
 
-        $order->save();
 
-        /* if ($printInvoice == false) {
+            // Calculate total quantity of extras and tickets
+            $totalItems = 0;
+
+
+            foreach ($extraProducts as $extra) {
+                $quantity = @$extra['quantity'] ?? @$extra['newQty'] ?? 0;
+                $totalItems +=  $quantity;
+            }
+
+            // Adjust extra product prices
+            if (count($extraProducts)) {
+                $orderExtras = collect($extraProducts)->map(function ($extra) {
+                    if (@$extra['id']) {
+
+
+                        if (@$extra['price']) {
+                            $extra['price'];
+                        }
+                        return [
+                            'id' => $extra['id'],
+                            'name' => Extra::find($extra['id'])->display_name,
+                            'qty' => @$extra['quantity'] ?? 0,
+                            'price' => max(0, @$extra['price'] ?? 0), // Ensure price doesn't go below zero
+                        ];
+                    }
+                })->toArray();
+                $order['extras'] = json_encode($orderExtras);
+            }
+
+            // Handle invoice printing or emailing
+            // $printInvoice = $request->get('printInvoice');
+            $sendInvoiceToMail = $request->get('send_mail');
+            // if(env('APP_ENV') != 'local'){
+
+
+
+            $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
+
+            // Return the order with tickets
+
+            DB::commit();
+            $order->update([
+                'status' => 1,
+                'payment_status' => 1
+            ]);
+
+            try {
+                $toco = new TOCOnlineService;
+                $response = $toco->createCommercialSalesDocument($order);
+
+                $order->invoice_id = $response['id'];
+                $order->invoice_url = $response['public_link'];
+                $order->invoice_body = json_encode($response);
+
+                if ($sendInvoiceToMail) {
+                    $toco->sendEmailDocument($order, $response['id']);
+                }
+            } catch (Exception | Error $e) {
+                Log::info($e->getMessage());
+                DB::rollBack();
+            }
+
+            $order->save();
+
+            /* if ($printInvoice == false) {
             $order->invoice_url = null;
 
             // Add invoice creation logic if needed
         } */
 
 
-        $data = [
-            'id' => $order->id,
-            // 'tickets' => $hollowTickets,
-            'invoice_url' => $order->invoice_url,
-        ];
+            $data = [
+                'id' => $order->id,
+                // 'tickets' => $hollowTickets,
+                'invoice_url' => $order->invoice_url,
+            ];
 
-        return response()->json($data, 200);
-        // } catch (Exception | Error $e) {
-        //     DB::rollBack();
-        //     return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
-        // }
+            return response()->json($data, 200);
+        } catch (Exception | Error $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
+        }
     }
 
     function getMyWallet()
