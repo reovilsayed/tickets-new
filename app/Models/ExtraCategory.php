@@ -9,6 +9,7 @@ class ExtraCategory extends Model
     use HasFactory;
 
     protected $table = 'extra_categories';  
+    protected $order_column = 'order';
     
     protected $fillable = ['name', 'slug', 'order'];
 

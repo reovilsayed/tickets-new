@@ -27,6 +27,7 @@ class EventController extends Controller
         $products['all'] = $event->products()
         ->whereIn('type', ['website', 'both'])
         ->where('invite_only', 0)
+        
         ->where('start_sell', '<=', $now)
         ->where('end_sell', '>=', $now)
         ->get();
