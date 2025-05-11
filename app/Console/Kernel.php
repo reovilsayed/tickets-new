@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:generate-auth-code')->everySixHours();
         $schedule->command('sync:customers')->everyTenMinutes();
-        // $schedule->command('orders:list-unpaid')->everyFifteenMinutes();
+        $schedule->command('orders:check-unpaid')->everyFifteenMinutes();
     }
 
     /**
