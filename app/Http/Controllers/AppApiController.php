@@ -380,7 +380,7 @@ class AppApiController extends Controller
                 'payment_status' => 1
             ]);
 
-            try {
+            /* try {
                 $toco = new TOCOnlineService;
                 $response = $toco->createCommercialSalesDocument($order);
 
@@ -394,7 +394,7 @@ class AppApiController extends Controller
             } catch (Exception | Error $e) {
                 Log::info($e->getMessage());
                 DB::rollBack();
-            }
+            } */
 
             $order->save();
 
