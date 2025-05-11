@@ -8,12 +8,12 @@ class ExtraCategory extends Model
 {
     use HasFactory;
 
+    protected $table = 'extra_categories';  
+    
     protected $fillable = ['name', 'slug', 'order'];
 
-    public function extra()
+    public function extras()
     {
-        return $this->hasMany(Extra::class);
+        return $this->hasMany(Extra::class, 'extra_category_id');
     }
-
-   
 }

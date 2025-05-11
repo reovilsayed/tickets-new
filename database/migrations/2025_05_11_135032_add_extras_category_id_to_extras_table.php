@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('extras', function (Blueprint $table) {
-            $table->unsignedBigInteger('extras_category_id')
+            $table->unsignedBigInteger('extra_category_id')
                   ->nullable()
                   ->after('event_id');
             
-            $table->foreign('extras_category_id')
+            $table->foreign('extra_category_id')
                   ->references('id')
-                  ->on('extras_categories')
+                  ->on('extra_categories')
                   ->onDelete('set null');
         });
     }

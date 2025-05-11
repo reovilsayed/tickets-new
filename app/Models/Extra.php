@@ -25,9 +25,9 @@ class Extra extends Model
     {
         return $this->belongsToMany(Pos::class, 'extra_pos', 'extra_id', 'pos_id');
     }
-    public function extras()
+    public function category()
     {
-        return $this->belongsTo(ExtraCategory::class, 'extras_category_id');
+        return $this->belongsTo(ExtraCategory::class, 'extra_category_id');
     }
 
 }
