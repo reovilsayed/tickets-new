@@ -4,15 +4,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ExtrasCategory extends Model
+class ExtraCategory extends Model
 {
     use HasFactory;
 
     protected $fillable = ['name', 'slug', 'order'];
 
-    public function extras()
+    public function extra()
     {
-        return $this->hasMany(Extras::class);
+        return $this->hasMany(Extra::class);
     }
 
    

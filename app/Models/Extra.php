@@ -27,7 +27,7 @@ class Extra extends Model
     }
     public function extras()
     {
-        return $this->belongsTo(ExtrasCategory::class, 'extras_category_id');
+        return $this->belongsTo(ExtraCategory::class, 'extras_category_id');
     }
 
 }
