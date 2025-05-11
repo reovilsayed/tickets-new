@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -18,17 +19,24 @@ class EventController extends Controller
 
     public function show(Event $event)
     {
+       
         $is_invite = false;
         $products = [];
+        $now = Carbon::now();
 
         $products['all'] = $event->products()
-            ->whereIn('type', ['website', 'both'])
-            ->where('invite_only', 0)->get();
+        ->whereIn('type', ['website', 'both'])
+        ->where('invite_only', 0)
+        ->where('start_sell', '<=', $now)
+        ->where('end_sell', '>=', $now)
+        ->get();
 
         foreach ($event->dates() as $date) {
             $products[$date] = $event->products()
                 ->whereIn('type', ['website', 'both'])
                 ->where('invite_only', 0)
+                ->where('start_sell', '<=', $now)
+                ->where('end_sell', '>=', $now)
                 ->get()
                 ->filter(fn($product) => in_array($date, $product->dates));
         }
