@@ -27,7 +27,6 @@ class PosProductsExport implements FromCollection, WithHeadings, WithTitle
                 'type' => 'Ticket',
                 'name' => $ticket->product?->name,
                 'quantity' => $ticket->total,
-                'amount' => null, // You might want to calculate this
             ]);
         }
         
@@ -37,7 +36,6 @@ class PosProductsExport implements FromCollection, WithHeadings, WithTitle
                 'type' => 'Product',
                 'name' => $extra->name,
                 'quantity' => $extra->qty,
-                'amount' => null, // You might want to calculate this
             ]);
         }
         
@@ -50,7 +48,6 @@ class PosProductsExport implements FromCollection, WithHeadings, WithTitle
             'Type',
             'Name',
             'Quantity',
-            'Amount'
         ];
     }
 

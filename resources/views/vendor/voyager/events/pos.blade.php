@@ -143,15 +143,18 @@
                 </div>
             </div>
             <div class="row mb-3">
-    <div class="col-md-6">
-        <a href="{{ request()->fullUrlWithQuery(['export' => 'summary']) }}" class="btn btn-success">
-            <i class="voyager-download"></i> Export Summary
-        </a>
-        <a href="{{ request()->fullUrlWithQuery(['export' => 'orders']) }}" class="btn btn-primary">
-            <i class="voyager-download"></i> Export Orders
-        </a>
-    </div>
-</div>
+                <div class="col-md-6">
+                    <a href="{{ request()->fullUrlWithQuery(['export' => 'summary']) }}" class="btn btn-success">
+                        <i class="voyager-download"></i> Export Summary
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['export' => 'products']) }}" class="btn btn-warning">
+                        <i class="voyager-download"></i> Export Products
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['export' => 'orders']) }}" class="btn btn-primary">
+                        <i class="voyager-download"></i> Export Orders
+                    </a>
+                </div>
+            </div>
         </form>
         <div class="panel">
             <div class="panel-body">
@@ -201,8 +204,7 @@
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
                             'label' => 'Total Paid Invite Amount',
-                            'value' => Sohoj::price(
-                                $totalPaidInvite->sum('price')),
+                            'value' => Sohoj::price($totalPaidInvite->sum('price')),
                         ])
                     </div>
                     <div class="col-md-4">

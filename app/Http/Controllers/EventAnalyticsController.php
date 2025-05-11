@@ -6,6 +6,7 @@ use App\Charts\EventTicketSellChart;
 use App\Charts\OrderSalesByTicketChart;
 use App\Charts\OrderSalesChart;
 use App\Exports\PosOrdersExport;
+use App\Exports\PosProductsExport;
 use App\Exports\PosReportExport;
 use App\Models\Event;
 use App\Models\Order;
@@ -492,6 +493,11 @@ class EventAnalyticsController extends Controller
                 return Excel::download(
                     new PosReportExport($event, $request, $exportData),
                     "{$event->name}_pos_summary.xlsx"
+                );
+            } elseif ($request->export == 'products') {
+                return Excel::download(
+                    new PosProductsExport($tickets, $extras),
+                    "{$event->name}_pos_products_sell.xlsx"
                 );
             } else {
                 return Excel::download(
