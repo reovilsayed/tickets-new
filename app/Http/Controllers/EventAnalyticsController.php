@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Charts\EventTicketSellChart;
 use App\Charts\OrderSalesByTicketChart;
 use App\Charts\OrderSalesChart;
+use App\Exports\PosOrdersExport;
+use App\Exports\PosReportExport;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Scan;
@@ -17,6 +19,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Sohoj;
 
 class EventAnalyticsController extends Controller
@@ -355,11 +358,11 @@ class EventAnalyticsController extends Controller
 
     public function POS(Event $event, Request $request)
     {
-         $staffs = User::select(['id', 'name', 'l_name'])
+        $staffs = User::select(['id', 'name', 'l_name'])
             ->where('role_id', 6)
             ->get();
 
-         $order = Order::selectRaw('sum(total) as total')
+        $order = Order::selectRaw('sum(total) as total')
             ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
             ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
             ->selectRaw('SUM(jt.qty) as extra_qty')
@@ -380,7 +383,7 @@ class EventAnalyticsController extends Controller
                 fn($query) => $query->where('orders.pos_id', $request->staff)
             )
             ->first();
-         $order_total = Order::selectRaw('sum(total) as total')
+        $order_total = Order::selectRaw('sum(total) as total')
             ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
             ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
             ->when(
@@ -461,13 +464,42 @@ class EventAnalyticsController extends Controller
             ->latest()
             ->withCount('tickets')
             ->paginate(50);
-            $totalPaidInvite = Ticket::where('event_id', $event->id)
+        $totalPaidInvite = Ticket::where('event_id', $event->id)
             ->when($request->filled('date'), fn($query) => $query->whereDate('activation_date', $request->date))
             ->when($request->filled('staff'), fn($query) => $query->where('pos_id', $request->staff))
             ->whereType('paid_invite')
-            ->where('active',1)
+            ->where('active', 1)
             ->whereNotNull('pos_id')
             ->get();
+
+
+        if ($request->has('export')) {
+            if ($request->export == 'summary') {
+                $exportData = [
+                    'total_amount' => Sohoj::price($order_total?->total, false),
+                    'card_amount' => Sohoj::price($order_total?->card_amount, false),
+                    'cash_amount' => Sohoj::price($order_total?->cash_amount, false),
+                    'tickets_count' => $tickets->sum('total') ?? 0,
+                    'products_count' => $order->extra_qty ?? 0,
+                    'products_amount' => Sohoj::price($order?->extra_total, false),
+                    'tickets_amount' => Sohoj::price($order?->total - $order?->extra_total, false),
+                    'paid_invites_amount' => Sohoj::price($totalPaidInvite->sum('price'), false),
+                    'paid_invites_count' => $totalPaidInvite->count(),
+                    'staff_name' => $request->filled('staff') ?
+                        $staffs->firstWhere('id', $request->staff)->fullName() : null
+                ];
+
+                return Excel::download(
+                    new PosReportExport($event, $request, $exportData),
+                    "{$event->name}_pos_summary.xlsx"
+                );
+            } else {
+                return Excel::download(
+                    new PosOrdersExport($allOrders),
+                    "{$event->name}_pos_orders.xlsx"
+                );
+            }
+        }
         //  return $order_test->getDescription();
         return view('vendor.voyager.events.pos', [
             'event' => $event,

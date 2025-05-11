@@ -181,7 +181,7 @@ class Order extends Model
 
     public function getDescription()
     {
-    
+
         $products = [];
         if ($this->tickets) {
             foreach ($this->tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $ticket) {
@@ -195,5 +195,10 @@ class Order extends Model
             }
         }
         return $products;
+    }
+
+    public function posUser()
+    {
+        return $this->belongsTo(User::class, 'pos_id', 'id');
     }
 }

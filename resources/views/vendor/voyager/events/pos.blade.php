@@ -142,6 +142,16 @@
                     </div>
                 </div>
             </div>
+            <div class="row mb-3">
+    <div class="col-md-6">
+        <a href="{{ request()->fullUrlWithQuery(['export' => 'summary']) }}" class="btn btn-success">
+            <i class="voyager-download"></i> Export Summary
+        </a>
+        <a href="{{ request()->fullUrlWithQuery(['export' => 'orders']) }}" class="btn btn-primary">
+            <i class="voyager-download"></i> Export Orders
+        </a>
+    </div>
+</div>
         </form>
         <div class="panel">
             <div class="panel-body">
