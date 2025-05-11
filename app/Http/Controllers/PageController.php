@@ -294,7 +294,7 @@ class PageController extends Controller
         // Validate the user and event IDs
         $user  = User::where('uniqid', $user_uniqid)->firstOrFail();
         $event = Event::findOrFail($event_id);
-        dd($user, $event);
+        
     }
 
 }
