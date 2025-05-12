@@ -462,13 +462,11 @@ class AppApiController extends Controller
     public function getUserFromQr(Request $request)
     {
         $user = null;
-        if ($request->filled('ticket')) {
-            $ticket = Ticket::where('ticket', $request->ticket)->first();
-            if ($ticket) {
-                $user = User::find($ticket->user_id);
-            }
-        } else if ($request->filled('qr')) {
-            $user = User::where('uniqid', $request->qr)->first();
+        $ticket = Ticket::where('ticket', $request->code)->first();
+        if ($ticket) {
+            $user = User::find($ticket->user_id);
+        } else {
+            $user = User::where('uniqid', $request->code)->first();
         }
 
         return response()->json(['user' => $user]);
