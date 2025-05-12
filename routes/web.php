@@ -17,6 +17,7 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
+use App\Mail\UnpaidOrderReminder;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Magazine;
@@ -432,7 +433,7 @@ Route::get('/wallet/pay/{event_id}/{user_uniqid}', [PageController::class, 'payW
 
 Route::group(['middleware' => ['auth', 'role:walletzone']], function () {
     Route::get('/wallet/dashboard', [WalletController::class, 'index'])->name('wallet.dashboard');
-    Route::post('wallet/withdraw-or-refund',[WalletController::class,'withdrawRefund'])->name('wallet.withdrawRefund');
+    Route::post('wallet/withdraw-or-refund', [WalletController::class, 'withdrawRefund'])->name('wallet.withdrawRefund');
 });
 
 Route::view('/privacy-policy', 'pages/privacy-policy')->name('privacy.policy');
@@ -464,3 +465,5 @@ Route::middleware(['auth'])->group(function () {
         return redirect('/')->with('status', 'Your account has been deleted.');
     })->name('account.delete');
 });
+
+

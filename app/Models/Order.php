@@ -181,7 +181,7 @@ class Order extends Model
 
     public function getDescription()
     {
-    
+
         $products = [];
         if ($this->tickets) {
             foreach ($this->tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $ticket) {
@@ -195,5 +195,54 @@ class Order extends Model
             }
         }
         return $products;
+    }
+
+    public function items()
+    {
+
+        $products = [];
+
+
+        if ($this->tickets) {
+
+            $i = 0;
+            foreach ($this->tickets->groupBy(fn($ticket) => $ticket->product->name) as $name => $tickets) {
+                $i++;
+                array_push($products, [
+                    'id' => $i,
+                    'type' => 'ticket',
+                    'name' => $name,
+                    'qty' => $tickets->count(),
+                    'total' => $tickets->sum('price')
+                ]);
+            }
+        }
+
+
+        if ($this->extras) {
+
+            foreach ((collect($this->extras))->groupBy('name') as $name => $extras) {
+
+                $i++;
+                array_push($products, [
+                    'id' => $i,
+                    'type' => 'extra',
+                    'name' => $name,
+                    'qty' => $extras->sum('qty'),
+                    'total' => $extras->sum('price')
+                ]);
+            }
+        }
+        return $products;
+    }
+
+    public function reminders()
+    {
+        return $this->hasMany(OrderReminder::class);
+    }
+
+    public function posUser()
+    {
+        return $this->belongsTo(User::class, 'pos_id', 'id');
     }
 }

@@ -137,10 +137,14 @@
                         href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'products', 'event_id' => request('event_id')]) }}"><i
                             class="fa-solid fa-box"></i>
                         {{ __('words.products') }}</a>
-                    <a class="cus-btn"
-                        href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'qr_payment', 'event_id' => request('event_id')]) }}"><i
-                            class="fa-solid fa-box"></i>
-                        {{ __('words.qr-payment') }}</a>
+                     
+                    @if ($event->is_wallet_payment_enabled == 1)
+                        <a class="cus-btn"
+                            href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'qr_payment', 'event_id' => request('event_id')]) }}">
+                            <i class="fa-solid fa-box"></i>
+                            {{ __('words.qr-payment') }}
+                        </a>
+                    @endif
                 </div>
             </div>
 

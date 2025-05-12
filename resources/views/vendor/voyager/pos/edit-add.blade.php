@@ -54,11 +54,14 @@
                             @php
                                 $dataTypeRows = $dataType->{$edit ? 'editRows' : 'addRows'};
                             @endphp
+                    
 
                             @foreach ($dataTypeRows as $row)
                                 @php
-                                    
-                                    if($row->field == 'permission') continue
+
+                                    if (in_array($row->field, ['permission', 'payment_methods'])) {
+                                        continue;
+                                    }
 
                                 @endphp
                                 <!-- GET THE DISPLAY OPTIONS -->
@@ -133,11 +136,25 @@
                             </h3>
                             <div class="row">
                                 @foreach ($dataTypeContent->permission as $key => $value)
-                                
                                     <div class="col-md-1">
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="permission[{{ $key }}]"
+                                                    value="1" {{ $value ? 'checked' : '' }}> {{ $key }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <h3>
+                                Payment Methods
+                            </h3>
+                            <div class="row">
+                                @foreach ($dataTypeContent->payment_methods as $key => $value)
+                                    <div class="col-md-1">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="payment_methods[{{ $key }}]"
                                                     value="1" {{ $value ? 'checked' : '' }}> {{ $key }}
                                             </label>
                                         </div>
