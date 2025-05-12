@@ -14,8 +14,9 @@ class OrderObserver
     {
         // Check if payment_status is set to 1 on creation
         if ($order->payment_status == 1) {
-         
-            event(new OrderIsPaid($order));
+            if(env('APP_ENV') != 'local'){
+                event(new OrderIsPaid($order));
+            }
         }
     }
 
@@ -27,7 +28,9 @@ class OrderObserver
         // Check if payment_status changed to 1 on update
         
         if ($order->isDirty('payment_status') && $order->payment_status == 1) {
-            event(new OrderIsPaid($order));
+            if(env('APP_ENV') != 'local'){
+                event(new OrderIsPaid($order));
+            }
         }
     }
 

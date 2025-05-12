@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\App\CreateOrderController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AppApiController;
 use App\Models\Extra;
@@ -181,7 +182,7 @@ Route::group(['prefix' => 'app'], function () {
         Route::post('zone-type', [AppApiController::class, 'getZoneType']);
         Route::get('extras/all', [AppApiController::class, 'getAllExtras']);
         Route::get('orders', [AppApiController::class, 'getOrders']);
-        Route::post('order/create', [AppApiController::class, 'createOrder']);
+        Route::post('order/create', CreateOrderController::class);
         Route::get('wallet', [AppApiController::class, 'getMyWallet']);
         Route::post('wallet/customer', [AppApiController::class, 'getWalletCustomer']);
     });

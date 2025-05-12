@@ -33,6 +33,9 @@ class Order extends Model
         'cash_amount' => ConvertFullMoney::class,
     ];
 
+    const STATUS_PAID = 1;
+    const PAYMENT_STATUS_PAID = 1;
+
     public function user()
     {
         return $this->belongsTo(User::class);
