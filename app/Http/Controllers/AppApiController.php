@@ -248,6 +248,7 @@ class AppApiController extends Controller
 
         $query = $request->get('query');
         $event_id = $request->get('event_id');
+        $category_id = $request->get('category_id');
 
         $extras = Extra::with('event')->whereHas('poses', function ($q) {
             $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos id
@@ -255,6 +256,10 @@ class AppApiController extends Controller
 
         if ($event_id) {
             $extras->where('event_id', $event_id);
+        }
+
+        if ($category_id) {
+            $extras->where('extra_category_id', $category_id);
         }
 
         $extras = $extras->paginate(50);
