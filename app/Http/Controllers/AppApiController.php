@@ -6,6 +6,7 @@ use App\Http\Resources\EventCollection;
 use App\Http\Resources\ExtraResoure;
 use App\Models\Event;
 use App\Models\Extra;
+use App\Models\ExtraCategory;
 use App\Models\Ticket;
 use App\Models\Transaction;
 use App\Models\User;
@@ -259,6 +260,12 @@ class AppApiController extends Controller
         $extras = $extras->paginate(50);
 
         return ExtraResoure::collection($extras);
+    }
+
+    public function getExtraCategories(Request $request)
+    {
+        $categories = ExtraCategory::all();
+        return response()->json(['data' => $categories]);
     }
 
     public function getOrders()
