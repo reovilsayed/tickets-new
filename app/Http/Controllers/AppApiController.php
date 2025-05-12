@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EventCollection;
 use App\Http\Resources\ExtraResoure;
+use App\Models\Event;
 use App\Models\Extra;
 use App\Models\Ticket;
 use App\Models\Transaction;
@@ -470,5 +472,12 @@ class AppApiController extends Controller
         }
 
         return response()->json(['user' => $user]);
+    }
+
+    public function events(Request $request)
+    {
+        $events = Event::where('status', 1)->where('in_pos', 1)->get();
+
+        return new EventCollection($events);
     }
 }
