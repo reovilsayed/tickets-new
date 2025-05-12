@@ -181,10 +181,12 @@ Route::group(['prefix' => 'app'], function () {
         Route::post('withdraw', [AppApiController::class, 'withdrawExtra']);
         Route::post('zone-type', [AppApiController::class, 'getZoneType']);
         Route::get('extras/all', [AppApiController::class, 'getAllExtras']);
+        Route::get('extras/categories', [AppApiController::class, 'getExtraCategories']);
         Route::get('orders', [AppApiController::class, 'getOrders']);
         Route::post('order/create', CreateOrderController::class);
         Route::get('wallet', [AppApiController::class, 'getMyWallet']);
         Route::post('wallet/customer', [AppApiController::class, 'getWalletCustomer']);
+        Route::get('/events', [AppApiController::class, 'events']);
     });
     Route::post('user-from-qr', [AppApiController::class, 'getUserFromQr']);
 });

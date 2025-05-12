@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EventCollection;
 use App\Http\Resources\ExtraResoure;
+use App\Models\Event;
 use App\Models\Extra;
+use App\Models\ExtraCategory;
 use App\Models\Ticket;
 use App\Models\Transaction;
 use App\Models\User;
@@ -246,6 +249,7 @@ class AppApiController extends Controller
 
         $query = $request->get('query');
         $event_id = $request->get('event_id');
+        $category_id = $request->get('category_id');
 
         $extras = Extra::with('event')->whereHas('poses', function ($q) {
             $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos id
@@ -255,9 +259,19 @@ class AppApiController extends Controller
             $extras->where('event_id', $event_id);
         }
 
+        if ($category_id) {
+            $extras->where('extra_category_id', $category_id);
+        }
+
         $extras = $extras->paginate(50);
 
         return ExtraResoure::collection($extras);
+    }
+
+    public function getExtraCategories(Request $request)
+    {
+        $categories = ExtraCategory::all();
+        return response()->json(['data' => $categories]);
     }
 
     public function getOrders()
@@ -463,15 +477,20 @@ class AppApiController extends Controller
     public function getUserFromQr(Request $request)
     {
         $user = null;
-        if ($request->filled('ticket')) {
-            $ticket = Ticket::where('ticket', $request->ticket)->first();
-            if ($ticket) {
-                $user = User::find($ticket->user_id);
-            }
-        } else if ($request->filled('qr')) {
-            $user = User::where('uniqid', $request->qr)->first();
+        $ticket = Ticket::where('ticket', $request->code)->first();
+        if ($ticket) {
+            $user = User::find($ticket->user_id);
+        } else {
+            $user = User::where('uniqid', $request->code)->first();
         }
 
         return response()->json(['user' => $user]);
+    }
+
+    public function events(Request $request)
+    {
+        $events = Event::where('status', 1)->where('in_pos', 1)->get();
+
+        return new EventCollection($events);
     }
 }
