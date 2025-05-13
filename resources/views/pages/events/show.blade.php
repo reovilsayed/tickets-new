@@ -82,6 +82,28 @@
             </div>
             <div class="accordin-item d-none d-md-block">
               <div>
+                <h5>
+                  {{ __('words.website') }}
+                </h5>
+                <p>
+                  {!! $event->website !!}
+                </p>
+              </div>
+
+            </div>
+            <div class="accordin-item d-none d-md-block">
+              <div>
+                <h5>
+                  {{ __('words.program') }}
+                </h5>
+                <p>
+                  {!! $event->program !!}
+                </p>
+              </div>
+
+            </div>
+            <div class="accordin-item d-none d-md-block">
+              <div>
                 <i class="fa fa-info-circle fa-2x"></i>
               </div>
               <div>
