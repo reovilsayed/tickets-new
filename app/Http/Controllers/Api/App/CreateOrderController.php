@@ -34,7 +34,7 @@ class CreateOrderController extends Controller
                 'event_id' => 'nullable|exists:events,id',
                 'subtotal' => 'required|numeric|min:0',
                 'total' => 'required|numeric|min:0',
-                'payment_method' => 'required|string|in:Wallet,App,Card,Cash',
+                'payment_method' => 'required|string|in:wallet,easypay,cash',
                 'send_message' => 'nullable|boolean',
                 'send_email' => 'nullable|boolean',
             ]);
