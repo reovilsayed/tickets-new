@@ -31,6 +31,7 @@ class CreateOrderController extends Controller
                 'billing.phone' => 'nullable|string',
                 'billing.vatNumber' => 'nullable|string',
                 'user_id' => 'nullable|exists:users,id',
+                'event_id' => 'nullable|exists:events,id',
                 'subtotal' => 'required|numeric|min:0',
                 'total' => 'required|numeric|min:0',
                 'payment_method' => 'required|string|in:Wallet,App,Card,Cash',
@@ -54,7 +55,7 @@ class CreateOrderController extends Controller
             }
 
             DB::beginTransaction();
-            
+
             $order = $this->createOrder($data);
             $this->attachExtras($order, $extras);
             $this->takePayment($order);
@@ -73,7 +74,6 @@ class CreateOrderController extends Controller
                     'invoice_url' => $order->invoice_url,
                 ]
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -99,12 +99,12 @@ class CreateOrderController extends Controller
 
     protected function attachExtras(Order $order, array $extras): void
     {
-    
+
         $orderExtras = [];
 
         foreach ($extras as $extra) {
             $quantity = $extra['quantity'] ?? $extra['newQty'] ?? 0;
-    
+
             if (isset($extra['id'])) {
                 $extraModel = Extra::findOrFail($extra['id']);
                 $price = max(0, $extra['price'] ?? 0);
@@ -130,6 +130,7 @@ class CreateOrderController extends Controller
         return Order::create([
             'billing' => $data->billing,
             'user_id' => $user->id,
+            'event_id' => $data->event_id,
             'subtotal' => $data->subtotal,
             'discount' => 0,
             'total' => $data->total,
