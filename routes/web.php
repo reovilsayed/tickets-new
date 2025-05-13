@@ -281,7 +281,7 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
         Route::get('/event-extras/{event}', [ApiController::class, 'eventExtras']);
     });
 });
-Route::get('app/pos/reports', PosDashboardReport::class);
+Route::get('app/pos/{token}/reports', PosDashboardReport::class);
 Route::get('aaspi/extrasasd', [ApiController::class, 'extras']);
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {

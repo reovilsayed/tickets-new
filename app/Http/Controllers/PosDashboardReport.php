@@ -12,10 +12,10 @@ use Illuminate\Support\Carbon;
 
 class PosDashboardReport extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke($token = null)
     {
-        $user = auth()->check() ? auth()->user() :  User::whereHas('tokens', fn($query) => $query->where('name', 'authToken')->where('token', $request->token))->first();
-        if(!$user) abort(403, 'Unauthorized');
+        $user = auth()->check() ? auth()->user() :  User::whereHas('tokens', fn($query) => $query->where('name', 'authToken')->where('token', $token))->first();
+        if (!$user) abort(403, 'Unauthorized');
         $events = Event::where('status', 1)->where('in_pos', 1)->get();
 
         $orders = Order::where('pos_id', $user->id)
