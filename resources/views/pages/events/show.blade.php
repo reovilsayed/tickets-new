@@ -86,7 +86,7 @@
                   {{ __('words.website') }}
                 </h5>
                 <p>
-                  {!! $event->website !!}
+                 <a href="{{ $event->website }}" target="_blank">{{ $event->website }}</a>
                 </p>
               </div>
 
@@ -97,7 +97,7 @@
                   {{ __('words.program') }}
                 </h5>
                 <p>
-                  {!! $event->program !!}
+                  <a href="{{ $event->program }}" target="_blank">{{ $event->program }}</a>
                 </p>
               </div>
 
