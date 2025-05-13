@@ -46,6 +46,7 @@ class AppApiController extends Controller
     {
         $user = auth('sanctum')->user();
         $user->load('pos');
+        $user->token = $user->currentAccessToken()->token;
         return $user;
     }
 
