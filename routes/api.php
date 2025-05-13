@@ -172,8 +172,10 @@ Route::get('/withdraw_checked', function () {
 
 Route::group(['prefix' => 'app'], function () {
     Route::post(('login'), [AppApiController::class, 'login']);
-
     Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('settings', function () {
+            return response()->json(setting('app'));
+        });
         Route::get('user', [AppApiController::class, 'user']);
         Route::post('checkin', [AppApiController::class, 'checkin']);
         Route::post('checkout', [AppApiController::class, 'checkout']);

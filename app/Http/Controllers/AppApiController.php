@@ -44,7 +44,9 @@ class AppApiController extends Controller
 
     function user(Request $request)
     {
-        return auth('sanctum')->user();
+        $user = auth('sanctum')->user();
+        $user->load('pos');
+        return $user;
     }
 
     function checkin(Request $request)
