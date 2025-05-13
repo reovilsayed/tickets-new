@@ -54,7 +54,7 @@ class CreateOrderController extends Controller
             }
 
             DB::beginTransaction();
-            
+
             $order = $this->createOrder($data);
             $this->attachExtras($order, $extras);
             $this->takePayment($order);
@@ -73,7 +73,6 @@ class CreateOrderController extends Controller
                     'invoice_url' => $order->invoice_url,
                 ]
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -99,12 +98,12 @@ class CreateOrderController extends Controller
 
     protected function attachExtras(Order $order, array $extras): void
     {
-    
+
         $orderExtras = [];
 
         foreach ($extras as $extra) {
             $quantity = $extra['quantity'] ?? $extra['newQty'] ?? 0;
-    
+
             if (isset($extra['id'])) {
                 $extraModel = Extra::findOrFail($extra['id']);
                 $price = max(0, $extra['price'] ?? 0);
