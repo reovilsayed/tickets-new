@@ -517,7 +517,7 @@
                                             <div class="order-actions">
                                                 @if ($order->alert == 'unmarked')
                                                     <button type="button" class="btn btn-primary ticket-marked-button"
-                                                        data-url="{{ route('order.marked', $order) }}"
+                                                        data-url="{{ route($app ? 'app.order.marked' : 'order.marked', ['order' => $order, 'token' => $token]) }}"
                                                         data-bs-toggle="modal" data-bs-target="#ticket-marked">
                                                         Mark
                                                     </button>
@@ -528,13 +528,13 @@
                                                 @endif
 
                                                 <span class="d-none" id="ticket-action-url-{{ $order->id }}"
-                                                    data-email-url="{{ route('order.email', $order) }}"
-                                                    data-sms-url="{{ route('order.sms', $order) }}"></span>
+                                                    data-email-url="{{ route($app ? 'app.order.email' : 'order.email', ['order' => $order, 'token' => $token]) }}"
+                                                    data-sms-url="{{ route($app ? 'app.order.sms' : 'order.sms', ['order' => $order, 'token' => $token]) }}"></span>
 
                                                 <button type="button" class="btn btn-primary ticket-action-button"
                                                     data-order-no="{{ $order->id }}"
                                                     data-has-product="{{ $order->tickets_count === 0 ? 0 : 1 }}"
-                                                    data-url="{{ route('order.update', $order) }}"
+                                                    data-url="{{ route($app ? 'app.order.update' : 'order.update', ['order' => $order, 'token' => $token]) }}"
                                                     data-email="{{ $order->billing->email ?? $order->user->email }}"
                                                     data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}"
                                                     data-bs-toggle="modal" data-bs-target="#action-modal">
@@ -593,7 +593,7 @@
                                                             @if ($order->alert == 'unmarked')
                                                                 <button type="button"
                                                                     class="btn btn-primary ticket-marked-button"
-                                                                    data-url="{{ route('order.marked', $order) }}"
+                                                                    data-url="{{ route('order.marked', ['order' => $order, 'token' => $token]) }}"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#ticket-marked">
                                                                     Mark
@@ -605,8 +605,8 @@
                                                             @endif
                                                             <span class="d-none"
                                                                 id="ticket-action-url-{{ $order->id }}"
-                                                                data-email-url="{{ route('order.email', $order) }}"
-                                                                data-sms-url="{{ route('order.sms', $order) }}"></span>
+                                                                data-email-url="{{ route('order.email', ['order' => $order, 'token' => $token]) }}"
+                                                                data-sms-url="{{ route('order.sms', ['order' => $order, 'token' => $token]) }}"></span>
                                                             <button type="button"
                                                                 class="btn btn-primary ticket-action-button"
                                                                 data-order-no="{{ $order->id }}"
@@ -734,51 +734,120 @@
         });
 
         const ticketTableBody = document.getElementById("ticket-table-body");
-        ticketTableBody.addEventListener('click', (e) => {
-            const el = e.target;
-            if (el.classList.contains('ticket-marked-button')) {
-                const url = el.dataset.url;
-                const formEl = document.getElementById('ticket-marked-form');
+        const ordersContainer = document.querySelector(".orders-container");
 
-                formEl.action = url;
-                return;
-            }
+        // Function to handle URL parameter preservation
+        function preserveUrlParams(formEl) {
+            const currentUrl = new URL(window.location.href);
+            const searchParams = currentUrl.searchParams;
+            
+            // Create hidden inputs for each URL parameter
+            searchParams.forEach((value, key) => {
+                if (key !== 'note') { // Skip note parameter as it's already in the form
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = value;
+                    formEl.appendChild(input);
+                }
+            });
+        }
 
-            if (el.classList.contains('ticket-action-button')) {
-                const url = el.dataset.url;
-                const hasProduct = el.dataset.hasProduct;
-
-                if (hasProduct === '0') {
-                    emailTicketBtn.classList.add('d-none')
+        // Handle table view clicks
+        if (ticketTableBody) {
+            ticketTableBody.addEventListener('click', (e) => {
+                const el = e.target;
+                if (el.classList.contains('ticket-marked-button')) {
+                    const url = el.dataset.url;
+                    const formEl = document.getElementById('ticket-marked-form');
+                    formEl.action = url;
+                    preserveUrlParams(formEl);
+                    return;
                 }
 
-                if (hasProduct !== '0') {
-                    emailTicketBtn.classList.remove('d-none')
+                if (el.classList.contains('ticket-action-button')) {
+                    const url = el.dataset.url;
+                    const hasProduct = el.dataset.hasProduct;
+
+                    if (hasProduct === '0') {
+                        emailTicketBtn.classList.add('d-none')
+                    }
+
+                    if (hasProduct !== '0') {
+                        emailTicketBtn.classList.remove('d-none')
+                    }
+
+                    if (!el.dataset.phone) {
+                        sendSmsTicketBtn.classList.add('d-none')
+                    }
+
+                    if (el.dataset.phone) {
+                        sendSmsTicketBtn.classList.remove('d-none')
+                    }
+
+                    emailTicketBtn.dataset.orderNo = el.dataset.orderNo;
+                    sendSmsTicketBtn.dataset.orderNo = el.dataset.orderNo;
+
+                    const formEl = document.getElementById('ticket-action-form');
+                    const emailEl = formEl.querySelector('[name=email]');
+                    const phoneEl = formEl.querySelector('[name=phone]');
+
+                    emailEl.value = el.dataset.email;
+                    phoneEl.value = el.dataset.phone;
+
+                    formEl.action = url;
+                    return;
+                }
+            });
+        }
+
+        // Handle card view clicks
+        if (ordersContainer) {
+            ordersContainer.addEventListener('click', (e) => {
+                const el = e.target;
+                if (el.classList.contains('ticket-marked-button')) {
+                    const url = el.dataset.url;
+                    const formEl = document.getElementById('ticket-marked-form');
+                    formEl.action = url;
+                    preserveUrlParams(formEl);
+                    return;
                 }
 
-                if (!el.dataset.phone) {
-                    sendSmsTicketBtn.classList.add('d-none')
+                if (el.classList.contains('ticket-action-button')) {
+                    const url = el.dataset.url;
+                    const hasProduct = el.dataset.hasProduct;
+
+                    if (hasProduct === '0') {
+                        emailTicketBtn.classList.add('d-none')
+                    }
+
+                    if (hasProduct !== '0') {
+                        emailTicketBtn.classList.remove('d-none')
+                    }
+
+                    if (!el.dataset.phone) {
+                        sendSmsTicketBtn.classList.add('d-none')
+                    }
+
+                    if (el.dataset.phone) {
+                        sendSmsTicketBtn.classList.remove('d-none')
+                    }
+
+                    emailTicketBtn.dataset.orderNo = el.dataset.orderNo;
+                    sendSmsTicketBtn.dataset.orderNo = el.dataset.orderNo;
+
+                    const formEl = document.getElementById('ticket-action-form');
+                    const emailEl = formEl.querySelector('[name=email]');
+                    const phoneEl = formEl.querySelector('[name=phone]');
+
+                    emailEl.value = el.dataset.email;
+                    phoneEl.value = el.dataset.phone;
+
+                    formEl.action = url;
+                    return;
                 }
-
-                if (el.dataset.phone) {
-                    sendSmsTicketBtn.classList.remove('d-none')
-                }
-
-                emailTicketBtn.dataset.orderNo = el.dataset.orderNo;
-                sendSmsTicketBtn.dataset.orderNo = el.dataset.orderNo;
-
-                const formEl = document.getElementById('ticket-action-form');
-                const emailEl = formEl.querySelector('[name=email]');
-                const phoneEl = formEl.querySelector('[name=phone]');
-
-                emailEl.value = el.dataset.email;
-                phoneEl.value = el.dataset.phone;
-
-                formEl.action = url;
-                return;
-            }
-
-        });
+            });
+        }
 
         let _hasDataChange = false;
 
