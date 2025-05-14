@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\App;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\OrderResource;
 use App\Models\Extra;
 use App\Models\Order;
 use App\Models\User;
@@ -66,12 +67,14 @@ class CreateOrderController extends Controller
 
             DB::commit();
 
+            $order->load('posUser', 'user');
             return response()->json([
                 'status' => true,
                 'message' => 'Order created successfully',
                 'order' => [
                     'id' => $order->id,
                     'invoice_url' => $order->invoice_url,
+                    'data' => OrderResource::make($order)
                 ]
             ]);
         } catch (\Exception $e) {

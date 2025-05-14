@@ -246,6 +246,6 @@ class Order extends Model
 
     public function posUser()
     {
-        return $this->belongsTo(User::class, 'pos_id', 'id');
+        return $this->belongsTo(User::class, 'pos_id', 'id')->with('pos');
     }
 }

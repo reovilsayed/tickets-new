@@ -17,6 +17,7 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
+use App\Http\Resources\OrderResource;
 use App\Mail\UnpaidOrderReminder;
 use App\Models\Event;
 use App\Models\Invite;
@@ -471,5 +472,6 @@ Route::middleware(['auth'])->group(function () {
         return redirect('/')->with('status', 'Your account has been deleted.');
     })->name('account.delete');
 });
+
 
 
