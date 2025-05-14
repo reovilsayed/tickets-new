@@ -283,10 +283,10 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     });
 });
 Route::get('app/pos/{token}/reports', PosDashboardReport::class);
-Route::get('app/pos/{token}/{order}/mark', [PosDashboardReport::class, 'index'])->name('app.order.marked');
-Route::put('app/pos/{token}/{order}/update', [PosDashboardReport::class, 'update'])->name('app.order.update');
-Route::put('app/pos/{token}/{order}/email', [PosDashboardReport::class, 'email'])->name('app.order.email');
-Route::put('app/pos/{token}/{order}/sms', [PosDashboardReport::class, 'sms'])->name('app.order.sms');
+Route::get('app/pos/{order}/{token}/mark', [PosDashboardReport::class, 'index'])->name('app.order.marked');
+Route::put('app/pos/{order}/{token}/update', [PosDashboardReport::class, 'update'])->name('app.order.update');
+Route::put('app/pos/{order}/{token}/email', [PosDashboardReport::class, 'email'])->name('app.order.email');
+Route::put('app/pos/{order}/{token}/sms', [PosDashboardReport::class, 'sms'])->name('app.order.sms');
 
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
