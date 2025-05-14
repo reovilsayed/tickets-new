@@ -11,6 +11,7 @@ import PhoneNumberInput from "./PhoneNumberInput";
 import { useFetch } from "../../../lib/hooks/useFetch";
 import { toast } from "react-toastify";
 import { calculateExtrasFeesForTotalCart } from "../../../lib/utils";
+import BillModal from "../BillModal/BillModal";
 
 const PaymentModal = ({ open }) => {
     const { items, cartTotal, isEmpty: cartIsEmpty, emptyCart } = useCart();
@@ -83,6 +84,10 @@ const PaymentModal = ({ open }) => {
     const navigate = useNavigate();
     const filterEvent = useSelector((state) => state.filter.event);
 
+    const [billOrder, setBillOrder] = useState(null);
+    const openBillModal = (order) => setBillOrder(order);
+    const closeBillModal = () => setBillOrder(null);
+
     const submitOrder = async () => {
         if (!filterEvent?.id) {
             toast("No event was selected!");
@@ -136,6 +141,7 @@ const PaymentModal = ({ open }) => {
                 );
                 setPhysicalQr(false);
             }
+            openBillModal(response?.data?.order);
             setSendToMail(true);
             setSendToPhone(false);
             setSendInvoiceToMail(false);
@@ -549,6 +555,7 @@ const PaymentModal = ({ open }) => {
                     </div>
                 </div>
             </div>
+            <BillModal order={billOrder} handleClose={closeBillModal} />
         </>
     );
 };
