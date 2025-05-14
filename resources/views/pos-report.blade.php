@@ -25,9 +25,9 @@
             padding: 20px;
             width: 100%;
             border-radius: 10px;
-
             border: 2px solid #EF5927 !important;
             transition: .2s ease-in;
+            margin-bottom: 15px;
         }
 
         .card:hover {
@@ -53,6 +53,274 @@
             font-size: 40px;
             font-weight: bold;
             color: #000;
+        }
+
+        /* Improved Compact Order Card Styles */
+        .order-card {
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #fff;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 2px 8px rgba(239, 89, 39, 0.15);
+            border-color: #EF5927;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .order-id {
+            font-size: 14px;
+            font-weight: bold;
+            color: #EF5927;
+            background: rgba(239, 89, 39, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .order-invoice {
+            font-size: 13px;
+        }
+
+        .order-invoice a {
+            color: #666;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .order-invoice a:hover {
+            color: #EF5927;
+        }
+
+        .customer-info {
+            margin-bottom: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .customer-name {
+            font-size: 15px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .customer-contact {
+            display: flex;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .customer-contact a {
+            color: #666;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .customer-contact a:hover {
+            color: #EF5927;
+            text-decoration: underline;
+        }
+
+        .order-description {
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .order-description ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .order-description li {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+        }
+
+        .order-description li span:first-child {
+            color: #666;
+        }
+
+        .order-description li span:last-child {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .order-note {
+            font-size: 12px;
+            color: #666;
+            margin: 8px 0;
+            padding: 6px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .order-note:before {
+            content: "!";
+            position: absolute;
+            left: 8px;
+            top: 6px;
+            width: 16px;
+            height: 16px;
+            background: #EF5927;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .order-actions .btn {
+            padding: 4px 8px;
+            font-size: 12px;
+            border-radius: 4px;
+            flex: 1;
+            min-width: 80px;
+            max-width: 120px;
+        }
+
+        /* Status badges */
+        .order-status {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .order-status.marked {
+            background: #fff8e6;
+            color: #e6a700;
+        }
+
+        .order-status.resolved {
+            background: #e6f7ee;
+            color: #00a854;
+        }
+
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 768px) {
+            .order-card {
+                padding: 10px;
+            }
+
+            .customer-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .customer-contact {
+                flex-direction: column;
+                gap: 4px;
+                align-items: flex-start;
+            }
+
+            .order-actions .btn {
+                min-width: 100%;
+                max-width: 100%;
+            }
+
+            .order-status {
+                position: static;
+                margin-bottom: 6px;
+            }
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .card h3 {
+                font-size: 16px;
+            }
+
+            .card h1 {
+                font-size: 28px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .form-group {
+                margin-bottom: 10px;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .customer-name {
+                font-size: 16px;
+            }
+
+            .order-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .order-actions .btn {
+                width: 100%;
+                padding: 6px 8px;
+            }
+
+            .row {
+                margin-left: -5px;
+                margin-right: -5px;
+            }
+
+            .col-md-3,
+            .col-md-4,
+            .col-md-6 {
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+
+            .orders-container {
+                margin-top: 10px !important;
+            }
         }
     </style>
 </head>
@@ -106,34 +374,34 @@
 
                     <div class="container">
                         <div class="row g-3 mb-3">
-                            <div class="col-md-4">
+                            <div class="col-6 col-md-4">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'Total Amount',
                                     'value' => Sohoj::price($orders->sum('total')),
                                 ])
 
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-6 col-md-4">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'Total Ticket Sell',
                                     'value' => $tickets->count(),
                                 ])
 
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-6 col-md-4">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'Total Product sell',
                                     'value' => $extras->sum('qty'),
                                 ])
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-6 col-md-4">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'Product sell Amount',
                                     'value' => Sohoj::price($productsellamount),
                                 ])
 
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-12    col-md-4">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'Ticket sell Amount',
                                     'value' => Sohoj::price($orders->sum('total') - $productsellamount),
@@ -142,7 +410,7 @@
 
 
                             @foreach ($tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $tickets)
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <div class="card">
                                         <h3>
                                             {{ $product }}
@@ -155,7 +423,7 @@
                             @endforeach
 
                             @foreach ($extras->groupBy('name') as $name => $data)
-                                <div class="col-md-4">
+                                <div class="col-12 col-md-4">
                                     <div class="card">
                                         <h3>
                                             {{ $name }}
@@ -172,17 +440,15 @@
                         <div class="card">
 
                             <div class="row text-left mb-0">
-                                <div class="col-md-4">
-                                    <div class="form-group ">
-
+                                <div class="col-12 col-md-4">
+                                    <div class="form-group">
                                         <input value="{{ request()->search }}"
                                             onchange="document.getElementById('form1').submit()" type="text"
                                             id="search" name="search" class="form-control"
                                             placeholder="Search here">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-
+                                <div class="col-12 col-md-3">
                                     <div class="form-group m-0">
                                         <select onchange="document.getElementById('form1').submit()" name="alert"
                                             id="alert" class="form-control">
@@ -191,8 +457,7 @@
                                                 Marked
                                             </option>
                                             <option @if (request()->alert == 'unmarked') selected @endif value="unmarked">
-                                                Not
-                                                marked
+                                                Not marked
                                             </option>
                                             <option @if (request()->alert == 'resolved') selected @endif value="resolved">
                                                 Resolved
@@ -203,83 +468,164 @@
 
                             </div>
 
-                            <div class="table-responsive">
-
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr class="">
-                                            <th>
-                                                #
-                                            </th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Phone Number</th>
-                                            <th>Description</th>
-                                            <th>Invoice</th>
-                                            <th>Note</th>
-                                            <th>Alert</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="ticket-table-body">
-                                        @foreach ($allorders as $order)
-                                            <tr>
-                                                <td>
-                                                    {{ $order->id }}
-                                                </td>
-                                                <td>{{ $order->user->name }}</td>
-                                                <td>{{ $order->billing->email ?? $order->user->email }}</td>
-                                                <td>{{ $order->billing->phone ?? $order->user->contact_number }}</td>
-                                                <td>
-                                                    <ul>
-                                                        @foreach ($order->getDescription() as $line)
-                                                            <li>
-                                                                {{ $line }}
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                </td>
-                                                <td>
+                            <div class="orders-container mt-4">
+                                @if ($app)
+                                    @foreach ($allorders as $order)
+                                        <div class="order-card">
+                                            <div class="order-header">
+                                                <div class="order-id">Order #{{ $order->id }}</div>
+                                                <div class="order-invoice">
                                                     @if (!empty($order->invoice_url) && !empty($order->invoice_id))
-                                                        <a href="{{ $order->invoice_url }}">Invoice
+                                                        <a href="{{ $order->invoice_url }}"
+                                                            class="btn btn-sm btn-outline-primary">View Invoice
                                                             #{{ $order->invoice_id }}</a>
                                                     @else
-                                                        N/A
+                                                        <span class="text-muted">No Invoice</span>
                                                     @endif
-                                                </td>
-                                                <td>{{ $order->note }}</td>
-                                                <td>
-                                                    @if ($order->alert == 'unmarked')
-                                                        <button type="button"
-                                                            class="btn btn-primary ticket-marked-button"
-                                                            data-url="{{ route('order.marked', $order) }}"
-                                                            data-bs-toggle="modal" data-bs-target="#ticket-marked">
-                                                            Mark
-                                                        </button>
-                                                    @elseif($order->alert == 'resolved')
-                                                        <button class="btn btn-success">Resolved</button>
-                                                    @else
-                                                        <button class="btn btn-danger">Marked</button>
-                                                    @endif
-                                                    <span class="d-none" id="ticket-action-url-{{ $order->id }}"
-                                                        data-email-url="{{ route('order.email', $order) }}"
-                                                        data-sms-url="{{ route('order.sms', $order) }}"></span>
-                                                    <button type="button" class="btn btn-primary ticket-action-button"
-                                                        data-order-no="{{ $order->id }}"
-                                                        data-has-product="{{ $order->tickets_count === 0 ? 0 : 1 }}"
-                                                        data-url="{{ route('order.update', $order) }}"
-                                                        data-email="{{ $order->billing->email ?? $order->user->email }}"
-                                                        data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}"
-                                                        data-bs-toggle="modal" data-bs-target="#action-modal">
-                                                        Action
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                {{ $allorders->withQueryString()->links('pagination::bootstrap-4') }}
+                                                </div>
+                                            </div>
 
+                                            <div class="customer-info">
+                                                <div class="customer-name">{{ $order->user->name }}</div>
+                                                <div class="customer-contact">
+                                                    <a
+                                                        href="mailto:{{ $order->billing->email ?? $order->user->email }}">
+                                                        {{ $order->billing->email ?? $order->user->email }}
+                                                    </a>
+                                                    <br>
+                                                    <a
+                                                        href="tel:{{ $order->billing->phone ?? $order->user->contact_number }}">
+                                                        {{ $order->billing->phone ?? $order->user->contact_number }}
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="order-description">
+                                                <ul>
+                                                    @foreach ($order->getDescription() as $line)
+                                                        <li>{{ $line }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+
+                                            @if ($order->note)
+                                                <div class="order-note mb-3">
+                                                    <strong>Note:</strong> {{ $order->note }}
+                                                </div>
+                                            @endif
+
+                                            <div class="order-actions">
+                                                @if ($order->alert == 'unmarked')
+                                                    <button type="button" class="btn btn-primary ticket-marked-button"
+                                                        data-url="{{ route('order.marked', $order) }}"
+                                                        data-bs-toggle="modal" data-bs-target="#ticket-marked">
+                                                        Mark
+                                                    </button>
+                                                @elseif($order->alert == 'resolved')
+                                                    <button class="btn btn-success">Resolved</button>
+                                                @else
+                                                    <button class="btn btn-danger">Marked</button>
+                                                @endif
+
+                                                <span class="d-none" id="ticket-action-url-{{ $order->id }}"
+                                                    data-email-url="{{ route('order.email', $order) }}"
+                                                    data-sms-url="{{ route('order.sms', $order) }}"></span>
+
+                                                <button type="button" class="btn btn-primary ticket-action-button"
+                                                    data-order-no="{{ $order->id }}"
+                                                    data-has-product="{{ $order->tickets_count === 0 ? 0 : 1 }}"
+                                                    data-url="{{ route('order.update', $order) }}"
+                                                    data-email="{{ $order->billing->email ?? $order->user->email }}"
+                                                    data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}"
+                                                    data-bs-toggle="modal" data-bs-target="#action-modal">
+                                                    Action
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="table-responsive">
+
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr class="">
+                                                    <th>
+                                                        #
+                                                    </th>
+                                                    <th>Name</th>
+                                                    <th>Email</th>
+                                                    <th>Phone Number</th>
+                                                    <th>Description</th>
+                                                    <th>Invoice</th>
+                                                    <th>Note</th>
+                                                    <th>Alert</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="ticket-table-body">
+                                                @foreach ($allorders as $order)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $order->id }}
+                                                        </td>
+                                                        <td>{{ $order->user->name }}</td>
+                                                        <td>{{ $order->billing->email ?? $order->user->email }}</td>
+                                                        <td>{{ $order->billing->phone ?? $order->user->contact_number }}
+                                                        </td>
+                                                        <td>
+                                                            <ul>
+                                                                @foreach ($order->getDescription() as $line)
+                                                                    <li>
+                                                                        {{ $line }}
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </td>
+                                                        <td>
+                                                            @if (!empty($order->invoice_url) && !empty($order->invoice_id))
+                                                                <a href="{{ $order->invoice_url }}">Invoice
+                                                                    #{{ $order->invoice_id }}</a>
+                                                            @else
+                                                                N/A
+                                                            @endif
+                                                        </td>
+                                                        <td>{{ $order->note }}</td>
+                                                        <td>
+                                                            @if ($order->alert == 'unmarked')
+                                                                <button type="button"
+                                                                    class="btn btn-primary ticket-marked-button"
+                                                                    data-url="{{ route('order.marked', $order) }}"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#ticket-marked">
+                                                                    Mark
+                                                                </button>
+                                                            @elseif($order->alert == 'resolved')
+                                                                <button class="btn btn-success">Resolved</button>
+                                                            @else
+                                                                <button class="btn btn-danger">Marked</button>
+                                                            @endif
+                                                            <span class="d-none"
+                                                                id="ticket-action-url-{{ $order->id }}"
+                                                                data-email-url="{{ route('order.email', $order) }}"
+                                                                data-sms-url="{{ route('order.sms', $order) }}"></span>
+                                                            <button type="button"
+                                                                class="btn btn-primary ticket-action-button"
+                                                                data-order-no="{{ $order->id }}"
+                                                                data-has-product="{{ $order->tickets_count === 0 ? 0 : 1 }}"
+                                                                data-url="{{ route('order.update', $order) }}"
+                                                                data-email="{{ $order->billing->email ?? $order->user->email }}"
+                                                                data-phone="{{ $order->billing->phone ?? $order->user->contact_number }}"
+                                                                data-bs-toggle="modal" data-bs-target="#action-modal">
+                                                                Action
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                @endif
                             </div>
+
+                            {{ $allorders->withQueryString()->links('pagination::bootstrap-4') }}
                         </div>
                     </div>
                 @endif

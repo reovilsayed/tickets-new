@@ -17,9 +17,11 @@ class Pos extends Model
         "scan" => 0,
         "report" => 0,
     ];
+
+
     protected $defaultPaymentMethods = [
-        "wallet" => 0,
-        "easypay" => 0,
+        "card" => 0,
+        "qr" => 0,
         "cash" => 0,
     ];
 
@@ -34,13 +36,17 @@ class Pos extends Model
             }
         );
     }
-    public function paymentMethods(): Attribute
+    
+    public function paymentmethods(): Attribute
     {
         return Attribute::make(
-            get: fn() => @$this->attributes['payment_methods'] ? array_merge($this->defaultPaymentMethods, @json_decode($this->attributes['payment_methods'], true) ?? [])  : $this->defaultPaymentMethods,
+            get: function () {
+                $methods = $this->attributes['payment_methods'] ?? null;
+                return $methods ? array_merge($this->defaultPaymentMethods, json_decode($methods, true) ?? []) : $this->defaultPaymentMethods;
+            },
             set: function ($value) {
-
-                return json_encode(array_merge($this->defaultPaymentMethods, $value));
+               
+                return json_encode(array_merge($this->defaultPaymentMethods, $value ?? []));
             }
         );
     }

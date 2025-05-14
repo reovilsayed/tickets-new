@@ -14,6 +14,13 @@ class PosDashboardReport extends Controller
 {
     public function __invoke($token = null)
     {
+
+
+
+        $app = false;
+        if ($token) {
+            $app = true;
+        }
         $user = auth()->check() ? auth()->user() :  User::whereHas('tokens', fn($query) => $query->where('name', 'authToken')->where('token', $token))->first();
         if (!$user) abort(403, 'Unauthorized');
         $events = Event::where('status', 1)->where('in_pos', 1)->get();
@@ -40,7 +47,7 @@ class PosDashboardReport extends Controller
         $extras =  $this->getExtras($user);
         $extras = $extras->filter()->values();
 
-        return view('pos-report', compact(['user', 'orders', 'tickets', 'events', 'extras', 'allorders']));
+        return view('pos-report', compact(['user', 'orders', 'tickets', 'events', 'extras', 'allorders', 'app']));
     }
 
     protected function getExtras($user)

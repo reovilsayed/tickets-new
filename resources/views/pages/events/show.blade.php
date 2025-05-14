@@ -25,6 +25,24 @@
       z-index: 999;
     }
   }
+
+  .website-link {
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+  
+  .website-link a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+    max-width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .website-link {
+      font-size: 0.9rem;
+    }
+  }
 </style>
 @section('content')
   @if ($is_invite)
@@ -78,6 +96,16 @@
                   {{ $event->location }}
                 </h5>
 
+              </div>
+            </div>
+            <div class="accordin-item">
+              <div>
+                <i class="fa fa-globe fa-2x"></i>
+              </div>
+              <div>
+                <h5 class="website-link">
+                 <a href="{{$event->website}}" target="__blank" class="text-break"> {{ preg_replace('/^https?:\/\//', '', rtrim($event->website, '/')) }} </a>
+                </h5>
               </div>
             </div>
             <div class="accordin-item d-none d-md-block">
