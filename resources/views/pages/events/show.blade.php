@@ -110,6 +110,28 @@
             </div>
             <div class="accordin-item d-none d-md-block">
               <div>
+                <h5>
+                  {{ __('words.website') }}
+                </h5>
+                <p>
+                 <a href="{{ $event->website }}" target="_blank">{{ $event->website }}</a>
+                </p>
+              </div>
+
+            </div>
+            <div class="accordin-item d-none d-md-block">
+              <div>
+                <h5>
+                  {{ __('words.program') }}
+                </h5>
+                <p>
+                  <a href="{{ $event->program }}" target="_blank">{{ $event->program }}</a>
+                </p>
+              </div>
+
+            </div>
+            <div class="accordin-item d-none d-md-block">
+              <div>
                 <i class="fa fa-info-circle fa-2x"></i>
               </div>
               <div>
