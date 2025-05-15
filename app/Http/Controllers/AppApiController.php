@@ -506,6 +506,7 @@ class AppApiController extends Controller
         $array = [
             'name' => $request['name'],
             'email' => strtolower(Str::slug($request['name'])) . '+' . uniqid() . '@events.essenciacompany.com',
+            'uniqid' => $request['code'],
             'password' => Hash::make('password'),
         ];
         $user = User::create($array);
