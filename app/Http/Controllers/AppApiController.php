@@ -164,18 +164,17 @@ class AppApiController extends Controller
             $extras = [];
 
             if ($ticket->pos_id == $posId) {
-                foreach ($ticket->extras as $extra) {
-                    // if (Extra::find($extra['id'])->zone_id != $request->zone) {
-                    //     continue;
-                    // }
-
+                $data = $ticket->extras->filter(function ($extra) use ($posId) {
+                    return $extra->poses->contains($posId);
+                });
+                foreach ($data as $extra) {
                     array_push($extras, $extra);
                 }
             }
             $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
             return response()->json($data);
         } else {
-            return response()->json(['error' => __('words.invalid_ticket_error')]);
+            return response()->json(['error' => 'Invalid ticket error']);
         }
     }
 
