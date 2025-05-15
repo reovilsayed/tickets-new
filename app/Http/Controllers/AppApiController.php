@@ -508,8 +508,10 @@ class AppApiController extends Controller
             'email' => strtolower(Str::slug($request['name'])) . '+' . uniqid() . '@events.essenciacompany.com',
             'uniqid' => $request['code'],
             'password' => Hash::make('password'),
+            'crated_at' => now(),
+            'updated_at' => now(),
         ];
-        $user = User::create($array);
+        $user = DB::table('users')->insert($array);
         return response()->json(['user' => $user]);
     }
 }
