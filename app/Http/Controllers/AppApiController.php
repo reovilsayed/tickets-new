@@ -195,7 +195,7 @@ class AppApiController extends Controller
         $request->validate([
             'ticket' => 'required',
             'withdraw' => 'required',
-            'zone' => 'required',
+            // 'zone' => 'required',
         ]);
 
         // if (session()->get('enter-extra-zone')['id'] != $request->session) {
@@ -204,7 +204,7 @@ class AppApiController extends Controller
 
         $ticket = Ticket::where('ticket', $request->ticket)->first();
         $extras = $ticket->extras;
-        $zone = Zone::where("security_key", $request->zone)->first();
+        // $zone = Zone::where("security_key", $request->zone)->first();
 
         if ($ticket->active == 0) {
             return response()->json(['error' => __('words.ticket_not_active')]);
@@ -213,10 +213,10 @@ class AppApiController extends Controller
             return response()->json(['error' => __('words.to_early_to_scan')], 500);
         }
 
-        if ($zone == null) {
+        /* if ($zone == null) {
             return response()->json(['error' => __('words.invalid_zone_error')], 500);
         }
-        $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
+        $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name]; */
 
         // Normalize the extras array to ensure consistent structure
         $normalizedExtras = [];
@@ -240,7 +240,7 @@ class AppApiController extends Controller
         array_push($data, $log);
         $ticket->extras = $normalizedExtras;
         $ticket->logs = $data;
-        $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
+        // $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
         $ticket->save();
 
         return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
