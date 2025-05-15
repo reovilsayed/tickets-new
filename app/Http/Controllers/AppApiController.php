@@ -496,4 +496,19 @@ class AppApiController extends Controller
 
         return new EventCollection($events);
     }
+
+    public function createQrUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required|unique:users,uniqid'
+        ]);
+        $array = [
+            'name' => $request['name'],
+            'email' => strtolower(Str::slug($request['name'])) . '+' . uniqid() . '@events.essenciacompany.com',
+            'password' => Hash::make('password'),
+        ];
+        $user = User::create($array);
+        return response()->json(['user' => $user]);
+    }
 }

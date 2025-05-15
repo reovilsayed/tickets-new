@@ -189,6 +189,7 @@ Route::group(['prefix' => 'app'], function () {
         Route::get('wallet', [AppApiController::class, 'getMyWallet']);
         Route::post('wallet/customer', [AppApiController::class, 'getWalletCustomer']);
         Route::get('/events', [AppApiController::class, 'events']);
+        Route::post('qr-user/create', [AppApiController::class, 'createQrUser']);
     });
     Route::post('user-from-qr', [AppApiController::class, 'getUserFromQr']);
 });
