@@ -208,6 +208,7 @@ class AppApiController extends Controller
 
         $ticket = Ticket::where('ticket', $request->ticket)->first();
         $extras = $ticket->extras;
+        $log = [];
         // $zone = Zone::where("security_key", $request->zone)->first();
 
         if ($ticket->active == 0) {
@@ -234,11 +235,11 @@ class AppApiController extends Controller
 
         foreach ($request->withdraw as $key => $qty) {
             if ($qty && isset($normalizedExtras[$key])) {
-                
+
                 $normalizedExtras[$key]['used'] += $qty;
 
                 if ($normalizedExtras[$key]['used'] > $normalizedExtras[$key]['qty']) {
-                    return $normalizedExtras[$key]['used'] = $normalizedExtras[$key]['qty'] ;
+                    return $normalizedExtras[$key]['used'] = $normalizedExtras[$key]['qty'];
                 }
 
                 $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $normalizedExtras[$key]['name'];
