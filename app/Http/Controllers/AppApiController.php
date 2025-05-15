@@ -169,6 +169,7 @@ class AppApiController extends Controller
                     return $extra->poses->contains($posId);
                 });
                 foreach ($data as $extra) {
+                    $extra = Extra::find($extra['id']);
                     array_push($extras, $extra);
                 }
             }
