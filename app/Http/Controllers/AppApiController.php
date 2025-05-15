@@ -512,6 +512,9 @@ class AppApiController extends Controller
             'updated_at' => now(),
         ];
         $user = DB::table('users')->insert($array);
+        if ($user) {
+            $user = User::where('uniqid', $request['code'])->first();
+        }
         return response()->json(['user' => $user]);
     }
 }
