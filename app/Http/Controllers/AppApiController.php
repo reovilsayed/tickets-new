@@ -163,13 +163,14 @@ class AppApiController extends Controller
         if ($ticket) {
             $extras = [];
 
-            foreach ($ticket->extras as $extra) {
-                // if (Extra::find($extra['id'])->zone_id != $request->zone) {
-                //     continue;
-                // }
-                $extra = Extra::find($extra['id']);
+            if ($ticket->pos_id == $posId) {
+                foreach ($ticket->extras as $extra) {
+                    // if (Extra::find($extra['id'])->zone_id != $request->zone) {
+                    //     continue;
+                    // }
 
-                array_push($extras, $extra);
+                    array_push($extras, $extra);
+                }
             }
             $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
             return response()->json($data);
