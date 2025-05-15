@@ -162,6 +162,9 @@ Route::post('/tickets/update-code', [ApiController::class, 'updateTicketCode']);
 Route::post('/tickets/activate', [ApiController::class, 'activateTicket']);
 Route::post('/tickets/toggle-active', [ApiController::class, 'toggleTicketActive']);
 Route::post('/ticket-extras', [ApiController::class, 'ticketExtras']);
+Route::get('/settings', function () {
+    return response()->json(setting('app'));
+});
 
 
 Route::get('/withdraw_checked', function () {
@@ -189,7 +192,7 @@ Route::group(['prefix' => 'app'], function () {
         Route::get('wallet', [AppApiController::class, 'getMyWallet']);
         Route::post('wallet/customer', [AppApiController::class, 'getWalletCustomer']);
         Route::get('/events', [AppApiController::class, 'events']);
-        Route::post('qr-user/create', [AppApiController::class, 'createQrUser']);
+        Route::post('/qr-user/create', [AppApiController::class, 'createQrUser']);
     });
     Route::post('user-from-qr', [AppApiController::class, 'getUserFromQr']);
 });
