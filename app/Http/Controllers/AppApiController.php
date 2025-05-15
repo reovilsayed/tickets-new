@@ -234,7 +234,12 @@ class AppApiController extends Controller
 
         foreach ($request->withdraw as $key => $qty) {
             if ($qty && isset($normalizedExtras[$key])) {
+                
                 $normalizedExtras[$key]['used'] += $qty;
+
+                if ($normalizedExtras[$key]['used'] > $normalizedExtras[$key]['qty']) {
+                    return $normalizedExtras[$key]['used'] = $normalizedExtras[$key]['qty'] ;
+                }
 
                 $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $normalizedExtras[$key]['name'];
             }
