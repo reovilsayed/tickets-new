@@ -59,6 +59,11 @@ const PaymentModal = ({ open }) => {
         `${import.meta.env.VITE_APP_URL}/api/withdraw_checked`
     );
 
+    const { data: settingsData } = useFetch(
+        ["settings-data"],
+        `${import.meta.env.VITE_APP_URL}/api/settings`
+    );
+
     useEffect(() => {
         setWithdraw(withdrawData?.checked);
     }, [withdrawData]);
@@ -141,7 +146,12 @@ const PaymentModal = ({ open }) => {
                 );
                 setPhysicalQr(false);
             }
-            openBillModal(response?.data?.order);
+            if (
+                window.location.pathname === "/pos/extras" &&
+                settingsData?.can_print == "1"
+            ) {
+                openBillModal(response?.data?.order);
+            }
             setSendToMail(true);
             setSendToPhone(false);
             setSendInvoiceToMail(false);
