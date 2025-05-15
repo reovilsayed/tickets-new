@@ -165,6 +165,7 @@ class AppApiController extends Controller
 
             if ($ticket->pos_id == $posId) {
                 $data = collect($ticket->extras)->filter(function ($extra) use ($posId) {
+                    $extra = Extra::find($extra['id']);
                     return dd($extra->poses);
                     return $extra->poses->contains($posId);
                 });
