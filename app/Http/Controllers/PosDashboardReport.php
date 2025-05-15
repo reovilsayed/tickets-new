@@ -63,9 +63,9 @@ class PosDashboardReport extends Controller
         return $extras;
     }
 
-    public function index(Request $request, $token = null, Order $order)
+    public function index(Request $request, Order $order, $token = null)
     {
-     
+
         $user = auth()->check() ? auth()->user() :  User::whereHas('tokens', fn($query) => $query->where('name', 'authToken')->where('token', $token))->first();
         if (!$user) abort(403, 'Unauthorized');
 
@@ -78,7 +78,7 @@ class PosDashboardReport extends Controller
         return redirect()->back()->with('sucess', 'Order marked');
     }
 
-    public function update(Request $request, $token = null, Order $order)
+    public function update(Request $request, Order $order, $token = null)
     {
         $user = auth()->check() ? auth()->user() :  User::whereHas('tokens', fn($query) => $query->where('name', 'authToken')->where('token', $token))->first();
         if (!$user) abort(403, 'Unauthorized');
@@ -95,7 +95,7 @@ class PosDashboardReport extends Controller
         return response()->json();
     }
 
-    public function email($token = null, Order $order)
+    public function email(Order $order, $token = null)
     {
         $user = auth()->check() ? auth()->user() :  User::whereHas('tokens', fn($query) => $query->where('name', 'authToken')->where('token', $token))->first();
         if (!$user) abort(403, 'Unauthorized');
@@ -107,7 +107,7 @@ class PosDashboardReport extends Controller
         return response()->json();
     }
 
-    public function sms($token = null, Order $order)
+    public function sms(Order $order, $token = null)
     {
         $user = auth()->check() ? auth()->user() :  User::whereHas('tokens', fn($query) => $query->where('name', 'authToken')->where('token', $token))->first();
         if (!$user) abort(403, 'Unauthorized');
