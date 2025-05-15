@@ -209,7 +209,7 @@ class Order extends Model
         if ($this->tickets) {
 
             $i = 0;
-            foreach ($this->tickets->groupBy(fn($ticket) => $ticket->product->name) as $name => $tickets) {
+            foreach (collect($this->tickets)->groupBy(fn($ticket) => $ticket->product->name) as $name => $tickets) {
                 $i++;
                 array_push($products, [
                     'id' => $i,
@@ -223,7 +223,7 @@ class Order extends Model
 
 
         if ($this->extras) {
-
+            $i = 0;
             foreach ((collect($this->extras))->groupBy('name') as $name => $extras) {
 
                 $i++;

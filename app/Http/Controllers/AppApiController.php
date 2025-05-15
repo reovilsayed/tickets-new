@@ -159,19 +159,23 @@ class AppApiController extends Controller
     public function getExtras(Request $request)
     {
         $ticket = Ticket::where('ticket', $request->ticket)->where('active', 1)->first();
+        $posId = auth()->user()->pos_id ?? null;
         if ($ticket) {
             $extras = [];
 
-            foreach ($ticket->extras as $extra) {
-                // if (Extra::find($extra['id'])->zone_id != $request->zone) {
-                //     continue;
-                // }
-                array_push($extras, $extra);
+            if ($ticket->pos_id == $posId) {
+                $data = collect($ticket->extras)->filter(function ($extra) use ($posId) {
+                    $extra = Extra::find($extra['id']);
+                    return $extra->poses->contains($posId);
+                });
+                foreach ($data as $extra) {
+                    array_push($extras, $extra);
+                }
             }
             $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
             return response()->json($data);
         } else {
-            return response()->json(['error' => __('words.invalid_ticket_error')]);
+            return response()->json(['error' => 'Invalid ticket error']);
         }
     }
 
@@ -195,7 +199,7 @@ class AppApiController extends Controller
         $request->validate([
             'ticket' => 'required',
             'withdraw' => 'required',
-            'zone' => 'required',
+            // 'zone' => 'required',
         ]);
 
         // if (session()->get('enter-extra-zone')['id'] != $request->session) {
@@ -204,7 +208,7 @@ class AppApiController extends Controller
 
         $ticket = Ticket::where('ticket', $request->ticket)->first();
         $extras = $ticket->extras;
-        $zone = Zone::where("security_key", $request->zone)->first();
+        // $zone = Zone::where("security_key", $request->zone)->first();
 
         if ($ticket->active == 0) {
             return response()->json(['error' => __('words.ticket_not_active')]);
@@ -213,10 +217,10 @@ class AppApiController extends Controller
             return response()->json(['error' => __('words.to_early_to_scan')], 500);
         }
 
-        if ($zone == null) {
+        /* if ($zone == null) {
             return response()->json(['error' => __('words.invalid_zone_error')], 500);
         }
-        $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
+        $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name]; */
 
         // Normalize the extras array to ensure consistent structure
         $normalizedExtras = [];
@@ -240,7 +244,7 @@ class AppApiController extends Controller
         array_push($data, $log);
         $ticket->extras = $normalizedExtras;
         $ticket->logs = $data;
-        $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
+        // $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
         $ticket->save();
 
         return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
@@ -495,5 +499,26 @@ class AppApiController extends Controller
         $events = Event::where('status', 1)->where('in_pos', 1)->get();
 
         return new EventCollection($events);
+    }
+
+    public function createQrUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'code' => 'required|unique:users,uniqid'
+        ]);
+        $array = [
+            'name' => $request['name'],
+            'email' => strtolower(Str::slug($request['name'])) . '+' . uniqid() . '@events.essenciacompany.com',
+            'uniqid' => $request['code'],
+            'password' => Hash::make('password'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+        $user = DB::table('users')->insert($array);
+        if ($user) {
+            $user = User::where('uniqid', $request['code'])->first();
+        }
+        return response()->json(['user' => $user]);
     }
 }

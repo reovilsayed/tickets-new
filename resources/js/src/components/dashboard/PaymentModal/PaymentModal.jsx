@@ -11,6 +11,7 @@ import PhoneNumberInput from "./PhoneNumberInput";
 import { useFetch } from "../../../lib/hooks/useFetch";
 import { toast } from "react-toastify";
 import { calculateExtrasFeesForTotalCart } from "../../../lib/utils";
+import BillModal from "../BillModal/BillModal";
 
 const PaymentModal = ({ open }) => {
     const { items, cartTotal, isEmpty: cartIsEmpty, emptyCart } = useCart();
@@ -58,6 +59,11 @@ const PaymentModal = ({ open }) => {
         `${import.meta.env.VITE_APP_URL}/api/withdraw_checked`
     );
 
+    const { data: settingsData } = useFetch(
+        ["settings-data"],
+        `${import.meta.env.VITE_APP_URL}/api/settings`
+    );
+
     useEffect(() => {
         setWithdraw(withdrawData?.checked);
     }, [withdrawData]);
@@ -82,6 +88,10 @@ const PaymentModal = ({ open }) => {
 
     const navigate = useNavigate();
     const filterEvent = useSelector((state) => state.filter.event);
+
+    const [billOrder, setBillOrder] = useState(null);
+    const openBillModal = (order) => setBillOrder(order);
+    const closeBillModal = () => setBillOrder(null);
 
     const submitOrder = async () => {
         if (!filterEvent?.id) {
@@ -135,6 +145,12 @@ const PaymentModal = ({ open }) => {
                         ?.join(",")}`
                 );
                 setPhysicalQr(false);
+            }
+            if (
+                window.location.pathname === "/pos/extras" &&
+                settingsData?.can_print == "1"
+            ) {
+                openBillModal(response?.data?.order);
             }
             setSendToMail(true);
             setSendToPhone(false);
@@ -549,6 +565,7 @@ const PaymentModal = ({ open }) => {
                     </div>
                 </div>
             </div>
+            <BillModal order={billOrder} handleClose={closeBillModal} />
         </>
     );
 };
