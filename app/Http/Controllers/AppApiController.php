@@ -508,7 +508,7 @@ class AppApiController extends Controller
             'email' => strtolower(Str::slug($request['name'])) . '+' . uniqid() . '@events.essenciacompany.com',
             'uniqid' => $request['code'],
             'password' => Hash::make('password'),
-            'crated_at' => now(),
+            'created_at' => now(),
             'updated_at' => now(),
         ];
         $user = DB::table('users')->insert($array);
