@@ -223,7 +223,7 @@ class Order extends Model
 
 
         if ($this->extras) {
-
+            $i = 0;
             foreach ((collect($this->extras))->groupBy('name') as $name => $extras) {
 
                 $i++;
