@@ -159,6 +159,7 @@ class AppApiController extends Controller
     public function getExtras(Request $request)
     {
         $ticket = Ticket::where('ticket', $request->ticket)->where('active', 1)->first();
+        $posId = auth()->user()->pos_id ?? null;
         if ($ticket) {
             $extras = [];
 
@@ -166,6 +167,8 @@ class AppApiController extends Controller
                 // if (Extra::find($extra['id'])->zone_id != $request->zone) {
                 //     continue;
                 // }
+                $extra = Extra::find($extra['id']);
+
                 array_push($extras, $extra);
             }
             $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
