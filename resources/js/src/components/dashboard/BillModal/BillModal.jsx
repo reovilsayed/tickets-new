@@ -50,49 +50,140 @@ function BillModal({ handleClose, order }) {
                             >
                                 <i className="fas fa-print me-2"></i>Print
                             </button>
-
-                            <div className="receipt" id="printableArea">
+                            <div
+                                className="receipt"
+                                id="printableArea"
+                                style={{
+                                    width: "80mm",
+                                    height: "80mm",
+                                    margin: "0 auto",
+                                    padding: 0,
+                                    fontSize: "10pt",
+                                    background: "#fff",
+                                    color: "#000",
+                                    boxSizing: "border-box",
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
                                 {order?.pos_user?.pos?.name && (
-                                    <div>
+                                    <div style={{ margin: '10px 0', padding: 0 }}>
                                         POS NAME:{" "}
                                         {order?.pos_user?.pos?.name || ""}
                                     </div>
                                 )}
                                 {order?.billing?.name && (
-                                    <div>
+                                    <div style={{ margin: '10px 0', padding: 0 }}>
                                         USER NAME: {order?.billing?.name || ""}
                                     </div>
                                 )}
                                 {order?.billing?.phone && (
-                                    <div>
+                                    <div style={{ margin: '10px 0', padding: 0 }}>
                                         USER PHONE:{" "}
                                         {order?.billing?.phone || ""}
                                     </div>
                                 )}
-                                <hr />
-                                <div className="bold">Order details</div>
-                                <div>Order id: {order?.id}</div>
-                                <hr />
-                                <table>
+                                <hr
+                                    style={{
+                                        border: "none",
+                                        borderTop: "1px dashed #000",
+                                        margin: "4px 0",
+                                    }}
+                                />
+                                <div
+                                    style={{
+                                        fontWeight: "bold",
+                                        margin: 0,
+                                        padding: 0,
+                                    }}
+                                >
+                                    Order details
+                                </div>
+                                <div style={{ margin: 0, padding: 0 }}>
+                                    Order id: {order?.id}
+                                </div>
+                                <hr
+                                    style={{
+                                        border: "none",
+                                        borderTop: "1px dashed #000",
+                                        margin: "4px 0",
+                                    }}
+                                />
+                                <table
+                                    style={{
+                                        width: "100%",
+                                        borderCollapse: "collapse",
+                                        margin: 0,
+                                        padding: 0,
+                                    }}
+                                >
                                     <thead>
                                         <tr>
-                                            <th className="text-center">
+                                            <th
+                                                style={{
+                                                    textAlign: "center",
+                                                    padding: "2px 0",
+                                                    fontSize: "10pt",
+                                                    whiteSpace: "nowrap",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
                                                 Name
                                             </th>
-                                            <th>Qty</th>
+                                            <th
+                                                style={{
+                                                    textAlign: "left",
+                                                    padding: "2px 0",
+                                                    fontSize: "10pt",
+                                                    whiteSpace: "nowrap",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                Qty
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {order?.items?.map((product, index) => (
-                                            <tr>
-                                                <td>{product.name}</td>
-                                                <td>{product.qty}</td>
+                                            <tr key={index}>
+                                                <td
+                                                    style={{
+                                                        textAlign: "left",
+                                                        padding: "2px 0",
+                                                        fontSize: "10pt",
+                                                        whiteSpace: "nowrap",
+                                                    }}
+                                                >
+                                                    {product.name}
+                                                </td>
+                                                <td
+                                                    style={{
+                                                        textAlign: "left",
+                                                        padding: "2px 0",
+                                                        fontSize: "10pt",
+                                                        whiteSpace: "nowrap",
+                                                    }}
+                                                >
+                                                    {product.qty}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
-                                <hr />
-                                <div className="right bold">
+                                <hr
+                                    style={{
+                                        border: "none",
+                                        borderTop: "1px dashed #000",
+                                        margin: "4px 0",
+                                    }}
+                                />
+                                <div
+                                    style={{
+                                        textAlign: "right",
+                                        fontWeight: "bold",
+                                        margin: 0,
+                                        padding: 0,
+                                    }}
+                                >
                                     Total: {order?.total}€
                                 </div>
                             </div>
