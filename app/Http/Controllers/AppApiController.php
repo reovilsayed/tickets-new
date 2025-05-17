@@ -474,21 +474,25 @@ class AppApiController extends Controller
 
     public function withdrawRefund(Request $request)
     {
-        $request->validate([
-            'amount' => 'required',
-            'user' => 'required',
-            'type' => 'required'
-        ]);
+        try {
+            $request->validate([
+                'amount' => 'required',
+                'user' => 'required',
+                'type' => 'required'
+            ]);
 
-        $user = User::find($request->user);
+            $user = User::find($request->user);
 
-        if ($request->type == 'refund') {
-            $user->refund($request->amount);
-        } else {
-            $user->deposit($request->amount);
+            if ($request->type == 'refund') {
+                $user->refund($request->amount);
+            } else {
+                $user->deposit($request->amount);
+            }
+
+            return response()->json(['user' => $user]);
+        } catch (Exception | Error $e) {
+            return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
         }
-
-        return response()->json(['user' => $user]);
     }
 
     public function getUserFromQr(Request $request)
