@@ -89,7 +89,7 @@ class CreateOrderController extends Controller
 
     protected function takePayment(Order $order): void
     {
-        if ($order->payment_method === 'Wallet' && $order->user_id) {
+        if ($order->payment_method === 'qr' && $order->user_id) {
             $user = User::findOrFail($order->user_id);
             $user->spend($order->total, 'Order number - ' . $order->id);
         }
