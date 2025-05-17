@@ -165,7 +165,7 @@ class AppApiController extends Controller
 
             $data = collect($ticket->extras)->filter(function ($extra) use ($posId) {
                 $extra = Extra::find($extra['id']);
-                return $extra->poses->contains($posId);
+                return $extra->poses->pluck('id')->contains($posId);
             });
             foreach ($data as $extra) {
                 array_push($extras, $extra);
