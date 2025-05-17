@@ -511,11 +511,20 @@ class AppApiController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'email' => 'nullable|unique:users,email',
+            'contact_number' => 'nullable|unique:users,contact_number',
+            'vatNumber' => 'nullable|unique:users,vatNumber',
             'code' => 'required|unique:users,uniqid'
         ]);
+        if (User::where('uniqid', $request['code'])->exists()) {
+            return response()->json(['error' => 'QR code is already associated with another user'], 409);
+        }
         $array = [
             'name' => $request['name'],
-            'email' => strtolower(Str::slug($request['name'])) . '+' . uniqid() . '@events.essenciacompany.com',
+            'email' => $request['email'] ?? strtolower(Str::slug($request['name'])) . '+' . uniqid() . '@events.essenciacompany.com',
+            'contact_number' => $request['contact_number'],
+            'vatNumber' => $request['vatNumber'],
+            'role_id' => 2,
             'uniqid' => $request['code'],
             'password' => Hash::make('password'),
             'created_at' => now(),
