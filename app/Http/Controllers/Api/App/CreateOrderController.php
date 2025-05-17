@@ -176,7 +176,7 @@ class CreateOrderController extends Controller
 
         if (!$user) {
             $user = User::create([
-                'name' => $billing['s'] ?? 'Unknown User',
+                'name' => $billing['name'] ?? 'Unknown User',
                 'email' => !empty($email) ? $email : $this->generateUniqueEmail($billing['name'] ?? 'user'),
                 'contact_number' => !empty($phone) ? $phone : null,
                 'email_verified_at' => now(),
