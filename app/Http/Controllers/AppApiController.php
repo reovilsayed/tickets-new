@@ -465,7 +465,11 @@ class AppApiController extends Controller
         if (request()->filled('qr')) {
             $customer = User::where('uniqid', request()->qr)->where('role_id', 2)->first();
         }
-        return response()->json(['customer' => $customer]);
+        $transactions = [];
+        if ($customer) {
+            $transactions = $customer->transactions;
+        }
+        return response()->json(['customer' => $customer, 'transactions' => $transactions]);
     }
 
     public function withdrawRefund(Request $request)
