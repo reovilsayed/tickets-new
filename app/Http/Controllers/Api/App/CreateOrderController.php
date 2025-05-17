@@ -155,18 +155,30 @@ class CreateOrderController extends Controller
 
     protected function getUser(array $billing): User
     {
-        $email = $billing['email'] ?? null;
-        $phone = $billing['phone'] ?? null;
+        $email = trim($billing['email'] ?? '');
+        $phone = trim($billing['phone'] ?? '');
 
-        $user = User::where('contact_number', $phone)
-            ->orWhere('email', $email)
-            ->first();
+        // if (empty($email) && empty($phone)) {
+        //     throw new \InvalidArgumentException('Either email or phone number is required for user identification');
+        // }
+
+        $query = User::query();
+
+        if (!empty($phone)) {
+            $query->where('contact_number', $phone);
+        }
+
+        if (!empty($email)) {
+            $query->orWhere('email', $email);
+        }
+
+        $user = $query->first();
 
         if (!$user) {
             $user = User::create([
-                'name' => $billing['name'] ?? 'Unknown User',
-                'email' => $email ?? $this->generateUniqueEmail($billing['name'] ?? 'user'),
-                'contact_number' => $phone,
+                'name' => $billing['s'] ?? 'Unknown User',
+                'email' => !empty($email) ? $email : $this->generateUniqueEmail($billing['name'] ?? 'user'),
+                'contact_number' => !empty($phone) ? $phone : null,
                 'email_verified_at' => now(),
                 'role_id' => self::DEFAULT_USER_ROLE,
                 'password' => Hash::make(self::DEFAULT_PASSWORD),
