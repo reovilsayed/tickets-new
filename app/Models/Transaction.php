@@ -19,7 +19,7 @@ class Transaction extends Model
         });
     }
 
-    public function transactionalbe()
+    public function transactionable()
     {
         return $this->morphTo();
     }
