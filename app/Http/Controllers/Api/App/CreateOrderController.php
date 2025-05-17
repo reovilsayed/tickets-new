@@ -165,14 +165,14 @@ class CreateOrderController extends Controller
         $query = User::query();
 
         if (!empty($phone)) {
-            $query->where('contact_number', $phone);
+            $user = $query->where('contact_number', $phone)->first();
         }
 
-        if (!empty($email)) {
-            $query->orWhere('email', $email);
+        if (!$user && !empty($email)) {
+            $user = $query->orWhere('email', $email)->first();
         }
 
-        $user = $query->first();
+
 
         if (!$user) {
             $user = User::create([
