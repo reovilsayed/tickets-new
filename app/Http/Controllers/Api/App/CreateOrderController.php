@@ -32,7 +32,7 @@ class CreateOrderController extends Controller
                 'billing.phone' => 'nullable|string',
                 'billing.vatNumber' => 'nullable|string',
                 'user_id' => 'nullable|exists:users,id',
-                'event_id' => 'nullable|exists:events,id',
+                'event_id' => 'required|exists:events,id',
                 'subtotal' => 'required|numeric|min:0',
                 'total' => 'required|numeric|min:0',
                 'payment_method' => 'required|string|in:qr,card,cash',
@@ -132,7 +132,7 @@ class CreateOrderController extends Controller
         if ($data->user_id) {
             $user = User::find($data->user_id);
         }
-        
+
         if (!$user) {
             $user = $this->getUser($data->billing);
         }
