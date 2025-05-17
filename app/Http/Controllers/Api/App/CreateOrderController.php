@@ -128,7 +128,14 @@ class CreateOrderController extends Controller
 
     protected function createOrder(object $data): Order
     {
-        $user = $this->getUser($data->billing);
+        $user = null;
+        if ($data->user_id) {
+            $user = User::find($data->user_id);
+        }
+        
+        if (!$user) {
+            $user = $this->getUser($data->billing);
+        }
 
         return Order::create([
             'billing' => $data->billing,
