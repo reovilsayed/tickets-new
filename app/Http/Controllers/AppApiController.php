@@ -222,6 +222,7 @@ class AppApiController extends Controller
         $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name]; */
 
         // Normalize the extras array to ensure consistent structure
+        $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => 'Pos user ' . auth()->user()->name];
         $normalizedExtras = [];
         foreach ($extras as $key => $extra) {
             if (is_array($extra) && isset($extra['id'])) {
@@ -248,7 +249,6 @@ class AppApiController extends Controller
         array_push($data, $log);
         $ticket->extras = $normalizedExtras;
         $ticket->logs = $data;
-        // $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
         $ticket->save();
 
         return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
