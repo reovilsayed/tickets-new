@@ -187,11 +187,11 @@ class AppApiController extends Controller
             return response()->json(['error' => __('words.invalid_zone_error')], 500);
         }
         $user = auth('sanctum')->user();
-        if (!$user->zones->contains($zone)) {
-            return response()->json(['error' => "You are not authorised to access that zone"], 401);
-        }
+        // if (!$user->zones->contains($zone)) {
+        //     return response()->json(['error' => "You are not authorised to access that zone"], 401);
+        // }
 
-        return response()->json(['food_zone' => $zone->type == 1]);
+        return response()->json(['food_zone' => $zone->type == 1, 'zone' => $zone]);
     }
 
     public function withdrawExtra(Request $request)
