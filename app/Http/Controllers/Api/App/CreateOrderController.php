@@ -158,6 +158,7 @@ class CreateOrderController extends Controller
         $email = trim($billing['email'] ?? '');
         $phone = trim($billing['phone'] ?? '');
 
+        $user = null;
         // if (empty($email) && empty($phone)) {
         //     throw new \InvalidArgumentException('Either email or phone number is required for user identification');
         // }
