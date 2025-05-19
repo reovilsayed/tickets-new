@@ -63,7 +63,7 @@ Route::get('invite/{invite:slug}', function (Invite $invite, Request $request) {
     foreach ($event->dates() as $date) {
         $products[$date] = $invite->products->filter(fn($product) => in_array($date, $product->dates));
     }
-    return view('pages.event_details', compact('event', 'products', 'is_invite', 'invite'));
+    return view('pages.events.show', compact('event', 'products', 'is_invite', 'invite'));
 })->name('invite.product_details')->excludedMiddleware(AgeVerification::class);
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
