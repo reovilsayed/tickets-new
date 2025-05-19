@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Transaction extends Model
 {
@@ -11,7 +12,14 @@ class Transaction extends Model
 
     protected $guarded = [];
 
-    public function transactionalbe()
+    protected static function booted()
+    {
+        static::addGlobalScope('withTransactionable', function (Builder $builder) {
+            $builder->whereHas('transactionable');
+        });
+    }
+
+    public function transactionable()
     {
         return $this->morphTo();
     }

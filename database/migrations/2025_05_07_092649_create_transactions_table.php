@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('transactionalbe_id');
-            $table->string('transactionalbe_type');
+            $table->integer('transactionable_id');
+            $table->string('transactionable_type');
             $table->enum('type', ['credit', 'debit']);
             $table->string('key')->nullable();
             $table->string('description')->nullable();
