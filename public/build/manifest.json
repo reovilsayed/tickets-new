@@ -7,51 +7,51 @@
     "file": "assets/PhoneNumberInput-911a6866.css",
     "src": "PhoneNumberInput.css"
   },
-  "_Essência-logo-cf465c80.js": {
+  "_Essência-logo-05032de4.js": {
     "assets": [
       "assets/Essência-logo-9fa5e606.png"
     ],
     "css": [
       "assets/Essência-logo-af647146.css"
     ],
-    "file": "assets/Essência-logo-cf465c80.js",
+    "file": "assets/Essência-logo-05032de4.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_PhoneNumberInput-acc5c942.js": {
+  "_PhoneNumberInput-acef4bb0.js": {
     "css": [
       "assets/PhoneNumberInput-911a6866.css"
     ],
-    "file": "assets/PhoneNumberInput-acc5c942.js",
+    "file": "assets/PhoneNumberInput-acef4bb0.js",
     "imports": [
       "resources/js/app.js",
-      "_index-428230d0.js"
+      "_index-fdd60505.js"
     ]
   },
-  "_index-428230d0.js": {
-    "file": "assets/index-428230d0.js",
+  "_index-fdd60505.js": {
+    "file": "assets/index-fdd60505.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_qr-scanner.min-b09fd408.js": {
+  "_qr-scanner.min-651beec8.js": {
     "css": [
       "assets/qr-scanner-7563ac72.css"
     ],
     "dynamicImports": [
       "node_modules/qr-scanner/qr-scanner-worker.min.js"
     ],
-    "file": "assets/qr-scanner.min-b09fd408.js",
+    "file": "assets/qr-scanner.min-651beec8.js",
     "imports": [
       "resources/js/app.js"
     ]
   },
-  "_useInfiniteFetch-f9b90ab8.js": {
-    "file": "assets/useInfiniteFetch-f9b90ab8.js",
+  "_useInfiniteFetch-9db73852.js": {
+    "file": "assets/useInfiniteFetch-9db73852.js",
     "imports": [
       "resources/js/app.js",
-      "_index-428230d0.js"
+      "_index-fdd60505.js"
     ]
   },
   "_utils-8b9f25e8.js": {
@@ -89,12 +89,12 @@
       "resources/js/src/components/layouts/DashboardLayout.jsx",
       "resources/js/src/pages/PhysicalQr/PhysicalQr.jsx"
     ],
-    "file": "assets/app-19792f39.js",
+    "file": "assets/app-2dd69cca.js",
     "isEntry": true,
     "src": "resources/js/app.js"
   },
   "resources/js/src/App.jsx": {
-    "file": "assets/App-7985a8c4.js",
+    "file": "assets/App-e2210c65.js",
     "imports": [
       "resources/js/app.js"
     ],
@@ -109,22 +109,22 @@
     "css": [
       "assets/DashboardLayout-7b3fe892.css"
     ],
-    "file": "assets/DashboardLayout-01099a88.js",
+    "file": "assets/DashboardLayout-58dc39d6.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-cf465c80.js",
+      "_Essência-logo-05032de4.js",
       "_utils-8b9f25e8.js",
-      "_PhoneNumberInput-acc5c942.js",
-      "_index-428230d0.js"
+      "_PhoneNumberInput-acef4bb0.js",
+      "_index-fdd60505.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/DashboardLayout.jsx"
   },
   "resources/js/src/components/layouts/MainLayout.jsx": {
-    "file": "assets/MainLayout-8f42c095.js",
+    "file": "assets/MainLayout-f386a7a0.js",
     "imports": [
       "resources/js/app.js",
-      "_Essência-logo-cf465c80.js"
+      "_Essência-logo-05032de4.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/components/layouts/MainLayout.jsx"
@@ -137,32 +137,32 @@
     "css": [
       "assets/Extras-1d7c3547.css"
     ],
-    "file": "assets/Extras-6437545a.js",
+    "file": "assets/Extras-4570e33d.js",
     "imports": [
       "resources/js/app.js",
-      "_useInfiniteFetch-f9b90ab8.js",
+      "_useInfiniteFetch-9db73852.js",
       "_utils-8b9f25e8.js",
-      "_index-428230d0.js"
+      "_index-fdd60505.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Extras/Extras.jsx"
   },
   "resources/js/src/pages/PhysicalQr/PhysicalQr.jsx": {
-    "file": "assets/PhysicalQr-ca8c2db3.js",
+    "file": "assets/PhysicalQr-e2630a17.js",
     "imports": [
       "resources/js/app.js",
-      "_qr-scanner.min-b09fd408.js"
+      "_qr-scanner.min-651beec8.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/PhysicalQr/PhysicalQr.jsx"
   },
   "resources/js/src/pages/Scanner/Scanner.jsx": {
-    "file": "assets/Scanner-9287eb14.js",
+    "file": "assets/Scanner-2dd0137b.js",
     "imports": [
       "resources/js/app.js",
-      "_qr-scanner.min-b09fd408.js",
-      "_PhoneNumberInput-acc5c942.js",
-      "_index-428230d0.js"
+      "_qr-scanner.min-651beec8.js",
+      "_PhoneNumberInput-acef4bb0.js",
+      "_index-fdd60505.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Scanner/Scanner.jsx"
@@ -175,12 +175,12 @@
     "css": [
       "assets/Tickets-c8e8aa15.css"
     ],
-    "file": "assets/Tickets-8094fa9f.js",
+    "file": "assets/Tickets-e63ec705.js",
     "imports": [
       "resources/js/app.js",
-      "_useInfiniteFetch-f9b90ab8.js",
+      "_useInfiniteFetch-9db73852.js",
       "_utils-8b9f25e8.js",
-      "_index-428230d0.js"
+      "_index-fdd60505.js"
     ],
     "isDynamicEntry": true,
     "src": "resources/js/src/pages/Tickets/Tickets.jsx"

@@ -8,9 +8,86 @@ function BillModal({ handleClose, order }) {
         const content = document.getElementById(divId).innerHTML;
         const printWindow = window.open("", "_blank");
         printWindow.document.open();
+        printWindow.document.write(`
+        <html>
+            <head>
+                <title>Print</title>
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        font-family: "Courier New", monospace;
+                        font-size: 10pt;
+                        line-height: 1.3;
+                    }
+
+                    .receipt {
+                        width: 100%;
+                        font-family: monospace;
+                    }
+
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+
+                    th,
+                    td {
+                        text-align: left;
+                        padding: 2px 0;
+                        font-size: 10pt;
+                        white-space: nowrap;
+                    }
+
+                    hr {
+                        border: none;
+                        border-top: 1px dashed #000;
+                        margin: 4px 0;
+                    }
+
+                    .center {
+                        text-align: center;
+                    }
+
+                    .right {
+                        text-align: right;
+                    }
+
+                    .bold {
+                        font-weight: bold;
+                    }
+
+                    #printableArea {
+                        width: 3in;
+                        height: 5in;
+                        background-color: red; /* For debugging layout */
+                    }
+
+                    @media print {
+                        @page {
+                            size: 3in 5in;
+                            margin: 0;
+                        }
+
+                        body {
+                            margin: 0;
+                            padding: 0.2in;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                ${content}
+            </body>
+        </html>
+    `);
         printWindow.document.close();
-        printWindow.document.body.innerHTML = content;
-        printWindow.print();
+
+        // Delay to ensure styles load
+        setTimeout(() => {
+            printWindow.focus();
+            printWindow.print();
+        }, 500);
     };
 
     return (
@@ -66,18 +143,24 @@ function BillModal({ handleClose, order }) {
                                 }}
                             >
                                 {order?.pos_user?.pos?.name && (
-                                    <div style={{ margin: '10px 0', padding: 0 }}>
+                                    <div
+                                        style={{ margin: "10px 0", padding: 0 }}
+                                    >
                                         POS NAME:{" "}
                                         {order?.pos_user?.pos?.name || ""}
                                     </div>
                                 )}
                                 {order?.billing?.name && (
-                                    <div style={{ margin: '10px 0', padding: 0 }}>
+                                    <div
+                                        style={{ margin: "10px 0", padding: 0 }}
+                                    >
                                         USER NAME: {order?.billing?.name || ""}
                                     </div>
                                 )}
                                 {order?.billing?.phone && (
-                                    <div style={{ margin: '10px 0', padding: 0 }}>
+                                    <div
+                                        style={{ margin: "10px 0", padding: 0 }}
+                                    >
                                         USER PHONE:{" "}
                                         {order?.billing?.phone || ""}
                                     </div>
