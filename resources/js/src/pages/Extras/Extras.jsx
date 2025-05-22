@@ -99,17 +99,13 @@ function Extras() {
                             data?.pages?.map((page, index) => (
                                 <Fragment key={index}>
                                     {page?.data?.map((extra, index) => {
-                                        if (
-                                            formatPrice(
-                                                extra?.sale_price
-                                                    ? extra?.sale_price
-                                                    : extra?.price
-                                            ) > 0
-                                        )
-                                            <ExtraItem
-                                                key={index}
-                                                extra={extra}
-                                            />;
+                                        if (extra?.price > 0)
+                                            return (
+                                                <ExtraItem
+                                                    key={index}
+                                                    extra={extra}
+                                                />
+                                            );
                                     })}
                                 </Fragment>
                             ))
