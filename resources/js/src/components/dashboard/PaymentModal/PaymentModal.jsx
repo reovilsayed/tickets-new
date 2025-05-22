@@ -11,7 +11,6 @@ import PhoneNumberInput from "./PhoneNumberInput";
 import { useFetch } from "../../../lib/hooks/useFetch";
 import { toast } from "react-toastify";
 import { calculateExtrasFeesForTotalCart } from "../../../lib/utils";
-import BillModal from "../BillModal/BillModal";
 
 const PaymentModal = ({ open }) => {
     const { items, cartTotal, isEmpty: cartIsEmpty, emptyCart } = useCart();
@@ -89,10 +88,6 @@ const PaymentModal = ({ open }) => {
     const navigate = useNavigate();
     const filterEvent = useSelector((state) => state.filter.event);
 
-    const [billOrder, setBillOrder] = useState(null);
-    const openBillModal = (order) => setBillOrder(order);
-    const closeBillModal = () => setBillOrder(null);
-
     const submitOrder = async () => {
         if (!filterEvent?.id) {
             toast("No event was selected!");
@@ -150,7 +145,223 @@ const PaymentModal = ({ open }) => {
                 window.location.pathname === "/pos/extras" &&
                 settingsData?.can_print == "1"
             ) {
-                openBillModal(response?.data?.order);
+                var order = response?.data?.order;
+                const printWindow = window.open("", "_blank");
+                printWindow.document.open();
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Print</title>
+                            <style>
+                                body {
+                                    margin: 0;
+                                    padding: 0;
+                                    font-family: "Courier New", monospace;
+                                    font-size: 10pt;
+                                    line-height: 1.3;
+                                }
+
+                                .receipt {
+                                    width: 100%;
+                                    font-family: monospace;
+                                }
+
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                }
+
+                                th,
+                                td {
+                                    text-align: left;
+                                    padding: 2px 0;
+                                    font-size: 10pt;
+                                    white-space: nowrap;
+                                }
+
+                                hr {
+                                    border: none;
+                                    border-top: 1px dashed #000;
+                                    margin: 4px 0;
+                                }
+
+                                .center {
+                                    text-align: center;
+                                }
+
+                                .right {
+                                    text-align: right;
+                                }
+
+                                .bold {
+                                    font-weight: bold;
+                                }
+
+                                #printableArea {
+                                    width: 3in;
+                                    height: 5in;
+                                    background-color: red; /* For debugging layout */
+                                }
+
+                                @media print {
+                                    @page {
+                                        size: 3in 5in;
+                                        margin: 0;
+                                    }
+
+                                    body {
+                                        margin: 0;
+                                        padding: 0.2in;
+                                    }
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            ${
+                                order?.pos_user?.pos?.name
+                                    ? `<div
+                                                    style={{ margin: "10px 0", padding: 0 }}
+                                                >
+                                                    POS NAME: ${
+                                                        order?.pos_user?.pos
+                                                            ?.name || ""
+                                                    }
+                                                </div>`
+                                    : ""
+                            }
+                            ${
+                                order?.billing?.name
+                                    ? `<div
+                                    style={{ margin: "10px 0", padding: 0 }}
+                                >
+                                    USER NAME: ${order?.billing?.name || ""}
+                                </div>`
+                                    : ""
+                            }
+                            ${
+                                order?.billing?.phone
+                                    ? `<div
+                                    style={{ margin: "10px 0", padding: 0 }}
+                                >
+                                    USER PHONE: ${order?.billing?.phone || ""}
+                                </div>`
+                                    : ""
+                            }
+                            <hr
+                                style={{
+                                    border: "none",
+                                    borderTop: "1px dashed #000",
+                                    margin: "4px 0",
+                                }}
+                            />
+                            <div
+                                style={{
+                                    fontWeight: "bold",
+                                    margin: 0,
+                                    padding: 0,
+                                }}
+                            >
+                                Order details
+                            </div>
+                            <div style={{ margin: 0, padding: 0 }}>
+                                Order id: ${order?.id}
+                            </div>
+                            <hr
+                                style={{
+                                    border: "none",
+                                    borderTop: "1px dashed #000",
+                                    margin: "4px 0",
+                                }}
+                            />
+                            <table
+                                style={{
+                                    width: "100%",
+                                    borderCollapse: "collapse",
+                                    margin: 0,
+                                    padding: 0,
+                                }}
+                            >
+                                <thead>
+                                    <tr>
+                                        <th
+                                            style={{
+                                                textAlign: "center",
+                                                padding: "2px 0",
+                                                fontSize: "10pt",
+                                                whiteSpace: "nowrap",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Name
+                                        </th>
+                                        <th
+                                            style={{
+                                                textAlign: "left",
+                                                padding: "2px 0",
+                                                fontSize: "10pt",
+                                                whiteSpace: "nowrap",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Qty
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${order?.items?.map(
+                                        (product, index) =>
+                                            `<tr key=${index}>
+                                            <td
+                                                style={{
+                                                    textAlign: "left",
+                                                    padding: "2px 0",
+                                                    fontSize: "10pt",
+                                                    whiteSpace: "nowrap",
+                                                }}
+                                            >
+                                                ${product.name}
+                                            </td>
+                                            <td
+                                                style={{
+                                                    textAlign: "left",
+                                                    padding: "2px 0",
+                                                    fontSize: "10pt",
+                                                    whiteSpace: "nowrap",
+                                                }}
+                                            >
+                                                ${product.qty}
+                                            </td>
+                                        </tr>`
+                                    )}
+                                </tbody>
+                            </table>
+                            <hr
+                                style={{
+                                    border: "none",
+                                    borderTop: "1px dashed #000",
+                                    margin: "4px 0",
+                                }}
+                            />
+                            <div
+                                style={{
+                                    textAlign: "right",
+                                    fontWeight: "bold",
+                                    margin: 0,
+                                    padding: 0,
+                                }}
+                            >
+                                Total: ${order?.total}€
+                            </div>
+                        </body>
+                    </html>
+                `);
+                printWindow.document.close();
+
+                // Delay to ensure styles load
+                setTimeout(() => {
+                    printWindow.focus();
+                    printWindow.print();
+                }, 500);
             }
             setSendToMail(true);
             setSendToPhone(false);
@@ -565,7 +776,6 @@ const PaymentModal = ({ open }) => {
                     </div>
                 </div>
             </div>
-            <BillModal order={billOrder} handleClose={closeBillModal} />
         </>
     );
 };
