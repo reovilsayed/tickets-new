@@ -4,6 +4,7 @@ import { HashLoader, PulseLoader } from "react-spinners";
 import { useInfiniteFetch } from "../../lib/hooks/useInfiniteFetch";
 import ExtraItem from "./ExtraItem/ExtraItem";
 import { useSelector } from "react-redux";
+import { formatPrice } from "../../lib/utils";
 
 function Extras() {
     const searchQuery = useSelector((state) => state.searchQuery.query);
@@ -97,9 +98,19 @@ function Extras() {
                         ) : data?.pages?.length ? (
                             data?.pages?.map((page, index) => (
                                 <Fragment key={index}>
-                                    {page?.data?.map((extra, index) => (
-                                        <ExtraItem key={index} extra={extra} />
-                                    ))}
+                                    {page?.data?.map((extra, index) => {
+                                        if (
+                                            formatPrice(
+                                                extra?.sale_price
+                                                    ? extra?.sale_price
+                                                    : extra?.price
+                                            ) > 0
+                                        )
+                                            <ExtraItem
+                                                key={index}
+                                                extra={extra}
+                                            />;
+                                    })}
                                 </Fragment>
                             ))
                         ) : (
