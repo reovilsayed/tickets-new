@@ -140,7 +140,7 @@
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="permission[{{ $key }}]"
-                                                    value="1" {{ $value ? 'checked' : '' }}> {{ $key }}
+                                                    value="1" {{ $value ? 'checked' : '' }}> {{ ucwords($key) }}
                                             </label>
                                         </div>
                                     </div>
@@ -155,7 +155,7 @@
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" name="payment_methods[{{ $key }}]"
-                                                    value="1" {{ $value ? 'checked' : '' }}> {{ $key }}
+                                                    value="1" {{ $value ? 'checked' : '' }}> {{ ucwords($key) }}
                                             </label>
                                         </div>
                                     </div>

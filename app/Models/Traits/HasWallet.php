@@ -47,6 +47,6 @@ trait HasWallet
 
     public function transactions()
     {
-        return $this->morphMany(Transaction::class, 'transactionalbe')->latest();
+        return $this->morphMany(Transaction::class, 'transactionable')->latest();
     }
 }

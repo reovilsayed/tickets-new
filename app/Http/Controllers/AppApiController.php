@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EventCollection;
 use App\Http\Resources\ExtraResoure;
+use App\Models\Event;
 use App\Models\Extra;
+use App\Models\ExtraCategory;
 use App\Models\Ticket;
 use App\Models\Transaction;
 use App\Models\User;
@@ -16,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Order;
 use App\Services\TOCOnlineService;
+use Error;
 
 class AppApiController extends Controller
 {
@@ -40,7 +44,10 @@ class AppApiController extends Controller
 
     function user(Request $request)
     {
-        return auth('sanctum')->user();
+        $user = auth('sanctum')->user();
+        $user->load('pos');
+        $user->token = $user->currentAccessToken()->token;
+        return $user;
     }
 
     function checkin(Request $request)
@@ -152,19 +159,25 @@ class AppApiController extends Controller
     public function getExtras(Request $request)
     {
         $ticket = Ticket::where('ticket', $request->ticket)->where('active', 1)->first();
+        $posId = auth()->user()->pos_id ?? null;
         if ($ticket) {
             $extras = [];
 
-            foreach ($ticket->extras as $extra) {
-                // if (Extra::find($extra['id'])->zone_id != $request->zone) {
-                //     continue;
-                // }
+            $data = collect($ticket->extras)->filter(function ($extra) use ($posId) {
+                try {
+                    $extra = Extra::find($extra['id']);
+                    return $posId !==null? $extra->poses->pluck('id')->contains($posId): $extra;
+                } catch (Exception | Error $e) {
+                    return null;
+                }
+            });
+            foreach ($data as $extra) {
                 array_push($extras, $extra);
             }
             $data = ['status' => 'success', 'extras' => $extras, 'ticket' => $ticket];
             return response()->json($data);
         } else {
-            return response()->json(['error' => __('words.invalid_ticket_error')]);
+            return response()->json(['error' => 'Invalid ticket error']);
         }
     }
 
@@ -176,11 +189,11 @@ class AppApiController extends Controller
             return response()->json(['error' => __('words.invalid_zone_error')], 500);
         }
         $user = auth('sanctum')->user();
-        if (!$user->zones->contains($zone)) {
-            return response()->json(['error' => "You are not authorised to access that zone"], 401);
-        }
+        // if (!$user->zones->contains($zone)) {
+        //     return response()->json(['error' => "You are not authorised to access that zone"], 401);
+        // }
 
-        return response()->json(['food_zone' => $zone->type == 1]);
+        return response()->json(['food_zone' => $zone->type == 1, 'zone' => $zone]);
     }
 
     public function withdrawExtra(Request $request)
@@ -188,7 +201,7 @@ class AppApiController extends Controller
         $request->validate([
             'ticket' => 'required',
             'withdraw' => 'required',
-            'zone' => 'required',
+            // 'zone' => 'required',
         ]);
 
         // if (session()->get('enter-extra-zone')['id'] != $request->session) {
@@ -197,7 +210,8 @@ class AppApiController extends Controller
 
         $ticket = Ticket::where('ticket', $request->ticket)->first();
         $extras = $ticket->extras;
-        $zone = Zone::where("security_key", $request->zone)->first();
+        $log = [];
+        // $zone = Zone::where("security_key", $request->zone)->first();
 
         if ($ticket->active == 0) {
             return response()->json(['error' => __('words.ticket_not_active')]);
@@ -206,12 +220,13 @@ class AppApiController extends Controller
             return response()->json(['error' => __('words.to_early_to_scan')], 500);
         }
 
-        if ($zone == null) {
+        /* if ($zone == null) {
             return response()->json(['error' => __('words.invalid_zone_error')], 500);
         }
-        $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name];
+        $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => $zone->name]; */
 
         // Normalize the extras array to ensure consistent structure
+        $log = ['time' => now()->format('Y-m-d H:i:s'), 'action' => '', 'zone' => 'Pos user ' . auth()->user()->name];
         $normalizedExtras = [];
         foreach ($extras as $key => $extra) {
             if (is_array($extra) && isset($extra['id'])) {
@@ -223,7 +238,12 @@ class AppApiController extends Controller
 
         foreach ($request->withdraw as $key => $qty) {
             if ($qty && isset($normalizedExtras[$key])) {
+
                 $normalizedExtras[$key]['used'] += $qty;
+
+                if ($normalizedExtras[$key]['used'] > $normalizedExtras[$key]['qty']) {
+                    return $normalizedExtras[$key]['used'] = $normalizedExtras[$key]['qty'];
+                }
 
                 $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $normalizedExtras[$key]['name'];
             }
@@ -233,7 +253,6 @@ class AppApiController extends Controller
         array_push($data, $log);
         $ticket->extras = $normalizedExtras;
         $ticket->logs = $data;
-        $ticket->scanedBy()->attach(auth()->id(), ['action' => $log['action'], 'zone_id' => $zone->id]);
         $ticket->save();
 
         return response()->json(['message' => __('words.extra_product_withdraw_success_message')]);
@@ -245,18 +264,31 @@ class AppApiController extends Controller
 
         $query = $request->get('query');
         $event_id = $request->get('event_id');
+        $category_id = $request->get('category_id');
 
         $extras = Extra::with('event')->whereHas('poses', function ($q) {
             $q->where('pos_id', auth()->user()->pos_id); // Filtering based on user's pos id
-        })->where('name', 'like', "%{$query}%");
+        })->when($request->filled('query'), function ($q) use ($query) {
+            $q->where('name', 'like', "%{$query}%");
+        });
 
         if ($event_id) {
             $extras->where('event_id', $event_id);
         }
 
+        if ($category_id) {
+            $extras->where('extra_category_id', $category_id);
+        }
+
         $extras = $extras->paginate(50);
 
         return ExtraResoure::collection($extras);
+    }
+
+    public function getExtraCategories(Request $request)
+    {
+        $categories = ExtraCategory::all();
+        return response()->json(['data' => $categories]);
     }
 
     public function getOrders()
@@ -437,40 +469,83 @@ class AppApiController extends Controller
         if (request()->filled('qr')) {
             $customer = User::where('uniqid', request()->qr)->where('role_id', 2)->first();
         }
-        return response()->json(['customer' => $customer]);
+        $transactions = [];
+        if ($customer) {
+            $transactions = $customer->transactions;
+        }
+        return response()->json(['customer' => $customer, 'transactions' => $transactions]);
     }
 
     public function withdrawRefund(Request $request)
     {
-        $request->validate([
-            'amount' => 'required',
-            'user' => 'required',
-            'type' => 'required'
-        ]);
+        try {
+            $request->validate([
+                'amount' => 'required',
+                'user' => 'required',
+                'type' => 'required'
+            ]);
 
-        $user = User::find($request->user);
+            $user = User::find($request->user);
 
-        if ($request->type == 'refund') {
-            $user->refund($request->amount);
-        } else {
-            $user->deposit($request->amount);
+            if ($request->type == 'refund') {
+                $user->refund($request->amount);
+            } else {
+                $user->deposit($request->amount);
+            }
+
+            return response()->json(['user' => $user]);
+        } catch (Exception | Error $e) {
+            return response()->json(['message' => $e->getMessage(), 'status' => false], 400);
         }
-
-        return response()->json(['user' => $user]);
     }
 
     public function getUserFromQr(Request $request)
     {
         $user = null;
-        if ($request->filled('ticket')) {
-            $ticket = Ticket::where('ticket', $request->ticket)->first();
-            if ($ticket) {
-                $user = User::find($ticket->user_id);
-            }
-        } else if ($request->filled('qr')) {
-            $user = User::where('uniqid', $request->qr)->first();
+        $ticket = Ticket::where('ticket', $request->code)->first();
+        if ($ticket) {
+            $user = User::find($ticket->user_id);
+        } else {
+            $user = User::where('uniqid', $request->code)->first();
         }
 
+        return response()->json(['user' => $user]);
+    }
+
+    public function events(Request $request)
+    {
+        $events = Event::where('status', 1)->where('in_pos', 1)->get();
+
+        return new EventCollection($events);
+    }
+
+    public function createQrUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'nullable|unique:users,email',
+            'contact_number' => 'nullable|unique:users,contact_number',
+            'vatNumber' => 'nullable|unique:users,vatNumber',
+            'code' => 'required|unique:users,uniqid'
+        ]);
+        if (User::where('uniqid', $request['code'])->exists()) {
+            return response()->json(['error' => 'QR code is already associated with another user'], 409);
+        }
+        $array = [
+            'name' => $request['name'],
+            'email' => $request['email'] ?? strtolower(Str::slug($request['name'])) . '+' . uniqid() . '@events.essenciacompany.com',
+            'contact_number' => $request['contact_number'],
+            'vatNumber' => $request['vatNumber'],
+            'role_id' => 2,
+            'uniqid' => $request['code'],
+            'password' => Hash::make('password'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+        $user = DB::table('users')->insert($array);
+        if ($user) {
+            $user = User::where('uniqid', $request['code'])->first();
+        }
         return response()->json(['user' => $user]);
     }
 }

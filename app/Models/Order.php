@@ -33,6 +33,9 @@ class Order extends Model
         'cash_amount' => ConvertFullMoney::class,
     ];
 
+    const STATUS_PAID = 1;
+    const PAYMENT_STATUS_PAID = 1;
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -206,7 +209,7 @@ class Order extends Model
         if ($this->tickets) {
 
             $i = 0;
-            foreach ($this->tickets->groupBy(fn($ticket) => $ticket->product->name) as $name => $tickets) {
+            foreach (collect($this->tickets)->groupBy(fn($ticket) => $ticket->product->name) as $name => $tickets) {
                 $i++;
                 array_push($products, [
                     'id' => $i,
@@ -220,7 +223,7 @@ class Order extends Model
 
 
         if ($this->extras) {
-
+            $i = 0;
             foreach ((collect($this->extras))->groupBy('name') as $name => $extras) {
 
                 $i++;
@@ -243,6 +246,6 @@ class Order extends Model
 
     public function posUser()
     {
-        return $this->belongsTo(User::class, 'pos_id', 'id');
+        return $this->belongsTo(User::class, 'pos_id', 'id')->with('pos');
     }
 }

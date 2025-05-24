@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\App\CreateOrderController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AppApiController;
 use App\Models\Extra;
@@ -161,6 +162,9 @@ Route::post('/tickets/update-code', [ApiController::class, 'updateTicketCode']);
 Route::post('/tickets/activate', [ApiController::class, 'activateTicket']);
 Route::post('/tickets/toggle-active', [ApiController::class, 'toggleTicketActive']);
 Route::post('/ticket-extras', [ApiController::class, 'ticketExtras']);
+Route::get('/settings', function () {
+    return response()->json(setting('app'));
+});
 
 
 Route::get('/withdraw_checked', function () {
@@ -171,8 +175,10 @@ Route::get('/withdraw_checked', function () {
 
 Route::group(['prefix' => 'app'], function () {
     Route::post(('login'), [AppApiController::class, 'login']);
-
     Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::get('settings', function () {
+            return response()->json(setting('app'));
+        });
         Route::get('user', [AppApiController::class, 'user']);
         Route::post('checkin', [AppApiController::class, 'checkin']);
         Route::post('checkout', [AppApiController::class, 'checkout']);
@@ -180,10 +186,14 @@ Route::group(['prefix' => 'app'], function () {
         Route::post('withdraw', [AppApiController::class, 'withdrawExtra']);
         Route::post('zone-type', [AppApiController::class, 'getZoneType']);
         Route::get('extras/all', [AppApiController::class, 'getAllExtras']);
+        Route::get('extras/categories', [AppApiController::class, 'getExtraCategories']);
         Route::get('orders', [AppApiController::class, 'getOrders']);
-        Route::post('order/create', [AppApiController::class, 'createOrder']);
+        Route::post('order/create', CreateOrderController::class);
         Route::get('wallet', [AppApiController::class, 'getMyWallet']);
         Route::post('wallet/customer', [AppApiController::class, 'getWalletCustomer']);
+        Route::post('wallet/withdraw', [AppApiController::class, 'withdrawRefund']);
+        Route::get('/events', [AppApiController::class, 'events']);
+        Route::post('/qr-user/create', [AppApiController::class, 'createQrUser']);
     });
     Route::post('user-from-qr', [AppApiController::class, 'getUserFromQr']);
 });

@@ -6,6 +6,7 @@ use Sohoj;
 use Illuminate\Support\Str;
 use App\Http\Resources\EventCollection;
 use App\Http\Resources\ExtraResoure;
+use App\Http\Resources\OrderResource;
 use App\Http\Resources\ProductCollection;
 use App\Mail\TicketDownload;
 use App\Models\Event;
@@ -347,10 +348,12 @@ class ApiController extends Controller
         }
 
 
+        $order->load('posUser', 'user');
         $data = [
             'id' => $order->id,
             'tickets' => $hollowTickets,
             'invoice_url' => $order->invoice_url,
+            'order' => OrderResource::make($order)
         ];
 
         return response()->json($data, 200);

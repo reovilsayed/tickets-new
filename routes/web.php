@@ -18,6 +18,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
+use App\Mail\UnpaidOrderReminder;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Magazine;
@@ -62,7 +63,7 @@ Route::get('invite/{invite:slug}', function (Invite $invite, Request $request) {
     foreach ($event->dates() as $date) {
         $products[$date] = $invite->products->filter(fn($product) => in_array($date, $product->dates));
     }
-    return view('pages.event_details', compact('event', 'products', 'is_invite', 'invite'));
+    return view('pages.events.show', compact('event', 'products', 'is_invite', 'invite'));
 })->name('invite.product_details')->excludedMiddleware(AgeVerification::class);
 Route::post('invite/{invite:slug}/checkout', function (Invite $invite, Request $request) {
     try {
@@ -272,6 +273,7 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::get('/pos/{page}', function () {
         return view('pos');
     });
+ 
 
     Route::prefix('api')->group(function () {
         Route::get('/tickets', [ApiController::class, 'index']);
@@ -280,7 +282,12 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
         Route::get('/event-extras/{event}', [ApiController::class, 'eventExtras']);
     });
 });
-Route::get('aaspi/extrasasd', [ApiController::class, 'extras']);
+Route::get('app/pos/{token}/reports', PosDashboardReport::class);
+Route::get('app/pos/{order}/{token}/mark', [PosDashboardReport::class, 'index'])->name('app.order.marked');
+Route::put('app/pos/{order}/{token}/update', [PosDashboardReport::class, 'update'])->name('app.order.update');
+Route::put('app/pos/{order}/{token}/email', [PosDashboardReport::class, 'email'])->name('app.order.email');
+Route::put('app/pos/{order}/{token}/sms', [PosDashboardReport::class, 'sms'])->name('app.order.sms');
+
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
     // Fetch the events where the wallet is 1, ordered by latest
@@ -464,5 +471,5 @@ Route::middleware(['auth'])->group(function () {
         return redirect('/')->with('status', 'Your account has been deleted.');
     })->name('account.delete');
 });
-Route::post('/update-uniqid', [UserController::class, 'updateUniqid'])->middleware('auth');
- 
+
+

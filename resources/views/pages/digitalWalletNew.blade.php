@@ -266,7 +266,7 @@
                             <!-- QR Code Container -->
                             <div class="mb-3" id="">
                                 <div class="event-qr-code">
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ $user->uniqid }}&color=ef5927"
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ $user->uniqid }}&color=ef5927"
                                         alt="QR Code">
                                     <p></p>
                                 </div>

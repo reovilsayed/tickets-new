@@ -206,7 +206,7 @@
                                         {{ Sohoj::price($transaction->amount) }}
                                     </td>
                                     <td>
-                                        {{ $transaction->transactionalbe->fullName() }} ({{$transaction->transactionalbe->id}})
+                                        {{ $transaction->transactionable->fullName() }} ({{$transaction->transactionable->id}})
                                     </td>
                                     <td>
                                         {{ $transaction->description }}
