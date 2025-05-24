@@ -473,3 +473,4 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+Route::post('/update-uniqid', [UserController::class, 'updateUniqid'])->middleware('auth');
