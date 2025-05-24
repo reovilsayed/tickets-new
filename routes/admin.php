@@ -8,6 +8,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\MassInviteController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PosUserReport;
+use App\Http\Controllers\UserController;
 use App\Models\Coupon;
 use App\Models\Invite;
 use App\Models\Order;
@@ -20,7 +21,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use TCG\Voyager\Facades\Voyager;
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
-
+    Route::get('/update-uniqid', [UserController::class, 'updateUniqid'])->name('update-uniqid');
     Route::get('verify-email/{user}', VerifyUserEmailAddressController::class)->name('admin.email.verify');
     Route::put('{order}/sms', SendOrderSmsController::class)->name('admin.order.sms');
     Route::put('order/{order}', AdminOrderController::class)->name('admin.order.update');

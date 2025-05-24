@@ -97,6 +97,8 @@
                 <div class="search-group">
                     <input type="text" name="q" placeholder="Search" value="{{ request()->q }}">
                     <button class="btn btn-custom"><i class="voyager-search"></i></button>
+                    <a href="{{ route('voyager.events.customer.analytics', $event) }}"   class="btn btn-custom"><i
+                            class="voyager-refresh"></i></a>
                 </div>
             </form>
 
@@ -105,6 +107,16 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
+                                <div
+                                    style="display: flex;flex-direction:column;gap:10px;align-items:center;justify-content;center">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data={{ $user->uniqid }}&color=ef5927"
+                                        alt="" height="80" width="80">
+                                    <a href="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ $user->uniqid }}&color=ef5927"
+                                        class="btn btn-custom" download="{{ $user->id }}_{{ $user->name }}_qr"
+                                        target="">
+                                        Download QR Code
+                                    </a>
+                                </div>
                                 <div>
                                     <h3>{{ $user->name . ' ' . $user->l_name }}</h3>
                                     <p style="margin: 0px;">{{ $user->email }}</p>
@@ -123,12 +135,9 @@
                                     <a href="{{ route('digital-wallet', $user) }}" class="btn btn-custom">
                                         Wallet Link
                                     </a>
-                                    <button class="btn btn-custom show-qr-modal" data-user-id="{{ $user->id }}"
-                                        data-user-name="{{ $user->name . ' ' . $user->l_name }}"
-                                        data-current-uniqid="{{ $user->uniqid }}" data-toggle="modal"
-                                        data-target="#qrCodeModal">
+                                    <a href="{{ route('update-uniqid', ['user_id' => $user->id]) }}" class="btn btn-custom ">
                                         Generate QR Code
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -189,7 +198,7 @@
                 var newUniqid = generateUniqid27();
 
                 $.ajax({
-                    url: '/update-uniqid',
+                    url: "{{ route('update-uniqid') }}",
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
