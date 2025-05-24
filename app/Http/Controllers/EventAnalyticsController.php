@@ -466,6 +466,8 @@ class EventAnalyticsController extends Controller
             ->paginate(50);
         $markedAmount = Order::where('event_id', $event->id)
             ->whereNotNull('pos_id')
+            ->whereIn('payment_method', ['Card', 'Cash'])
+            ->where('alert', 'marked')
             ->when(
                 $request->filled('date'),
                 fn($query) => $query->whereDate('created_at', $request->date)
@@ -474,7 +476,7 @@ class EventAnalyticsController extends Controller
                 $request->filled('staff'),
                 fn($query) => $query->where('orders.pos_id', $request->staff)
             )
-            ->where('alert', 'marked')->sum('total');
+            ->sum('total') / 100;
 
         $totalPaidInvite = Ticket::where('event_id', $event->id)
             ->when($request->filled('date'), fn($query) => $query->whereDate('activation_date', $request->date))

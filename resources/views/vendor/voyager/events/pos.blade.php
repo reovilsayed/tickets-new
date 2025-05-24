@@ -181,7 +181,6 @@
             <div class="panel-body">
                 <div class="row">
                     @php
-
                         $totalAmount = $order_total?->cash_amount + $order_total?->card_amount - $markedAmount;
                     @endphp
                     <div class="col-md-4">
