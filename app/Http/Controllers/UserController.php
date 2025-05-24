@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Mail\VerifyEmail;
@@ -172,13 +173,26 @@ class UserController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'uniqid'  => 'required|string|unique:users,uniqid',
         ]);
 
         $user         = User::findOrFail($request->user_id);
-        $user->uniqid = $request->uniqid;
+        $user->uniqid = now()->timestamp . '_' . uniqid();
         $user->save();
-
-        return response()->json(['message' => 'Uniqid updated successfully.']);
+        $previousUrl = url()->previous();
+        $parsedUrl = parse_url($previousUrl);
+        $queryParams = [];
+        
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $queryParams);
+        }
+        
+        $queryParams['q'] = $user->email;
+        
+        $newUrl = $parsedUrl['path'] . '?' . http_build_query($queryParams);
+        
+        return redirect()->to($newUrl)->with([
+            'message' => 'Uniqid updated successfully.',
+            'type'    => 'success'
+        ]);
     }
 }
