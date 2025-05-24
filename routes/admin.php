@@ -4,11 +4,9 @@ use App\Exports\CustomerExport;
 use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\AdminOrderController;use App\Http\Controllers\Admin\SendOrderSmsController;use App\Http\Controllers\Admin\VerifyUserEmailAddressController;
 use App\Http\Controllers\EventAnalyticsController;
-
 use App\Http\Controllers\ExportController;
-
 use App\Http\Controllers\MassInviteController;
-
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PosUserReport;
 use App\Models\Coupon;
 use App\Models\Invite;
@@ -180,7 +178,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
 
         return Excel::download(new CouponExport($coupons), 'coupons_' . now()->format('dmyhi') . '.xlsx');
     })->name('voyager.coupons.export');
-   
+
     Route::get('admin/subscription-records/export', [ExportController::class, 'export'])->name('subscription-records.export');
+
+    Route::patch('/orders/{order}/unmark', [OrderController::class, 'unmark'])->name('order.unmark');
 
 });

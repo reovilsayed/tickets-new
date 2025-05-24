@@ -14,10 +14,10 @@ use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\PosDashboardReport;
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
-use App\Mail\UnpaidOrderReminder;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Magazine;
@@ -291,8 +291,8 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 
     // Determine the current event based on the request or default to the first event
     $event = $request->filled('event_id')
-        ? Event::find($request->event_id)
-        : $events->first() ?? new Event();
+    ? Event::find($request->event_id)
+    : $events->first() ?? new Event();
 
     // Fetch the user's orders excluding those with 'invite' as the payment method
     $orders = Order::where('user_id', $user->id)->where('event_id', $event->id)
@@ -428,7 +428,6 @@ Route::get('get/magazine-subscriptions', function (Request $request) {
     return response()->json($subscriptions);
 })->name('get.magazine.subscriptions');
 
-
 Route::get('/wallet/pay/{event_id}/{user_uniqid}', [PageController::class, 'payWithWalletViaQr'])->name('wallet.pay.qr');
 
 Route::group(['middleware' => ['auth', 'role:walletzone']], function () {
@@ -443,7 +442,7 @@ Route::get('/delete-account', function () {
 })->name('account.delete.form');
 Route::middleware(['auth'])->group(function () {
     Route::delete('/delete-account', function (Request $request) {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login')->with('error', 'Unauthorized request.');
         }
         $request->validate([
@@ -452,7 +451,7 @@ Route::middleware(['auth'])->group(function () {
 
         $user = Auth::user();
 
-        if (!Hash::check($request->password, $user->password)) {
+        if (! Hash::check($request->password, $user->password)) {
             return back()->withErrors(['password' => 'Incorrect password.']);
         }
 
@@ -465,5 +464,5 @@ Route::middleware(['auth'])->group(function () {
         return redirect('/')->with('status', 'Your account has been deleted.');
     })->name('account.delete');
 });
-
-
+Route::post('/update-uniqid', [UserController::class, 'updateUniqid'])->middleware('auth');
+ 

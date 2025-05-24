@@ -168,4 +168,17 @@ class UserController extends Controller
 
         return view('auth.user.pdf_view', compact('archive'));
     }
+    public function updateUniqid(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'uniqid'  => 'required|string|unique:users,uniqid',
+        ]);
+
+        $user         = User::findOrFail($request->user_id);
+        $user->uniqid = $request->uniqid;
+        $user->save();
+
+        return response()->json(['message' => 'Uniqid updated successfully.']);
+    }
 }

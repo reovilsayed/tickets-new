@@ -94,6 +94,27 @@
     <script>
         var table = $('#dataTable').DataTable()
     </script>
+    <script>
+        document.querySelectorAll('.ticket-resolve-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+
+                fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.reload(); // Refresh to show updated status
+                        }
+                    });
+            });
+        });
+    </script>
 @endsection
 @section('content')
     <div class="container">
@@ -159,10 +180,21 @@
         <div class="panel">
             <div class="panel-body">
                 <div class="row">
+                    @php
+                        $markedAmount = \App\Models\Order::where('alert', 'marked')->sum('total');
+                        $totalAmount = $order_total?->cash_amount + $order_total?->card_amount - $markedAmount;
+                    @endphp
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
                             'label' => 'Total Amount',
-                            'value' => Sohoj::price($order_total?->total),
+                            'value' => Sohoj::price($totalAmount),
+                        ])
+                    </div>
+
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Marked Amount',
+                            'value' => Sohoj::price($markedAmount),
                         ])
                     </div>
                     <div class="col-md-4">
@@ -248,7 +280,7 @@
                                 <th>Description</th>
                                 <th>Invoice</th>
                                 <th>Note</th>
-                                <th style="display: none">Alert</th>
+                                <th>Alert</th>
                             </tr>
                         </thead>
                         <tbody id="ticket-table-body">
@@ -278,22 +310,26 @@
                                         @endif
                                     </td>
                                     <td>{{ $allOrder->note }}</td>
-                                    <td style="display: none">
+                                    <td>
                                         @if ($allOrder->alert == 'unmarked')
                                             <button type="button" class="btn btn-primary ticket-marked-button"
                                                 data-url="{{ route('order.marked', $allOrder) }}" data-bs-toggle="modal"
                                                 data-bs-target="#ticket-marked">
                                                 Mark
                                             </button>
-                                        @elseif($allOrder->alert == 'resolved')
-                                            <button class="btn btn-success">Resolved</button>
-                                        @else
-                                            <button class="btn btn-danger">Marked</button>
+                                        @elseif($allOrder->alert == 'marked')
+                                            <form method="POST" action="{{ route('order.unmark', $allOrder) }}"
+                                                style="display: inline;">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-success">Resolved</button>
+                                            </form>
+                                            {{-- <button class="btn btn-danger">Marked</button> --}}
                                         @endif
                                         <span class="d-none" id="ticket-action-url-{{ $allOrder->id }}"
                                             data-email-url="{{ route('order.email', $allOrder) }}"
                                             data-sms-url="{{ route('order.sms', $allOrder) }}"></span>
-                                        <button type="button" class="btn btn-primary ticket-action-button"
+                                        {{-- <button type="button" class="btn btn-primary ticket-action-button"
                                             data-order-no="{{ $allOrder->id }}"
                                             data-has-product="{{ $allOrder->tickets_count === 0 ? 0 : 1 }}"
                                             data-url="{{ route('order.update', $allOrder) }}"
@@ -301,8 +337,9 @@
                                             data-phone="{{ $allOrder->billing->phone ?? $allOrder->user->contact_number }}"
                                             data-bs-toggle="modal" data-bs-target="#action-modal">
                                             Action
-                                        </button>
+                                        </button> --}}
                                     </td>
+                                    <td style="display: none">{{ $allOrder->alert }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
