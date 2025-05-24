@@ -245,107 +245,115 @@
                             'value' => $totalPaidInvite->count(),
                         ])
                     </div>
+
+
+
+
+                </div>
+
+                <h1 class="p-3">
+                    {{ __('words.tickets') }}
+                </h1>
+                <div class="row">
                     @foreach ($tickets as $ticket)
                         <div class="col-md-4">
-                            <div class="card">
-                                <h3>
-                                    {{ $ticket->product?->name }}
-                                </h3>
-                                <h1>
-                                    {{ $ticket->total }}
-                                </h1>
-                            </div>
+
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => $ticket->product?->name,
+                                'value' => $ticket->total,
+                            ])
+
                         </div>
                     @endforeach
+                </div>
+                <h1 class="p-3">
+                    {{ __('words.extras') }}
+                </h1>
+                <div class="row">
                     @foreach ($extras as $extra)
                         <div class="col-md-4">
-                            <div class="card">
-                                <h3>
-                                    {{ $extra->name }}
-                                </h3>
-                                <h1>
-                                    {{ $extra->qty }}
-                                </h1>
-                            </div>
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => $extra->name,
+                                'value' => $extra->qty,
+                            ])
                         </div>
                     @endforeach
-
-                    <table class="table table-hover">
-                        <thead>
-                            <tr class="">
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone Number</th>
-                                <th>Description</th>
-                                <th>Invoice</th>
-                                <th>Note</th>
-                                <th>Alert</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ticket-table-body">
-                            @foreach ($allOrders as $allOrder)
-                                <tr>
-                                    <td>
-                                        {{ $allOrder->id }}
-                                    </td>
-                                    <td>{{ $allOrder->user->name }}</td>
-                                    <td>{{ $allOrder->billing->email ?? $allOrder->user->email }}</td>
-                                    <td>{{ $allOrder->billing->phone ?? $allOrder->user->contact_number }}</td>
-                                    <td>
-                                        <ul>
-                                            @foreach ($allOrder->getDescription() as $line)
-                                                <li>
-                                                    {{ $line }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        @if (!empty($allOrder->invoice_url) && !empty($allOrder->invoice_id))
-                                            <a href="{{ $allOrder->invoice_url }}">Invoice
-                                                #{{ $allOrder->invoice_id }}</a>
-                                        @else
-                                            N/A
-                                        @endif
-                                    </td>
-                                    <td>{{ $allOrder->note }}</td>
-                                    <td>
-                                        @if ($allOrder->alert == 'unmarked')
-                                            <button type="button" class="btn btn-primary ticket-marked-button"
-                                                data-url="{{ route('order.marked', $allOrder) }}" data-bs-toggle="modal"
-                                                data-bs-target="#ticket-marked">
-                                                Mark
-                                            </button>
-                                        @elseif($allOrder->alert == 'marked')
-                                            <form method="POST" action="{{ route('order.unmark', $allOrder) }}"
-                                                style="display: inline;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-success">Resolved</button>
-                                            </form>
-                                            {{-- <button class="btn btn-danger">Marked</button> --}}
-                                        @endif
-                                        <span class="d-none" id="ticket-action-url-{{ $allOrder->id }}"
-                                            data-email-url="{{ route('order.email', $allOrder) }}"
-                                            data-sms-url="{{ route('order.sms', $allOrder) }}"></span>
-                                        {{-- <button type="button" class="btn btn-primary ticket-action-button"
-                                            data-order-no="{{ $allOrder->id }}"
-                                            data-has-product="{{ $allOrder->tickets_count === 0 ? 0 : 1 }}"
-                                            data-url="{{ route('order.update', $allOrder) }}"
-                                            data-email="{{ $allOrder->billing->email ?? $allOrder->user->email }}"
-                                            data-phone="{{ $allOrder->billing->phone ?? $allOrder->user->contact_number }}"
-                                            data-bs-toggle="modal" data-bs-target="#action-modal">
-                                            Action
-                                        </button> --}}
-                                    </td>
-                                    <td style="display: none">{{ $allOrder->alert }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                    {{ $allOrders->withQueryString()->links('pagination::bootstrap-4') }}
                 </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="">
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Description</th>
+                            <th>Invoice</th>
+                            <th>Note</th>
+                            <th>Alert</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticket-table-body">
+                        @foreach ($allOrders as $allOrder)
+                            <tr>
+                                <td>
+                                    {{ $allOrder->id }}
+                                </td>
+                                <td>{{ $allOrder->user->name }}</td>
+                                <td>{{ $allOrder->billing->email ?? $allOrder->user->email }}</td>
+                                <td>{{ $allOrder->billing->phone ?? $allOrder->user->contact_number }}</td>
+                                <td>
+                                    <ul>
+                                        @foreach ($allOrder->getDescription() as $line)
+                                            <li>
+                                                {{ $line }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </td>
+                                <td>
+                                    @if (!empty($allOrder->invoice_url) && !empty($allOrder->invoice_id))
+                                        <a href="{{ $allOrder->invoice_url }}">Invoice
+                                            #{{ $allOrder->invoice_id }}</a>
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                                <td>{{ $allOrder->note }}</td>
+                                <td>
+                                    @if ($allOrder->alert == 'unmarked')
+                                        <button type="button" class="btn btn-primary ticket-marked-button"
+                                            data-url="{{ route('order.marked', $allOrder) }}" data-bs-toggle="modal"
+                                            data-bs-target="#ticket-marked">
+                                            Mark
+                                        </button>
+                                    @elseif($allOrder->alert == 'marked')
+                                        <form method="POST" action="{{ route('order.unmark', $allOrder) }}"
+                                            style="display: inline;">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn btn-success">Resolved</button>
+                                        </form>
+                                        {{-- <button class="btn btn-danger">Marked</button> --}}
+                                    @endif
+                                    <span class="d-none" id="ticket-action-url-{{ $allOrder->id }}"
+                                        data-email-url="{{ route('order.email', $allOrder) }}"
+                                        data-sms-url="{{ route('order.sms', $allOrder) }}"></span>
+                                    {{-- <button type="button" class="btn btn-primary ticket-action-button"
+                                        data-order-no="{{ $allOrder->id }}"
+                                        data-has-product="{{ $allOrder->tickets_count === 0 ? 0 : 1 }}"
+                                        data-url="{{ route('order.update', $allOrder) }}"
+                                        data-email="{{ $allOrder->billing->email ?? $allOrder->user->email }}"
+                                        data-phone="{{ $allOrder->billing->phone ?? $allOrder->user->contact_number }}"
+                                        data-bs-toggle="modal" data-bs-target="#action-modal">
+                                        Action
+                                    </button> --}}
+                                </td>
+                                <td style="display: none">{{ $allOrder->alert }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                {{ $allOrders->withQueryString()->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </div>
