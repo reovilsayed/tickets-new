@@ -181,7 +181,7 @@
             <div class="panel-body">
                 <div class="row">
                     @php
-                        $markedAmount = \App\Models\Order::where('alert', 'marked')->sum('total');
+
                         $totalAmount = $order_total?->cash_amount + $order_total?->card_amount - $markedAmount;
                     @endphp
                     <div class="col-md-4">

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Charts\EventTicketSellChart;
@@ -59,9 +58,9 @@ class EventAnalyticsController extends Controller
         ]);
 
         return view('vendor.voyager.events.analytics', [
-            'event' => $event,
-            'totalOrder' => $totalOrder,
-            'totalTicket' => $totalTicket,
+            'event'          => $event,
+            'totalOrder'     => $totalOrder,
+            'totalTicket'    => $totalTicket,
             'physicalTicket' => $physicalTicket,
         ]);
     }
@@ -84,8 +83,8 @@ class EventAnalyticsController extends Controller
         $ticketSoldChart = $ticketSoldChart->build($event);
 
         return view('vendor.voyager.events.ticket-particiapants-analytics', [
-            'event' => $event,
-            'report' => $report,
+            'event'           => $event,
+            'report'          => $report,
             'ticketSoldChart' => $ticketSoldChart,
         ]);
     }
@@ -107,7 +106,7 @@ class EventAnalyticsController extends Controller
             ->paginate(40);
 
         return view('vendor.voyager.events.orders', [
-            'event' => $event,
+            'event'  => $event,
             'orders' => $orders,
         ]);
     }
@@ -130,46 +129,46 @@ class EventAnalyticsController extends Controller
             ->first();
 
         $order = [
-            'total' => [
-                'total' => [
-                    'total' => Sohoj::price($totalOrder?->online_cost + $totalOrder?->pos_cost),
-                    'withoutTax' => Sohoj::price($totalOrder?->online_cost + $totalOrder?->pos_cost - ($totalOrder?->online_tax + $totalOrder?->pos_tax))
+            'total'    => [
+                'total'    => [
+                    'total'      => Sohoj::price($totalOrder?->online_cost + $totalOrder?->pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder?->online_cost + $totalOrder?->pos_cost - ($totalOrder?->online_tax + $totalOrder?->pos_tax)),
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price($totalOrder?->refund_online_cost + $totalOrder?->refund_pos_cost),
-                    'withoutTax' => Sohoj::price($totalOrder?->refund_online_cost + $totalOrder?->refund_pos_cost - ($totalOrder?->refund_online_tax + $totalOrder?->refund_pos_tax))
+                    'total'      => Sohoj::price($totalOrder?->refund_online_cost + $totalOrder?->refund_pos_cost),
+                    'withoutTax' => Sohoj::price($totalOrder?->refund_online_cost + $totalOrder?->refund_pos_cost - ($totalOrder?->refund_online_tax + $totalOrder?->refund_pos_tax)),
                 ],
             ],
-            'digital' => [
-                'total' => [
-                    'total' => Sohoj::price($totalOrder?->online_cost),
+            'digital'  => [
+                'total'    => [
+                    'total'      => Sohoj::price($totalOrder?->online_cost),
                     'withoutTax' => Sohoj::price($totalOrder?->online_cost - $totalOrder?->online_tax),
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price($totalOrder?->refund_online_cost),
+                    'total'      => Sohoj::price($totalOrder?->refund_online_cost),
                     'withoutTax' => Sohoj::price($totalOrder?->refund_online_tax),
                 ],
             ],
             'physical' => [
-                'total' => [
-                    'total' => Sohoj::price($totalOrder?->pos_cost),
+                'total'    => [
+                    'total'      => Sohoj::price($totalOrder?->pos_cost),
                     'withoutTax' => Sohoj::price($totalOrder?->pos_cost - $totalOrder?->pos_tax),
                 ],
                 'refunded' => [
-                    'total' => Sohoj::price($totalOrder?->refund_pos_cost),
+                    'total'      => Sohoj::price($totalOrder?->refund_pos_cost),
                     'withoutTax' => Sohoj::price($totalOrder?->refund_pos_tax),
                 ],
             ],
         ];
 
         $lineChart = $orderSalesLineChart->build($event);
-        $pieChart = $orderSalesByTicketPiChart->build($totalOrder?->online_cost, $totalOrder?->pos_cost);
+        $pieChart  = $orderSalesByTicketPiChart->build($totalOrder?->online_cost, $totalOrder?->pos_cost);
 
         return view('vendor.voyager.events.ticket-sales-analytics', [
-            'event' => $event,
-            'pieChart' => $pieChart,
-            'lineChart' => $lineChart,
-            'order' => $order,
+            'event'      => $event,
+            'pieChart'   => $pieChart,
+            'lineChart'  => $lineChart,
+            'order'      => $order,
             'totalOrder' => $totalOrder,
         ]);
     }
@@ -209,7 +208,7 @@ class EventAnalyticsController extends Controller
     {
 
         $request->validate([
-            'name' => 'required',
+            'name'  => 'required',
             'email' => 'required',
         ]);
         $orders = Order::where('event_id', $event->id)->where('payment_method', 'invite')->whereJsonContains('billing', ['name' => $request->name, 'email' => $request->email]);
@@ -226,7 +225,7 @@ class EventAnalyticsController extends Controller
     public function inviteReportTickets(Event $event, Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name'  => 'required',
             'email' => 'required',
         ]);
         $tickets = Ticket::where('event_id', $event->id)->where('type', 'invite')->whereJsonContains('owner', ['name' => $request->name, 'email' => $request->email]);
@@ -237,7 +236,7 @@ class EventAnalyticsController extends Controller
             });
         }
         $ticketsByStatus = (clone $tickets)->get()->groupBy(fn($ticket) => $ticket->status())->map(fn($tickets) => $tickets->count());
-        $tickets = $tickets->get();
+        $tickets         = $tickets->get();
 
         return view('vendor.voyager.events.invites.tickets', compact('tickets', 'event', 'ticketsByStatus'));
     }
@@ -252,7 +251,7 @@ class EventAnalyticsController extends Controller
             });
         }
         $ordersByStatus = (clone $orders)->get()->groupBy(fn($order) => $order->getStatus())->map(fn($orders) => $orders->count());
-        $orders = $orders->get();
+        $orders         = $orders->get();
         return view('vendor.voyager.events.order-reports', compact('orders', 'event', 'ordersByStatus'));
     }
     public function customerReportTickets(Event $event, User $user)
@@ -349,10 +348,10 @@ class EventAnalyticsController extends Controller
             ->get();
 
         return view('vendor.voyager.events.checkin', [
-            'event' => $event,
-            'zones' => $zones,
-            'staffs' => $staffs,
-            'tickets' => $tickets,
+            'event'    => $event,
+            'zones'    => $zones,
+            'staffs'   => $staffs,
+            'tickets'  => $tickets,
             'products' => $products,
         ]);
     }
@@ -449,8 +448,8 @@ class EventAnalyticsController extends Controller
                 request()->filled('search'),
                 function (Builder $query) {
                     $query->whereHas('user', fn($q) => $q->where('name', 'LIKE', '%' . request()->search . '%')
-                        ->orWhere('email', 'LIKE', '%' . request()->search . '%')
-                        ->orWhere('contact_number', 'LIKE', '%' . request()->search . '%'));
+                            ->orWhere('email', 'LIKE', '%' . request()->search . '%')
+                            ->orWhere('contact_number', 'LIKE', '%' . request()->search . '%'));
                 }
             )
             ->when(
@@ -465,6 +464,18 @@ class EventAnalyticsController extends Controller
             ->latest()
             ->withCount('tickets')
             ->paginate(50);
+        $markedAmount = Order::where('event_id', $event->id)
+            ->whereNotNull('pos_id')
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )
+            ->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('orders.pos_id', $request->staff)
+            )
+            ->where('alert', 'marked')->sum('total');
+
         $totalPaidInvite = Ticket::where('event_id', $event->id)
             ->when($request->filled('date'), fn($query) => $query->whereDate('activation_date', $request->date))
             ->when($request->filled('staff'), fn($query) => $query->where('pos_id', $request->staff))
@@ -473,21 +484,20 @@ class EventAnalyticsController extends Controller
             ->whereNotNull('pos_id')
             ->get();
 
-
         if ($request->has('export')) {
             if ($request->export == 'summary') {
                 $exportData = [
-                    'total_amount' => Sohoj::price($order_total?->total, false),
-                    'card_amount' => Sohoj::price($order_total?->card_amount, false),
-                    'cash_amount' => Sohoj::price($order_total?->cash_amount, false),
-                    'tickets_count' => $tickets->sum('total') ?? 0,
-                    'products_count' => $order->extra_qty ?? 0,
-                    'products_amount' => Sohoj::price($order?->extra_total, false),
-                    'tickets_amount' => Sohoj::price($order?->total - $order?->extra_total, false),
+                    'total_amount'        => Sohoj::price($order_total?->total, false),
+                    'card_amount'         => Sohoj::price($order_total?->card_amount, false),
+                    'cash_amount'         => Sohoj::price($order_total?->cash_amount, false),
+                    'tickets_count'       => $tickets->sum('total') ?? 0,
+                    'products_count'      => $order->extra_qty ?? 0,
+                    'products_amount'     => Sohoj::price($order?->extra_total, false),
+                    'tickets_amount'      => Sohoj::price($order?->total - $order?->extra_total, false),
                     'paid_invites_amount' => Sohoj::price($totalPaidInvite->sum('price'), false),
-                    'paid_invites_count' => $totalPaidInvite->count(),
-                    'staff_name' => $request->filled('staff') ?
-                        $staffs->firstWhere('id', $request->staff)->fullName() : null
+                    'paid_invites_count'  => $totalPaidInvite->count(),
+                    'staff_name'          => $request->filled('staff') ?
+                    $staffs->firstWhere('id', $request->staff)->fullName() : null,
                 ];
 
                 return Excel::download(
@@ -508,14 +518,15 @@ class EventAnalyticsController extends Controller
         }
         //  return $order_test->getDescription();
         return view('vendor.voyager.events.pos', [
-            'event' => $event,
-            'order' => $order,
-            'staffs' => $staffs,
-            'extras' => $extras,
-            'tickets' => $tickets,
-            'allOrders' => $allOrders,
+            'event'           => $event,
+            'order'           => $order,
+            'staffs'          => $staffs,
+            'extras'          => $extras,
+            'tickets'         => $tickets,
+            'allOrders'       => $allOrders,
             'totalPaidInvite' => $totalPaidInvite,
-            'order_total' => $order_total,
+            'order_total'     => $order_total,
+            'markedAmount'    => $markedAmount,
         ]);
     }
 
@@ -530,15 +541,15 @@ class EventAnalyticsController extends Controller
     {
         try {
 
-            $order =  CheckoutService::create(event: $event, user: $user, request: $request, isFree: true);
+            $order = CheckoutService::create(event: $event, user: $user, request: $request, isFree: true);
             return redirect()->route('voyager.events.customer.analytics.tickets', [$event, $user])->with([
-                'type' => 'success',
-                'message' => 'Ticket added'
+                'type'    => 'success',
+                'message' => 'Ticket added',
             ]);
         } catch (Exception | Error $e) {
             return redirect()->back()->with([
-                'type' => 'error',
-                'message' => $e->getMessage()
+                'type'    => 'error',
+                'message' => $e->getMessage(),
             ]);
         }
     }
