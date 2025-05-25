@@ -111,11 +111,11 @@
                                     style="display: flex;flex-direction:column;gap:10px;align-items:center;justify-content;center">
                                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data={{ $user->uniqid }}&color=ef5927"
                                         alt="" height="80" width="80">
-                                    <a href="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ $user->uniqid }}&color=ef5927"
+                                    {{-- <a href="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={{ $user->uniqid }}&color=ef5927"
                                         class="btn btn-custom" download="{{ $user->id }}_{{ $user->name }}_qr"
                                         target="">
                                         Download QR Code
-                                    </a>
+                                    </a> --}}
                                 </div>
                                 <div>
                                     <h3>{{ $user->name . ' ' . $user->l_name }}</h3>
