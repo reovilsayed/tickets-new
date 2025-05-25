@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Carbon\CarbonPeriod;
@@ -12,7 +11,7 @@ class Event extends Model
 
     protected $casts = [
         'start_at' => 'datetime',
-        'end_at' => 'datetime',
+        'end_at'   => 'datetime',
     ];
 
     public function path()
@@ -58,10 +57,9 @@ class Event extends Model
         return $this->hasMany(Zone::class);
     }
 
-
     public function priceRange()
     {
-        $prices = $this->products()->where('status', 1)->where('invite_only',0)->get()->map(fn($product) => $product->currentPrice());
+        $prices = $this->products()->where('status', 1)->where('invite_only', 0)->get()->map(fn($product) => $product->currentPrice());
         return ['min' => $prices->min(), 'max' => $prices->max()];
     }
 
@@ -71,7 +69,7 @@ class Event extends Model
     }
     public function dates()
     {
-        $period = CarbonPeriod::create($this->start_at, $this->end_at);
+        $period         = CarbonPeriod::create($this->start_at, $this->end_at);
         $formattedDates = [];
         foreach ($period as $date) {
             $formattedDates[] = $date->format('Y-m-d');
@@ -82,5 +80,9 @@ class Event extends Model
     public function coupons()
     {
         return $this->hasToMany(Coupon::class);
+    }
+    public function extraCategories()
+    {
+        return $this->hasMany(ExtraCategory::class, 'event_id');
     }
 }

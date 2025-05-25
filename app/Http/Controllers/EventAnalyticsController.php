@@ -195,6 +195,23 @@ class EventAnalyticsController extends Controller
             'event' => $event,
         ]);
     }
+    public function zonesReport(Event $event)
+    {
+        $event->load('zones');
+        $zones = $event->zones()->paginate(20);
+        return view('vendor.voyager.events.zones', [
+            'event' => $event,
+            'zones' => $zones,
+        ]);
+    }
+   public function extraReport(Event $event, Request $request)
+{
+    $extras = \App\Models\Extra::with('category')
+        ->where('event_id', $event->id)
+        ->paginate(20); 
+
+    return view('vendor.voyager.events.extras', compact('event', 'extras'));
+}
 
     public function invitesReport(Event $event)
     {

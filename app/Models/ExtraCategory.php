@@ -17,4 +17,8 @@ class ExtraCategory extends Model
     {
         return $this->hasMany(Extra::class, 'extra_category_id');
     }
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'event_id');
+    }
 }

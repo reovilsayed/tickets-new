@@ -29,5 +29,14 @@ class Extra extends Model
     {
         return $this->belongsTo(ExtraCategory::class, 'extra_category_id');
     }
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class);
+    }
+
+    public function extraCategory()
+    {
+        return $this->belongsTo(ExtraCategory::class,'extras_category_id');
+    }
 
 }
