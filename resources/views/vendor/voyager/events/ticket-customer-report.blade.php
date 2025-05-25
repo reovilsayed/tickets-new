@@ -97,7 +97,7 @@
                 <div class="search-group">
                     <input type="text" name="q" placeholder="Search" value="{{ request()->q }}">
                     <button class="btn btn-custom"><i class="voyager-search"></i></button>
-                    <a href="{{ route('voyager.events.customer.analytics', $event) }}"   class="btn btn-custom"><i
+                    <a href="{{ route('voyager.events.customer.analytics', $event) }}" class="btn btn-custom"><i
                             class="voyager-refresh"></i></a>
                 </div>
             </form>
@@ -135,9 +135,11 @@
                                     <a href="{{ route('digital-wallet', $user) }}" class="btn btn-custom">
                                         Wallet Link
                                     </a>
-                                    <a href="{{ route('update-uniqid', ['user_id' => $user->id]) }}" class="btn btn-custom ">
-                                        Generate QR Code
+                                    <a href="#" data-toggle="modal" data-target="#scanQrModal"
+                                        data-user-id="{{ $user->id }}" class="btn btn-custom">
+                                        Scan QR Code
                                     </a>
+
                                 </div>
                             </div>
                         </div>
@@ -154,16 +156,17 @@
     </div>
 
     <!-- QR Code Modal -->
-    <div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel">
+    <div class="modal fade" id="scanQrModal" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content text-center">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">QR Code for <span id="qrUserName" style="color: #EF5927"></span></h4>
+                    <h4 class="modal-title">Scan QR Code</h4>
                 </div>
                 <div class="modal-body">
-                    <div id="qrCode" class="d-flex justify-content-center mb-3"></div>
-                    <p id="uniqidText" class="font-weight-bold text-primary"></p>
+                    <div id="reader" style="width: 100%; height: auto;"></div>
+
+                    <p id="scanResult" class="text-success mt-3"></p>
                 </div>
             </div>
         </div>
@@ -171,53 +174,72 @@
 @endsection
 
 @section('javascript')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Bootstrap 3 JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+
     <script>
-        function generateUniqid27() {
-            const prefix = '01'; // fixed start
-            const randomLength = 27 - prefix.length;
+        var html5QrCode;
+        var userIdToAssign = null;
 
-            const randomPart = Array.from(crypto.getRandomValues(new Uint8Array(32)))
-                .map(b => b.toString(36).padStart(2, '0'))
-                .join('')
-                .substring(0, randomLength);
+        $('#scanQrModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            userIdToAssign = button.data('user-id');
+        });
 
-            return prefix + randomPart;
-        }
+        $('#scanQrModal').on('shown.bs.modal', function() {
+            html5QrCode = new Html5Qrcode("reader");
 
-        $(document).ready(function() {
-            $('#qrCodeModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var userId = button.data('user-id');
-                var userName = button.data('user-name');
-
-                var newUniqid = generateUniqid27();
-
-                $.ajax({
-                    url: "{{ route('update-uniqid') }}",
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        user_id: userId,
-                        uniqid: newUniqid
+            // Slight delay to make sure the modal is rendered fully
+            setTimeout(function() {
+                html5QrCode.start({
+                        facingMode: "environment"
+                    }, {
+                        fps: 10,
+                        qrbox: 250
                     },
-                    success: function() {
-                        $('#qrUserName').text(userName);
-                        var qrContainer = $('#qrCode');
-                        qrContainer.empty();
+                    qrCodeMessage => {
+                        $('#scanResult').text("Scanned: " + qrCodeMessage);
 
-                        new QRCode(qrContainer[0], {
-                            text: newUniqid,
-                            width: 200,
-                            height: 200
+                        // Stop scanning after successful read
+                        html5QrCode.stop().then(() => {
+                            // Assign uniqid via AJAX
+                            $.ajax({
+                                url: "{{ route('update-uniqid') }}",
+                                method: "POST",
+                                data: {
+                                    _token: "{{ csrf_token() }}",
+                                    user_id: userIdToAssign,
+                                    uniqid: qrCodeMessage
+                                },
+                                success: function() {
+                                    alert("Uniqid assigned successfully!");
+                                    $('#scanQrModal').modal('hide');
+                                },
+                                error: function() {
+                                    alert("Failed to assign uniqid.");
+                                }
+                            });
                         });
+                    },
+                    error => {
+                        // Optional error callback
                     }
+                ).catch(err => {
+                    console.error("Camera init error:", err);
+                    alert("Camera error: " + err);
                 });
-            });
+            }, 1000); // Delay slightly for Bootstrap 3
+        });
+
+        $('#scanQrModal').on('hide.bs.modal', function() {
+            if (html5QrCode) {
+                html5QrCode.stop().catch(err => {
+                    console.error("Stop failed", err);
+                });
+            }
         });
     </script>
 
