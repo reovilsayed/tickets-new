@@ -249,6 +249,26 @@
 
 
                 </div>
+                <h1 class="p-3">
+                    {{ __('words.withdraw_logs') }}
+                </h1>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Total Withdraw Amount',
+                            'value' => Sohoj::price($withdrawLogs->sum('amount')),
+                        ])
+                    </div>
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'Total Withdraw Count',
+                            'value' => $withdrawLogs->count(),
+                        ])
+                    </div>
+                    
+                </div>
+
 
                 <h1 class="p-3">
                     {{ __('words.tickets') }}

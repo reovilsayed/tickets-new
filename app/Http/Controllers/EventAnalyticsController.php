@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Models\Scan;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Models\WithdrawLog;
 use App\Services\CheckoutService;
 use App\Services\EventReport;
 use Error;
@@ -204,14 +205,14 @@ class EventAnalyticsController extends Controller
             'zones' => $zones,
         ]);
     }
-   public function extraReport(Event $event, Request $request)
-{
-    $extras = \App\Models\Extra::with('category')
-        ->where('event_id', $event->id)
-        ->paginate(20); 
+    public function extraReport(Event $event, Request $request)
+    {
+        $extras = \App\Models\Extra::with('category')
+            ->where('event_id', $event->id)
+            ->paginate(20);
 
-    return view('vendor.voyager.events.extras', compact('event', 'extras'));
-}
+        return view('vendor.voyager.events.extras', compact('event', 'extras'));
+    }
 
     public function invitesReport(Event $event)
     {
@@ -502,7 +503,9 @@ class EventAnalyticsController extends Controller
             ->where('active', 1)
             ->whereNotNull('pos_id')
             ->get();
-
+        $withdrawLogs = WithdrawLog::with(['event', 'ticket', 'zone', 'user', 'product'])
+            ->where('event_id', $event->id)
+            ->get();
         if ($request->has('export')) {
             if ($request->export == 'summary') {
                 $exportData = [
@@ -546,6 +549,7 @@ class EventAnalyticsController extends Controller
             'totalPaidInvite' => $totalPaidInvite,
             'order_total'     => $order_total,
             'markedAmount'    => $markedAmount,
+            'withdrawLogs'    => $withdrawLogs,
         ]);
     }
 

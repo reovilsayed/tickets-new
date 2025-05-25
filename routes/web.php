@@ -14,11 +14,9 @@ use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\PdfDownloadController;
 use App\Http\Controllers\PosDashboardReport;
 use App\Http\Controllers\ShippingController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
-use App\Mail\UnpaidOrderReminder;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Magazine;
@@ -27,6 +25,7 @@ use App\Models\Order;
 use App\Models\Shipping;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Models\WithdrawLog;
 use App\Services\CheckoutService;
 use App\Services\TOCOnlineService;
 use Illuminate\Http\Request;
@@ -229,9 +228,21 @@ Route::post('extras-used', function (Request $request) {
 
     foreach ($request->withdraw as $key => $qty) {
         if ($qty && isset($normalizedExtras[$key])) {
-            $normalizedExtras[$key]['used'] += $qty;
+            $normalizedExtras[$key]['used'] = ($normalizedExtras[$key]['used'] ?? 0) + $qty;
 
             $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $normalizedExtras[$key]['name'];
+            // Store into withdraw_logs table
+            WithdrawLog::create([
+                'event_id'   => $ticket->event_id,
+                'ticket_id'  => $ticket->id,
+                'zone_id'    => $zone->id,
+                'user_id'    => auth()->id(),
+                'product_id' => $normalizedExtras[$key]['id'] ?? null,
+                'name'       => $normalizedExtras[$key]['name'],
+                'quantity'   => $qty,
+                'used'       => $normalizedExtras[$key]['used'],
+                'amount'      => $normalizedExtras[$key]['amount'] ?? 0,
+            ]);
         }
     }
 
@@ -273,7 +284,6 @@ Route::middleware(['auth', 'role:pos'])->group(function () {
     Route::get('/pos/{page}', function () {
         return view('pos');
     });
- 
 
     Route::prefix('api')->group(function () {
         Route::get('/tickets', [ApiController::class, 'index']);
@@ -287,7 +297,6 @@ Route::get('app/pos/{order}/{token}/mark', [PosDashboardReport::class, 'index'])
 Route::put('app/pos/{order}/{token}/update', [PosDashboardReport::class, 'update'])->name('app.order.update');
 Route::put('app/pos/{order}/{token}/email', [PosDashboardReport::class, 'email'])->name('app.order.email');
 Route::put('app/pos/{order}/{token}/sms', [PosDashboardReport::class, 'sms'])->name('app.order.sms');
-
 
 Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
     // Fetch the events where the wallet is 1, ordered by latest
@@ -471,5 +480,3 @@ Route::middleware(['auth'])->group(function () {
         return redirect('/')->with('status', 'Your account has been deleted.');
     })->name('account.delete');
 });
-
-
