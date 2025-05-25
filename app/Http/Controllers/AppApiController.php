@@ -18,6 +18,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Models\Order;
+use App\Models\WithdrawLog;
 use App\Services\TOCOnlineService;
 use Error;
 
@@ -166,7 +167,7 @@ class AppApiController extends Controller
             $data = collect($ticket->extras)->filter(function ($extra) use ($posId) {
                 try {
                     $extra = Extra::find($extra['id']);
-                    return $posId !==null? $extra->poses->pluck('id')->contains($posId): $extra;
+                    return $posId !== null ? $extra->poses->pluck('id')->contains($posId) : $extra;
                 } catch (Exception | Error $e) {
                     return null;
                 }
@@ -246,6 +247,17 @@ class AppApiController extends Controller
                 }
 
                 $log['action'] = 'Withdrawn ' . $qty . ' quantity of ' . $normalizedExtras[$key]['name'];
+                WithdrawLog::create([
+                    'event_id'   => $ticket->event_id,
+                    'ticket_id'  => $ticket->id,
+                    'zone_id'    => null,
+                    'user_id'    => auth()->id(),
+                    'product_id' => $normalizedExtras[$key]['id'] ?? null,
+                    'name'       => $normalizedExtras[$key]['name'],
+                    'quantity'   => $qty,
+                    'used'       => $normalizedExtras[$key]['used'],
+                    'amount'      => $normalizedExtras[$key]['amount'] ?? 0,
+                ]);
             }
         }
 
