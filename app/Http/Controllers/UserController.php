@@ -172,7 +172,7 @@ class UserController extends Controller
     {
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'uniqid'  => 'required|string|size:27',
+            'uniqid'  => 'required|string',
         ]);
 
         $user         = User::findOrFail($request->user_id);
