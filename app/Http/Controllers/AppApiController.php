@@ -465,8 +465,10 @@ class AppApiController extends Controller
     function getMyWallet()
     {
         $transactions = Transaction::where('agent_id', auth('sanctum')->id())->latest()->paginate(20);
-        $todayDeposit = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Deposit')->sum('amount');
-        $todayRefund = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Refund')->sum('amount');
+        $todayDeposit = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Deposit')
+            ->whereDate('created_at', today())->sum('amount');
+        $todayRefund = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Refund')
+            ->whereDate('created_at', today())->sum('amount');
         return response()->json(['transactions' => $transactions, 'deposit' => (int)($todayDeposit), 'refund' => (int)($todayRefund)]);
     }
 
