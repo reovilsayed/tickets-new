@@ -506,6 +506,20 @@ class EventAnalyticsController extends Controller
         $withdrawLogs = WithdrawLog::with(['event', 'ticket', 'zone', 'user', 'product'])
             ->where('event_id', $event->id)
             ->get();
+        $withdrawCounts = DB::table('withdraw_logs')
+            ->where('event_id', $event->id)
+            ->when(
+                $request->filled('date'),
+                fn($query) => $query->whereDate('created_at', $request->date)
+            )->when(
+                $request->filled('staff'),
+                fn($query) => $query->where('user_id', $request->staff)
+            )
+            
+            ->select('name', DB::raw('SUM(quantity) AS total'))
+            ->groupBy('name')
+            ->get();
+
         if ($request->has('export')) {
             if ($request->export == 'summary') {
                 $exportData = [
@@ -550,6 +564,7 @@ class EventAnalyticsController extends Controller
             'order_total'     => $order_total,
             'markedAmount'    => $markedAmount,
             'withdrawLogs'    => $withdrawLogs,
+            'withdrawCounts'  => $withdrawCounts,
         ]);
     }
 

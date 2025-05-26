@@ -254,19 +254,16 @@
                 </h1>
 
                 <div class="row">
-                    <div class="col-md-4">
-                        @include('vendor.voyager.events.partial.card', [
-                            'label' => 'Total Withdraw Amount',
-                            'value' => Sohoj::price($withdrawLogs->sum('amount')),
-                        ])
-                    </div>
-                    <div class="col-md-4">
-                        @include('vendor.voyager.events.partial.card', [
-                            'label' => 'Total Withdraw Count',
-                            'value' => $withdrawLogs->count(),
-                        ])
-                    </div>
-                    
+
+                    @foreach ($withdrawCounts as $entry)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Withdraws of: ' . $entry->name,
+                                'value' => $entry->total, // <-- change this from withdraw_count to total
+                            ])
+                        </div>
+                    @endforeach
+
                 </div>
 
 
