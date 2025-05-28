@@ -297,7 +297,7 @@
                                                         ])
                                                     @endif
                                                 @endforeach
-                                                @if ($data->toconline_item_code == null)
+                                                @if (!$data->toconline_item_code)
                                                     <a href="{{ route('voyager.extras.create-toconline-item', $data) }}"
                                                         style="margin-right:5px; background: green;color:#fff"
                                                         class="btn pull-right" style="margin-right:7px;"><i class=""
