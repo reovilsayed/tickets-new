@@ -299,12 +299,24 @@ class AppApiController extends Controller
 
     public function getExtraCategories(Request $request)
     {
-        $categories = ExtraCategory::orderBy('order', 'asc')->has('extras');
-        if ($request->has('event') && $request->event != null) {
-            $categories = $categories->where('event_id', $request->event)->get();
-        } else {
-            $categories = $categories->get();
+        $eventId = $request->event;
+        $posId = auth()->user()->pos_id;
+
+        $categories = ExtraCategory::orderBy('order', 'asc')
+            ->whereHas('extras', function ($query) use ($eventId, $posId) {
+                if ($eventId) {
+                    $query->where('event_id', $eventId);
+                }
+                $query->whereHas('poses', function ($q) use ($posId) {
+                    $q->where('pos_id', $posId);
+                });
+            });
+
+        if ($eventId) {
+            $categories = $categories->where('event_id', $eventId);
         }
+
+        $categories = $categories->get();
 
         return response()->json(['data' => $categories]);
     }
