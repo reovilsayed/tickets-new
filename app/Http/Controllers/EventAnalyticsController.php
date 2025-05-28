@@ -198,6 +198,8 @@ class EventAnalyticsController extends Controller
     }
     public function zonesReport(Event $event)
     {
+        session()->put('redirect_after_action', 'zones');
+        session()->put('event_id', $event->id);
         $event->load('zones');
         $zones = $event->zones()->paginate(20);
         return view('vendor.voyager.events.zones', [
@@ -207,6 +209,8 @@ class EventAnalyticsController extends Controller
     }
     public function extraReport(Event $event, Request $request)
     {
+        session()->put('redirect_after_action', 'extras');
+        session()->put('event_id', $event->id);
         $extras = \App\Models\Extra::with('category')
             ->where('event_id', $event->id)
             ->paginate(20);
@@ -512,10 +516,10 @@ class EventAnalyticsController extends Controller
                 $request->filled('date'),
                 fn($query) => $query->whereDate('created_at', $request->date)
             )->when(
-                $request->filled('staff'),
-                fn($query) => $query->where('user_id', $request->staff)
-            )
-            
+            $request->filled('staff'),
+            fn($query) => $query->where('user_id', $request->staff)
+        )
+
             ->select('name', DB::raw('SUM(quantity) AS total'))
             ->groupBy('name')
             ->get();
