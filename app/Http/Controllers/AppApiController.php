@@ -299,7 +299,13 @@ class AppApiController extends Controller
 
     public function getExtraCategories(Request $request)
     {
-        $categories = ExtraCategory::all();
+        $categories = ExtraCategory::orderBy('order', 'asc')->has('extras');
+        if ($request->has('event') && $request->event != null) {
+            $categories = $categories->where('event_id', $request->event)->get();
+        } else {
+            $categories = $categories->get();
+        }
+
         return response()->json(['data' => $categories]);
     }
 
@@ -465,8 +471,10 @@ class AppApiController extends Controller
     function getMyWallet()
     {
         $transactions = Transaction::where('agent_id', auth('sanctum')->id())->latest()->paginate(20);
-        $todayDeposit = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Deposit')->sum('amount');
-        $todayRefund = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Refund')->sum('amount');
+        $todayDeposit = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Deposit')
+            ->whereDate('created_at', today())->sum('amount');
+        $todayRefund = Transaction::where('agent_id', auth('sanctum')->id())->where('description', 'Refund')
+            ->whereDate('created_at', today())->sum('amount');
         return response()->json(['transactions' => $transactions, 'deposit' => (int)($todayDeposit), 'refund' => (int)($todayRefund)]);
     }
 
