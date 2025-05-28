@@ -217,6 +217,15 @@ class EventAnalyticsController extends Controller
 
         return view('vendor.voyager.events.extras', compact('event', 'extras'));
     }
+    public function extraCategory(Event $event, Request $request)
+    {
+        session()->put('redirect_after_action', 'extras');
+        session()->put('event_id', $event->id);
+        $extraCategory = \App\Models\ExtraCategory::where('event_id', $event->id)
+            ->paginate(20);
+
+        return view('vendor.voyager.events.extra-categories', compact('event', 'extraCategory'));
+    }
 
     public function invitesReport(Event $event)
     {

@@ -182,6 +182,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
         Route::get('/customer-report', [EventAnalyticsController::class, 'customerReport'])->name('voyager.events.customer.analytics');
         Route::get('/zones', [EventAnalyticsController::class, 'zonesReport'])->name('voyager.events.zones.analytics');
         Route::get('/extras', [EventAnalyticsController::class, 'extraReport'])->name('voyager.events.extras.analytics');
+        Route::get('/extra-category', [EventAnalyticsController::class, 'extraCategory'])->name('voyager.events.extra.categories.analytics');
 
         // Route::get('/invites-report', [EventAnalyticsController::class, 'invitesReport'])->name('voyager.events.invites.analytics');
         Route::get('/customer-report/{user}/orders', [EventAnalyticsController::class, 'customerReportOrders'])->name('voyager.events.customer.analytics.orders');

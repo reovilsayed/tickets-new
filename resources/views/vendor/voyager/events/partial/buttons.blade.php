@@ -7,3 +7,4 @@
 <a href="{{ route('voyager.events.orders', $event) }}" class="btn btn-custom">Orders</a>
 <a href="{{ route('voyager.events.zones.analytics', $event) }}" class="btn btn-custom">Zones</a>
 <a href="{{ route('voyager.events.extras.analytics', $event) }}" class="btn btn-custom">Extras</a>
+<a href="{{ route('voyager.events.extra.categories.analytics', $event) }}" class="btn btn-custom">Extra Category</a>
