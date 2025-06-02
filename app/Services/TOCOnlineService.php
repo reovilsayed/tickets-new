@@ -461,6 +461,7 @@ class TOCOnlineService
                     'sales_price' => $price,
                     'sales_price_includes_vat' => $vat,
                     'tax_code' => $taxCode,
+                    'item_family_id'=> 1
                 ],
             ],
         ]);
