@@ -180,6 +180,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
         Route::get('/sales-report', [EventAnalyticsController::class, 'salesReport'])->name('voyager.events.salesReport.analytics');
         Route::get('/checkin', [EventAnalyticsController::class, 'checkinReport'])->name('voyager.events.checkinReport.analytics');
         Route::get('/pos', [EventAnalyticsController::class, 'POS'])->name('voyager.events.pos.analytics');
+        Route::get('/qrwallet', [EventAnalyticsController::class, 'qrWallet'])->name('voyager.events.qrwallet.analytics');
         Route::get('/customer-report', [EventAnalyticsController::class, 'customerReport'])->name('voyager.events.customer.analytics');
         Route::get('/zones', [EventAnalyticsController::class, 'zonesReport'])->name('voyager.events.zones.analytics');
         Route::get('/extras', [EventAnalyticsController::class, 'extraReport'])->name('voyager.events.extras.analytics');

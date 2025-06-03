@@ -11,6 +11,7 @@ use App\Models\Event;
 use App\Models\Order;
 use App\Models\Scan;
 use App\Models\Ticket;
+use App\Models\Transaction;
 use App\Models\User;
 use App\Models\WithdrawLog;
 use App\Services\CheckoutService;
@@ -346,8 +347,6 @@ class EventAnalyticsController extends Controller
             })
             ->paginate(20);
 
-       
-
         // Products - Modified to show all by default
         $products = DB::table('tickets')
             ->select('products.name')
@@ -371,11 +370,11 @@ class EventAnalyticsController extends Controller
             ->get();
 
         return view('vendor.voyager.events.checkin', [
-            'event'          => $event,
-            'zones'          => $zones,
-            'staffs'         => $staffs,
-            'tickets'        => $tickets,
-            'products'       => $products,
+            'event'    => $event,
+            'zones'    => $zones,
+            'staffs'   => $staffs,
+            'tickets'  => $tickets,
+            'products' => $products,
         ]);
     }
 
@@ -596,4 +595,54 @@ class EventAnalyticsController extends Controller
             ]);
         }
     }
+
+    public function qrWallet(Request $request, Event $event)
+    {
+        $this->authorize('browse', $event);
+        $staffs = User::select(['id', 'name', 'l_name'])
+            ->where('role_id', 6)
+            ->get();
+
+        $transactions = Transaction::with(['transactionable', 'agent'])
+            ->when($request->filled('date'), function ($query) use ($request) {
+                $query->whereDate('created_at', $request->date);
+            })
+            ->when($request->filled('staff'), function ($query) use ($request) {
+                $query->where('agent_id', $request->staff);
+            })
+            ->get();
+
+        // Group transactions by transactionable_id (user)
+        $walletUserTransactions = $transactions->groupBy('transactionable_id');
+
+        // Calculate summaries
+        $walletUserSummaries = [];
+        foreach ($walletUserTransactions as $userId => $userTransactions) {
+            $user    = $userTransactions->first()->transactionable;
+            $deposit = $userTransactions->where('type', 'debit')->sum('amount');
+            $refund  = $userTransactions->where('type', 'credit')->sum('amount');
+
+            $walletUserSummaries[] = [
+                'user'    => $user,
+                'deposit' => $deposit,
+                'refund'  => $refund,
+                'total'   => $deposit - $refund,
+            ];
+        }
+
+        // Calculate overall totals
+        $overallDeposit = $transactions->where('type', 'debit')->sum('amount');
+        $overallRefund  = $transactions->where('type', 'credit')->sum('amount');
+        $overallTotal   = $overallDeposit - $overallRefund;
+
+        return view('vendor.voyager.events.qrwallet', compact(
+            'event',
+            'staffs',
+            'walletUserSummaries',
+            'overallDeposit',
+            'overallRefund',
+            'overallTotal',
+        ));
+    }
+
 }
