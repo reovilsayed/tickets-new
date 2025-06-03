@@ -344,46 +344,38 @@ class EventAnalyticsController extends Controller
                         ->orWhere('check_out_zone', request()->zone);
                 });
             })
-            ->paginate(25);
+            ->paginate(20);
 
+       
+
+        // Products - Modified to show all by default
         $products = DB::table('tickets')
             ->select('products.name')
             ->selectRaw('count(DISTINCT tickets.id) as total')
             ->join('ticket_user', 'tickets.id', 'ticket_user.ticket_id')
             ->join('products', 'products.id', 'tickets.product_id')
-            ->when(
-                $request->filled('staff'),
-                fn($query) => $query->where('ticket_user.user_id', $request->staff)
-            )
-            ->when(
-                $request->filled('date'),
-                fn($query) => $query->whereDate('ticket_user.created_at', $request->date)
-            )
             ->where('tickets.event_id', $event->id)
+            ->when($request->filled('staff'), fn($query) => $query->where('ticket_user.user_id', $request->staff))
+            ->when($request->filled('date'), fn($query) => $query->whereDate('ticket_user.created_at', $request->date))
             ->groupBy('tickets.product_id', 'products.name')
             ->get();
 
+        // Zones - Modified to show all by default
         $zones = Scan::with('zone')
             ->select('zone_id')
             ->selectRaw("count(DISTINCT ticket_id) as total")
             ->whereHas('ticket', fn($query) => $query->where('event_id', $event->id))
-            ->when(
-                $request->filled('staff'),
-                fn($query) => $query->where('user_id', $request->staff)
-            )
-            ->when(
-                $request->filled('date'),
-                fn($query) => $query->whereDate('created_at', $request->date)
-            )
+            ->when($request->filled('staff'), fn($query) => $query->where('user_id', $request->staff))
+            ->when($request->filled('date'), fn($query) => $query->whereDate('created_at', $request->date))
             ->groupBy('zone_id')
             ->get();
 
         return view('vendor.voyager.events.checkin', [
-            'event'    => $event,
-            'zones'    => $zones,
-            'staffs'   => $staffs,
-            'tickets'  => $tickets,
-            'products' => $products,
+            'event'          => $event,
+            'zones'          => $zones,
+            'staffs'         => $staffs,
+            'tickets'        => $tickets,
+            'products'       => $products,
         ]);
     }
 

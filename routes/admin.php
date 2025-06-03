@@ -8,67 +8,68 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\MassInviteController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PosUserReport;
+use App\Http\Controllers\TOCOnlineCreateController;
 use App\Http\Controllers\UserController;
 use App\Models\Coupon;
-use App\Models\Extra;
 use App\Models\Invite;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Services\TOCOnlineService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 use TCG\Voyager\Facades\Voyager;
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
     Route::post('/update-uniqid', [UserController::class, 'updateUniqid'])->name('update-uniqid');
+    Route::get('extras/{extra}/create-toconline-item', TOCOnlineCreateController::class)
+        ->name('voyager.extras.create-toconline-item');
+    Route::get('products/{product}/create-toconline-item-from-product', [TOCOnlineCreateController::class, 'createFromTicket'])
+        ->name('voyager.products.create-toconline-item-from-product');
+    // Route::get('extras/{extra}/create-toconline-item', function (Extra $extra) {
+    //     $tocOnline = new TOCOnlineService();
+    //     $tax_type  = $extra->tax_type;
+    //     if ($tax_type == '23') {
+    //         $tax_code = 'NOR';
+    //     } else if ($tax_type == '13') {
+    //         $tax_code = 'INT';
+    //     } else {
+    //         $tax_code = 'RED';
+    //     }
+    //     $data = $tocOnline->createProduct(
+    //         type: $extra->type,
+    //         code: 'EXTRA_' . $extra->id,
+    //         description: $extra->name,
+    //         price: $extra->price,
+    //         vat: true,
+    //         taxCode: $tax_code,
+    //     );
 
-    Route::get('extras/{extra}/create-toconline-item', function (Extra $extra) {
-        $tocOnline = new TOCOnlineService();
-        $tax_type  = $extra->tax_type;
-        if ($tax_type == '23') {
-            $tax_code = 'NOR';
-        } else if ($tax_type == '13') {
-            $tax_code = 'INT';
-        } else {
-            $tax_code = 'RED';
-        }
-        $data = $tocOnline->createProduct(
-            type: $extra->type,
-            code: 'EXTRA_' . $extra->id,
-            description: $extra->name,
-            price: $extra->price,
-            vat: true,
-            taxCode: $tax_code,
-        );
-
-        if (isset($data['error'])) {
-            Log::error('TOCOnlineService: ' . $data['message']);
-            return redirect()->back()->with([
-                'message'    => 'Error creating TOCOnline item: ' . $data['message'],
-                'alert-type' => 'error',
-            ]);
-        }
-        if (isset($data['data']['id'])) {
-            $extra->update([
-                'toconline_item_code' => 'EXTRA_' . $extra->id,
-                'toconline_item_id'   => $data['data']['id'],
-            ]);
-              return redirect()->back()->with([
-                'message'    => 'TOCOnline item created successfully.',
-                'alert-type' => 'success',
-            ]);
-        } else {
-            Log::error('TOCOnlineService: ' . json_encode($data));
-            return redirect()->back()->with([
-                'message'    => 'Error creating TOCOnline item: ' . $data['message'],
-                'alert-type' => 'error',
-            ]);
-        }
-    })->name('voyager.extras.create-toconline-item');
+    //     if (isset($data['error'])) {
+    //         Log::error('TOCOnlineService: ' . $data['message']);
+    //         return redirect()->back()->with([
+    //             'message'    => 'Error creating TOCOnline item: ' . $data['message'],
+    //             'alert-type' => 'error',
+    //         ]);
+    //     }
+    //     if (isset($data['data']['id'])) {
+    //         $extra->update([
+    //             'toconline_item_code' => 'EXTRA_' . $extra->id,
+    //             'toconline_item_id'   => $data['data']['id'],
+    //         ]);
+    //           return redirect()->back()->with([
+    //             'message'    => 'TOCOnline item created successfully.',
+    //             'alert-type' => 'success',
+    //         ]);
+    //     } else {
+    //         Log::error('TOCOnlineService: ' . json_encode($data));
+    //         return redirect()->back()->with([
+    //             'message'    => 'Error creating TOCOnline item: ' . $data['message'],
+    //             'alert-type' => 'error',
+    //         ]);
+    //     }
+    // })->name('voyager.extras.create-toconline-item');
     Route::get('verify-email/{user}', VerifyUserEmailAddressController::class)->name('admin.email.verify');
     Route::put('{order}/sms', SendOrderSmsController::class)->name('admin.order.sms');
     Route::put('order/{order}', AdminOrderController::class)->name('admin.order.update');
