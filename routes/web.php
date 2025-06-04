@@ -348,6 +348,7 @@ Route::get('/toc-online-test/{order}', function ($order) {
 })->name('toc-online-test');
 
 Route::get('/api/user/pos-permission', [ApiController::class, 'getPosPermissions'])->middleware('auth');
+Route::post('/api/tickets/get', [ApiController::class, 'getTicket'])->middleware('auth');
 
 Route::get('test', function () {
     $order    = MagazineOrder::latest()->first();
