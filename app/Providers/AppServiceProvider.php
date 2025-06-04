@@ -40,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
         Voyager::addAction(\App\Actions\AddExtraAction::class);
         Voyager::addAction(\App\Actions\StaffReportAction::class);
         Voyager::addAction(\App\Actions\InviteLinkAction::class);
+        Voyager::addAction(\App\Actions\ReSendInviteLinkAction::class);
         Voyager::addAction(\App\Actions\GeneratePhysicalTicketAction::class);
         Voyager::addAction(\App\Actions\AddVerifyEmailAction::class);
         Voyager::addFormField(\App\FormFields\ArrayDateField::class);
