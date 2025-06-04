@@ -170,6 +170,7 @@
                         </thead>
                         <tbody>
                             @forelse ($walletUserSummaries as $summary)
+                               
                                 <tr>
                                     <td>{{ $summary['user']->name }} {{ $summary['user']->l_name }}</td>
                                     <td><span class="pill pill-success">+ {{ Sohoj::price($summary['deposit']) }}</span>

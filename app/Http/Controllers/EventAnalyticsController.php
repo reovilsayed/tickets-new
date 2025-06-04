@@ -600,7 +600,7 @@ class EventAnalyticsController extends Controller
     {
         $this->authorize('browse', $event);
         $staffs = User::select(['id', 'name', 'l_name'])
-            ->where('role_id', 6)
+            ->where('role_id', 8)
             ->get();
 
         $transactions = Transaction::with(['transactionable', 'agent'])
@@ -612,10 +612,9 @@ class EventAnalyticsController extends Controller
             })
             ->get();
 
-        // Group transactions by transactionable_id (user)
+
         $walletUserTransactions = $transactions->groupBy('transactionable_id');
 
-        // Calculate summaries
         $walletUserSummaries = [];
         foreach ($walletUserTransactions as $userId => $userTransactions) {
             $user    = $userTransactions->first()->transactionable;
