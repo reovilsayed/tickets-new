@@ -152,11 +152,14 @@ class ApiController extends Controller
 
     public function eventExtras(Request $request, $event)
     {
+        $user = auth()->user();
         $perPage = $request->get('per_page', 10);
 
         $query = $request->get('query');
 
-        $extras = Extra::with('event')->where('name', 'like', "%{$query}%")->where('event_id', $event)->paginate($perPage);
+        $extras = Extra::with('event')->whereHas('poses', function ($q) use ($user) {
+            $q->where('pos_id', $user->pos_id);
+        })->where('name', 'like', "%{$query}%")->where('event_id', $event)->paginate($perPage);
 
         return response()->json($extras);
     }
