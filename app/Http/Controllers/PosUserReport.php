@@ -28,6 +28,7 @@ class PosUserReport extends Controller
                 $query->whereHas('user', fn($q) => $q->where('name','LIKE','%'.request()->search.'%')->orWhere('email','LIKE','%'.request()->search.'%')->orWhere('contact_number','LIKE','%'.request()->search.'%'));
             })
             ->paginate(50);
+            
 
         $tickets = Ticket::where('pos_id', $user->id)
             ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))

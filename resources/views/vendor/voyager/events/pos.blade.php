@@ -137,6 +137,7 @@
                             <option value="marked">Marked</option>
                             <option value="unmarked">Not Marked</option>
                             <option value="resolved">Resolved</option>
+                            <option value="all">All</option>
                         </select>
                     </div>
                 </div>
@@ -249,23 +250,6 @@
 
 
                 </div>
-                <h1 class="p-3">
-                    {{ __('words.withdraw_logs') }}
-                </h1>
-
-                <div class="row">
-
-                    @foreach ($withdrawCounts as $entry)
-                        <div class="col-md-4">
-                            @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Withdraws of: ' . $entry->name,
-                                'value' => $entry->total, // <-- change this from withdraw_count to total
-                            ])
-                        </div>
-                    @endforeach
-
-                </div>
-
 
                 <h1 class="p-3">
                     {{ __('words.tickets') }}
@@ -294,6 +278,22 @@
                             ])
                         </div>
                     @endforeach
+                </div>
+                <h1 class="p-3">
+                    {{ __('words.withdraw_logs') }}
+                </h1>
+
+                <div class="row">
+
+                    @foreach ($withdrawCounts as $entry)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Withdraws of: ' . $entry->name,
+                                'value' => $entry->total, // <-- change this from withdraw_count to total
+                            ])
+                        </div>
+                    @endforeach
+
                 </div>
                 <table class="table table-hover">
                     <thead>
@@ -337,10 +337,11 @@
                                 <td>{{ $allOrder->note }}</td>
                                 <td>
                                     @if ($allOrder->alert == 'unmarked')
-                                        <button type="button" class="btn btn-primary ticket-marked-button"
+                                        <button type="button" class="btn"
+                                            style="background-color: #da2424de; color: #fff;"
                                             data-url="{{ route('order.marked', $allOrder) }}" data-bs-toggle="modal"
                                             data-bs-target="#ticket-marked">
-                                            Mark
+                                            Marked
                                         </button>
                                     @elseif($allOrder->alert == 'marked')
                                         <form method="POST" action="{{ route('order.unmark', $allOrder) }}"

@@ -465,7 +465,10 @@ class EventAnalyticsController extends Controller
 
         $allOrders = Order::with('user')
             ->where('event_id', $event->id)
-            ->when(request()->filled('alert'), fn($query) => $query->where('alert', request()->alert))
+            ->when(
+                request()->filled('alert') && request()->alert !== 'all',
+                fn($query) => $query->where('alert', request()->alert)
+            )
             ->when(
                 request()->filled('search'),
                 function (Builder $query) {
@@ -611,7 +614,6 @@ class EventAnalyticsController extends Controller
                 $query->where('agent_id', $request->staff);
             })
             ->get();
-
 
         $walletUserTransactions = $transactions->groupBy('transactionable_id');
 

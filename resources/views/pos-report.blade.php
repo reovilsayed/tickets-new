@@ -377,9 +377,28 @@
                             <div class="col-6 col-md-4">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'Total Amount',
-                                    'value' => Sohoj::price($orders->sum('total')),
+                                    'value' => Sohoj::price($totalAmount),
                                 ])
 
+                            </div>
+                            <div class="col-md-4">
+                                @include('vendor.voyager.events.partial.card', [
+                                    'label' => 'Marked Amount',
+                                    'value' => Sohoj::price($markedAmount),
+                                ])
+                            </div>
+                            <div class="col-md-4">
+                                @include('vendor.voyager.events.partial.card', [
+                                    'label' => 'Card Amount',
+                                    'value' => Sohoj::price($cardAmount),
+                                ])
+                            </div>
+
+                            <div class="col-md-4">
+                                @include('vendor.voyager.events.partial.card', [
+                                    'label' => 'Cash Amount',
+                                    'value' => Sohoj::price($cashAmount),
+                                ])
                             </div>
                             <div class="col-6 col-md-4">
                                 @include('vendor.voyager.events.partial.card', [
@@ -407,33 +426,69 @@
                                     'value' => Sohoj::price($orders->sum('total') - $productsellamount),
                                 ])
                             </div>
+                            <div class="col-md-4">
+                                @include('vendor.voyager.events.partial.card', [
+                                    'label' => 'Total Paid Invite ',
+                                    'value' => $totalPaidInvite->count(),
+                                ])
+                            </div>
 
-
-                            @foreach ($tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $tickets)
-                                <div class="col-12 col-md-4">
-                                    <div class="card">
-                                        <h3>
-                                            {{ $product }}
-                                        </h3>
-                                        <h1>
-                                            {{ count($tickets) }}
-                                        </h1>
+                            <div class="col-md-4">
+                                @include('vendor.voyager.events.partial.card', [
+                                    'label' => 'Total Paid Invite Amount',
+                                    'value' => Sohoj::price($totalPaidInvite->sum('price')),
+                                ])
+                            </div>
+                            <h1 class="p-3">
+                                {{ __('words.tickets') }}
+                            </h1>
+                            <div class="row">
+                                @foreach ($tickets->groupBy(fn($ticket) => $ticket->product->name) as $product => $tickets)
+                                    <div class="col-12 col-md-4">
+                                        <div class="card">
+                                            <h3>
+                                                {{ $product }}
+                                            </h3>
+                                            <h1>
+                                                {{ count($tickets) }}
+                                            </h1>
+                                        </div>
                                     </div>
-                                </div>
-                            @endforeach
-
-                            @foreach ($extras->groupBy('name') as $name => $data)
-                                <div class="col-12 col-md-4">
-                                    <div class="card">
-                                        <h3>
-                                            {{ $name }}
-                                        </h3>
-                                        <h1>
-                                            {{ $data->sum('qty') }}
-                                        </h1>
+                                @endforeach
+                            </div>
+                            <h1 class="p-3">
+                                {{ __('words.extras') }}
+                            </h1>
+                            <div class="row">
+                                @foreach ($extras->groupBy('name') as $name => $data)
+                                    <div class="col-12 col-md-4">
+                                        <div class="card">
+                                            <h3>
+                                                {{ $name }}
+                                            </h3>
+                                            <h1>
+                                                {{ $data->sum('qty') }}
+                                            </h1>
+                                        </div>
                                     </div>
-                                </div>
-                            @endforeach
+                                @endforeach
+                            </div>
+                            <h1 class="p-3">
+                                {{ __('words.withdraw_logs') }}
+                            </h1>
+
+                            <div class="row">
+
+                                @foreach ($withdrawCounts as $entry)
+                                    <div class="col-md-4">
+                                        @include('vendor.voyager.events.partial.card', [
+                                            'label' => 'Withdraws of: ' . $entry->name,
+                                            'value' => $entry->total, // <-- change this from withdraw_count to total
+                                        ])
+                                    </div>
+                                @endforeach
+
+                            </div>
 
                         </div>
 
@@ -740,7 +795,7 @@
         function preserveUrlParams(formEl) {
             const currentUrl = new URL(window.location.href);
             const searchParams = currentUrl.searchParams;
-            
+
             // Create hidden inputs for each URL parameter
             searchParams.forEach((value, key) => {
                 if (key !== 'note') { // Skip note parameter as it's already in the form
