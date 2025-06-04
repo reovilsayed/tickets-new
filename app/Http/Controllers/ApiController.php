@@ -61,6 +61,7 @@ class ApiController extends Controller
 
     public function getTicket(Request $request)
     {
+        $user = auth()->user();
         $ticket = Ticket::where('ticket', $request->ticket)->with(['event', 'product'])->first();
         if (!$ticket)
             return response()->json(['message' => 'No ticket was found'], status: 404);
@@ -88,10 +89,20 @@ class ApiController extends Controller
             "hasExtras" => $ticket["hasExtras"],
             "extras" => [],
         ];
-        $extras = $ticket->extras;
-        foreach ($extras as $extra) {
-            $ticketData['extras'][] = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $extra['qty'], 'used' => @$extra['used'] ?? 0, 'price' => Extra::find($extra['id'])->price];
+        $extras = array_map(function ($extra) {
+            return $extra['id'];
+        }, $ticket->extras);
+        $extras = Extra::with('event')->whereIn('id', $extras)->whereHas('poses', function ($q) {
+            $q->where('pos_id', auth()->user()->pos_id);
+        })->get();
+        for ($i = 0; $i < count($extras); $i++) {
+            $extra = $extras[$i];
+            $extra['qty'] = $ticket->extras[$extra->id]['qty'];
+            $extra['used'] = $ticket->extras[$extra->id]['used'];
+            $extras[$i] = $extra;
         }
+        $ticketData['extras'] = $extras;
+        // return dd($ticket->extras);
 
         return response()->json($ticketData);
     }
