@@ -15,7 +15,6 @@ class PosDashboardReport extends Controller
 {
     public function __invoke($token = null)
     {
-
         $app = false;
         if ($token) {
             $app = true;
@@ -27,27 +26,44 @@ class PosDashboardReport extends Controller
 
         $events = Event::where('status', 1)->where('in_pos', 1)->get();
 
+        // Get base orders query
         $orders = Order::where('pos_id', $user->id)
             ->when(request()->filled('alert'), fn($query) => $query->where('alert', request()->alert))
             ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))
             ->when(request()->filled('date'), fn($query) => $query->whereBetween('created_at', [Carbon::parse(request()->date)->startOfDay(), Carbon::parse(request()->date)->endOfDay()]))
             ->get();
-        $allorders = Order::where('pos_id', $user->id)->latest()
         
+        // Calculate amounts like EventAnalyticsController
+        $cardAmount = $orders->where(function($order) {
+            return strtolower($order->payment_method) === 'card';
+        })->sum('total');
+        
+        $cashAmount = $orders->where(function($order) {
+            return strtolower($order->payment_method) === 'cash';
+        })->sum('total');
+        
+        $markedAmount = $orders->whereIn('alert', ['marked', 'resolved'])
+            ->where(function($order) {
+                return in_array(strtolower($order->payment_method), ['card', 'cash']);
+            })->sum('total');
+            
+        $totalAmount = $cardAmount + $cashAmount - $markedAmount;
+
+        // Get paginated orders for display
+        $allorders = Order::where('pos_id', $user->id)
+            ->latest()
             ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))
             ->when(request()->filled('date'), fn($query) => $query->whereBetween('created_at', [Carbon::parse(request()->date)->startOfDay(), Carbon::parse(request()->date)->endOfDay()]))
             ->when(request()->filled('alert'), fn($query) => $query->where('alert', request()->alert))
-
             ->when(request()->filled('search'), function ($query) {
-                $query->whereHas('user', fn($q) => $q->where('name', 'LIKE', '%' . request()->search . '%')->orWhere('email', 'LIKE', '%' . request()->search . '%')->orWhere('contact_number', 'LIKE', '%' . request()->search . '%'));
+                $query->whereHas('user', fn($q) => $q->where('name', 'LIKE', '%' . request()->search . '%')
+                    ->orWhere('email', 'LIKE', '%' . request()->search . '%')
+                    ->orWhere('contact_number', 'LIKE', '%' . request()->search . '%'));
             })
             ->withCount('tickets')
             ->paginate(50);
-        $cardAmount   = $orders->where('payment_method', 'Card')->sum('total');
-        $cashAmount   = $orders->where('payment_method', 'Cash')->sum('total');
-        $markedAmount = $orders->whereIn('alert', ['marked', 'resolved'])->whereIn('payment_method', ['Card', 'Cash'])->sum('total');
-        $totalAmount  = $cardAmount + $cashAmount - $markedAmount;
 
+        // Get tickets
         $tickets = Ticket::where('pos_id', $user->id)
             ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))
             ->when(request()->filled('date'), fn($query) => $query->whereBetween('created_at', [Carbon::parse(request()->date)->startOfDay(), Carbon::parse(request()->date)->endOfDay()]))
@@ -55,31 +71,62 @@ class PosDashboardReport extends Controller
 
         $eventId = request()->event;
 
+        // Get extras
+        $extras = Order::where('pos_id', $user->id)
+            ->whereNotNull('extras')
+            ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))
+            ->when(request()->filled('date'), fn($query) => $query->whereBetween('created_at', [Carbon::parse(request()->date)->startOfDay(), Carbon::parse(request()->date)->endOfDay()]))
+            ->select('extras')
+            ->get()
+            ->map(fn($order) => $order->extras)
+            ->flatten()
+            ->filter()
+            ->values();
+
+        // Calculate product sell amount
+        $productsellamount = $extras->sum(function($extra) {
+            return $extra->qty * $extra->price;
+        });
+
+        // Get paid invites
         $totalPaidInvite = Ticket::where('event_id', $eventId)
+            ->whereNotNull('pos_id')
             ->when(request()->filled('date'), fn($query) => $query->whereDate('activation_date', request()->date))
             ->whereType('paid_invite')
             ->where('active', 1)
-            ->whereNotNull('pos_id')
             ->get();
 
+        // Get withdraw logs
         $withdrawLogs = WithdrawLog::with(['event', 'ticket', 'zone', 'user', 'product'])
             ->where('event_id', $eventId)
+            ->when(request()->filled('date'), fn($query) => $query->whereDate('created_at', request()->date))
             ->get();
 
         $withdrawCounts = DB::table('withdraw_logs')
             ->where('event_id', $eventId)
-            ->when(
-                request()->filled('date'),
-                fn($query) => $query->whereDate('created_at', request()->date)
-            )
+            ->when(request()->filled('date'), fn($query) => $query->whereDate('created_at', request()->date))
             ->select('name', DB::raw('SUM(quantity) AS total'))
             ->groupBy('name')
             ->get();
-        $extras = $this->getExtras($user);
-        $extras = $extras->filter()->values();
 
-        return view('pos-report', compact(['user', 'orders', 'tickets', 'events', 'extras', 'allorders', 'app', 'token', 'markedAmount', 'cardAmount', 'cashAmount', 'totalAmount', 'totalPaidInvite', 'withdrawLogs', 'withdrawCounts']))
-            ->with('title', 'POS Dashboard Report');
+        return view('pos-report', compact([
+            'user', 
+            'orders', 
+            'tickets', 
+            'events', 
+            'extras', 
+            'allorders', 
+            'app', 
+            'token', 
+            'markedAmount', 
+            'cardAmount', 
+            'cashAmount', 
+            'totalAmount', 
+            'totalPaidInvite', 
+            'withdrawLogs', 
+            'withdrawCounts',
+            'productsellamount'
+        ]))->with('title', 'POS Dashboard Report');
     }
 
     protected function getExtras($user)
