@@ -132,11 +132,11 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <select name="alert" class="form-control">
-                            <option value="">Select Alert</option>
-                            <option value="">Alert</option>
-                            <option value="marked">Marked</option>
-                            <option value="unmarked">Not Marked</option>
-                            <option value="resolved">Resolved</option>
+                            <option value="">All</option>
+                            <option @if (request()->alert == 'marked') selected @endif value="marked">Marked</option>
+                            <option @if (request()->alert == 'unmarked') selected @endif value="unmarked">Not Marked</option>
+                            <option @if (request()->alert == 'resolved') selected @endif value="resolved">Resolved</option>
+
                         </select>
                     </div>
                 </div>
@@ -249,23 +249,6 @@
 
 
                 </div>
-                <h1 class="p-3">
-                    {{ __('words.withdraw_logs') }}
-                </h1>
-
-                <div class="row">
-
-                    @foreach ($withdrawCounts as $entry)
-                        <div class="col-md-4">
-                            @include('vendor.voyager.events.partial.card', [
-                                'label' => 'Withdraws of: ' . $entry->name,
-                                'value' => $entry->total, // <-- change this from withdraw_count to total
-                            ])
-                        </div>
-                    @endforeach
-
-                </div>
-
 
                 <h1 class="p-3">
                     {{ __('words.tickets') }}
@@ -294,6 +277,22 @@
                             ])
                         </div>
                     @endforeach
+                </div>
+                <h1 class="p-3">
+                    {{ __('words.withdraw_logs') }}
+                </h1>
+
+                <div class="row">
+
+                    @foreach ($withdrawCounts as $entry)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Withdraws of: ' . $entry->name,
+                                'value' => $entry->total, // <-- change this from withdraw_count to total
+                            ])
+                        </div>
+                    @endforeach
+
                 </div>
                 <table class="table table-hover">
                     <thead>
@@ -338,31 +337,19 @@
                                 <td>
                                     @if ($allOrder->alert == 'unmarked')
                                         <button type="button" class="btn btn-primary ticket-marked-button"
-                                            data-url="{{ route('order.marked', $allOrder) }}" data-bs-toggle="modal"
-                                            data-bs-target="#ticket-marked">
+                                            data-url="{{ route('order.marked', ['order' => $allOrder]) }}"
+                                            data-bs-toggle="modal" data-bs-target="#ticket-marked">
                                             Mark
                                         </button>
+                                    @elseif($allOrder->alert == 'resolved')
+                                        <button class="btn btn-success">Resolved</button>
                                     @elseif($allOrder->alert == 'marked')
-                                        <form method="POST" action="{{ route('order.unmark', $allOrder) }}"
-                                            style="display: inline;">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="btn btn-success">Resolved</button>
-                                        </form>
-                                        {{-- <button class="btn btn-danger">Marked</button> --}}
+                                        <a href="{{ route('admin.order.marked', ['order' => $allOrder]) }}" class="btn btn-danger">Marked</a>
                                     @endif
                                     <span class="d-none" id="ticket-action-url-{{ $allOrder->id }}"
                                         data-email-url="{{ route('order.email', $allOrder) }}"
                                         data-sms-url="{{ route('order.sms', $allOrder) }}"></span>
-                                    {{-- <button type="button" class="btn btn-primary ticket-action-button"
-                                        data-order-no="{{ $allOrder->id }}"
-                                        data-has-product="{{ $allOrder->tickets_count === 0 ? 0 : 1 }}"
-                                        data-url="{{ route('order.update', $allOrder) }}"
-                                        data-email="{{ $allOrder->billing->email ?? $allOrder->user->email }}"
-                                        data-phone="{{ $allOrder->billing->phone ?? $allOrder->user->contact_number }}"
-                                        data-bs-toggle="modal" data-bs-target="#action-modal">
-                                        Action
-                                    </button> --}}
+
                                 </td>
                                 <td style="display: none">{{ $allOrder->alert }}</td>
                             </tr>
