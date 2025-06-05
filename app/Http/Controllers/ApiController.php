@@ -97,9 +97,11 @@ class ApiController extends Controller
         })->get();
         for ($i = 0; $i < count($extras); $i++) {
             $extra = $extras[$i];
-            $extra['qty'] = $ticket->extras[$extra->id]['qty'];
-            $extra['used'] = $ticket->extras[$extra->id]['used'];
-            $extras[$i] = $extra;
+            if ($ticket->extras && isset($ticket->extras[$extra->id])) {
+                $extra['qty'] = $ticket->extras[$extra->id]['qty'];
+                $extra['used'] = $ticket->extras[$extra->id]['used'];
+                $extras[$i] = $extra;
+            }
         }
         $ticketData['extras'] = $extras;
         // return dd($ticket->extras);
