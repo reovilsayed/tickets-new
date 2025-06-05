@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Charts\EventTicketSellChart;
@@ -405,7 +406,11 @@ class EventAnalyticsController extends Controller
                 fn($query) => $query->where('orders.pos_id', $request->staff)
             )
             ->first();
-        $order_total = Order::selectRaw('sum(total) as total')
+        $order_total = Order::when(
+            request()->filled('alert') && request()->alert !== 'all',
+            fn($query) => $query->where('alert', request()->alert)
+        )->selectRaw('sum(total) as total')
+
             ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
             ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
             ->when(
@@ -420,7 +425,10 @@ class EventAnalyticsController extends Controller
             )
             ->first();
 
-        $extras = Order::select('jt.name as name')
+        $extras = Order::when(
+            request()->filled('alert') && request()->alert !== 'all',
+            fn($query) => $query->where('alert', request()->alert)
+        )->select('jt.name as name')
             ->selectRaw("SUM(jt.qty) AS qty")
             ->from(DB::raw("
             orders,
@@ -473,8 +481,8 @@ class EventAnalyticsController extends Controller
                 request()->filled('search'),
                 function (Builder $query) {
                     $query->whereHas('user', fn($q) => $q->where('name', 'LIKE', '%' . request()->search . '%')
-                            ->orWhere('email', 'LIKE', '%' . request()->search . '%')
-                            ->orWhere('contact_number', 'LIKE', '%' . request()->search . '%'));
+                        ->orWhere('email', 'LIKE', '%' . request()->search . '%')
+                        ->orWhere('contact_number', 'LIKE', '%' . request()->search . '%'));
                 }
             )
             ->when(
@@ -492,7 +500,7 @@ class EventAnalyticsController extends Controller
         $markedAmount = Order::where('event_id', $event->id)
             ->whereNotNull('pos_id')
             ->whereIn('payment_method', ['Card', 'Cash'])
-            ->where('alert', 'marked')
+            ->whereIn('alert', ['marked', 'resolved'])
             ->when(
                 $request->filled('date'),
                 fn($query) => $query->whereDate('created_at', $request->date)
@@ -519,9 +527,9 @@ class EventAnalyticsController extends Controller
                 $request->filled('date'),
                 fn($query) => $query->whereDate('created_at', $request->date)
             )->when(
-            $request->filled('staff'),
-            fn($query) => $query->where('user_id', $request->staff)
-        )
+                $request->filled('staff'),
+                fn($query) => $query->where('user_id', $request->staff)
+            )
 
             ->select('name', DB::raw('SUM(quantity) AS total'))
             ->groupBy('name')
@@ -540,7 +548,7 @@ class EventAnalyticsController extends Controller
                     'paid_invites_amount' => Sohoj::price($totalPaidInvite->sum('price'), false),
                     'paid_invites_count'  => $totalPaidInvite->count(),
                     'staff_name'          => $request->filled('staff') ?
-                    $staffs->firstWhere('id', $request->staff)->fullName() : null,
+                        $staffs->firstWhere('id', $request->staff)->fullName() : null,
                 ];
 
                 return Excel::download(
@@ -645,5 +653,4 @@ class EventAnalyticsController extends Controller
             'overallTotal',
         ));
     }
-
 }

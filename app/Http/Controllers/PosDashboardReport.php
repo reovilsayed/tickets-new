@@ -28,10 +28,12 @@ class PosDashboardReport extends Controller
         $events = Event::where('status', 1)->where('in_pos', 1)->get();
 
         $orders = Order::where('pos_id', $user->id)
+            ->when(request()->filled('alert'), fn($query) => $query->where('alert', request()->alert))
             ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))
             ->when(request()->filled('date'), fn($query) => $query->whereBetween('created_at', [Carbon::parse(request()->date)->startOfDay(), Carbon::parse(request()->date)->endOfDay()]))
             ->get();
         $allorders = Order::where('pos_id', $user->id)->latest()
+        
             ->when(request()->filled('event'), fn($query) => $query->where('event_id', request()->event))
             ->when(request()->filled('date'), fn($query) => $query->whereBetween('created_at', [Carbon::parse(request()->date)->startOfDay(), Carbon::parse(request()->date)->endOfDay()]))
             ->when(request()->filled('alert'), fn($query) => $query->where('alert', request()->alert))
@@ -43,7 +45,7 @@ class PosDashboardReport extends Controller
             ->paginate(50);
         $cardAmount   = $orders->where('payment_method', 'Card')->sum('total');
         $cashAmount   = $orders->where('payment_method', 'Cash')->sum('total');
-        $markedAmount = $orders->where('alert', 'marked')->whereIn('payment_method', ['Card', 'Cash'])->sum('total');
+        $markedAmount = $orders->whereIn('alert', ['marked', 'resolved'])->whereIn('payment_method', ['Card', 'Cash'])->sum('total');
         $totalAmount  = $cardAmount + $cashAmount - $markedAmount;
 
         $tickets = Ticket::where('pos_id', $user->id)
