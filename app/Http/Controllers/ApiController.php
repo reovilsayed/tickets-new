@@ -97,10 +97,13 @@ class ApiController extends Controller
         })->get();
         for ($i = 0; $i < count($extras); $i++) {
             $extra = $extras[$i];
-            $matchingExtra = collect($ticket->extras)->firstWhere('id', $extra->id);
-
-            $extra['qty'] = $matchingExtra['qty'];
-            $extra['used'] = $matchingExtra['used'];
+            $extra['qty'] = 0;
+            $extra['used'] = 0;
+            if ($ticket->extras && isset($ticket->extras[$extra->id])) {
+                $matchingExtra = collect($ticket->extras)->firstWhere('id', $extra->id);
+                $extra['qty'] = $matchingExtra['qty'] ?? 0;
+                $extra['used'] = $matchingExtra['used'] ?? 0;
+            }
             $extras[$i] = $extra;
         }
         $ticketData['extras'] = $extras;
