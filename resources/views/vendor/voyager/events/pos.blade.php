@@ -344,7 +344,7 @@
                                     @elseif($allOrder->alert == 'resolved')
                                         <button class="btn btn-success">Resolved</button>
                                     @elseif($allOrder->alert == 'marked')
-                                        <button class="btn btn-danger">Marked</button>
+                                        <a href="{{ route('admin.order.marked', ['order' => $allOrder]) }}" class="btn btn-danger">Marked</a>
                                     @endif
                                     <span class="d-none" id="ticket-action-url-{{ $allOrder->id }}"
                                         data-email-url="{{ route('order.email', $allOrder) }}"
