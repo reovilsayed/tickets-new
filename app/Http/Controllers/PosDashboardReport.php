@@ -43,7 +43,7 @@ class PosDashboardReport extends Controller
         })->sum('total');
         $qrAmount = $orders->where(function($order) {
             return strtolower($order->payment_method) === 'qr';
-        })->sum('total');
+        })->sum('total') / 100;
         
         $markedAmount = $orders->whereIn('alert', ['marked', 'resolved'])
             ->where(function($order) {
