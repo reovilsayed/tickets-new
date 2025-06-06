@@ -298,7 +298,12 @@ Route::put('app/pos/{order}/{token}/update', [PosDashboardReport::class, 'update
 Route::put('app/pos/{order}/{token}/email', [PosDashboardReport::class, 'email'])->name('app.order.email');
 Route::put('app/pos/{order}/{token}/sms', [PosDashboardReport::class, 'sms'])->name('app.order.sms');
 
-Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
+Route::get('/my-wallet/{uniqid}', function (Request $request, $uniqid) {
+
+    $user = User::where('uniqid', $uniqid)->first();
+    if (!$user) {
+        return "User not found";
+    }
     // Fetch the events where the wallet is 1, ordered by latest
     $events = Event::where('wallet', 1)->orderBy('sequence', 'asc')->get();
     if ($events->count() == 0) {

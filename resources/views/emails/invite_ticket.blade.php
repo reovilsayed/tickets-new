@@ -63,7 +63,7 @@
             margin-top: 10px;">{{ __('words.download_invite_ticket') }}</a>
         </div>
         <div class="" style="text-align: center; margin-top: 40px;">
-            <a href="{{ route('digital-wallet', ['user'=>$order->user,'event_id'=>$order->event_id]) }}"
+            <a href="{{ route('digital-wallet', ['uniqid'=>$order->user->uniqid,'event_id'=>$order->event_id]) }}"
                 class="btn-download text-white" style=" margin: 10% auto;
             padding: 13px 15px;
             background-color: #e86c3d;
