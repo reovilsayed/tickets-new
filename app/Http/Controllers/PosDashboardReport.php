@@ -41,13 +41,16 @@ class PosDashboardReport extends Controller
         $cashAmount = $orders->where(function($order) {
             return strtolower($order->payment_method) === 'cash';
         })->sum('total');
+        $qrAmount = $orders->where(function($order) {
+            return strtolower($order->payment_method) === 'qr';
+        })->sum('total');
         
         $markedAmount = $orders->whereIn('alert', ['marked', 'resolved'])
             ->where(function($order) {
                 return in_array(strtolower($order->payment_method), ['card', 'cash']);
             })->sum('total');
             
-        $totalAmount = $cardAmount + $cashAmount - $markedAmount;
+        $totalAmount = ($cardAmount + $cashAmount + $qrAmount) - $markedAmount;
 
         // Get paginated orders for display
         $allorders = Order::where('pos_id', $user->id)
@@ -121,6 +124,7 @@ class PosDashboardReport extends Controller
             'markedAmount', 
             'cardAmount', 
             'cashAmount', 
+            'qrAmount', 
             'totalAmount', 
             'totalPaidInvite', 
             'withdrawLogs', 

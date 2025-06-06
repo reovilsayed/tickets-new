@@ -388,6 +388,7 @@ class EventAnalyticsController extends Controller
         $order = Order::selectRaw('sum(total) as total')
             ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
             ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
+            ->selectRaw('sum(case when payment_method = "QR" then total END) as qr_amount')
             ->selectRaw('SUM(jt.qty) as extra_qty')
             ->selectRaw('SUM(jt.qty * jt.price) as extra_total')
             ->leftJoin(DB::raw('JSON_TABLE(orders.extras, \'$[*]\' COLUMNS (
@@ -413,6 +414,7 @@ class EventAnalyticsController extends Controller
 
             ->selectRaw('sum(case when payment_method = "Card" then total END) as card_amount')
             ->selectRaw('sum(case when payment_method = "Cash" then total END) as cash_amount')
+            ->selectRaw('sum(case when payment_method = "QR" then total END) as qr_amount')
             ->when(
                 $request->filled('date'),
                 fn($query) => $query->whereDate('created_at', $request->date)
@@ -541,6 +543,7 @@ class EventAnalyticsController extends Controller
                     'total_amount'        => Sohoj::price($order_total?->total, false),
                     'card_amount'         => Sohoj::price($order_total?->card_amount, false),
                     'cash_amount'         => Sohoj::price($order_total?->cash_amount, false),
+                    'qr_amount'           => Sohoj::price($order_total?->qr_amount, false),
                     'tickets_count'       => $tickets->sum('total') ?? 0,
                     'products_count'      => $order->extra_qty ?? 0,
                     'products_amount'     => Sohoj::price($order?->extra_total, false),
