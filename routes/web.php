@@ -298,7 +298,8 @@ Route::put('app/pos/{order}/{token}/update', [PosDashboardReport::class, 'update
 Route::put('app/pos/{order}/{token}/email', [PosDashboardReport::class, 'email'])->name('app.order.email');
 Route::put('app/pos/{order}/{token}/sms', [PosDashboardReport::class, 'sms'])->name('app.order.sms');
 
-Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
+Route::get('/my-wallet/{uniqid}', function (Request $request, $uniqid) {
+    $user = User::where('uniqid', $uniqid)->first();
     // Fetch the events where the wallet is 1, ordered by latest
     $events = Event::where('wallet', 1)->orderBy('sequence', 'asc')->get();
     if ($events->count() == 0) {
@@ -307,8 +308,8 @@ Route::get('/my-wallet/{user:uniqid}', function (User $user, Request $request) {
 
     // Determine the current event based on the request or default to the first event
     $event = $request->filled('event_id')
-    ? Event::find($request->event_id)
-    : $events->first() ?? new Event();
+        ? Event::find($request->event_id)
+        : $events->first() ?? new Event();
 
     // Fetch the user's orders excluding those with 'invite' as the payment method
     $orders = Order::where('user_id', $user->id)->where('event_id', $event->id)
