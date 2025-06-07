@@ -521,6 +521,8 @@ class EventAnalyticsController extends Controller
             ->get();
         $withdrawLogs = WithdrawLog::with(['event', 'ticket', 'zone', 'user', 'product'])
             ->where('event_id', $event->id)
+            ->when(request()->filled('date'), fn($query) => $query->whereDate('created_at', request()->date))
+            ->when(request()->filled('staff'), fn($query) => $query->where('pos_id', request()->staff))
             ->get();
         $withdrawCounts = DB::table('withdraw_logs')
             ->where('event_id', $event->id)
