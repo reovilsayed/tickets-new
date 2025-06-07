@@ -426,7 +426,6 @@ class EventAnalyticsController extends Controller
                 fn($query) => $query->where('orders.pos_id', $request->staff)
             )
             ->first();
-
         $extras = Order::when(
             request()->filled('alert') && request()->alert !== 'all',
             fn($query) => $query->where('alert', request()->alert)
@@ -536,6 +535,7 @@ class EventAnalyticsController extends Controller
             ->select('name', DB::raw('SUM(quantity) AS total'))
             ->groupBy('name')
             ->get();
+            // dd($order_total);
 
         if ($request->has('export')) {
             if ($request->export == 'summary') {
