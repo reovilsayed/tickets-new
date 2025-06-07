@@ -20,7 +20,8 @@ class ProductResource extends JsonResource
         return [
             'id' => $this->id,
             'event_thumbnail' => Voyager::image($this->event->thumbnail),
-            'thumbnail' => 'https://events.essenciacompany.com/storage/' , Voyager::image($this->thumbnail),
+            'thumbnail' => 'https://events.essenciacompany.com/storage/',
+            Voyager::image($this->thumbnail),
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
@@ -43,7 +44,7 @@ class ProductResource extends JsonResource
             'extras' => $this->transformExtras(),
             'invite_only' => $this->invite_only,
             'event' => $this->event,
-            'thumbnail'=>Voyager::image($this->thumbnail)
+            'thumbnail' => Voyager::image($this->thumbnail)
         ];
     }
 
@@ -52,7 +53,7 @@ class ProductResource extends JsonResource
         return collect($this->extras)->mapWithKeys(function ($quantity, $id) {
             $extra = Extra::find($id);
             $extra['quantity'] = (int)$quantity;
-            return [$extra];
-        })->toArray();
+            return [$id => $extra];
+        })->filter()->values()->toArray();
     }
 }

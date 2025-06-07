@@ -61,13 +61,16 @@ class CreateOrderController extends Controller
             $this->attachExtras($order, $extras);
             $this->takePayment($order);
 
+
+
+            DB::commit();
+
             if (config('app.env') !== 'local') {
                 $this->handleTOCOnlineIntegration($order);
             }
 
-            DB::commit();
-
             $order->load('posUser', 'user');
+
             return response()->json([
                 'status' => true,
                 'message' => 'Order created successfully',
@@ -193,6 +196,13 @@ class CreateOrderController extends Controller
     {
         $toco = new TOCOnlineService;
         $response = $toco->createCommercialSalesDocument($order);
+
+        if (is_string($response)) {
+            $order->update([ 
+                'invoice_body' => json_encode($response)
+            ]);
+            return;
+        }
 
         $order->update([
             'invoice_id' => $response['id'],
