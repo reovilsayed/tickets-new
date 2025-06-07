@@ -132,8 +132,9 @@
                                         class="btn btn-custom">
                                         View Tickets
                                     </a>
-                                    <a href="{{ route('digital-wallet', $user) }}" class="btn btn-custom">
-                                        Wallet Link
+                                    <a href="{{ route('digital-wallet', ['uniqid' => $user->uniqid, 'event_id' => $event->id]) }}"
+                                        class="btn btn-custom">
+                                        Wallet Link 
                                     </a>
                                     <a href="#" data-toggle="modal" data-target="#scanQrModal"
                                         data-user-id="{{ $user->id }}" class="btn btn-custom">

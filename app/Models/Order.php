@@ -31,6 +31,7 @@ class Order extends Model
         'refund_pos_tax' => ConvertFullMoney::class,
         'card_amount' => ConvertFullMoney::class,
         'cash_amount' => ConvertFullMoney::class,
+        'qr_amount' => ConvertFullMoney::class,
     ];
 
     const STATUS_PAID = 1;

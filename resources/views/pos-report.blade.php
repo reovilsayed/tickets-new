@@ -400,6 +400,12 @@
                                     'value' => Sohoj::price($cashAmount),
                                 ])
                             </div>
+                            <div class="col-md-4">
+                                @include('vendor.voyager.events.partial.card', [
+                                    'label' => 'QR Amount',
+                                    'value' => Sohoj::price($qrAmount),
+                                ])
+                            </div>
                             <div class="col-6 col-md-4">
                                 @include('vendor.voyager.events.partial.card', [
                                     'label' => 'Total Ticket Sell',

@@ -97,13 +97,12 @@ class ApiController extends Controller
         })->get();
         for ($i = 0; $i < count($extras); $i++) {
             $extra = $extras[$i];
-            $extra['qty'] = 0;
-            $extra['used'] = 0;
-            if ($ticket->extras && isset($ticket->extras[$extra->id])) {
-                $matchingExtra = collect($ticket->extras)->firstWhere('id', $extra->id);
-                $extra['qty'] = $matchingExtra['qty'] ?? 0;
-                $extra['used'] = $matchingExtra['used'] ?? 0;
-            }
+
+
+            $matchingExtra = collect($ticket->extras)->firstWhere('id', $extra->id);
+            $extra['qty'] = @$matchingExtra['qty'] ?? 0;
+            $extra['used'] = @$matchingExtra['used'] ?? 0;
+
             $extras[$i] = $extra;
         }
         $ticketData['extras'] = $extras;
@@ -379,41 +378,35 @@ class ApiController extends Controller
 
         $requestTicket = $request->ticket;
         $ticket = Ticket::findOrFail($requestTicket['id']);
-        $ticket->extras = collect($requestTicket['extras'])->map(function ($extra) use ($request) {
-            $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => @$extra['newQty'] ?? $extra['qty'], 'price' => $extra['price'], 'used' => @$extra['used'] ?? 0];
-            if ($request->can_withdraw && @$extra['newQty']) {
-                $data['used'] =  @$extra['newQty'];
+
+        $ticketExtras = collect($ticket->extras);
+
+        $extras = collect($requestTicket['extras'])->mapWithKeys(function ($extra) use ($request, $ticketExtras) {
+            $existing = $ticketExtras->get($extra['id'], []);
+            $existingQty = isset($existing['qty']) ? $existing['qty'] : 0;
+            $newQty = isset($extra['newQty']) ? $extra['newQty'] : 0;
+            
+            $qty = $existingQty + $newQty;
+
+            $data = [
+                'id' => $extra['id'],
+                'name' => Extra::find($extra['id'])->display_name,
+                'qty' => $qty > 0 ? $qty : (isset($extra['qty']) ? $extra['qty'] : 0),
+                'price' => $extra['price'],
+                'used' => isset($extra['used']) ? $extra['used'] : 0,
+            ];
+            if ($request->can_withdraw && $newQty) {
+                $data['used'] = $newQty;
             }
-            return $data;
+            return [$extra['id'] => $data];
         })->toArray();
+       
+
+        $newExtras = $ticketExtras->replace($extras)->toArray();
+        $ticket->extras = $newExtras;
         $ticket->save();
 
-        // $totalPrice = 0;
-        // $extras = [];
-        // foreach ($requestTicket['extras'] as $extra) {
-        //     $quantity = (int)(($extra['newQty'] ?? $extra['qty']) - $extra['qty']);
-        //     if ($quantity > 0) {
-        //         $price =  $quantity * $extra['price'];
-        //         $totalPrice += $price;
-        //         $data = ['id' => $extra['id'], 'name' => Extra::find($extra['id'])->display_name, 'qty' => $quantity,  'price' => $quantity * $extra['price']];
-
-        //         $extras[] = $data;
-        //     }
-        // }
-
-        // $orderData = [
-        //     'user_id' => $ticket['user_id'],
-        //     'subtotal' => $totalPrice,
-        //     'discount' => 0,
-        //     'total' => $totalPrice,
-        //     'status' => 1,
-        //     'payment_status' => 1,
-        //     'payment_method' => 'pos',
-        //     'transaction_id' => Str::uuid(),
-        //     'security_key' => Str::uuid(),
-        //     'extras' => json_encode($extras)
-        // ];
-        // $order = Order::create($orderData);
+     
         return response()->json(['ticket' => $ticket]);
     }
 

@@ -120,27 +120,27 @@
                 </h3>
                 <div class="cus-btn-bar">
                     <a class="cus-btn"
-                        href="{{ route('digital-wallet', ['user' => $user, 'event_id' => request('event_id')]) }}"><i
+                        href="{{ route('digital-wallet', ['uniqid' => $user->uniqid, 'event_id' => request('event_id')]) }}"><i
                             class="fa-solid fa-qrcode"></i>
                         {{ __('words.tickets') }}</a>
                     @if ($orders->count())
                         <a class="cus-btn"
-                            href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'invoice', 'event_id' => request('event_id')]) }}"><i
+                            href="{{ route('digital-wallet', ['uniqid' => $user->uniqid, 'tab' => 'invoice', 'event_id' => request('event_id')]) }}"><i
                                 class="fa-solid fa-file-invoice"></i>
                             {{ __('words.invoice') }}</a>
                     @endif
                     <a class="cus-btn"
-                        href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'info', 'event_id' => request('event_id')]) }}"><i
+                        href="{{ route('digital-wallet', ['uniqid' => $user->uniqid, 'tab' => 'info', 'event_id' => request('event_id')]) }}"><i
                             class="fa-solid fa-circle-info"></i>
                         {{ __('words.information') }}</a>
                     <a class="cus-btn"
-                        href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'products', 'event_id' => request('event_id')]) }}"><i
+                        href="{{ route('digital-wallet', ['uniqid' => $user->uniqid, 'tab' => 'products', 'event_id' => request('event_id')]) }}"><i
                             class="fa-solid fa-box"></i>
                         {{ __('words.products') }}</a>
                      
                     @if ($event->is_wallet_payment_enabled == 1)
                         <a class="cus-btn"
-                            href="{{ route('digital-wallet', ['user' => $user, 'tab' => 'qr_payment', 'event_id' => request('event_id')]) }}">
+                            href="{{ route('digital-wallet', ['uniqid' => $user->uniqid, 'tab' => 'qr_payment', 'event_id' => request('event_id')]) }}">
                             <i class="fa-solid fa-box"></i>
                             {{ __('words.qr-payment') }}
                         </a>

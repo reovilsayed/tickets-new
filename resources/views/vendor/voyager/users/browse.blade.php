@@ -300,7 +300,7 @@
                                                         ])
                                                     @endif
                                                 @endforeach
-                                                <a href="{{ route('digital-wallet', $data) }}"
+                                                <a href="{{ route('digital-wallet', ['uniqid' => $data->uniqid]) }}"
                                                     class="btn btn-primary edit">Wallet Link</a>
                                                 @if ($data->role_id == 6)
                                                     <a href="{{ route('pos.user.report', $data) }}"

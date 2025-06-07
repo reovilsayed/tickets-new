@@ -35,7 +35,7 @@ class SendMessageToCustomer
                 $eventName = $event->order->event?->name ?? 'Essência do Vinho - Lisboa';
                 $event_id = $event->order->event?->id;
 
-                $message = 'Informação e Acesso ao ' . $eventName . ' : aceda aqui  [%goto:' . route('digital-wallet', ['user'=>$event->order->user,'event_id'=>$event_id]) . '%] !!';
+                $message = 'Informação e Acesso ao ' . $eventName . ' : aceda aqui  [%goto:' . route('digital-wallet', ['uniqid' => $event->order->user->uniqid, 'event_id' => $event_id]) . '%] !!';
                 SmsApi::send($event->order->billing->phone,  $message);
                 Log::info($message);
             }

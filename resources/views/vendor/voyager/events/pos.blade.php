@@ -181,7 +181,7 @@
             <div class="panel-body">
                 <div class="row">
                     @php
-                        $totalAmount = $order_total?->cash_amount + $order_total?->card_amount - $markedAmount;
+                        $totalAmount = ($order_total?->cash_amount + $order_total?->card_amount + $order_total?->qr_amount) - $markedAmount;
                     @endphp
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
@@ -206,6 +206,12 @@
                         @include('vendor.voyager.events.partial.card', [
                             'label' => 'Cash Amount',
                             'value' => Sohoj::price($order_total?->cash_amount),
+                        ])
+                    </div>
+                    <div class="col-md-4">
+                        @include('vendor.voyager.events.partial.card', [
+                            'label' => 'QR Amount',
+                            'value' => Sohoj::price($order_total?->qr_amount),
                         ])
                     </div>
                     <div class="col-md-4">
