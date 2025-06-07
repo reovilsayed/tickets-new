@@ -271,7 +271,6 @@ class ApiController extends Controller
             $order['extras'] = json_encode($orderExtras);
         }
 
-        // Handle ticket creation and price adjustment
         $hollowTickets = [];
         $physicalQr = $request->get('physicalQr');
 
@@ -299,7 +298,7 @@ class ApiController extends Controller
                     'type' => 'pos'
                 ];
 
-                $extras = $item['extras'] ?? [];
+                $extras = $item['extras'] ?? $product['extras'] ??  [];
                 if (count($extras)) {
                     $data['hasExtras'] = true;
                     foreach ($extras as $extra) {
@@ -322,17 +321,10 @@ class ApiController extends Controller
             }
         }
 
-        // Handle invoice printing or emailing
         $printInvoice = $request->get('printInvoice');
         $sendInvoiceToMail = $request->get('sendInvoiceToMail');
         $sendTicketToMail = $request->get('sendToMail') ?? $request->billing->sendToMail;
-        // if(env('APP_ENV') != 'local'){
-
-
-
         $phone = isset($orderData['billing']['phone']) ? $orderData['billing']['phone'] : '';
-
-        // Return the order with tickets
 
         DB::commit();
         $order->update([
