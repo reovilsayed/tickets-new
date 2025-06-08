@@ -43,7 +43,7 @@ class PosDashboardReport extends Controller
         })->sum('total');
         $qrAmount = $orders->where(function($order) {
             return strtolower($order->payment_method) === 'qr';
-        })->sum('total') / 100;
+        })->sum('total') ;
         
         $markedAmount = $orders->whereIn('alert', ['marked', 'resolved'])
             ->where(function($order) {
@@ -101,11 +101,13 @@ class PosDashboardReport extends Controller
 
         // Get withdraw logs
         $withdrawLogs = WithdrawLog::with(['event', 'ticket', 'zone', 'user', 'product'])
+            ->where('pos_id', $user->id)
             ->where('event_id', $eventId)
             ->when(request()->filled('date'), fn($query) => $query->whereDate('created_at', request()->date))
             ->get();
 
         $withdrawCounts = DB::table('withdraw_logs')
+            ->where('pos_id', $user->id)
             ->where('event_id', $eventId)
             ->when(request()->filled('date'), fn($query) => $query->whereDate('created_at', request()->date))
             ->select('name', DB::raw('SUM(quantity) AS total'))
