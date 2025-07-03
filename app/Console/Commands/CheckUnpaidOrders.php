@@ -15,26 +15,26 @@ class CheckUnpaidOrders extends Command
 
     public function handle()
     {
-        // Find orders that are unpaid for 30 minutes
+        // Find orders that are unpaid for 30 minutes and created today
         $order = Order::where('status', 0)
+            ->whereDate('created_at', Carbon::today())
             ->where('created_at', '<=', Carbon::now()->subMinutes(30))
             ->whereDoesntHave('reminders', function ($query) {
                 $query->where('type', '30_minute_reminder');
             })
-
             ->first();
+            
+        if ($order) {
+            // Send reminder email
+            Mail::to($order->user->email)->send(new UnpaidOrderReminder($order));
 
-        // Send reminder email
-        Mail::to($order->user->email)->send(new UnpaidOrderReminder($order));
+            // Record that we sent this reminder
+            $order->reminders()->create([
+                'type' => '30_minute_reminder',
+                'sent_at' => now(),
+            ]);
 
-        // Record that we sent this reminder
-        $order->reminders()->create([
-            'type' => '30_minute_reminder',
-            'sent_at' => now(),
-        ]);
-
-        $this->info("Sent reminder for order #{$order->id}");
-
-
+            $this->info("Sent reminder for order #{$order->id}");
+        }
     }
 }
