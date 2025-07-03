@@ -181,7 +181,11 @@
             <div class="panel-body">
                 <div class="row">
                     @php
-                        $totalAmount = ($order_total?->cash_amount + $order_total?->card_amount + $order_total?->qr_amount) - $markedAmount;
+                        $totalAmount =
+                            $order_total?->cash_amount +
+                            $order_total?->card_amount +
+                            $order_total?->qr_amount -
+                            $markedAmount;
                     @endphp
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
@@ -190,36 +194,44 @@
                         ])
                     </div>
 
-                    <div class="col-md-4">
-                        @include('vendor.voyager.events.partial.card', [
-                            'label' => 'Marked Amount',
-                            'value' => Sohoj::price($markedAmount),
-                        ])
-                    </div>
-                    <div class="col-md-4">
-                        @include('vendor.voyager.events.partial.card', [
-                            'label' => 'Card Amount',
-                            'value' => Sohoj::price($order_total?->card_amount),
-                        ])
-                    </div>
+                    @if ($markedAmount > 0)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Marked Amount',
+                                'value' => Sohoj::price($markedAmount),
+                            ])
+                        </div>
+                    @endif
+                    @if ($order_total?->card_amount > 0)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Card Amount',
+                                'value' => Sohoj::price($order_total?->card_amount),
+                            ])
+                        </div>
+                    @endif
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
                             'label' => 'Cash Amount',
                             'value' => Sohoj::price($order_total?->cash_amount),
                         ])
                     </div>
-                    <div class="col-md-4">
-                        @include('vendor.voyager.events.partial.card', [
-                            'label' => 'QR Amount',
-                            'value' => Sohoj::price($order_total?->qr_amount),
-                        ])
-                    </div>
-                    <div class="col-md-4">
-                        @include('vendor.voyager.events.partial.card', [
-                            'label' => 'Total Ticket Sell',
-                            'value' => $tickets->sum('total') ?? 0,
-                        ])
-                    </div>
+                    @if ($order_total?->qr_amount > 0)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'QR Amount',
+                                'value' => Sohoj::price($order_total?->qr_amount),
+                            ])
+                        </div>
+                    @endif
+                    @if ($tickets->sum('total') > 0)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Total Ticket Sell',
+                                'value' => $tickets->sum('total') ?? 0,
+                            ])
+                        </div>
+                    @endif
                     <div class="col-md-4">
                         @include('vendor.voyager.events.partial.card', [
                             'label' => 'Total Product sell',
@@ -238,27 +250,29 @@
                             'value' => Sohoj::price($order?->total - $order?->extra_total),
                         ])
                     </div>
-                    <div class="col-md-4">
-                        @include('vendor.voyager.events.partial.card', [
-                            'label' => 'Total Paid Invite Amount',
-                            'value' => Sohoj::price($totalPaidInvite->sum('price')),
-                        ])
-                    </div>
-                    <div class="col-md-4">
-                        @include('vendor.voyager.events.partial.card', [
-                            'label' => 'Total Paid Invite ',
-                            'value' => $totalPaidInvite->count(),
-                        ])
-                    </div>
-
-
-
-
+                    @if ($totalPaidInvite->sum('price') > 0)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Total Paid Invite Amount',
+                                'value' => Sohoj::price($totalPaidInvite->sum('price')),
+                            ])
+                        </div>
+                    @endif
+                    @if ($totalPaidInvite->count() > 0)
+                        <div class="col-md-4">
+                            @include('vendor.voyager.events.partial.card', [
+                                'label' => 'Total Paid Invite ',
+                                'value' => $totalPaidInvite->count(),
+                            ])
+                        </div>
+                    @endif
                 </div>
 
-                <h1 class="p-3">
-                    {{ __('words.tickets') }}
-                </h1>
+                @if ($tickets->count() > 0)
+                    <h1 class="p-3">
+                        {{ __('words.tickets') }}
+                    </h1>
+                @endif
                 <div class="row">
                     @foreach ($tickets as $ticket)
                         <div class="col-md-4">
@@ -271,9 +285,11 @@
                         </div>
                     @endforeach
                 </div>
-                <h1 class="p-3">
-                    {{ __('words.extras') }}
-                </h1>
+                @if ($extras->count() > 0)
+                    <h1 class="p-3">
+                        {{ __('words.extras') }}
+                    </h1>
+                @endif
                 <div class="row">
                     @foreach ($extras as $extra)
                         <div class="col-md-4">
@@ -350,7 +366,8 @@
                                     @elseif($allOrder->alert == 'resolved')
                                         <button class="btn btn-success">Resolved</button>
                                     @elseif($allOrder->alert == 'marked')
-                                        <a href="{{ route('admin.order.marked', ['order' => $allOrder]) }}" class="btn btn-danger">Marked</a>
+                                        <a href="{{ route('admin.order.marked', ['order' => $allOrder]) }}"
+                                            class="btn btn-danger">Marked</a>
                                     @endif
                                     <span class="d-none" id="ticket-action-url-{{ $allOrder->id }}"
                                         data-email-url="{{ route('order.email', $allOrder) }}"
