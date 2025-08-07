@@ -66,46 +66,43 @@
         </div>
 
     </section>
-    @auth
-        @if (auth()->user()->role_id == 1)
-            <section class="rooms1 section-padding bg-cream">
-                <div class="container">
-                    @if ($magazines->count() > 0)
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="section-subtitle">{{ __('words.get_magazine') }}</div>
-                            </div>
-                        </div>
-                    @endif
 
-                    <div class="row">
-                        @foreach ($magazines as $magazine)
-                            <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
-                                <div class="item" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
-                                    <a href="{{ $magazine->path() }}" class="d-block">
-                                        <img src="{{ Storage::url($magazine->image) }}" alt="" style="">
-                                    </a>
-                                    <div class="con">
-                                        {{-- <h6>$100</h6> --}}
+    <section class="rooms1 section-padding bg-cream">
+        <div class="container">
+            @if ($magazines->count() > 0)
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-subtitle">{{ __('words.get_magazine') }}</div>
+                    </div>
+                </div>
+            @endif
 
-                                        <h5 style="height: 85px" class="product-title">
-                                            <a href="{{ $magazine->path() }}" title="{{ $magazine->name }}"
-                                                class="w-100">{{ Str::limit($magazine->name, 30) }}</a>
-                                        </h5>
-                                        <div class="line"></div>
-                                        <div class=" facilities">
-                                            <a class="custom-button back-button"
-                                                href="{{ $magazine->path() }}">{{ __('words.view_magazine') }}</a>
-                                        </div>
-                                    </div>
+            <div class="row">
+                @foreach ($magazines as $magazine)
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-3 col-xl-3">
+                        <div class="item" style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+                            <a href="{{ $magazine->path() }}" class="d-block">
+                                <img src="{{ Storage::url($magazine->image) }}" alt="" style="">
+                            </a>
+                            <div class="con">
+                                {{-- <h6>$100</h6> --}}
+
+                                <h5 style="height: 85px" class="product-title">
+                                    <a href="{{ $magazine->path() }}" title="{{ $magazine->name }}"
+                                        class="w-100">{{ Str::limit($magazine->name, 30) }}</a>
+                                </h5>
+                                <div class="line"></div>
+                                <div class=" facilities">
+                                    <a class="custom-button back-button"
+                                        href="{{ $magazine->path() }}">{{ __('words.view_magazine') }}</a>
                                 </div>
                             </div>
-                        @endforeach
-
+                        </div>
                     </div>
-            </section>
-        @endif
-    @endauth
+                @endforeach
+
+            </div>
+    </section>
 @endsection
 @section('js')
     <script src="{{ asset('assets/js/star-rating.js') }}" type="text/javascript"></script>
