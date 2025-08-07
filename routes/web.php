@@ -37,10 +37,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('magazines', [MagazineController::class, 'index'])->name('magazines.index');
-    Route::get('magazines/{magazine:slug}', [MagazineController::class, 'show'])->name('magazines.show');
-});
+Route::get('magazines', [MagazineController::class, 'index'])->name('magazines.index');
+Route::get('magazines/{magazine:slug}', [MagazineController::class, 'show'])->name('magazines.show');
+
 Route::get('events', [EventController::class, 'index'])->name('events.index');
 Route::get('event/{event:slug}', [EventController::class, 'show'])->name('events.show');
 Route::get('invite/{invite:slug}', function (Invite $invite, Request $request) {
@@ -241,7 +240,7 @@ Route::post('extras-used', function (Request $request) {
                 'name'       => $normalizedExtras[$key]['name'],
                 'quantity'   => $qty,
                 'used'       => $normalizedExtras[$key]['used'],
-                'amount'      => $normalizedExtras[$key]['amount'] ?? 0,
+                'amount'     => $normalizedExtras[$key]['amount'] ?? 0,
             ]);
         }
     }
@@ -301,7 +300,7 @@ Route::put('app/pos/{order}/{token}/sms', [PosDashboardReport::class, 'sms'])->n
 Route::get('/my-wallet/{uniqid}', function (Request $request, $uniqid) {
 
     $user = User::where('uniqid', $uniqid)->first();
-    if (!$user) {
+    if (! $user) {
         return "User not found";
     }
     // Fetch the events where the wallet is 1, ordered by latest
@@ -312,7 +311,7 @@ Route::get('/my-wallet/{uniqid}', function (Request $request, $uniqid) {
 
     // Determine the current event based on the request or default to the first event
     $event = $request->filled('event_id')
-    ? Event::find($request->event_id)
+     ?Event::find($request->event_id)
     : $events->first() ?? new Event();
 
     // Fetch the user's orders excluding those with 'invite' as the payment method

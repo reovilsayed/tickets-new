@@ -18,16 +18,16 @@
                         class="nav-link dropdown-toggle {{ Route::is('homepage') ? 'active' : '' }}"
                         href="{{ route('homepage') }}">{{ __('words.home') }}</a>
                 </li>
-                @auth
-                    @if (auth()->user()->role_id == 1)
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle {{ Route::is('homepage') ? 'active' : '' }}"
-                                href="{{ route('magazines.index') }}">
-                                {{ __('words.magazine') }}
-                            </a>
-                        </li>
-                    @endif
-                @endauth
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {{ Route::is('homepage') ? 'active' : '' }}"
+                        href="{{ route('magazines.index') }}">
+                        {{ __('words.magazine') }}
+                    </a>
+                </li>
+
+
                 {{-- <li class="nav-item dropdown"> <a
                         class="nav-link dropdown-toggle {{ Route::is('shops') ? 'active' : '' }}"
                         href="{{ route('shops') }}">{{ __('Events') }} </a>
