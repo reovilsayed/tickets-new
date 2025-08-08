@@ -100,7 +100,7 @@
                                                 value="{{ auth()->user()->name }}">
                                         </div>
                                         <div>
-                                            <label for="l_name" class="form-label">{{ __('words.name') }}</label>
+                                            <label for="l_name" class="form-label">{{ __('words.last_name') }}</label>
                                             <input type="text" name="l_name" class="form-control" id="l_name"
                                                 placeholder="{{ __('words.enter_name') }}"
                                                 value="{{ auth()->user()->l_name }}">
