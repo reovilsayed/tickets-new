@@ -194,7 +194,7 @@
                         <div class="tab-content" id="pills-tabContent">
                             {{-- One-time --}}
                             @if ($archives->count() > 0)
-                                <div class="tab-pane fade {{ $firstActive === 'onetime' ? 'show active' : '' }}"
+                                <div class="tab-pane fade show active {{ $firstActive === 'onetime' ? 'show active' : '' }}"
                                     id="pills-onetime-purchase" role="tabpanel">
                                     @foreach ($archives as $archive)
                                         <div class="card card-ticket active">
