@@ -233,7 +233,7 @@
                                     accept=".pdf" required>
                                 <label class="custom-file-label" for="pdf_file">Choose PDF file...</label>
                             </div>
-                            <small class="form-text text-muted">Max file size: 2MB</small>
+                            <small class="form-text text-muted">Max file size: 200MB</small>
                         </div>
                     </div>
                     <div class="modal-footer">
