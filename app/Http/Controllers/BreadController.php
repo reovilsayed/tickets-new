@@ -19,7 +19,7 @@ class BreadController extends Controller
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'description' => 'required|string|max:1000',
-            'pdf_file' => 'required|file|mimes:pdf|max:2048',
+            'pdf_file' => 'required|file|mimes:pdf|max:204800',
         ]);
 
         $pdfPath = $request->file('pdf_file')->store('archives', 'public');
@@ -51,7 +51,7 @@ class BreadController extends Controller
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0',
             'shipping_cost' => 'required|numeric|min:0',
-            'pdf_file' => 'nullable|file|mimes:pdf|max:2048',
+            'pdf_file' => 'nullable|file|mimes:pdf|max:204800',
         ]);
 
         if ($request->hasFile('pdf_file')) {
