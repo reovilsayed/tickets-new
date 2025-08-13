@@ -15,6 +15,7 @@ class MagazineOffer extends Model
     {
         return $this->belongsTo(SubscriptionMagazineDetail::class, 'subscription_magazine_details_id');
     }
+    
 
     public function user(){
         return $this->belongsTo(User::class);

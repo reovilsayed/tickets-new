@@ -56,7 +56,6 @@
         .form-section {
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
         }
 
         .form-section-title {
@@ -164,11 +163,13 @@
                                 </div>
                             </div>
 
-                            <div class="form-section">
-                                <h3 class="form-section-title">Subscription Options</h3>
-                                <div id="subscriptionList">
-                                    <div class="no-subscriptions">
-                                        Please select a magazine first to view available subscriptions
+                            <div class="row">
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Subscription Options</h3>
+                                    <div id="subscriptionList">
+                                        <div class="no-subscriptions">
+                                            Please select a magazine first to view available subscriptions
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -250,44 +251,50 @@
 
                             if (data.length > 0) {
                                 $.each(data, function(key, subscription) {
-                                    // Format text to capitalize first letter
+                                    // Simplified formatting - just capitalize first letter
                                     const formatText = (text) => {
                                         if (!text) return '';
                                         return text.charAt(0).toUpperCase() + text
-                                            .slice(1).toLowerCase();
+                                            .slice(1);
                                     };
 
-                                    const subscriptionType = formatText(subscription
-                                        .subscription_type);
+                                    // Clear display text for subscription types
+                                    const subscriptionType = subscription
+                                        .subscription_type === 'digital' ? 'Digital' :
+                                        subscription.subscription_type === 'physical' ?
+                                        'Physical' :
+                                        formatText(subscription.subscription_type);
+
                                     const recurringPeriod = formatText(subscription
                                         .recurring_period);
                                     const description = subscription.description ?
                                         formatText(subscription.description) : '';
 
                                     subscriptionList.append(`
-                            <div class="mb-3">
-                                <input type="radio" 
-                                       class="subscription-radio" 
-                                       name="subscription_magazine_details_id" 
-                                       value="${subscription.id}" 
-                                       id="subscription_${subscription.id}"
-                                       ${'{{ old('subscription_magazine_details_id', $dataTypeContent->subscription_magazine_details_id ?? '') }}' == subscription.id ? 'checked' : ''}>
-                                <label class="subscription-label" for="subscription_${subscription.id}">
-                                    <div class="subscription-card">
-                                        <div class="d-flex align-items-center">
-                                            <div class="mr-3">
-                                                <i class="voyager-check-circle" style="font-size: 24px; color: #3490dc;"></i>
-                                            </div>
-                                            <div class="subscription-details">
-                                                <h5 class="mb-1">${subscriptionType}</h5>
-                                                <p class="mb-1 text-muted">Duration: ${recurringPeriod}</p>
-                                                ${description ? `<p class="mb-0">${description}</p>` : ''}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </label>
+                <div class="col-md-6 mb-3">
+                    <input type="radio" 
+                           class="subscription-radio" 
+                           name="subscription_magazine_details_id" 
+                           value="${subscription.id}" 
+                           id="subscription_${subscription.id}"
+                           ${'{{ old('subscription_magazine_details_id', $dataTypeContent->subscription_magazine_details_id ?? '') }}' == subscription.id ? 'checked' : ''}>
+                    <label class="subscription-label" for="subscription_${subscription.id}">
+                        <div class="subscription-card">
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="voyager-check-circle" style="font-size: 24px; color: #3490dc;"></i>
+                                </div>
+                                <div class="subscription-details">
+                                    <h5 class="mb-1">${subscriptionType} Subscription</h5>
+                                    <p class="mb-1 text-muted">Duration: ${recurringPeriod}</p>
+                                    <p class="mb-1 text-muted">Price: $${subscription.price}</p>
+                                    ${description ? `<p class="mb-0">${description}</p>` : ''}
+                                </div>
                             </div>
-                        `);
+                        </div>
+                    </label>
+                </div>
+            `);
                                 });
                             } else {
                                 subscriptionList.html(

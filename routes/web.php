@@ -445,7 +445,7 @@ Route::get('/populate-shipping', function () {
 });
 
 Route::get('get/magazine-subscriptions', function (Request $request) {
-    $subscriptions = Magazine::find($request->id)->subscriptions()->where('subscription_type', 'digital')->get();
+    $subscriptions = Magazine::find($request->id)->subscriptions()->whereIn('subscription_type', ['digital', 'physical'])->get();
     return response()->json($subscriptions);
 })->name('get.magazine.subscriptions');
 
