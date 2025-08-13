@@ -48,7 +48,7 @@
             <div class="col-md-3">
                 <form method="get" id="offerFilterForm" action="{{ route('voyager.' . $dataType->slug . '.index') }}">
                     <select name="filter" id="offerFilter" class="form-control" onchange="this.form.submit()">
-                        <option value="">-- All --</option>
+                        <option value="">-- All Filter--</option>
                         <option value="0" {{ request('filter') == '0' ? 'selected' : '' }}>Paid</option>
                         <option value="1" {{ request('filter') == '1' ? 'selected' : '' }}>Offer</option>
                     </select>
