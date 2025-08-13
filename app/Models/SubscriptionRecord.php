@@ -12,6 +12,7 @@ class SubscriptionRecord extends Model
     protected $casts   = [
         'start_date' => 'datetime',
         'end_date'   => 'datetime',
+        'is_offer'   => 'boolean',
     ];
     // const STATUS_ACTIVE = 'active';
     // const STATUS_EXPIRED = 'expired';
@@ -44,4 +45,17 @@ class SubscriptionRecord extends Model
 
         return json_decode($value, true);
     }
+    public function scopeOffer($query)
+    {
+        return $query->where('is_offer', 1);
+    }
+
+    /**
+     * Scope for paid records (is_offer = 0)
+     */
+    public function scopePaid($query)
+    {
+        return $query->where('is_offer', 0);
+    }
+
 }

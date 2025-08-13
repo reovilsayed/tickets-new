@@ -234,7 +234,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
         return Excel::download(new CouponExport($coupons), 'coupons_' . now()->format('dmyhi') . '.xlsx');
     })->name('voyager.coupons.export');
 
-    Route::get('admin/subscription-records/export', [ExportController::class, 'export'])->name('subscription-records.export');
+    Route::get('admin/subscription-records/export', [ExportController::class, 'export'])
+        ->name('subscription-records.export');
 
     Route::patch('/orders/{order}/unmark', [OrderController::class, 'unmark'])->name('order.unmark');
 

@@ -484,4 +484,5 @@ Route::middleware(['auth'])->group(function () {
 
         return redirect('/')->with('status', 'Your account has been deleted.');
     })->name('account.delete');
+    
 });

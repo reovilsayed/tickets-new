@@ -8,9 +8,22 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class SubscriptionRecordsExport implements FromCollection, WithHeadings, WithMapping
 {
+    protected $filter;
+
+    public function __construct($filter = null)
+    {
+        $this->filter = $filter;
+    }
+
     public function collection()
     {
-        return SubscriptionRecord::with(['user', 'magazine'])->get();
+        $query = SubscriptionRecord::with(['user', 'magazine']);
+
+        if ($this->filter !== null) {
+            $query->where('is_offer', $this->filter);
+        }
+
+        return $query->get();
     }
 
     public function map($record): array
@@ -22,6 +35,7 @@ class SubscriptionRecordsExport implements FromCollection, WithHeadings, WithMap
             $record->subscription?->id,
             $record->subscription_type,
             $record->recurring_period,
+            $record->is_offer ? 'Offer' : 'Paid', // Add this line to show Paid/Offer
             $record->start_date,
             $record->end_date,
             $record->status,
@@ -40,6 +54,7 @@ class SubscriptionRecordsExport implements FromCollection, WithHeadings, WithMap
             'Subscription ID',
             'Subscription Type',
             'Recurring Period',
+            'Payment Type', // Added heading for Paid/Offer
             'Start Date',
             'End Date',
             'Status',

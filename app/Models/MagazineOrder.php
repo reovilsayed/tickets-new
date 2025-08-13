@@ -12,7 +12,7 @@ class MagazineOrder extends Model
     protected $guarded = [];
     protected $casts   = [
         'date_paid' => 'datetime',
-     
+
     ];
     public function user()
     {
@@ -54,6 +54,7 @@ class MagazineOrder extends Model
                 'start_date'             => now(),
                 'end_date'               => now()->addMonths((int) ($details['recurring_period'] ?? 0)),
                 'details'                => json_encode($details),
+                'is_offer'               => $details['is_offer'] ?? false,
             ]);
         }
 
@@ -92,4 +93,5 @@ class MagazineOrder extends Model
                 return 'secondary';
         }
     }
+   
 }

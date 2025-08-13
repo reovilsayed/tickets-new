@@ -14,9 +14,9 @@
         @endcan
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
-            <a href="{{ route('subscription-records.export', ['filter' => request('filter')]) }}" class="btn btn-success">
+            {{-- <a href="{{ route('subscription-records.export', ['filter' => request('filter')]) }}" class="btn btn-success">
                 <i class="voyager-download"></i> Export
-            </a>
+            </a> --}}
         @endcan
         @can('edit', app($dataType->model_name))
             @if (!empty($dataType->order_column) && !empty($dataType->order_display_column))
@@ -43,13 +43,12 @@
 
 @section('content')
     <div class="page-content browse container-fluid">
-        <div class="row" style="margin-bottom: 20px;">
-          
+        {{-- <div class="row" style="margin-bottom: 20px;">
             <div class="col-md-3">
                 <form method="get" id="offerFilterForm" action="{{ route('voyager.' . $dataType->slug . '.index') }}">
                     <select name="filter" id="offerFilter" class="form-control" onchange="this.form.submit()">
                         <option value="">-- All --</option>
-                        <option value="0" {{ request('filter') == '0' ? 'selected' : '' }}>Paid</option>
+                        <option value="1" {{ request('filter') == '1' ? 'selected' : '' }}>Paid</option>
                         <option value="1" {{ request('filter') == '1' ? 'selected' : '' }}>Offer</option>
                     </select>
 
@@ -59,7 +58,7 @@
                     @endforeach
                 </form>
             </div>
-        </div>
+        </div> --}}
         @include('voyager::alerts')
         <div class="row">
             <div class="col-md-12">
