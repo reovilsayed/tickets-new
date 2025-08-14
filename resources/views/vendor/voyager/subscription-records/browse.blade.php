@@ -14,7 +14,12 @@
         @endcan
         @can('delete', app($dataType->model_name))
             @include('voyager::partials.bulk-delete')
-            <a href="{{ route('subscription-records.export', ['filter' => request('filter')]) }}" class="btn btn-success">
+            <a href="{{ route('subscription-records.export', [
+                'filter' => request('filter'),
+                'magazine_filter' => request('magazine_filter'),
+                'subscription_type_filter' => request('subscription_type_filter'),
+            ]) }}"
+                class="btn btn-success">
                 <i class="voyager-download"></i> Export
             </a>
         @endcan
@@ -44,21 +49,48 @@
 @section('content')
     <div class="page-content browse container-fluid">
         <div class="row" style="margin-bottom: 20px;">
-          
-            <div class="col-md-3">
-                <form method="get" id="offerFilterForm" action="{{ route('voyager.' . $dataType->slug . '.index') }}">
+
+            <form method="get" id="offerFilterForm" action="{{ route('voyager.' . $dataType->slug . '.index') }}">
+                <div class="col-md-3">
                     <select name="filter" id="offerFilter" class="form-control" onchange="this.form.submit()">
-                        <option value="">-- All Filter--</option>
+                        <option value="">-- All Filter Paid / Offer--</option>
                         <option value="0" {{ request('filter') == '0' ? 'selected' : '' }}>Paid</option>
                         <option value="1" {{ request('filter') == '1' ? 'selected' : '' }}>Offer</option>
                     </select>
 
 
-                    @foreach (request()->except('filter', 'page') as $key => $value)
+                    {{-- @foreach (request()->except('filter', 'page') as $key => $value)
                         <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                    @endforeach
-                </form>
-            </div>
+                    @endforeach --}}
+                </div>
+                <div class="col-md-3">
+
+                    <select name="magazine_filter" id="" class="form-control" onchange="this.form.submit()">
+                        <option value="">-- All Filter Magazine--</option>
+                        @foreach ($magazines as $magazine)
+                            <option value="{{ $magazine->id }}"
+                                {{ request('magazine_filter') == $magazine->id ? 'selected' : '' }}>{{ $magazine->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                </div>
+                <div class="col-md-3">
+
+                    <select name="subscription_type_filter" id="" class="form-control"
+                        onchange="this.form.submit()">
+                        <option value="">-- All Filter Subscription Type--</option>
+
+                        <option value="digital" {{ request('subscription_type_filter') == 'digital' ? 'selected' : '' }}>
+                            Digital</option>
+                        <option value="physical" {{ request('subscription_type_filter') == 'physical' ? 'selected' : '' }}>
+                            Physical</option>
+
+                    </select>
+
+                </div>
+            </form>
+
         </div>
         @include('voyager::alerts')
         <div class="row">

@@ -35,8 +35,11 @@ class ExportController extends Controller
     public function export(Request $request)
     {
         $filter = $request->query('filter');
+        $magazineFilter = $request->query('magazine_filter');
+        $subscriptionTypeFilter = $request->query('subscription_type_filter');
+
         return Excel::download(
-            new SubscriptionRecordsExport($filter),
+            new SubscriptionRecordsExport($filter, $magazineFilter, $subscriptionTypeFilter),
             'subscription_records.xlsx'
         );
     }

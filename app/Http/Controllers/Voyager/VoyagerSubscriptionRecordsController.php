@@ -79,9 +79,16 @@ class VoyagerSubscriptionRecordsController extends VoyagerBaseController
 
             $row             = $dataType->rows->where('field', $orderBy)->firstWhere('type', 'relationship');
             $dataTypeContent = call_user_func([
-                $query->when(request()->filled('filter'), function ($q) {
-                    return $q->where('is_offer', request('filter'));
-                }),
+                $query
+                    ->when(request()->filled('filter'), function ($q) {
+                        return $q->where('is_offer', request('filter'));
+                    })
+                    ->when(request()->filled('magazine_filter'), function ($q) {
+                        return $q->where('magazine_id', request('magazine_filter'));
+                    })
+                    ->when(request()->filled('subscription_type_filter'), function ($q) {
+                        return $q->where('subscription_type', request('subscription_type_filter'));
+                    }),
                 $getter,
             ]);
             if ($orderBy && (in_array($orderBy, $dataType->fields()) || ! empty($row))) {
@@ -168,6 +175,9 @@ class VoyagerSubscriptionRecordsController extends VoyagerBaseController
             $view = "voyager::$slug.browse";
         }
 
+        $magazines           = \App\Models\Magazine::all();
+        $subscriptionRecords = \App\Models\SubscriptionRecord::all();
+        
         return Voyager::view($view, compact(
             'actions',
             'dataType',
@@ -183,7 +193,9 @@ class VoyagerSubscriptionRecordsController extends VoyagerBaseController
             'defaultSearchKey',
             'usesSoftDeletes',
             'showSoftDeleted',
-            'showCheckboxColumn'
+            'showCheckboxColumn',
+            'magazines',
+            'subscriptionRecords'
         ));
     }
 }

@@ -9,18 +9,28 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class SubscriptionRecordsExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $filter;
+    protected $magazineFilter;
+    protected $subscriptionTypeFilter;
 
-    public function __construct($filter = null)
+    public function __construct($filter = null, $magazineFilter = null, $subscriptionTypeFilter = null)
     {
         $this->filter = $filter;
+        $this->magazineFilter = $magazineFilter;
+        $this->subscriptionTypeFilter = $subscriptionTypeFilter;
     }
 
     public function collection()
     {
         $query = SubscriptionRecord::with(['user', 'magazine']);
 
-        if ($this->filter !== null) {
+        if ($this->filter !== null && $this->filter !== '') {
             $query->where('is_offer', $this->filter);
+        }
+        if ($this->magazineFilter !== null && $this->magazineFilter !== '') {
+            $query->where('magazine_id', $this->magazineFilter);
+        }
+        if ($this->subscriptionTypeFilter !== null && $this->subscriptionTypeFilter !== '') {
+            $query->where('subscription_type', $this->subscriptionTypeFilter);
         }
 
         return $query->get();
