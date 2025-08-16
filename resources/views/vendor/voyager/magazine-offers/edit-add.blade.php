@@ -148,13 +148,12 @@
                             <div class="form-section">
                                 <h3 class="form-section-title">Magazine Selection</h3>
                                 <div class="form-group">
-                                    <label for="magazine_id">Select Magazine</label>    
-                                    <select class="form-control " name="subscription_magazine_details_id" id="magazine_id"
-                                        required>
+                                    <label for="magazine_id">Select Magazine</label>
+                                    <select class="form-control select2" name="magazine_id" id="magazine_id" required>
                                         <option value="">-- Select a Magazine --</option>
                                         @foreach (\App\Models\Magazine::all() as $magazine)
                                             <option value="{{ $magazine->id }}"
-                                                {{ old('subscription_magazine_details_id', $dataTypeContent->subscription_magazine_details_id ?? '') == $magazine->id ? 'selected' : '' }}>
+                                                {{ old('magazine_id', $dataTypeContent->magazine_id ?? '') == $magazine->id ? 'selected' : '' }}>
                                                 {{ $magazine->name }}
                                             </option>
                                         @endforeach
