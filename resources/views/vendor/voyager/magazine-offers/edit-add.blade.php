@@ -63,6 +63,28 @@
             color: #3490dc;
             margin-bottom: 15px;
         }
+
+        .subscription-title {
+            font-size: 1.1rem;
+            color: #3490dc;
+            margin-bottom: 15px;
+            padding: 15px;
+        }
+
+        .subscription-card h5 {
+            padding: 10px 0;
+            /* Add padding above and below the title */
+            margin-bottom: 5px;
+        }
+
+        #shipping-info {
+            padding: 15px;
+            /* Add padding around the shipping info section */
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #f8fafc;
+            margin-bottom: 15px;
+        }
     </style>
 @stop
 
@@ -165,7 +187,7 @@
 
                             <div class="row">
                                 <div class="form-section">
-                                    <h3 class="form-section-title">Subscription Options</h3>
+                                    <h3 class="subscription-title">Subscription Options</h3>
                                     <div id="subscriptionList">
                                         <div class="no-subscriptions">
                                             Please select a magazine first to view available subscriptions
@@ -380,21 +402,22 @@
         });
     </script>
     <script>
-        $(document).on('change', '.subscription-radio', function() {
-            let type = $(this).data('type');
-            if (type === 'physical') {
-                $('#shipping-info').slideDown();
-            } else {
-                $('#shipping-info').slideUp();
-            }
-        });
-
-        // On page load (edit mode), check selected subscription
         $(document).ready(function() {
-            let selected = $('.subscription-radio:checked').data('type');
-            if (selected === 'physical') {
+            // Show shipping info if a physical subscription is selected on page load
+            let selectedType = $('.subscription-radio:checked').data('type');
+            if (selectedType === 'physical') {
                 $('#shipping-info').show();
             }
+
+            // Handle selection changes
+            $(document).on('change', '.subscription-radio', function() {
+                let type = $(this).data('type');
+                if (type === 'physical') {
+                    $('#shipping-info').slideDown();
+                } else {
+                    $('#shipping-info').slideUp();
+                }
+            });
         });
     </script>
 
