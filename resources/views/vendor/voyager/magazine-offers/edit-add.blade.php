@@ -148,12 +148,13 @@
                             <div class="form-section">
                                 <h3 class="form-section-title">Magazine Selection</h3>
                                 <div class="form-group">
-                                    <label for="magazine_id">Select Magazine</label>
-                                    <select class="form-control select2" name="magazine_id" id="magazine_id" required>
+                                    <label for="magazine_id">Select Magazine</label>    
+                                    <select class="form-control " name="subscription_magazine_details_id" id="magazine_id"
+                                        required>
                                         <option value="">-- Select a Magazine --</option>
                                         @foreach (\App\Models\Magazine::all() as $magazine)
                                             <option value="{{ $magazine->id }}"
-                                                {{ old('magazine_id', $dataTypeContent->magazine_id ?? '') == $magazine->id ? 'selected' : '' }}>
+                                                {{ old('subscription_magazine_details_id', $dataTypeContent->subscription_magazine_details_id ?? '') == $magazine->id ? 'selected' : '' }}>
                                                 {{ $magazine->name }}
                                             </option>
                                         @endforeach
@@ -174,6 +175,65 @@
                                 </div>
                             </div>
                         </div>
+                        @php
+                            $shippingInfo = $dataTypeContent->shipping_info;
+                        @endphp
+                        <div class="form-section" id="shipping-info" style="display:none;">
+                            <h3 class="form-section-title">Shipping Information</h3>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="street_address" class="form-label">{{ __('words.street_address') }}</label>
+                                    <input type="text" name="shipping_info[street_address]" class="form-control"
+                                        placeholder="{{ __('words.street_address') }}"
+                                        value="{{ old('shipping_info.street_address', $shippingInfo['street_address'] ?? '') }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="apartment" class="form-label">{{ __('words.apartment_suite') }}
+                                        ({{ __('words.optional') }})</label>
+                                    <input type="text" name="shipping_info[apartment]" class="form-control"
+                                        placeholder="{{ __('words.apartment_suite') }}"
+                                        value="{{ old('shipping_info.apartment', $shippingInfo['apartment'] ?? '') }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="city" class="form-label">{{ __('words.city') }}</label>
+                                    <input type="text" name="shipping_info[city]" class="form-control"
+                                        placeholder="{{ __('words.city') }}"
+                                        value="{{ old('shipping_info.city', $shippingInfo['city'] ?? '') }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="state_province"
+                                        class="form-label">{{ __('words.state_province') }}</label>
+                                    <input type="text" name="shipping_info[state_province]" class="form-control"
+                                        placeholder="{{ __('words.state_province') }}"
+                                        value="{{ old('shipping_info.state_province', $shippingInfo['state_province'] ?? '') }}">
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="postal_code" class="form-label">{{ __('words.postal_code') }}</label>
+                                    <input type="text" name="shipping_info[postal_code]" class="form-control"
+                                        placeholder="{{ __('words.postal_code') }}"
+                                        value="{{ old('shipping_info.postal_code', $shippingInfo['postal_code'] ?? '') }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="shipping_country" class="form-label">{{ __('words.country') }}</label>
+                                    <select class="form-control" name="shipping_info[country]">
+                                        <option value="">-- Select Country --</option>
+                                        @foreach (Sohoj::getCountries() as $code => $name)
+                                            <option value="{{ $code }}"
+                                                {{ old('shipping_info.country', $shippingInfo['country'] ?? '') == $code ? 'selected' : '' }}>
+                                                {{ $name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="panel-footer">
                             <button type="submit" class="btn btn-primary save">
@@ -184,6 +244,8 @@
                             </a>
                         </div>
                     </form>
+
+
                 </div>
             </div>
         </div>
@@ -200,7 +262,6 @@
                 const selectedOption = this.options[this.selectedIndex];
 
                 if (selectedOption.value) {
-                    // User selected -> Fill values
                     const name = selectedOption.getAttribute('data-name') || '';
                     const email = selectedOption.getAttribute('data-email') || '';
                     const phone = selectedOption.getAttribute('data-phone') || '';
@@ -209,7 +270,6 @@
                     document.getElementById('receiver_email').value = email;
                     document.getElementById('receiver_phone').value = phone;
                 } else {
-                    // No user selected -> Clear fields
                     clearFields();
                 }
             });
@@ -251,14 +311,12 @@
 
                             if (data.length > 0) {
                                 $.each(data, function(key, subscription) {
-                                    // Simplified formatting - just capitalize first letter
                                     const formatText = (text) => {
                                         if (!text) return '';
                                         return text.charAt(0).toUpperCase() + text
                                             .slice(1);
                                     };
 
-                                    // Clear display text for subscription types
                                     const subscriptionType = subscription
                                         .subscription_type === 'digital' ? 'Digital' :
                                         subscription.subscription_type === 'physical' ?
@@ -271,30 +329,32 @@
                                         formatText(subscription.description) : '';
 
                                     subscriptionList.append(`
-                <div class="col-md-6 mb-3">
-                    <input type="radio" 
-                           class="subscription-radio" 
-                           name="subscription_magazine_details_id" 
-                           value="${subscription.id}" 
-                           id="subscription_${subscription.id}"
-                           ${'{{ old('subscription_magazine_details_id', $dataTypeContent->subscription_magazine_details_id ?? '') }}' == subscription.id ? 'checked' : ''}>
-                    <label class="subscription-label" for="subscription_${subscription.id}">
-                        <div class="subscription-card">
-                            <div class="d-flex align-items-center">
-                                <div class="mr-3">
-                                    <i class="voyager-check-circle" style="font-size: 24px; color: #3490dc;"></i>
-                                </div>
-                                <div class="subscription-details">
-                                    <h5 class="mb-1">${subscriptionType} Subscription</h5>
-                                    <p class="mb-1 text-muted">Duration: ${recurringPeriod}</p>
-                                    <p class="mb-1 text-muted">Price: $${subscription.price}</p>
-                                    ${description ? `<p class="mb-0">${description}</p>` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    </label>
+    <div class="col-md-6 mb-3">
+        <input type="radio" 
+               class="subscription-radio" 
+               name="subscription_magazine_details_id" 
+               value="${subscription.id}" 
+               id="subscription_${subscription.id}"
+               data-type="${subscription.subscription_type}"
+               ${'{{ old('subscription_magazine_details_id', $dataTypeContent->subscription_magazine_details_id ?? '') }}' == subscription.id ? 'checked' : ''}>
+        <label class="subscription-label" for="subscription_${subscription.id}">
+            <div class="subscription-card">
+                <div class="d-flex align-items-center">
+                    <div class="mr-3">
+                        <i class="voyager-check-circle" style="font-size: 24px; color: #3490dc;"></i>
+                    </div>
+                    <div class="subscription-details">
+                        <h5 class="mb-1">${subscriptionType} Subscription</h5>
+                        <p class="mb-1 text-muted">Duration: ${recurringPeriod}</p>
+                        <p class="mb-1 text-muted">Price: $${subscription.price}</p>
+                        ${description ? `<p class="mb-0">${description}</p>` : ''}
+                    </div>
                 </div>
-            `);
+            </div>
+        </label>
+    </div>
+`);
+
                                 });
                             } else {
                                 subscriptionList.html(
@@ -320,4 +380,23 @@
             @endif
         });
     </script>
+    <script>
+        $(document).on('change', '.subscription-radio', function() {
+            let type = $(this).data('type');
+            if (type === 'physical') {
+                $('#shipping-info').slideDown();
+            } else {
+                $('#shipping-info').slideUp();
+            }
+        });
+
+        // On page load (edit mode), check selected subscription
+        $(document).ready(function() {
+            let selected = $('.subscription-radio:checked').data('type');
+            if (selected === 'physical') {
+                $('#shipping-info').show();
+            }
+        });
+    </script>
+
 @stop
