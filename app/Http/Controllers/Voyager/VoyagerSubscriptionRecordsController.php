@@ -89,6 +89,7 @@ class VoyagerSubscriptionRecordsController extends VoyagerBaseController
                     ->when(request()->filled('subscription_type_filter'), function ($q) {
                         return $q->where('subscription_type', request('subscription_type_filter'));
                     }),
+                 
                 $getter,
             ]);
             if ($orderBy && (in_array($orderBy, $dataType->fields()) || ! empty($row))) {

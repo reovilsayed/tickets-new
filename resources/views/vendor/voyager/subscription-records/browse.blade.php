@@ -22,6 +22,12 @@
                 class="btn btn-success">
                 <i class="voyager-download"></i> Export
             </a>
+            <a href="{{ route('subscription-records.export.portugal') }}" class="btn btn-success">
+                <i class="voyager-download"></i> export portugal
+            </a>
+            <a href="{{ route('subscription-records.export.all') }}" class="btn btn-success">
+                <i class="voyager-download"></i> export all country
+            </a>
         @endcan
         @can('edit', app($dataType->model_name))
             @if (!empty($dataType->order_column) && !empty($dataType->order_display_column))
@@ -59,9 +65,6 @@
                     </select>
 
 
-                    {{-- @foreach (request()->except('filter', 'page') as $key => $value)
-                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                    @endforeach --}}
                 </div>
                 <div class="col-md-3">
 
@@ -88,6 +91,11 @@
 
                     </select>
 
+                </div>
+               
+                
+                <div class="col-md-3">
+                    <a href="{{ route('voyager.' . $dataType->slug . '.index') }}" class="btn btn-default">Reset</a>
                 </div>
             </form>
 
@@ -164,7 +172,8 @@
                                             @if ($showCheckboxColumn)
                                                 <td>
                                                     <input type="checkbox" name="row_id"
-                                                        id="checkbox_{{ $data->getKey() }}" value="{{ $data->getKey() }}">
+                                                        id="checkbox_{{ $data->getKey() }}"
+                                                        value="{{ $data->getKey() }}">
                                                 </td>
                                             @endif
                                             @foreach ($dataType->browseRows as $row)

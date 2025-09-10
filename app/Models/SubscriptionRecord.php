@@ -20,7 +20,7 @@ class SubscriptionRecord extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
     public function magazine()
     {
@@ -57,5 +57,6 @@ class SubscriptionRecord extends Model
     {
         return $query->where('is_offer', 0);
     }
+    
 
 }

@@ -84,6 +84,11 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         return $this->hasMany(Massage::class, 'reciver_id');
     }
 
+    public function magazineOrders()
+    {
+        return $this->hasMany(MagazineOrder::class, 'user_id');
+    }
+
     public function followedShops()
     {
         return $this->belongsToMany(Shop::class, 'shop_user', 'user_id', 'shop_id')->withTimestamps();

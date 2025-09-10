@@ -1,8 +1,10 @@
 <?php
 
+use App\Exports\CountryPTExport;
 use App\Exports\CustomerExport;
 use App\Http\Controllers\AdminCustomController;
 use App\Http\Controllers\AdminOrderController;use App\Http\Controllers\Admin\SendOrderSmsController;use App\Http\Controllers\Admin\VerifyUserEmailAddressController;
+use App\Http\Controllers\CountryExportController;
 use App\Http\Controllers\EventAnalyticsController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\MassInviteController;
@@ -238,5 +240,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
         ->name('subscription-records.export');
 
     Route::patch('/orders/{order}/unmark', [OrderController::class, 'unmark'])->name('order.unmark');
-
+    Route::get('admin/subscription-records/export/portugal', [CountryExportController::class, 'exportPortugal'])->name('subscription-records.export.portugal');
+    Route::get('admin/subscription-records/export/all', [CountryExportController::class, 'exportAll'])->name('subscription-records.export.all');
 });
