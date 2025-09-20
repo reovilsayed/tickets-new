@@ -166,7 +166,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        return view('auth.user.pdf_view', compact('archive'));
+        return view('auth.user.pdf-viewer', compact('archive'));
     }
     public function updateUniqid(Request $request)
     {
