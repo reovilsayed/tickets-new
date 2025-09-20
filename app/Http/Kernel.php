@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\AgeVerification;
 use App\Http\Middleware\EmailVerified;
+use App\Http\Middleware\HandlePdfRequests;
 use App\Http\Middleware\Localization;
 use App\Http\Middleware\NeedPaymentMethod;
 use App\Http\Middleware\SecondStepVerifications;
@@ -24,6 +25,7 @@ class Kernel extends HttpKernel
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
+        \App\Http\Middleware\HandlePdfRequests::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
