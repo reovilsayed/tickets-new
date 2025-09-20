@@ -1,27 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <link rel="stylesheet" href="{{asset('src/css/flipbook.min.css')}}">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <script
-            src="https://code.jquery.com/jquery-3.6.3.js"
-            integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
-            crossorigin="anonymous"
-        ></script>
+    <link rel="stylesheet" href="{{ asset('src/css/flipbook.min.css') }}">
 
-        <script src="{{asset('src/js/flipbook.min.js')}}"></script>
-        <script type="text/javascript">
-            jQuery(document).ready(function () {
-                jQuery('#container').flipBook({
-                    pdfUrl: "{{ Storage::url($archive->pdf_file) }}",
-                });
+    <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+        crossorigin="anonymous"></script>
+
+    <script src="{{ asset('src/js/flipbook.min.js') }}"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('#container').flipBook({
+                pdfUrl: '{{ asset('storage/' . $archive->pdf_file) }}',
             });
-        </script>
-    </head>
+        });
+    </script>
+</head>
 
-    <body>
-        <div id="container"></div>
-    </body>
+<body>
+    <div id="container"></div>
+</body>
+
 </html>
