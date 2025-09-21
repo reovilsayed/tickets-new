@@ -12,6 +12,7 @@ use App\Http\Controllers\MagazineController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentCallbackController;
 use App\Http\Controllers\PdfDownloadController;
+use App\Http\Controllers\PdfServeController;
 use App\Http\Controllers\PosDashboardReport;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\WalletController;
@@ -36,6 +37,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
+
+// PDF serving route with proper headers for flipbook
+Route::get('/pdf/{path}', [PdfServeController::class, 'serve'])->where('path', '.*');
 
 Route::get('magazines', [MagazineController::class, 'index'])->name('magazines.index');
 Route::get('magazines/{magazine:slug}', [MagazineController::class, 'show'])->name('magazines.show');
