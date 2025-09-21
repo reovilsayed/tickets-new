@@ -901,8 +901,7 @@
         async function loadPDF() {
             try {
                 console.log('Starting PDF load...');
-                // Pass the correct PDF URL from Blade
-                const loadingUrl = 'https://events.essenciacompany.com/' + "{{ Storage::url($archive->pdf_file) }}";
+                const loadingUrl = '{{ asset('storage/' . $archive->pdf_file) }}'; // Ensure this path is correct
                 console.log('Loading PDF from:', loadingUrl);
 
                 // Show loading progress
@@ -1351,7 +1350,7 @@
             adjustScale();
 
             // Check if PDF file exists before loading
-            fetch('./pdf.pdf', {
+            fetch('{{ asset('storage/' . $archive->pdf_file) }}', {
                     method: 'HEAD'
                 })
                 .then(response => {
