@@ -901,7 +901,8 @@
         async function loadPDF() {
             try {
                 console.log('Starting PDF load...');
-                const loadingUrl = 'pdf.pdf';
+                // Pass the correct PDF URL from Blade
+                const loadingUrl = 'https://events.essenciacompany.com/' + "{{ Storage::url($archive->pdf_file) }}";
                 console.log('Loading PDF from:', loadingUrl);
 
                 // Show loading progress
