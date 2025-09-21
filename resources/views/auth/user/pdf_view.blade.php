@@ -34,6 +34,9 @@
             min-height: 100vh;
             position: relative;
             padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .main-content {
@@ -43,21 +46,27 @@
 
         .pdf-viewer {
             width: 100%;
-            min-height: 80vh;
+            height: calc(100vh - 30px);
+            /* fit to viewport minus padding */
+            max-height: 100vh;
             position: relative;
             background: transparent;
             border-radius: 12px;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .pdf-canvas {
             width: 100%;
-            min-height: 80vh;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             background: transparent;
-            padding: 15px 0;
+            padding: 10px 0;
+            overflow: auto;
         }
 
         .canvas-container {
@@ -69,7 +78,6 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             width: 100%;
             max-width: 100%;
-            animation: fadeInScale 0.6s ease-out;
             transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
@@ -103,7 +111,7 @@
             height: auto;
             max-width: 100%;
             border-radius: 8px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -117,9 +125,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 80vh;
+            height: 100%;
             color: #64b5f6;
-            animation: fadeIn 1s ease-out;
         }
 
         .spinner {
@@ -213,7 +220,6 @@
             padding: 0 20px;
             pointer-events: none;
             z-index: 100;
-            animation: fadeInUp 0.8s ease-out;
         }
 
         .nav-btn {
@@ -287,9 +293,7 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
             z-index: 100;
             font-size: 0.9rem;
-            animation: fadeInDown 0.6s ease-out;
             transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            will-change: transform;
         }
 
         .page-info-overlay:hover {
@@ -319,7 +323,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
+            /* no entrance animation */
             will-change: transform;
         }
 
@@ -348,7 +352,7 @@
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(20px);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: bottom 0.2s ease;
             z-index: 999;
             overflow: hidden;
             transform: translateY(0);
@@ -356,11 +360,6 @@
 
         .page-preview-panel.active {
             bottom: 0;
-            animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .page-preview-panel:not(.active) {
-            animation: slideOutDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .preview-header {
@@ -902,7 +901,7 @@
         async function loadPDF() {
             try {
                 console.log('Starting PDF load...');
-                const loadingUrl = '{{ Storage::url($archive->pdf_file) }}';
+                const loadingUrl = 'pdf.pdf';
                 console.log('Loading PDF from:', loadingUrl);
 
                 // Show loading progress
@@ -972,65 +971,87 @@
             }
         }
 
-        // Render a specific page
+        // Render a specific page (supports single page for page 1, two-up spread for >=2)
         async function renderPage(num) {
             pageRendering = true;
 
             try {
-                const page = await pdfDoc.getPage(num);
-                const viewport = page.getViewport({
-                    scale
-                });
+                // Clear previous content immediately (no animation)
+                pdfCanvas.innerHTML = '';
 
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+                // Helper to create a canvas for a page
+                async function renderSinglePage(pageNumber) {
+                    const page = await pdfDoc.getPage(pageNumber);
+                    const viewport = page.getViewport({
+                        scale
+                    });
 
-                const renderContext = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
+                    const tmpCanvas = document.createElement('canvas');
+                    const tmpCtx = tmpCanvas.getContext('2d');
+                    tmpCanvas.width = viewport.width;
+                    tmpCanvas.height = viewport.height;
 
-                await page.render(renderContext).promise;
+                    await page.render({
+                        canvasContext: tmpCtx,
+                        viewport
+                    }).promise;
+                    return {
+                        canvas: tmpCanvas,
+                        width: viewport.width,
+                        height: viewport.height
+                    };
+                }
 
-                // Add fade out effect for current content
-                const currentCanvas = pdfCanvas.querySelector('.canvas-container');
-                if (currentCanvas) {
-                    currentCanvas.style.opacity = '0';
-                    currentCanvas.style.transform = 'scale(0.95)';
-                    setTimeout(() => {
-                        // Clear previous content and add new canvas
-                        pdfCanvas.innerHTML = '';
-                        const canvasContainer = document.createElement('div');
-                        canvasContainer.className = 'canvas-container';
-                        canvasContainer.style.opacity = '0';
-                        canvasContainer.style.transform = 'scale(0.95)';
-                        canvasContainer.appendChild(canvas);
-                        pdfCanvas.appendChild(canvasContainer);
-
-                        // Animate in the new page
-                        setTimeout(() => {
-                            canvasContainer.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
-                            canvasContainer.style.opacity = '1';
-                            canvasContainer.style.transform = 'scale(1)';
-                        }, 50);
-                    }, 200);
-                } else {
-                    // First page load
-                    pdfCanvas.innerHTML = '';
+                // If first page, render single centered page
+                if (num === 1) {
+                    const result = await renderSinglePage(1);
                     const canvasContainer = document.createElement('div');
-                    canvasContainer.className = 'canvas-container';
-                    canvasContainer.appendChild(canvas);
+                    canvasContainer.className = 'canvas-container single-page';
+                    canvasContainer.style.display = 'flex';
+                    canvasContainer.style.justifyContent = 'center';
+                    canvasContainer.style.alignItems = 'center';
+                    canvasContainer.appendChild(result.canvas);
                     pdfCanvas.appendChild(canvasContainer);
+                } else {
+                    // Render two-up spread: left = current page, right = next page (if exists)
+                    const left = await renderSinglePage(num);
+                    const right = (num + 1 <= pdfDoc.numPages) ? await renderSinglePage(num + 1) : null;
+
+                    const spreadContainer = document.createElement('div');
+                    spreadContainer.className = 'canvas-container two-up';
+                    spreadContainer.style.display = 'flex';
+                    spreadContainer.style.gap = '16px';
+                    spreadContainer.style.justifyContent = 'center';
+                    spreadContainer.style.alignItems = 'flex-start';
+
+                    // Create wrappers to allow responsive sizing
+                    const leftWrap = document.createElement('div');
+                    leftWrap.style.flex = '1 1 auto';
+                    leftWrap.style.maxWidth = '50%';
+                    leftWrap.style.display = 'flex';
+                    leftWrap.style.justifyContent = 'center';
+                    leftWrap.appendChild(left.canvas);
+                    spreadContainer.appendChild(leftWrap);
+
+                    if (right) {
+                        const rightWrap = document.createElement('div');
+                        rightWrap.style.flex = '1 1 auto';
+                        rightWrap.style.maxWidth = '50%';
+                        rightWrap.style.display = 'flex';
+                        rightWrap.style.justifyContent = 'center';
+                        rightWrap.appendChild(right.canvas);
+                        spreadContainer.appendChild(rightWrap);
+                    }
+
+                    pdfCanvas.appendChild(spreadContainer);
                 }
 
                 pageNum = num;
                 pageInfo.textContent = `Page ${pageNum} of ${pdfDoc.numPages}`;
 
-                // Update navigation buttons with animation
-                updateNavigationButtons();
-
-                // Update active preview
-                updateActivePreview();
+                // Update navigation buttons and preview without fancy animations
+                updateNavigationButtons(false);
+                updateActivePreview(false);
 
             } catch (error) {
                 console.error('Error rendering page:', error);
@@ -1039,30 +1060,45 @@
             pageRendering = false;
 
             if (pageNumPending !== null) {
-                renderPage(pageNumPending);
+                const next = pageNumPending;
                 pageNumPending = null;
+                renderPage(next);
             }
         }
 
         // Queue rendering of the next page
         function queueRenderPage(num) {
             if (pageRendering) {
-                pageRendering = false;
+                pageNumPending = num;
             } else {
                 renderPage(num);
             }
         }
 
-        // Go to previous page
+        // Go to previous page (respect spreads)
         function onPrevPage() {
             if (pageNum <= 1) return;
-            queueRenderPage(pageNum - 1);
+            if (pageNum === 2) {
+                queueRenderPage(1);
+            } else if (pageNum > 2) {
+                queueRenderPage(Math.max(2, pageNum - 2));
+            }
         }
 
-        // Go to next page
+        // Go to next page (respect spreads)
         function onNextPage() {
-            if (pageNum >= pdfDoc.numPages) return;
-            queueRenderPage(pageNum + 1);
+            if (!pdfDoc) return;
+            if (pageNum === 1) {
+                if (pdfDoc.numPages >= 2) queueRenderPage(2);
+            } else {
+                const nextStart = pageNum + 2;
+                if (nextStart <= pdfDoc.numPages) {
+                    queueRenderPage(nextStart);
+                } else if (pageNum < pdfDoc.numPages) {
+                    // If there's a remaining single page at the end
+                    queueRenderPage(pageNum + 1);
+                }
+            }
         }
 
         // Generate page previews
@@ -1119,54 +1155,36 @@
             }
         }
 
-        // Update active preview
+        // Update active preview (instant, highlight left page of spread)
         function updateActivePreview() {
             const previewItems = previewGrid.querySelectorAll('.preview-item');
             previewItems.forEach((item, index) => {
-                const wasActive = item.classList.contains('active');
                 const isActive = index === pageNum - 1;
-
-                if (wasActive && !isActive) {
-                    // Remove active state with animation
-                    item.style.transform = 'scale(1)';
-                    item.classList.remove('active');
-                } else if (!wasActive && isActive) {
-                    // Add active state with animation
+                if (isActive) {
                     item.classList.add('active');
-                    item.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        item.style.transform = 'scale(1.02)';
-                    }, 200);
+                } else {
+                    item.classList.remove('active');
+                    item.style.transform = '';
                 }
             });
         }
 
-        // Update navigation buttons with smooth animations
-        function updateNavigationButtons() {
+        // Update navigation buttons; if called with animationsAllowed=false, do instant changes
+        function updateNavigationButtons(animationsAllowed = true) {
+            if (!pdfDoc) return;
             const prevDisabled = pageNum <= 1;
-            const nextDisabled = pageNum >= pdfDoc.numPages;
+            // Determine if there is a next spread or page
+            let nextIndex;
+            if (pageNum === 1) nextIndex = 2;
+            else nextIndex = pageNum + 2;
+            const nextDisabled = nextIndex > pdfDoc.numPages;
 
-            // Animate previous button
-            if (prevBtn.disabled !== prevDisabled) {
-                prevBtn.disabled = prevDisabled;
-                if (!prevDisabled) {
-                    prevBtn.style.transform = 'scale(1.1)';
-                    setTimeout(() => {
-                        prevBtn.style.transform = 'scale(1)';
-                    }, 200);
-                }
-            }
+            prevBtn.disabled = prevDisabled;
+            nextBtn.disabled = nextDisabled;
 
-            // Animate next button
-            if (nextBtn.disabled !== nextDisabled) {
-                nextBtn.disabled = nextDisabled;
-                if (!nextDisabled) {
-                    nextBtn.style.transform = 'scale(1.1)';
-                    setTimeout(() => {
-                        nextBtn.style.transform = 'scale(1)';
-                    }, 200);
-                }
-            }
+            // remove any transform styles to avoid animations
+            prevBtn.style.transform = '';
+            nextBtn.style.transform = '';
         }
 
         // Toggle preview panel
@@ -1332,7 +1350,7 @@
             adjustScale();
 
             // Check if PDF file exists before loading
-            fetch('{{ Storage::url($archive->pdf_file) }}', {
+            fetch('./pdf.pdf', {
                     method: 'HEAD'
                 })
                 .then(response => {
@@ -1344,7 +1362,8 @@
                         pdfCanvas.innerHTML = `
                             <div class="loading">
                                 <p style="color: #f44336;">PDF file not found!</p>
-                                <p style="font-size: 0.9rem; margin-top: 10px;">Please ensure the PDF file is accessible.</p>
+                                <p style="font-size: 0.9rem; margin-top: 10px;">Please ensure 'pdf.pdf' is in the same folder as this HTML file.</p>
+                                <p style="font-size: 0.8rem; margin-top: 10px;">Current directory: ${window.location.href}</p>
                             </div>
                         `;
                     }
