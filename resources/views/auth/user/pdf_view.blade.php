@@ -20,18 +20,11 @@
             background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
             color: #ffffff;
-            overflow-x: hidden;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-            -webkit-tap-highlight-color: transparent;
+
         }
 
         .pdf-container {
             width: 100vw;
-            min-height: 100vh;
             position: relative;
             padding: 15px;
             display: flex;
@@ -171,6 +164,10 @@
             bottom: 0;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             animation: shimmer 2s infinite;
+        }
+
+        .canvas-container canvas{
+            height: 85vh;
         }
 
         @keyframes shimmer {
