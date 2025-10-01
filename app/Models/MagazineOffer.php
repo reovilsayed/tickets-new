@@ -19,16 +19,21 @@ class MagazineOffer extends Model
         return $this->belongsTo(SubscriptionMagazineDetail::class, 'subscription_magazine_details_id');
     }
 
+    public function magazine()
+    {
+        return $this->belongsTo(Magazine::class, 'magazine_id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-   
-    public function shippingInfo() : Attribute
+
+    public function shippingInfo(): Attribute
     {
         return Attribute::make(
-            
-            set: fn ($value) => ! empty($value) ? json_encode($value) : null
+
+            set: fn($value) => ! empty($value) ? json_encode($value) : null
         );
     }
 

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +14,11 @@ class SubscriptionMagazineDetail extends Model
     {
         return $this->belongsTo(Magazine::class);
     }
-
+    public function magazineOffer()
+    {
+        return $this->hasOne(MagazineOffer::class, 'magazine_offer_id');
+    }
+    
     public function magazineSubscription()
     {
         return $this->belongsTo(MagazineSubscription::class, 'magazine_subscription_id');
