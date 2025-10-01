@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use App\Models\Traits\HasWallet;
@@ -20,7 +19,6 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
      *
      * @var array<int, string>
      */
-
 
     protected $guarded = [];
     // protected $guarded = [];
@@ -43,7 +41,6 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
 
     public function uniqueIds()
     {
@@ -125,7 +122,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     public function subscriptionStatus()
     {
         $subscription = $this->getSubscription();
-        if (!$subscription || $subscription->stripe_status !== 'active' || $subscription->ends_at !== null) {
+        if (! $subscription || $subscription->stripe_status !== 'active' || $subscription->ends_at !== null) {
             return false;
         }
         return true;
@@ -146,13 +143,10 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
         return $this->subscription('basic')->cancelNow();
     }
 
-
     public function resumeSubscription()
     {
         return $this->subscription('basic')->cancel();
     }
-
-
 
     public function isFollowingShop($shopId)
     {
@@ -167,7 +161,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     public function scopeFilter($query)
     {
         $currentWeekStart = Carbon::now()->startOfWeek();
-        $currentWeekEnd = Carbon::now()->endOfWeek();
+        $currentWeekEnd   = Carbon::now()->endOfWeek();
 
         return $query->whereHas('orders', function ($query) {
             $query->where('shop_id', auth()->user()->shop->id);
@@ -191,8 +185,7 @@ class User extends \TCG\Voyager\Models\User implements MustVerifyEmail
     public function getCountry()
     {
         $country_array = config('countries');
-
-        return $country_array[$this->country];
+        return $country_array[$this->country] ?? 'N/A';
     }
 
     public function events()
