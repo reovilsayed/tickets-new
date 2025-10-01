@@ -102,7 +102,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-bordered">
-                    <form role="form" class="form-edit-add"
+                    <form role="form" class="form-edit-add" id="magazine-offer-form"
                         action="{{ $edit ? route('voyager.magazine-offers.update', $dataTypeContent->getKey()) : route('voyager.magazine-offers.store') }}"
                         method="POST" enctype="multipart/form-data">
                         @if ($edit)
@@ -124,6 +124,12 @@
                             <div class="form-section">
                                 <h3 class="form-section-title">Receiver Information</h3>
                                 <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label for="user_filter">Filter by Name, Email, or Contact Number</label>
+                                        <input type="text" class="form-control" id="user_filter"
+                                            placeholder="Type name, email, or contact number...">
+                                        <div id="suggestions" class="list-group mt-1"></div>
+                                    </div>
                                     <div class="form-group col-md-4">
                                         <label for="user_id">User Name</label>
                                         <div class="input-group">
@@ -275,6 +281,78 @@
 
 @section('javascript')
     <script>
+        $(document).ready(function() {
+            $('#user_filter').on('keyup', function() {
+                let query = $(this).val();
+
+                if (query.length > 1) {
+                    $.ajax({
+                        url: "{{ route('admin.user.search') }}",
+                        type: "GET",
+                        data: {
+                            q: query
+                        },
+                        success: function(data) {
+                            let suggestions = $('#suggestions');
+                            suggestions.empty();
+
+                            if (data.length > 0) {
+                                data.forEach(user => {
+                                    suggestions.append(`
+                                <a href="#" class="list-group-item list-group-item-action suggestion-item"
+                                   data-id="${user.id}"
+                                   data-name="${user.name}"
+                                   data-email="${user.email ?? ''}"
+                                   data-phone="${user.contact_number ?? ''}">
+                                   ${user.name} (${user.email ?? ''}) - ${user.contact_number ?? ''}
+                                </a>
+                            `);
+                                });
+                            } else {
+                                suggestions.append(
+                                    `<div class="list-group-item">No results found</div>`);
+                            }
+                        }
+                    });
+                } else {
+                    $('#suggestions').empty();
+                }
+            });
+
+            // On selecting a suggestion
+            $(document).on('click', '.suggestion-item', function(e) {
+                e.preventDefault();
+
+                let userId = $(this).data('id');
+                let name = $(this).data('name');
+                let email = $(this).data('email');
+                let phone = $(this).data('phone');
+
+                // Fill filter input
+                $('#user_filter').val(name);
+                $('#suggestions').empty();
+
+                // Select user in dropdown
+                $('#user_id').val(userId);
+
+                // Autofill receiver fields
+                $('#receiver_name').val(name);
+                $('#receiver_email').val(email);
+                $('#receiver_phone').val(phone);
+            });
+
+            // Clear user button
+            $('#clear-user-btn').on('click', function() {
+                $('#user_filter').val('');
+                $('#user_id').val('');
+                $('#receiver_name').val('');
+                $('#receiver_email').val('');
+                $('#receiver_phone').val('');
+                $('#suggestions').empty();
+            });
+        });
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const userSelect = document.getElementById('user_id');
             const clearBtn = document.getElementById('clear-user-btn');
@@ -420,5 +498,54 @@
             });
         });
     </script>
+    <script>
+        $('#magazine-offer-form').on('submit', function(e) {
+            e.preventDefault();
+
+            let form = $(this);
+            let formData = new FormData(this);
+            let actionUrl = form.attr('action');
+
+            $.ajax({
+                url: actionUrl,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+
+                  
+                    let userId = form.find('#user_id').val();
+                    let receiverEmail = form.find('#receiver_email').val();
+
+                    if (userId || receiverEmail) {
+                        $.ajax({
+                            url: "{{ route('admin.magazine-offer.send-email') }}",
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                user_id: userId,
+                                email: receiverEmail 
+                            },
+                            success: function(mailResponse) {
+                                console.log('Email sent successfully');
+                            },
+                            error: function(err) {
+                                console.error('Failed to send email', err);
+                            }
+                        });
+                    }
+
+             
+                    window.location.href = "{{ route('voyager.magazine-offers.index') }}";
+                },
+                error: function(err) {
+                    console.error('Failed to save magazine offer', err);
+                    alert('Something went wrong while saving!');
+                }
+            });
+        });
+    </script>
+
 
 @stop

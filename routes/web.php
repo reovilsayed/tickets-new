@@ -18,6 +18,7 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
+use App\Mail\MagazineOrderPlaced;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Magazine;
@@ -34,6 +35,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('homepage');
@@ -315,8 +317,8 @@ Route::get('/my-wallet/{uniqid}', function (Request $request, $uniqid) {
 
     // Determine the current event based on the request or default to the first event
     $event = $request->filled('event_id')
-     ?Event::find($request->event_id)
-    : $events->first() ?? new Event();
+         ?Event::find($request->event_id)
+        : $events->first() ?? new Event();
 
     // Fetch the user's orders excluding those with 'invite' as the payment method
     $orders = Order::where('user_id', $user->id)->where('event_id', $event->id)
@@ -404,7 +406,7 @@ Route::post('/magazine/{magazine:slug}/shipping', function (Magazine $magazine, 
             $shippingCondition = new \Darryldecode\Cart\CartCondition([
                 'name'       => 'Shipping ' . $product->name . ' to ' . $shipping->country_code,
                 'type'       => 'shipping',
-                'target'     => 'subtotal', // this condition will be applied to cart's subtotal when getSubTotal() is called.
+                'target'     => 'subtotal',
                 'value'      => '+' . $shipping->price * $product->model->totalShipment() * $product->quantity,
                 'order'      => $order,
                 'attributes' => [
@@ -448,6 +450,19 @@ Route::get('/populate-shipping', function () {
     return "Successfully populated $count countries!";
 });
 
+Route::get('/admin/user-search', function (Request $request) {
+    $query = $request->get('q', '');
+
+    $users = User::query()
+        ->where('name', 'like', "%{$query}%")
+        ->orWhere('email', 'like', "%{$query}%")
+        ->orWhere('contact_number', 'like', "%{$query}%")
+        ->limit(10)
+        ->get(['id', 'name', 'email', 'contact_number']);
+
+    return response()->json($users);
+})->name('admin.user.search');
+
 Route::get('get/magazine-subscriptions', function (Request $request) {
     $subscriptions = Magazine::find($request->id)->subscriptions()->whereIn('subscription_type', ['digital', 'physical'])->get();
     return response()->json($subscriptions);
@@ -488,5 +503,33 @@ Route::middleware(['auth'])->group(function () {
 
         return redirect('/')->with('status', 'Your account has been deleted.');
     })->name('account.delete');
-    
+
 });
+
+// Route::get('/test-magazine-order-mail/{order}', function ($orderId) {
+
+//     $order = MagazineOrder::with(['user', 'items'])->findOrFail($orderId);
+//     Mail::to(Auth::user()->email)->send(new MagazineOrderPlaced($order));
+
+//     return view('emails.order.magazine-placed', compact('order'));
+// });
+Route::post('/admin/magazine-offer/send-email', function (\Illuminate\Http\Request $request) {
+    $email = null;
+
+    if ($request->user_id) {
+        $user = \App\Models\User::find($request->user_id);
+        if ($user && $user->email) {
+            $email = $user->email;
+        }
+    }
+
+    if ($request->email) {
+        $email = $request->email;
+    }
+
+    if ($email) {
+        Mail::to($email)->send(new \App\Mail\SubscriptionOfferMail($request->all()));
+    }
+
+    return response()->json(['status' => 'success']);
+})->name('admin.magazine-offer.send-email');
