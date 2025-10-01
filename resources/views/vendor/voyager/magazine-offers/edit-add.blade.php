@@ -514,7 +514,6 @@
                 contentType: false,
                 success: function(response) {
 
-                  
                     let userId = form.find('#user_id').val();
                     let receiverEmail = form.find('#receiver_email').val();
 
@@ -525,19 +524,25 @@
                             data: {
                                 _token: '{{ csrf_token() }}',
                                 user_id: userId,
-                                email: receiverEmail 
+                                email: receiverEmail
                             },
                             success: function(mailResponse) {
-                                console.log('Email sent successfully');
+                                alert("✅ Email sent successfully!");
+                                window.location.href =
+                                    "{{ route('voyager.magazine-offers.index') }}";
                             },
                             error: function(err) {
-                                console.error('Failed to send email', err);
+                                if (err.responseJSON && err.responseJSON.message) {
+                                    alert("❌ " + err.responseJSON.message);
+                                    $('#receiver_email').addClass('is-invalid');
+                                } else {
+                                    alert("❌ Failed to send email.");
+                                }
                             }
                         });
+                    } else {
+                        alert("❌ Please select a user or enter an email!");
                     }
-
-             
-                    window.location.href = "{{ route('voyager.magazine-offers.index') }}";
                 },
                 error: function(err) {
                     console.error('Failed to save magazine offer', err);
@@ -546,6 +551,5 @@
             });
         });
     </script>
-
 
 @stop

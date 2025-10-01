@@ -18,10 +18,11 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\ZoneScannerController;
 use App\Http\Middleware\AgeVerification;
-use App\Mail\MagazineOrderPlaced;
+use App\Mail\SubscriptionOfferMail;
 use App\Models\Event;
 use App\Models\Invite;
 use App\Models\Magazine;
+use App\Models\MagazineOffer;
 use App\Models\MagazineOrder;
 use App\Models\Order;
 use App\Models\Shipping;
@@ -513,11 +514,11 @@ Route::middleware(['auth'])->group(function () {
 
 //     return view('emails.order.magazine-placed', compact('order'));
 // });
-Route::post('/admin/magazine-offer/send-email', function (\Illuminate\Http\Request $request) {
+Route::post('/admin/magazine-offer/send-email', function (Request $request) {
     $email = null;
 
     if ($request->user_id) {
-        $user = \App\Models\User::find($request->user_id);
+        $user = User::find($request->user_id);
         if ($user && $user->email) {
             $email = $user->email;
         }
@@ -528,8 +529,25 @@ Route::post('/admin/magazine-offer/send-email', function (\Illuminate\Http\Reque
     }
 
     if ($email) {
-        Mail::to($email)->send(new \App\Mail\SubscriptionOfferMail($request->all()));
+        $alreadyExists = MagazineOffer::where('receiver_email', $email)
+            ->orWhereHas('user', function ($q) use ($request) {
+                if ($request->user_id) {
+                    $q->where('id', $request->user_id);
+                }
+            })
+            ->exists();
+
+        if ($alreadyExists) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Offer already sent to this user/email.',
+            ], 422);
+        }
+
+        Mail::to($email)->send(new SubscriptionOfferMail($request->all()));
+
+        return response()->json(['status' => 'success']);
     }
 
-    return response()->json(['status' => 'success']);
+    return response()->json(['status' => 'error', 'message' => 'No valid email found'], 422);
 })->name('admin.magazine-offer.send-email');
