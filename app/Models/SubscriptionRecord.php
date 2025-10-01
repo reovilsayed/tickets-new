@@ -57,6 +57,21 @@ class SubscriptionRecord extends Model
     {
         return $query->where('is_offer', 0);
     }
-    
+    public function getStatus()
+    {
+
+        switch ($this->status) {
+            case 0:
+                return 'secondary';
+            case 1:
+                return 'success';
+            case 2:
+                return 'danger';
+            case 3:
+                return 'warning';
+            default:
+                return 'secondary';
+        }
+    }
 
 }

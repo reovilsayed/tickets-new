@@ -1,14 +1,15 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Exports\TicketExport;
 use App\Mail\InviteDownload;
+use App\Mail\MagazineOrderMail;
 use App\Mail\TicketDownload;
 use App\Models\Coupon;
 use App\Models\Event;
 use App\Models\Extra;
 use App\Models\Invite;
+use App\Models\MagazineOrder;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
@@ -70,13 +71,13 @@ class AdminCustomController extends Controller
     {
 
         $product = $ticket->product;
-        $extras = Extra::where('event_id', $product->event_id)->get();
+        $extras  = Extra::where('event_id', $product->event_id)->get();
         return view('vendor.voyager.ticket.extras', compact('ticket', 'extras', 'product'));
     }
 
     public function ticketAddExtrasStore(Ticket $ticket, Request $request)
     {
-        $data = [];
+        $data   = [];
         $extras = $ticket->extras;
 
         foreach ($request->extras as $key => $extra) {
@@ -86,8 +87,8 @@ class AdminCustomController extends Controller
                     $extras[$key]['qty'] = $extra['qty'];
                 } else {
                     $extras[$key] = [
-                        "id" => $key,
-                        "qty" => $extra['qty'],
+                        "id"   => $key,
+                        "qty"  => $extra['qty'],
                         "name" => Extra::find($key)->display_name,
                         "used" => 0,
                     ];
@@ -120,17 +121,17 @@ class AdminCustomController extends Controller
     {
         if ($order->status == 1) {
             $order->update([
-                'status' => 3,
+                'status'        => 3,
                 'refund_amount' => $order->total,
             ]);
 
             return back()->with([
-                'message' => "Order amount has been refunded",
+                'message'    => "Order amount has been refunded",
                 'alert-type' => 'success',
             ]);
         } else {
             return back()->with([
-                'message' => "Attempted to refund is failed",
+                'message'    => "Attempted to refund is failed",
                 'alert-type' => 'error',
             ]);
         }
@@ -138,7 +139,7 @@ class AdminCustomController extends Controller
 
     public function sendEmailOrder(Order $order, Request $request)
     {
-        $ticket = null;
+        $ticket  = null;
         $product = null;
         if ($request->filled('ticket')) {
             $ticket = Ticket::find($request->ticket);
@@ -172,35 +173,35 @@ class AdminCustomController extends Controller
             }
         }
         return redirect()->back()->with([
-            'message' => 'Email sent successfully',
+            'message'    => 'Email sent successfully',
             'alert-type' => 'success',
         ]);
     }
     public function couponGenerate()
     {
         $products = Product::all();
-        $events = Event::all();
+        $events   = Event::all();
         return view('vendor.voyager.coupons.coupon-add', compact('products', 'events'));
     }
 
     public function couponCreate(Request $request)
     {
         $request->validate([
-            'discount' => 'required',
+            'discount'  => 'required',
             'expire_at' => 'required',
-            'limit' => 'required',
-            'type' => 'required',
-            'event_id' => 'required|exists:events,id',
+            'limit'     => 'required',
+            'type'      => 'required',
+            'event_id'  => 'required|exists:events,id',
         ]);
 
         for ($i = 0; $i < $request->quantity; $i++) {
             $coupon = Coupon::updateOrCreate(['id' => $request->coupon_id], [
-                'code' =>  $request->code ?? uniqid(),
-                'discount' => $request->discount,
+                'code'      => $request->code ?? uniqid(),
+                'discount'  => $request->discount,
                 'expire_at' => $request->expire_at,
-                'limit' => $request->limit,
-                'type' => $request->type,
-                'event_id' => $request->event_id,
+                'limit'     => $request->limit,
+                'type'      => $request->type,
+                'event_id'  => $request->event_id,
             ]);
 
             if ($request->coupon_id) {
@@ -211,7 +212,7 @@ class AdminCustomController extends Controller
         }
 
         return redirect()->route('voyager.coupons.index')->with([
-            'message' => 'Coupons Created Successfully',
+            'message'    => 'Coupons Created Successfully',
             'alert-type' => 'success',
         ]);
     }
@@ -225,7 +226,7 @@ class AdminCustomController extends Controller
         $email = isset($billing['email']) ? $billing['email'] : null;
         $phone = isset($billing['phone']) ? $billing['phone'] : null;
 
-        $user = null;
+        $user          = null;
         $user_by_phone = null;
         $user_by_email = null;
         if ($phone) {
@@ -241,54 +242,54 @@ class AdminCustomController extends Controller
             $user = $user_by_email;
         }
 
-        if (!$user) {
+        if (! $user) {
             $user = User::create([
-                'name' => $billing['name'] ?? 'unkown user',
-                'email' => $email ?? strtolower(Str::slug($billing['name'] ?? 'user')) . '+' . uniqid() . '@mail.com',
-                'contact_number' => $phone,
+                'name'              => $billing['name'] ?? 'unkown user',
+                'email'             => $email ?? strtolower(Str::slug($billing['name'] ?? 'user')) . '+' . uniqid() . '@mail.com',
+                'contact_number'    => $phone,
                 'email_verified_at' => now(),
-                'role_id' => 2,
-                'password' => Hash::make('password2176565'),
-                'country' => 'PT',
-                'vatNumber' => $billing['vatNumber'] ?? null,
+                'role_id'           => 2,
+                'password'          => Hash::make('password2176565'),
+                'country'           => 'PT',
+                'vatNumber'         => $billing['vatNumber'] ?? null,
             ]);
         }
-        
+
         return $user;
     }
     public function personalInvitePost(Request $request, Product $product)
     {
 
         $request->validate([
-            'name' => 'required',
-            'email' => 'required_without_all:phone|required_if:send_email,1|nullable',
-            'phone' => 'required_without_all:email|required_if:send_message,1|nullable',
-            'qty' => 'required|min:1',
-            'send_email' => 'boolean',
+            'name'         => 'required',
+            'email'        => 'required_without_all:phone|required_if:send_email,1|nullable',
+            'phone'        => 'required_without_all:email|required_if:send_message,1|nullable',
+            'qty'          => 'required|min:1',
+            'send_email'   => 'boolean',
             'send_message' => 'boolean',
         ]);
 
         try {
             $billing = [
-                'name' => $request->name,
+                'name'  => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
             ];
             $orderData = [
-                'user_id' => $this->getUser($billing)->id,
-                'billing' => $billing,
-                'subtotal' => 0,
-                'discount' => 0,
-                'discount_code' => 0,
-                'tax' => 0,
-                'total' => 0,
+                'user_id'        => $this->getUser($billing)->id,
+                'billing'        => $billing,
+                'subtotal'       => 0,
+                'discount'       => 0,
+                'discount_code'  => 0,
+                'tax'            => 0,
+                'total'          => 0,
 
                 'payment_method' => 'invite',
                 'transaction_id' => Str::uuid(),
-                'security_key' => Str::uuid(),
-                'send_message' => $request->send_message ? true : false,
-                'send_email' => $request->send_email ? true : false,
-                'event_id' => $product->event->id,
+                'security_key'   => Str::uuid(),
+                'send_message'   => $request->send_message ? true : false,
+                'send_email'     => $request->send_email ? true : false,
+                'event_id'       => $product->event->id,
             ];
             $order = Order::create($orderData);
 
@@ -300,46 +301,46 @@ class AdminCustomController extends Controller
             $product->save();
             for ($i = 1; $i <= $request->qty; $i++) {
                 $data = [
-                    'user_id' => $orderData['user_id'],
-                    'owner' => [
-                        'name' => $request->name,
+                    'user_id'    => $orderData['user_id'],
+                    'owner'      => [
+                        'name'  => $request->name,
                         'email' => $request->email,
                         'phone' => $request->phone,
                     ],
-                    'event_id' => $product->event->id,
+                    'event_id'   => $product->event->id,
                     'product_id' => $product->id,
-                    'order_id' => $order->id,
-                    'ticket' => uniqid(),
-                    'price' => $product->price,
-                    'dates' => $product->dates,
-                    'type' => $product->paid_invite ? 'paid_invite' : 'invite',
-                    'active' => $product->paid_invite ? 0 : 1
+                    'order_id'   => $order->id,
+                    'ticket'     => uniqid(),
+                    'price'      => $product->price,
+                    'dates'      => $product->dates,
+                    'type'       => $product->paid_invite ? 'paid_invite' : 'invite',
+                    'active'     => $product->paid_invite ? 0 : 1,
                 ];
 
                 if ($product->extras && count($product->extras)) {
                     $data['hasExtras'] = true;
-                    $data['extras'] = collect($product->extras)->map(fn($qty, $key) => ['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray();
+                    $data['extras']    = collect($product->extras)->map(fn($qty, $key) => ['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray();
                 }
                 $order->tickets()->create($data);
             }
             $order->update([
-                'status' => 1,
+                'status'         => 1,
                 'payment_status' => 1,
             ]);
 
             // Mail::to(request()->email)->send(new InviteDownload($order, $product, null));
             return redirect()->route('voyager.products.index')->with([
-                'message' => 'Invite sent successfully',
+                'message'    => 'Invite sent successfully',
                 'alert-type' => 'success',
             ]);
         } catch (\Exception $e) {
             return redirect()->back()->with([
-                'message' => $e->getMessage(),
+                'message'    => $e->getMessage(),
                 'alert-type' => 'error',
             ]);
         } catch (Error $e) {
             return redirect()->route('voyager.products.index')->with([
-                'message' => $e->getMessage(),
+                'message'    => $e->getMessage(),
                 'alert-type' => 'error',
             ]);
         }
@@ -356,27 +357,27 @@ class AdminCustomController extends Controller
         try {
             DB::beginTransaction();
             $tickets = [];
-            $extras = [];
+            $extras  = [];
             if ($product->extras && count($product->extras)) {
                 $extras['hasExtras'] = true;
-                $extras['extras'] = json_encode(collect($product->extras)->map(fn($qty, $key) => ['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray());
+                $extras['extras']    = json_encode(collect($product->extras)->map(fn($qty, $key) => ['id' => $key, 'name' => Extra::find($key)->display_name, 'qty' => $qty, 'used' => 0])->toArray());
             }
 
             for ($i = 1; $i <= $request->qty; $i++) {
                 $data = [
-                    'event_id' => $product->event_id,
+                    'event_id'   => $product->event_id,
                     'product_id' => $product->id,
-                    'group' => $request->name,
-                    'type' => 'physical',
-                    'ticket' => now()->format('ymdhis') . uniqid(),
-                    'status' => 0,
-                    'owner' => json_encode([
-                        'name' => '',
+                    'group'      => $request->name,
+                    'type'       => 'physical',
+                    'ticket'     => now()->format('ymdhis') . uniqid(),
+                    'status'     => 0,
+                    'owner'      => json_encode([
+                        'name'  => '',
                         'email' => '',
                         'phone' => '',
                     ]),
-                    'price' => $product->price,
-                    'dates' => json_encode($product->dates),
+                    'price'      => $product->price,
+                    'dates'      => json_encode($product->dates),
                     'created_at' => now(),
 
                 ];
@@ -388,13 +389,13 @@ class AdminCustomController extends Controller
 
             DB::commit();
             return redirect()->back()->with([
-                'message' => 'Physical ticket generation completed successfully',
+                'message'    => 'Physical ticket generation completed successfully',
                 'alert_type' => 'success',
             ]);
         } catch (Exception | Error $e) {
             DB::rollBack();
             return redirect()->back()->with([
-                'message' => $e->getMessage(),
+                'message'    => $e->getMessage(),
                 'alert_type' => 'error',
             ]);
         }
@@ -403,14 +404,14 @@ class AdminCustomController extends Controller
     public function ticketCreatePhysicalDownload(Product $product, Request $request)
     {
         $productName = preg_replace('/[\/\\\\]/', '-', strtolower(str_replace(' ', '-', $product->name)));
-        $groupName = preg_replace('/[\/\\\\]/', '-', strtolower(str_replace(' ', '-', $request->group)));
-        $name = $productName . '-' . $groupName . '-tickets-' . now()->format('ymdhs');
-        $tickets = $product->physicalTickets()->where('group', $request->group)->get()->map(fn($ticket) => [
-            'id' => $ticket->id,
-            'ticket' => $ticket->ticket,
-            'event' => $ticket->event->name,
+        $groupName   = preg_replace('/[\/\\\\]/', '-', strtolower(str_replace(' ', '-', $request->group)));
+        $name        = $productName . '-' . $groupName . '-tickets-' . now()->format('ymdhs');
+        $tickets     = $product->physicalTickets()->where('group', $request->group)->get()->map(fn($ticket) => [
+            'id'      => $ticket->id,
+            'ticket'  => $ticket->ticket,
+            'event'   => $ticket->event->name,
             'product' => $ticket->product->name,
-            'dates' => implode(', ', $ticket->dates),
+            'dates'   => implode(', ', $ticket->dates),
         ]);
 
         return Excel::download(new TicketExport($tickets), $name . '.xlsx');
@@ -419,24 +420,78 @@ class AdminCustomController extends Controller
     {
         $tickets = $product->physicalTickets()->where('group', $request->group)->delete();
         return redirect()->back()->with([
-            'message' => 'Physical ticket delete  successfully',
+            'message'    => 'Physical ticket delete  successfully',
             'alert_type' => 'success',
         ]);
     }
     public function orderMarkPay(Order $order)
     {
         $order->payment_status = 1;
-        $order->status = 1;
+        $order->status         = 1;
         $order->save();
 
-
-        $toco = new TOCOnlineService;
-        $response = $toco->createCommercialSalesDocument($order);
-        $order->invoice_id = $response['id'];
-        $order->invoice_url = $response['public_link'];
+        $toco                = new TOCOnlineService;
+        $response            = $toco->createCommercialSalesDocument($order);
+        $order->invoice_id   = $response['id'];
+        $order->invoice_url  = $response['public_link'];
         $order->invoice_body = json_encode($response);
         $order->save();
         $response = $toco->sendEmailDocument($order, $response['id']);
         return redirect(url('admin/orders'));
+    }
+    public function cancel(MagazineOrder $order)
+    {
+        if ($order->status == 0) {
+            $order->update([
+                'status' => 2,
+            ]);
+
+            return back()->with([
+                'message'    => "Order has been cancelled",
+                'alert-type' => 'success',
+            ]);
+        } else {
+            return back()->with([
+                'message'    => "Attempted to cancel is failed",
+                'alert-type' => 'error',
+            ]);
+        }
+    }
+    public function createInvoice($id)
+    {
+        $order = MagazineOrder::with(['user', 'magazine'])->findOrFail($id);
+        return view('magazine_invoice', compact('order'));
+    }
+    public function markAsPaid(MagazineOrder $order)
+    {
+
+        $order->update([
+            'payment_status' => 1,
+            'status'         => 1,
+            'date_paid'      => now(),
+        ]);
+
+        return back()->with([
+            'message'    => 'Order marked as Paid successfully.',
+            'alert-type' => 'success',
+        ]);
+    }
+
+    public function sendEmail(MagazineOrder $order)
+    {
+        if (! $order->user || ! $order->user->email) {
+            return back()->with([
+                'message'    => 'No email associated with this order!',
+                'alert-type' => 'error',
+            ]);
+        }
+
+     
+        Mail::to($order->user->email)->send(new MagazineOrderMail($order));
+
+        return back()->with([
+            'message'    => 'Email sent successfully!',
+            'alert-type' => 'success',
+        ]);
     }
 }

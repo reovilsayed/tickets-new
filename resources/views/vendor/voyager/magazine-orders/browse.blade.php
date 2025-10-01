@@ -319,6 +319,34 @@
                                                         ])
                                                     @endif
                                                 @endforeach
+                                                @if ($data->status == 0)
+                                                    <a href="{{ route('magazine.order.cancel', $data->id) }}"
+                                                        class="btn edit btn-dark pull-right" style="margin-right:7px;"
+                                                        onclick="return confirm('Are you sure you want to cancel this order?');">
+                                                        <i class="voyager-wallet" style="margin-right:5px;"></i>Cancel
+                                                    </a>
+                                                @endif
+
+                                                @if ($data->user_id)
+                                                    <a href="{{ route('send.magazine.email', $data) }}"
+                                                        class="btn btn-sm btn-warning pull-right" style="margin-right:7px;">
+                                                        <i class="voyager-mail"></i> Send Mail
+                                                    </a>
+                                                @endif
+
+                                                <a href="{{ route('magazine.order.mark.as.pay', $data) }}"
+                                                    class="btn btn-info pull-right"
+                                                    onclick="return confirm('Are you sure you want to mark this order as Paid?');"
+                                                    style="margin-right:7px;">
+                                                    <i class="voyager-wallet" style="margin-right:5px;"></i>Mark As Pay
+                                                </a>
+                                                @if ($data->invoice_id === null && $data->total > 0)
+                                                    <a href="{{ route('admin.magazine-orders.invoice', $data->id) }}"
+                                                        class="btn btn-success pull-right" style="margin-right:5px;">
+                                                        <i class="voyager-document-text" style="margin-right:5px;"></i>
+                                                        Create Invoice
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

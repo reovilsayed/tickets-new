@@ -1,9 +1,8 @@
 <?php
 
-use App\Exports\CountryPTExport;
 use App\Exports\CustomerExport;
-use App\Http\Controllers\AdminCustomController;
-use App\Http\Controllers\AdminOrderController;use App\Http\Controllers\Admin\SendOrderSmsController;use App\Http\Controllers\Admin\VerifyUserEmailAddressController;
+use App\Http\Controllers\AdminCustomController;use App\Http\Controllers\AdminOrderController;use App\Http\Controllers\Admin\SendOrderSmsController;
+use App\Http\Controllers\Admin\VerifyUserEmailAddressController;
 use App\Http\Controllers\CountryExportController;
 use App\Http\Controllers\EventAnalyticsController;
 use App\Http\Controllers\ExportController;
@@ -209,7 +208,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
     })->name('voyager.invites.show');
 
     Route::get('orders/refund/{order}', [AdminCustomController::class, 'refund'])->name('order.refund');
+    Route::get('magazine-orders/cancel/{order}', [AdminCustomController::class, 'cancel'])->name('magazine.order.cancel');
+    Route::get('magazine-orders/mark-as-pay/{order}', [AdminCustomController::class, 'markAsPaid'])->name('magazine.order.mark.as.pay');
     Route::get('/coupon-generate', [AdminCustomController::class, 'couponGenerate'])->name('voyager.coupon.generate');
+    Route::get('magazine-orders/send-mail/{order}', [AdminCustomController::class, 'sendEmail'])
+        ->name('send.magazine.email');
     Route::post('/coupon-create', [AdminCustomController::class, 'couponCreate'])->name('voyager.coupon.create');
     Route::get('order/mark-as-pay/{order}', [AdminCustomController::class, 'orderMarkPay'])->name('order.mark.pay');
 
@@ -242,4 +245,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin.user'], function () {
     Route::patch('/orders/{order}/unmark', [OrderController::class, 'unmark'])->name('order.unmark');
     Route::get('admin/subscription-records/export/portugal', [CountryExportController::class, 'exportPortugal'])->name('subscription-records.export.portugal');
     Route::get('admin/subscription-records/export/all', [CountryExportController::class, 'exportAll'])->name('subscription-records.export.all');
+    Route::get('/admin/magazine-orders/{id}/invoice', [AdminCustomController::class, 'createInvoice'])
+        ->name('admin.magazine-orders.invoice');
 });
